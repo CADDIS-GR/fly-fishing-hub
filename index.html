@@ -23,14 +23,36 @@
             margin: 0 auto;
         }
 
-        /* Hero Section */
+        /* Hero Section with Background Image */
         .hero {
-            background: white;
+            position: relative;
+            background-image: url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border-radius: 20px;
             padding: 60px 40px;
             margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             text-align: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
@@ -45,13 +67,14 @@
 
         .hero p {
             font-size: 1.2em;
-            color: #718096;
+            color: #2d3748;
             line-height: 1.6;
+            font-weight: 500;
         }
 
         .hero .subtitle {
             font-size: 0.9em;
-            color: #a0aec0;
+            color: #4a5568;
             margin-top: 10px;
         }
 
@@ -210,9 +233,11 @@
     <div class="container">
         <!-- Hero Section -->
         <div class="hero">
-            <h1>🎣 플라이낚시 아카이브 허브</h1>
-            <p>관리형 낚시터에서의 플라이낚시 경험과 지식을 체계적으로 정리한 공간입니다.</p>
-            <p class="subtitle">20년간의 낚시 경험 × AI 기반 지식 관리</p>
+            <div class="hero-content">
+                <h1>🎣 플라이낚시 아카이브 허브</h1>
+                <p>관리형 낚시터에서의 플라이낚시 경험과 지식을 체계적으로 정리한 공간입니다.</p>
+                <p class="subtitle">20년간의 낚시 경험 × AI 기반 지식 관리</p>
+            </div>
         </div>
 
         <!-- Stats -->

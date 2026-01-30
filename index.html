@@ -1,57 +1,370 @@
-/* Hero Section 부분만 수정 */
-.hero {
-    position: relative;
-    background-image: url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 20px;
-    padding: 60px 40px;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-    text-align: center;
-    overflow: hidden;
-}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플라이낚시 아카이브 허브</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.5);
-    z-index: 1;
-}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-.hero h1 {
-    font-size: 3em;
-    color: #1a202c;
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
-}
+        /* Hero Section with Background Image */
+        .hero {
+            position: relative;
+            background-image: url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            overflow: hidden;
+        }
 
-.hero p {
-    font-size: 1.2em;
-    color: #1a202c;
-    line-height: 1.6;
-    font-weight: 600;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
-}
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5);
+            z-index: 1;
+        }
 
-.hero .subtitle {
-    font-size: 0.9em;
-    color: #2d3748;
-    margin-top: 10px;
-    font-weight: 600;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
-}
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: #1a202c;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: #1a202c;
+            line-height: 1.6;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+        }
+
+        .hero .subtitle {
+            font-size: 0.9em;
+            color: #2d3748;
+            margin-top: 10px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        /* Repository Cards */
+        .section-title {
+            color: white;
+            font-size: 2em;
+            margin: 40px 0 20px 0;
+            text-align: center;
+        }
+
+        .repos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .repo-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .repo-card h3 {
+            color: #2d3748;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .repo-card .icon {
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .repo-card p {
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .repo-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .repo-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .repo-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: #718096;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .repos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>🎣 플라이낚시 아카이브 허브</h1>
+                <p>관리형 낚시터에서의 플라이낚시 경험과 지식을 체계적으로 정리한 공간입니다.</p>
+                <p class="subtitle">20년간의 낚시 경험 × AI 기반 지식 관리</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number">8</div>
+                <div class="label">저장소</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">100+</div>
+                <div class="label">낚시 기록</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">50+</div>
+                <div class="label">플라이 패턴</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">∞</div>
+                <div class="label">배움의 여정</div>
+            </div>
+        </div>
+
+        <!-- Core Repositories -->
+        <h2 class="section-title">📚 핵심 아카이브</h2>
+        <div class="repos-grid">
+            <div class="repo-card">
+                <h3><span class="icon">📝</span> Fishing Log</h3>
+                <p>매 출조마다 기록한 상세한 낚시 일지. 날씨, 수온, 사용 플라이, 조과 등을 체계적으로 정리합니다.</p>
+                <div class="tags">
+                    <span class="tag">출조 기록</span>
+                    <span class="tag">데이터 분석</span>
+                    <span class="tag">대시보드</span>
+                </div>
+                <a href="https://caddis-gr.github.io/fishing-log/" class="repo-link" target="_blank">출조 기록 보기 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">🪝</span> Fly Tying Archive</h3>
+                <p>직접 타잉한 플라이 패턴 아카이브. Chironomid, Streamer, Nymph 등 각 패턴의 레시피와 특징을 문서화합니다.</p>
+                <div class="tags">
+                    <span class="tag">플라이 패턴</span>
+                    <span class="tag">타잉 레시피</span>
+                    <span class="tag">이미지 갤러리</span>
+                </div>
+                <a href="https://caddis-gr.github.io/fly-tying-archive/" class="repo-link" target="_blank">패턴 아카이브 보기 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">🎓</span> Fishing Technique</h3>
+                <p>플라이낚시 기술과 노하우. 멀티 스플릿 인디케이터 시스템, 딥 라이닝 등 고급 기법을 정리합니다.</p>
+                <div class="tags">
+                    <span class="tag">낚시 기법</span>
+                    <span class="tag">전략</span>
+                    <span class="tag">노하우</span>
+                </div>
+                <a href="https://caddis-gr.github.io/fishing-technique/" class="repo-link" target="_blank">기술 문서 보기 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">🎒</span> Fishing Gear</h3>
+                <p>플라이낚시 장비 정보와 리뷰. 로드, 릴, 라인부터 액세서리까지 장비 선택의 기준을 공유합니다.</p>
+                <div class="tags">
+                    <span class="tag">장비 정보</span>
+                    <span class="tag">리뷰</span>
+                    <span class="tag">추천</span>
+                </div>
+                <a href="https://caddis-gr.github.io/fishing-gear/" class="repo-link" target="_blank">장비 정보 보기 →</a>
+            </div>
+        </div>
+
+        <!-- Support Tools -->
+        <h2 class="section-title">🛠️ 지원 도구</h2>
+        <div class="repos-grid">
+            <div class="repo-card">
+                <h3><span class="icon">💰</span> Expense Tracker</h3>
+                <p>플라이낚시 관련 지출을 추적하고 관리하는 도구입니다.</p>
+                <div class="tags">
+                    <span class="tag">경비 관리</span>
+                    <span class="tag">통계</span>
+                </div>
+                <a href="https://github.com/CADDIS-GR/fly-fishing-expense-tracker" class="repo-link" target="_blank">저장소 방문 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">🌤️</span> Weather Automation</h3>
+                <p>낚시 출조를 위한 날씨 정보 자동화 시스템입니다.</p>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">자동화</span>
+                    <span class="tag">날씨</span>
+                </div>
+                <a href="https://github.com/CADDIS-GR/weather-automation" class="repo-link" target="_blank">저장소 방문 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">📋</span> My Gear</h3>
+                <p>개인이 보유한 장비 리스트와 사용 기록입니다.</p>
+                <div class="tags">
+                    <span class="tag">개인 장비</span>
+                    <span class="tag">리스트</span>
+                </div>
+                <a href="https://caddis-gr.github.io/my-gear/" class="repo-link" target="_blank">내 장비 보기 →</a>
+            </div>
+
+            <div class="repo-card">
+                <h3><span class="icon">📄</span> Web Docs</h3>
+                <p>정적 HTML 문서와 기타 자료를 모아둔 공간입니다.</p>
+                <div class="tags">
+                    <span class="tag">문서</span>
+                    <span class="tag">자료</span>
+                </div>
+                <a href="https://github.com/CADDIS-GR/web-docs2" class="repo-link" target="_blank">저장소 방문 →</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>🎣 플라이낚시는 평생의 배움입니다</strong></p>
+            <p style="margin-top: 15px;">
+                모든 저장소는 <a href="https://github.com/CADDIS-GR" target="_blank">GitHub @CADDIS-GR</a>에서 확인하실 수 있습니다.
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #a0aec0;">
+                Last updated: 2026년 1월 30일
+            </p>
+        </div>
+    </div>
+</body>
+</html>

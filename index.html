@@ -7,564 +7,810 @@
   <title>플라이낚시 아카이브 허브 | 낚시대장</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* ── CSS VARIABLES (season-review 표준) ── */
+    /* ── TOKENS ── */
     :root {
-      --bg:        #f5f3ee;
-      --bg2:       #eeece6;
-      --bg3:       #e6e2da;
-      --surface:   #ffffff;
-      --surface2:  #f0ede8;
-      --border:    rgba(0,0,0,.08);
-      --border2:   rgba(0,0,0,.14);
-      --ink:       #1a1814;
-      --ink2:      #2e2b24;
-      --ink3:      #52493c;
-      --ink4:      #8a8070;
-      --gold:      #9a7a28;
-      --gold2:     #7a5e18;
-      --gold-dim:  rgba(154,122,40,.10);
-      --gold-glow: rgba(154,122,40,.05);
-      --water:     #2d6e5c;
-      --water2:    #235848;
-      --water-dim: rgba(45,110,92,.10);
-      --red:       #b03828;
-      --red-dim:   rgba(176,56,40,.10);
+      --black:   #080806;
+      --dark:    #0e0d0a;
+      --dark2:   #161410;
+      --dark3:   #1e1b15;
+      --surface: #252118;
+      --surf2:   #2e2921;
+      --border:  rgba(255,255,255,.07);
+      --border2: rgba(255,255,255,.13);
+      --white:   #f5f2eb;
+      --white2:  #cdc8be;
+      --white3:  #8a8070;
+      --gold:    #c9953a;
+      --gold2:   #f0c96a;
+      --gold3:   #7a5e18;
+      --water:   #2eb88a;
+      --water2:  #1d8a67;
+      --red:     #e05038;
+      --accent:  #f0c96a;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'Noto Sans KR', sans-serif;
-      background: var(--bg);
-      color: var(--ink);
+      background: var(--black);
+      color: var(--white);
       line-height: 1.7;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      cursor: none;
     }
 
-    /* grain overlay */
-    body::before {
+    /* ── CURSOR ── */
+    .cursor {
+      position: fixed; z-index: 99999;
+      width: 12px; height: 12px;
+      background: var(--gold2);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform .1s, width .3s, height .3s, background .3s;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      position: fixed; z-index: 99998;
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(240,201,106,.4);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform .18s ease-out, width .3s, height .3s, border-color .3s;
+    }
+    body:has(a:hover) .cursor { width: 20px; height: 20px; }
+    body:has(a:hover) .cursor-ring { width: 54px; height: 54px; border-color: var(--gold); }
+
+    /* ── GRAIN ── */
+    body::after {
       content: '';
-      position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: .025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      position: fixed; inset: 0; z-index: 9998;
+      pointer-events: none; opacity: .032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 128px 128px;
     }
 
-    /* ── STICKY NAV ── */
-    .sticky-nav {
+    /* ── NAV ── */
+    .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(245,243,238,.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+      transition: background .4s, border-color .4s;
+    }
+    .nav.scrolled {
+      background: rgba(8,8,6,.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-inner {
-      max-width: 1200px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 56px;
-    }
     .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--gold); text-decoration: none;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: .12em;
+      color: var(--gold2); text-decoration: none;
       transition: color .2s;
     }
-    .nav-logo:hover { color: var(--gold2); }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-logo:hover { color: var(--white); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a {
       font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--ink4); text-decoration: none;
+      font-size: .67rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--white3); text-decoration: none;
       transition: color .2s;
+      position: relative;
     }
-    .nav-links a:hover { color: var(--ink); }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -3px; left: 0; right: 0; height: 1px;
+      background: var(--gold2);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .25s ease;
+    }
+    .nav-links a:hover { color: var(--white2); }
+    .nav-links a:hover::after { transform: scaleX(1); }
 
     /* ── HERO ── */
     .hero {
       min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 60px 80px;
       position: relative; overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr auto;
     }
+
     .hero-bg {
       position: absolute; inset: 0;
       background:
-        linear-gradient(180deg, rgba(15,14,11,.15) 0%, rgba(15,14,11,.52) 55%, rgba(245,243,238,.97) 100%),
-        linear-gradient(90deg, rgba(15,14,11,.28) 0%, transparent 60%),
-        url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg') center 40% / cover no-repeat;
+        url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg')
+        center 40% / cover no-repeat;
     }
-    /* 격자 장식선 */
-    .hero-lines {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        linear-gradient(90deg, rgba(154,122,40,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(154,122,40,.06) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: linear-gradient(180deg, transparent 30%, black 60%, transparent 100%);
-      -webkit-mask-image: linear-gradient(180deg, transparent 30%, black 60%, transparent 100%);
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, rgba(8,8,6,.92) 0%, rgba(8,8,6,.6) 55%, rgba(8,8,6,.2) 100%),
+        linear-gradient(to top, rgba(8,8,6,1) 0%, rgba(8,8,6,.5) 30%, transparent 70%);
     }
 
-    .hero-content { position: relative; z-index: 2; max-width: 680px; }
+    /* 대각선 구분선 장식 */
+    .hero-diagonal {
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 120px;
+      background: var(--black);
+      clip-path: polygon(0 60%, 100% 0%, 100% 100%, 0% 100%);
+      z-index: 3;
+    }
 
-    .hero-avatar {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 28px;
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 80px 100px;
+      max-width: 1100px;
     }
-    .hero-avatar img {
-      width: 44px; height: 44px; border-radius: 50%;
-      border: 2px solid rgba(154,122,40,.5);
-      object-fit: cover;
-    }
-    .hero-avatar-name {
-      font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(255,255,255,.65);
+
+    /* 넘버 장식 */
+    .hero-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28vw;
+      line-height: .82;
+      position: absolute;
+      right: -2vw; bottom: 60px; z-index: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(201,149,58,.08);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -.02em;
     }
 
     .hero-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
-      color: #f0d878; margin-bottom: 20px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .hero-eyebrow::before {
-      content: '';
-      display: block; width: 28px; height: 1.5px;
-      background: #f0d878; flex-shrink: 0;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 7vw, 5.2rem);
-      font-weight: 900;
-      line-height: 1.08; letter-spacing: -.02em;
-      color: #fff;
-      text-shadow: 0 4px 24px rgba(0,0,0,.3);
+      display: flex; align-items: center; gap: 14px;
       margin-bottom: 24px;
     }
-    .hero h1 em {
-      font-style: italic; font-weight: 700;
-      color: #f0d878;
+    .eyebrow-line {
+      width: 40px; height: 1px;
+      background: var(--gold);
+    }
+    .eyebrow-text {
+      font-family: 'DM Mono', monospace;
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 10vw, 9rem);
+      line-height: .92;
+      letter-spacing: .03em;
+      color: var(--white);
+      margin-bottom: 28px;
+    }
+    .hero-title .accent { color: var(--gold2); }
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--white2);
     }
 
     .hero-sub {
-      font-size: .95rem; font-weight: 300;
-      color: rgba(255,255,255,.72);
-      line-height: 1.8; margin-bottom: 48px;
-      max-width: 420px;
+      font-size: .92rem; font-weight: 300;
+      color: var(--white3);
+      line-height: 1.9; margin-bottom: 52px;
+      max-width: 380px;
+      border-left: 2px solid var(--gold3);
+      padding-left: 18px;
     }
 
-    /* 히어로 통계 바 */
+    /* 히어로 스탯 - 수평 바 */
     .hero-stats {
-      display: flex;
-      background: rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 14px;
-      overflow: hidden; width: fit-content;
+      display: flex; gap: 0;
     }
     .hero-stat {
-      padding: 18px 32px;
-      border-right: 1px solid rgba(255,255,255,.12);
-      text-align: center;
+      display: flex; flex-direction: column;
+      padding: 20px 36px 20px 0;
+      margin-right: 36px;
+      border-right: 1px solid var(--border2);
     }
     .hero-stat:last-child { border-right: none; }
-    .hero-stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem; font-weight: 700;
-      color: #f0d878; line-height: 1; margin-bottom: 4px;
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; line-height: 1;
+      color: var(--gold2);
     }
-    .hero-stat-lbl {
+    .stat-lbl {
       font-family: 'DM Mono', monospace;
-      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-      color: rgba(255,255,255,.5);
+      font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--white3); margin-top: 4px;
     }
 
-    .hero-scroll {
-      position: absolute; bottom: 32px; right: 60px;
+    /* 우측 배지 */
+    .hero-badge {
+      position: absolute; right: 80px; bottom: 120px; z-index: 2;
+      width: 120px; height: 120px;
+      border: 1px solid var(--gold3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center;
+      animation: spin-badge 20s linear infinite;
+    }
+    .hero-badge-inner {
       font-family: 'DM Mono', monospace;
-      font-size: .65rem; letter-spacing: .16em; text-transform: uppercase;
-      color: rgba(255,255,255,.35);
-      writing-mode: vertical-rl;
+      font-size: .55rem; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gold);
+      line-height: 1.6;
+      animation: spin-badge 20s linear infinite reverse;
+    }
+    @keyframes spin-badge {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      background: var(--gold);
+      overflow: hidden; white-space: nowrap;
+      padding: 14px 0;
+      position: relative; z-index: 4;
+    }
+    .marquee-track {
+      display: inline-flex; gap: 0;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.05rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--black);
+      padding: 0 32px;
+    }
+    .marquee-dot {
+      color: var(--dark3);
+      font-size: 1.3rem;
+      vertical-align: middle;
+      padding: 0 8px;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
 
     /* ── ARCHIVE SECTION ── */
-    .archive-section {
-      max-width: 1200px; margin: 0 auto;
-      padding: 80px 40px 100px;
+    .archive {
+      background: var(--black);
+      padding: 100px 80px 120px;
+      position: relative;
     }
 
-    .section-eyebrow {
-      display: flex; align-items: center; gap: 16px;
-      margin-bottom: 48px;
+    .section-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 64px;
     }
-    .eyebrow-tag {
+    .section-label {
       font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+      font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
       color: var(--gold);
-      background: var(--gold-dim);
-      border: 1px solid rgba(154,122,40,.2);
-      padding: 6px 14px; border-radius: 999px;
-      white-space: nowrap;
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
     }
-    .eyebrow-rule {
-      flex: 1; height: 1px;
-      background: linear-gradient(90deg, var(--border2), transparent);
+    .section-label::before {
+      content: '';
+      display: inline-block; width: 20px; height: 1px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      letter-spacing: .05em;
+      color: var(--white);
+      line-height: 1;
+    }
+    .section-count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem; line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--border2);
+      letter-spacing: -.02em;
     }
 
     /* ── CARD GRID ── */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto auto;
+      gap: 16px;
     }
-    .card-grid > .card:first-child { grid-column: span 2; }
+
+    /* 카드 배치 */
+    .card:nth-child(1) { grid-column: span 7; grid-row: span 1; }
+    .card:nth-child(2) { grid-column: span 5; grid-row: span 1; }
+    .card:nth-child(3) { grid-column: span 4; grid-row: span 1; }
+    .card:nth-child(4) { grid-column: span 4; grid-row: span 1; }
+    .card:nth-child(5) { grid-column: span 4; grid-row: span 1; }
+    .card:nth-child(6) { grid-column: span 12; grid-row: span 1; }
 
     .card {
-      background: var(--surface);
+      background: var(--dark2);
       border: 1px solid var(--border);
-      border-radius: 14px;
       overflow: hidden;
       display: flex; flex-direction: column;
       text-decoration: none; color: inherit;
-      transition: transform .3s cubic-bezier(.25,.46,.45,.94),
-                  box-shadow .3s ease, border-color .3s ease;
       position: relative;
+      transition: border-color .35s ease;
+      group: true;
     }
-    .card::after {
+    .card::before {
       content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--gold), var(--water));
-      opacity: 0; transition: opacity .3s ease;
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, rgba(201,149,58,.06), transparent 60%);
+      opacity: 0;
+      transition: opacity .4s ease;
     }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px -8px rgba(26,24,20,.13);
-      border-color: var(--border2);
-    }
-    .card:hover::after { opacity: 1; }
+    .card:hover { border-color: var(--gold3); }
+    .card:hover::before { opacity: 1; }
 
-    /* Thumbnail */
+    /* 카드 썸네일 */
     .card-thumb {
       width: 100%; aspect-ratio: 16/8;
-      overflow: hidden; background: var(--bg3);
+      overflow: hidden;
       position: relative; flex-shrink: 0;
+      background: var(--dark3);
     }
-    .card:first-child .card-thumb { aspect-ratio: 16/7; }
+    .card:nth-child(1) .card-thumb { aspect-ratio: 16/6; }
+    .card:nth-child(6) .card-thumb { display: none; }
+
     .card-thumb img {
       width: 100%; height: 100%; object-fit: cover;
-      filter: saturate(.85) brightness(.97);
-      transition: transform .5s cubic-bezier(.25,.46,.45,.94), filter .4s ease;
+      filter: saturate(.7) brightness(.85);
+      transition: transform .7s cubic-bezier(.25,.46,.45,.94), filter .5s ease;
     }
     .card:hover .card-thumb img {
-      transform: scale(1.04);
-      filter: saturate(1) brightness(1);
+      transform: scale(1.07);
+      filter: saturate(1) brightness(.95);
     }
+
+    /* 썸네일 오버레이 */
     .card-thumb::after {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 50%, rgba(26,24,20,.22) 100%);
+      background: linear-gradient(180deg, transparent 40%, rgba(14,13,10,.7) 100%);
       pointer-events: none;
     }
-    .thumb-badge {
-      position: absolute; bottom: 12px; left: 14px; z-index: 1;
-      font-family: 'DM Mono', monospace;
-      font-size: .63rem; letter-spacing: .08em; text-transform: uppercase;
-      background: rgba(26,24,20,.72); backdrop-filter: blur(6px);
-      color: rgba(255,255,255,.9);
-      padding: 4px 10px; border-radius: 6px;
-    }
-    .thumb-badge.new { background: var(--water); color: #fff; }
 
-    /* Card Body */
-    .card-body {
-      padding: 24px 26px 28px;
-      display: flex; flex-direction: column; flex: 1;
+    /* 인덱스 번호 */
+    .card-index {
+      position: absolute; top: 16px; left: 20px; z-index: 2;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem; line-height: 1;
+      color: rgba(240,201,106,.15);
+      pointer-events: none;
     }
-    .card-meta {
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 10px;
-    }
-    .meta-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--gold); flex-shrink: 0;
-    }
-    .meta-text {
+    .card:nth-child(6) .card-index { display: none; }
+
+    .card-badge {
+      position: absolute; bottom: 14px; left: 16px; z-index: 2;
       font-family: 'DM Mono', monospace;
-      font-size: .65rem; letter-spacing: .07em; color: var(--ink4);
+      font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+      background: rgba(8,8,6,.75); backdrop-filter: blur(8px);
+      color: var(--white2);
+      padding: 5px 12px;
+      border: 1px solid var(--border2);
     }
+    .card-badge.new {
+      background: var(--water2);
+      border-color: var(--water);
+      color: #fff;
+    }
+
+    /* 카드 바디 */
+    .card-body {
+      padding: 22px 24px 26px;
+      display: flex; flex-direction: column; flex: 1;
+      position: relative; z-index: 1;
+    }
+
+    /* 와이드 카드(6번)는 가로 레이아웃 */
+    .card:nth-child(6) .card-body {
+      flex-direction: row;
+      align-items: center;
+      padding: 32px 40px;
+      gap: 48px;
+    }
+    .card:nth-child(6) .card-body-left { flex: 1; }
+    .card:nth-child(6) .card-body-right {
+      flex-shrink: 0;
+      display: flex; gap: 32px;
+    }
+
+    .card-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .meta-slash { color: var(--white3); }
+
     .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem; font-weight: 700;
-      color: var(--ink); line-height: 1.28;
-      letter-spacing: -.01em; margin-bottom: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: .05em;
+      color: var(--white); line-height: 1.1;
+      margin-bottom: 10px;
+      transition: color .25s;
     }
-    .card:first-child .card-title { font-size: 1.6rem; }
+    .card:nth-child(1) .card-title { font-size: 2rem; }
+    .card:nth-child(6) .card-title { font-size: 2.2rem; }
+    .card:hover .card-title { color: var(--gold2); }
+
     .card-desc {
-      font-size: .87rem; color: var(--ink3);
-      line-height: 1.75; flex: 1; margin-bottom: 18px;
+      font-size: .84rem; color: var(--white3);
+      line-height: 1.8; flex: 1; margin-bottom: 20px;
+      font-weight: 300;
     }
+    .card:nth-child(6) .card-desc { margin-bottom: 0; }
+
     .card-tags {
       display: flex; flex-wrap: wrap; gap: 6px;
       margin-bottom: 20px;
     }
+    .card:nth-child(6) .card-tags { margin-bottom: 0; }
     .tag {
       font-family: 'DM Mono', monospace;
-      font-size: .62rem; letter-spacing: .04em;
-      color: var(--ink4); background: var(--bg2);
+      font-size: .6rem; letter-spacing: .05em;
+      color: var(--white3);
+      background: var(--dark3);
       border: 1px solid var(--border);
-      padding: 3px 9px; border-radius: 5px;
+      padding: 3px 10px;
     }
 
-    /* CTA */
+    /* CTA 화살표 */
     .card-cta {
-      display: flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 10px;
       font-family: 'DM Mono', monospace;
-      font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--water); margin-top: auto;
-      transition: gap .2s ease;
+      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--white3);
+      margin-top: auto;
+      transition: color .25s;
     }
-    .card:hover .card-cta { gap: 13px; }
-    .cta-arrow {
-      width: 20px; height: 20px;
-      border: 1.5px solid var(--water); border-radius: 50%;
+    .card:hover .card-cta { color: var(--gold2); }
+    .cta-icon {
+      width: 28px; height: 28px;
+      border: 1px solid var(--border2);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: background .2s, transform .2s;
+      transition: background .25s, border-color .25s, transform .25s;
     }
-    .card:hover .cta-arrow { background: var(--water); transform: translateX(2px); }
-    .cta-arrow svg {
-      width: 9px; height: 9px;
-      stroke: var(--water); fill: none;
-      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-      transition: stroke .2s;
+    .card:hover .cta-icon {
+      background: var(--gold);
+      border-color: var(--gold);
+      transform: translateX(4px);
     }
-    .card:hover .cta-arrow svg { stroke: #fff; }
+    .cta-icon svg {
+      width: 10px; height: 10px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      transition: stroke .25s;
+    }
+    .card:hover .cta-icon svg { stroke: var(--black); }
+
+    /* 와이드 카드 스탯 */
+    .wide-stat {
+      text-align: center;
+    }
+    .wide-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem; line-height: 1;
+      color: var(--gold2);
+    }
+    .wide-stat-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--white3); margin-top: 4px;
+    }
+    .wide-stat-sep {
+      width: 1px; background: var(--border2);
+      align-self: stretch;
+    }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--bg2);
-      border-top: 1px solid var(--border2);
-      padding: 56px 40px;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 64px 80px;
     }
     .footer-inner {
       max-width: 1200px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 24px;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 40px;
     }
-    .footer-left {
-      font-family: 'Playfair Display', serif;
-      font-style: italic; font-size: 1.1rem;
-      color: var(--gold); line-height: 1.4;
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; letter-spacing: .08em;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--gold3);
+      line-height: 1;
     }
-    .footer-left span {
+    .footer-quote {
+      text-align: center;
+      font-family: 'Noto Serif KR', serif;
+      font-style: italic; font-size: .95rem;
+      color: var(--gold);
+      line-height: 1.7;
+    }
+    .footer-quote span {
       display: block;
-      font-family: 'Noto Sans KR', sans-serif;
-      font-style: normal; font-size: .8rem; font-weight: 300;
-      color: var(--ink4); margin-top: 4px;
+      font-family: 'DM Mono', monospace;
+      font-style: normal; font-size: .62rem; letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--white3); margin-top: 8px;
     }
     .footer-right {
       text-align: right;
       font-family: 'DM Mono', monospace;
-      font-size: .72rem; letter-spacing: .06em;
-      color: var(--ink4); line-height: 1.8;
+      font-size: .68rem; letter-spacing: .06em;
+      color: var(--white3); line-height: 2;
     }
     .footer-right a { color: var(--water); text-decoration: none; transition: color .2s; }
     .footer-right a:hover { color: var(--water2); }
 
     /* ── SCROLL REVEAL ── */
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity .7s cubic-bezier(.25,.46,.45,.94),
+                  transform .7s cubic-bezier(.25,.46,.45,.94);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-left {
+      opacity: 0; transform: translateX(-32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: none; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 960px) {
-      .nav-inner { padding: 0 24px; }
-      .nav-links { display: none; }
-      .hero { padding: 0 32px 64px; }
-      .archive-section { padding: 60px 24px 80px; }
-      .card-grid { grid-template-columns: 1fr 1fr; }
-      .card-grid > .card:first-child { grid-column: span 2; }
-      footer { padding: 40px 24px; }
-      .footer-inner { flex-direction: column; text-align: center; }
-      .footer-right { text-align: center; }
+    @media (max-width: 1100px) {
+      .archive { padding: 80px 48px 100px; }
+      .hero-content { padding: 0 48px 100px; }
+      .hero-badge { display: none; }
+      .card:nth-child(1) { grid-column: span 12; }
+      .card:nth-child(2) { grid-column: span 6; }
+      .card:nth-child(3) { grid-column: span 6; }
+      .card:nth-child(4) { grid-column: span 6; }
+      .card:nth-child(5) { grid-column: span 6; }
+      .card:nth-child(6) { grid-column: span 12; }
     }
-    @media (max-width: 600px) {
-      .hero { padding: 0 24px 56px; }
-      .hero h1 { font-size: 2.6rem; }
-      .hero-stats { width: 100%; flex-wrap: wrap; }
-      .hero-stat { flex: 1 1 40%; padding: 14px 16px; }
-      .hero-scroll { display: none; }
-      .card-grid { grid-template-columns: 1fr; }
-      .card-grid > .card:first-child { grid-column: span 1; }
-      .archive-section { padding: 48px 20px 64px; }
+    @media (max-width: 768px) {
+      .nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 24px 80px; }
+      .hero-title { font-size: 3.5rem; }
+      .hero-number { display: none; }
+      .archive { padding: 64px 24px 80px; }
+      .card:nth-child(n) { grid-column: span 12; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .card:nth-child(6) .card-body { flex-direction: column; gap: 24px; }
+      .card:nth-child(6) .card-body-right { flex-wrap: wrap; justify-content: center; }
+      footer { padding: 48px 24px; }
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-right { text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- STICKY NAV -->
-  <nav class="sticky-nav">
-    <div class="nav-inner">
-      <a class="nav-logo" href="#">CADDIS · GR</a>
-      <ul class="nav-links">
-        <li><a href="https://caddis-gr.github.io/fishing-log/" target="_blank">Logs</a></li>
-        <li><a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank">Tying</a></li>
-        <li><a href="https://caddis-gr.github.io/fishing-technique/" target="_blank">Technique</a></li>
-        <li><a href="https://caddis-gr.github.io/fishing-gear/" target="_blank">Gear</a></li>
-        <li><a href="https://github.com/CADDIS-GR" target="_blank">GitHub ↗</a></li>
-      </ul>
-    </div>
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="mainNav">
+    <a class="nav-logo" href="#">CADDIS · GR</a>
+    <ul class="nav-links">
+      <li><a href="https://caddis-gr.github.io/fishing-log/" target="_blank">Logs</a></li>
+      <li><a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank">Tying</a></li>
+      <li><a href="https://caddis-gr.github.io/fishing-technique/" target="_blank">Technique</a></li>
+      <li><a href="https://caddis-gr.github.io/fishing-gear/" target="_blank">Gear</a></li>
+      <li><a href="https://github.com/CADDIS-GR" target="_blank">GitHub ↗</a></li>
+    </ul>
   </nav>
 
   <!-- HERO -->
   <header class="hero" id="sec-top">
     <div class="hero-bg"></div>
-    <div class="hero-lines" aria-hidden="true"></div>
+    <div class="hero-diagonal"></div>
+    <div class="hero-number" aria-hidden="true">GR</div>
 
     <div class="hero-content">
-      <div class="hero-avatar">
-        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG"
-             alt="낚시대장 프로필"
-             onerror="this.style.display='none'">
-        <span class="hero-avatar-name">낚시대장 · CADDIS-GR</span>
+      <div class="hero-eyebrow reveal">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Fly Fishing Knowledge Hub · Since 2024</span>
       </div>
 
-      <div class="hero-eyebrow">Fly Fishing Knowledge Hub</div>
+      <h1 class="hero-title reveal" style="transition-delay:.1s">
+        Archive<br>
+        <span class="outline">For The</span><br>
+        <span class="accent">Devoted</span>
+      </h1>
 
-      <h1>Archive<br><em>for the</em><br>Devoted Angler</h1>
-
-      <p class="hero-sub">
+      <p class="hero-sub reveal" style="transition-delay:.2s">
         관리형 낚시터에서의 20년 경험과 노하우,<br>
-        데이터와 AI가 만나 완성된 플라이낚시 지식 아카이브.
+        데이터와 AI가 만나 완성된<br>
+        플라이낚시 지식 아카이브.
       </p>
 
-      <div class="hero-stats">
+      <div class="hero-stats reveal" style="transition-delay:.3s">
         <div class="hero-stat">
-          <div class="hero-stat-num">10</div>
-          <div class="hero-stat-lbl">Repositories</div>
+          <span class="stat-num">10</span>
+          <span class="stat-lbl">Repositories</span>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-num">100+</div>
-          <div class="hero-stat-lbl">Fishing Logs</div>
+          <span class="stat-num">100+</span>
+          <span class="stat-lbl">Fishing Logs</span>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-num">50+</div>
-          <div class="hero-stat-lbl">Fly Patterns</div>
+          <span class="stat-num">50+</span>
+          <span class="stat-lbl">Fly Patterns</span>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-num">∞</div>
-          <div class="hero-stat-lbl">Passion</div>
+          <span class="stat-num">∞</span>
+          <span class="stat-lbl">Passion</span>
         </div>
       </div>
     </div>
 
-    <div class="hero-scroll">Scroll ↓</div>
+    <!-- 회전 배지 -->
+    <div class="hero-badge" aria-hidden="true">
+      <div class="hero-badge-inner">
+        Fly · Fishing<br>Archive<br>낚시대장
+      </div>
+    </div>
   </header>
 
-  <!-- ARCHIVE CARDS -->
-  <section class="archive-section">
-    <div class="section-eyebrow reveal">
-      <span class="eyebrow-tag">Core Archives</span>
-      <span class="eyebrow-rule"></span>
+  <!-- MARQUEE -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Fishing Log</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Fly Tying Archive</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Techniques & Tips</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Gear Review</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
+      <!-- 반복 -->
+      <span class="marquee-item">Fishing Log</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Fly Tying Archive</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Techniques & Tips</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Gear Review</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
+    </div>
+  </div>
+
+  <!-- ARCHIVE -->
+  <section class="archive" id="archive">
+    <div class="section-header reveal-left">
+      <div>
+        <div class="section-label">Core Archives</div>
+        <h2 class="section-title">Knowledge<br>Repository</h2>
+      </div>
+      <div class="section-count">06</div>
     </div>
 
     <div class="card-grid">
 
-      <!-- 1. Fishing Log (featured) -->
-      <a href="https://caddis-gr.github.io/fishing-log/" target="_blank" class="card reveal">
+      <!-- 1. Fishing Log (FEATURED) -->
+      <a href="https://caddis-gr.github.io/fishing-log/" target="_blank" class="card reveal" style="transition-delay:.05s">
+        <div class="card-index">01</div>
         <div class="card-thumb">
           <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/HanTer.JPEG" alt="한터낚시터 전경">
-          <span class="thumb-badge">출조 기록</span>
+          <span class="card-badge">출조 기록</span>
         </div>
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Data · Dashboard</span></div>
+          <div class="card-meta">Data <span class="meta-slash">/</span> Dashboard</div>
           <h3 class="card-title">Fishing Log</h3>
-          <p class="card-desc">매 출조의 날씨, 수온, 사용 패턴과 조과를 기록한 데이터 대시보드. 한터낚시터 세션 아카이브를 한눈에 탐색할 수 있습니다.</p>
+          <p class="card-desc">매 출조의 날씨, 수온, 사용 패턴과 조과를 기록한 데이터 대시보드. 한터낚시터 세션 아카이브를 한눈에 탐색.</p>
           <div class="card-tags">
             <span class="tag">출조 기록</span><span class="tag">데이터 분석</span><span class="tag">한터낚시터</span>
           </div>
-          <div class="card-cta">기록 열람하기<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-cta">기록 열람하기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
         </div>
       </a>
 
       <!-- 2. Fly Tying -->
-      <a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank" class="card reveal">
+      <a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank" class="card reveal" style="transition-delay:.1s">
+        <div class="card-index">02</div>
         <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-01.jpg" alt="바닥 공략 송어">
-          <span class="thumb-badge">패턴 라이브러리</span>
+          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-01.jpg" alt="플라이 패턴">
+          <span class="card-badge">패턴 라이브러리</span>
         </div>
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Tying · Recipe</span></div>
+          <div class="card-meta">Tying <span class="meta-slash">/</span> Recipe</div>
           <h3 class="card-title">Fly Tying Archive</h3>
           <p class="card-desc">Chironomid, Mini Leech 등 직접 타잉한 패턴 레시피와 고화질 이미지 갤러리.</p>
           <div class="card-tags"><span class="tag">패턴</span><span class="tag">레시피</span></div>
-          <div class="card-cta">패턴 라이브러리<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-cta">패턴 보기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
         </div>
       </a>
 
       <!-- 3. Techniques -->
-      <a href="https://caddis-gr.github.io/fishing-technique/" target="_blank" class="card reveal">
+      <a href="https://caddis-gr.github.io/fishing-technique/" target="_blank" class="card reveal" style="transition-delay:.15s">
+        <div class="card-index">03</div>
         <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Field-01.JPEG" alt="현장 기법 운용">
-          <span class="thumb-badge">기법 가이드</span>
+          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Field-01.JPEG" alt="현장 기법">
+          <span class="card-badge">기법 가이드</span>
         </div>
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Technique · Guide</span></div>
+          <div class="card-meta">Technique <span class="meta-slash">/</span> Guide</div>
           <h3 class="card-title">Techniques & Tips</h3>
           <p class="card-desc">마이크로 님핑, 딥 라이닝 등 현장 검증 고급 운용 기법 문서.</p>
           <div class="card-tags"><span class="tag">낚시 기법</span><span class="tag">노하우</span></div>
-          <div class="card-cta">기술 문서 보기<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-cta">기술 문서 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
         </div>
       </a>
 
       <!-- 4. Gear Review -->
-      <a href="https://caddis-gr.github.io/fishing-gear/" target="_blank" class="card reveal">
+      <a href="https://caddis-gr.github.io/fishing-gear/" target="_blank" class="card reveal" style="transition-delay:.2s">
+        <div class="card-index">04</div>
         <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0425/0425-Hanter.JPEG" alt="전층 운영 채비">
-          <span class="thumb-badge">장비 리뷰</span>
+          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0425/0425-Hanter.JPEG" alt="장비 채비">
+          <span class="card-badge">장비 리뷰</span>
         </div>
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Gear · Review</span></div>
+          <div class="card-meta">Gear <span class="meta-slash">/</span> Review</div>
           <h3 class="card-title">Gear Review</h3>
           <p class="card-desc">로드, 릴, 플라이 라인 등 장비 선택 기준과 솔직한 현장 사용 경험.</p>
           <div class="card-tags"><span class="tag">장비 정보</span><span class="tag">리뷰</span></div>
-          <div class="card-cta">장비 정보 보기<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-cta">장비 정보 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
         </div>
       </a>
 
       <!-- 5. How Trout Feed -->
-      <a href="https://caddis-gr.github.io/trout-feeding-science/" target="_blank" class="card reveal">
+      <a href="https://caddis-gr.github.io/trout-feeding-science/" target="_blank" class="card reveal" style="transition-delay:.25s">
+        <div class="card-index">05</div>
         <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG" alt="한터 수면 장면">
-          <span class="thumb-badge">섭식 과학</span>
+          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG" alt="한터 수면">
+          <span class="card-badge">섭식 과학</span>
         </div>
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Science · Series</span></div>
+          <div class="card-meta">Science <span class="meta-slash">/</span> Series</div>
           <h3 class="card-title">How Trout Feed</h3>
           <p class="card-desc">탐색 이미지, 4~6mm 법칙, 깔따구의 중요성 — 송어 섭식의 과학 시리즈.</p>
           <div class="card-tags"><span class="tag">섭식 과학</span><span class="tag">인터랙티브</span></div>
-          <div class="card-cta">시리즈 열람하기<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-cta">시리즈 열람 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
         </div>
       </a>
 
-      <!-- 6. Fly Fishing Science (NEW) -->
-      <a href="https://caddis-gr.github.io/fly-fishing-science/" target="_blank" class="card reveal">
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0508/0508-Hanter04.JPEG" alt="한터 필드 사진">
-          <span class="thumb-badge new">NEW</span>
-        </div>
+      <!-- 6. Fly Fishing Science (WIDE) -->
+      <a href="https://caddis-gr.github.io/fly-fishing-science/" target="_blank" class="card reveal" style="transition-delay:.3s">
         <div class="card-body">
-          <div class="card-meta"><span class="meta-dot"></span><span class="meta-text">Theory · Reference</span></div>
-          <h3 class="card-title">Fly Fishing Science</h3>
-          <p class="card-desc">수중 빛 감쇄, 형광 효과, UV/FL 소재 전략 — 플라이 낚시의 "왜(Why)"에 답하는 이론 아카이브.</p>
-          <div class="card-tags"><span class="tag">빛·색·형광</span><span class="tag">어류 생태</span><span class="tag">이론</span></div>
-          <div class="card-cta">아카이브 열람하기<span class="cta-arrow"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          <div class="card-body-left">
+            <div class="card-meta">Theory <span class="meta-slash">/</span> Reference · <span style="color:var(--water)">NEW</span></div>
+            <h3 class="card-title">Fly Fishing Science</h3>
+            <p class="card-desc">수중 빛 감쇄, 형광 효과, UV/FL 소재 전략 — 플라이 낚시의 "왜(Why)"에 답하는 이론 아카이브.</p>
+            <div class="card-tags">
+              <span class="tag">빛·색·형광</span><span class="tag">어류 생태</span><span class="tag">이론</span>
+            </div>
+            <div class="card-cta" style="margin-top:20px">아카이브 열람하기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
+          </div>
+          <div class="card-body-right">
+            <div class="wide-stat">
+              <div class="wide-stat-num">UV</div>
+              <div class="wide-stat-lbl">광학 분석</div>
+            </div>
+            <div class="wide-stat-sep"></div>
+            <div class="wide-stat">
+              <div class="wide-stat-num">FL</div>
+              <div class="wide-stat-lbl">형광 효과</div>
+            </div>
+            <div class="wide-stat-sep"></div>
+            <div class="wide-stat">
+              <div class="wide-stat-num">∞</div>
+              <div class="wide-stat-lbl">이론 탐구</div>
+            </div>
+          </div>
         </div>
       </a>
 
@@ -574,29 +820,61 @@
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <div class="footer-left">
+      <div class="footer-brand">CADDIS<br>GR</div>
+      <div class="footer-quote">
         "플라이낚시는 평생의 배움입니다"
         <span>관리형 낚시터에서의 기록과 탐구를 아카이브합니다</span>
       </div>
       <div class="footer-right">
         Maintained by <a href="https://github.com/CADDIS-GR" target="_blank">@CADDIS-GR</a><br>
-        <span style="opacity:.6; font-size:.68rem;">Last updated: 2026.05.12</span>
+        <span style="opacity:.5; font-size:.62rem;">Last updated: 2026.05.15</span>
       </div>
     </div>
   </footer>
 
   <script>
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
+    // ── CURSOR ──
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animateCursor() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+      rx += (mx - rx) * .14;
+      ry += (my - ry) * .14;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // ── NAV SCROLL ──
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ── SCROLL REVEAL ──
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e, i) => {
         if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          const delay = parseFloat(e.target.style.transitionDelay || 0);
+          setTimeout(() => e.target.classList.add('visible'), delay * 1000);
           io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.08 });
-    reveals.forEach(el => io.observe(el));
+    }, { threshold: 0.07 });
+    document.querySelectorAll('.reveal, .reveal-left').forEach(el => io.observe(el));
+
+    // ── 히어로 패럴랙스 ──
+    const heroBg = document.querySelector('.hero-bg');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroBg.style.transform = `translateY(${y * 0.3}px)`;
+      }
+    }, { passive: true });
   </script>
 
 </body>

@@ -313,7 +313,7 @@
       gap: 16px;
     }
 
-    /* 카드 배치 — 7개 */
+    /* 카드 배치 — 8개 */
     .card:nth-child(1) { grid-column: span 7; }
     .card:nth-child(2) { grid-column: span 5; }
     .card:nth-child(3) { grid-column: span 4; }
@@ -321,6 +321,7 @@
     .card:nth-child(5) { grid-column: span 4; }
     .card:nth-child(6) { grid-column: span 12; }
     .card:nth-child(7) { grid-column: span 12; }
+    .card:nth-child(8) { grid-column: span 12; }
 
     .card {
       background: var(--dark2);
@@ -349,7 +350,8 @@
     }
     .card:nth-child(1) .card-thumb { aspect-ratio: 16/6; }
     .card:nth-child(6) .card-thumb,
-    .card:nth-child(7) .card-thumb { display: none; }
+    .card:nth-child(7) .card-thumb,
+    .card:nth-child(8) .card-thumb { display: none; }
 
     .card-thumb img {
       width: 100%; height: 100%; object-fit: cover;
@@ -375,7 +377,8 @@
       pointer-events: none;
     }
     .card:nth-child(6) .card-index,
-    .card:nth-child(7) .card-index { display: none; }
+    .card:nth-child(7) .card-index,
+    .card:nth-child(8) .card-index { display: none; }
 
     .card-badge {
       position: absolute; bottom: 14px; left: 16px; z-index: 2;
@@ -398,18 +401,21 @@
       position: relative; z-index: 1;
     }
 
-    /* 와이드 카드 (6, 7번) 가로 레이아웃 */
+    /* 와이드 카드 (6, 7, 8번) 가로 레이아웃 */
     .card:nth-child(6) .card-body,
-    .card:nth-child(7) .card-body {
+    .card:nth-child(7) .card-body,
+    .card:nth-child(8) .card-body {
       flex-direction: row;
       align-items: center;
       padding: 32px 40px;
       gap: 48px;
     }
     .card:nth-child(6) .card-body-left,
-    .card:nth-child(7) .card-body-left { flex: 1; }
+    .card:nth-child(7) .card-body-left,
+    .card:nth-child(8) .card-body-left { flex: 1; }
     .card:nth-child(6) .card-body-right,
-    .card:nth-child(7) .card-body-right {
+    .card:nth-child(7) .card-body-right,
+    .card:nth-child(8) .card-body-right {
       flex-shrink: 0;
       display: flex; gap: 32px;
     }
@@ -432,7 +438,8 @@
     }
     .card:nth-child(1) .card-title { font-size: 2rem; }
     .card:nth-child(6) .card-title,
-    .card:nth-child(7) .card-title { font-size: 2.2rem; }
+    .card:nth-child(7) .card-title,
+    .card:nth-child(8) .card-title { font-size: 2.2rem; }
     .card:hover .card-title { color: var(--gold2); }
 
     .card-desc {
@@ -441,14 +448,16 @@
       font-weight: 300;
     }
     .card:nth-child(6) .card-desc,
-    .card:nth-child(7) .card-desc { margin-bottom: 0; }
+    .card:nth-child(7) .card-desc,
+    .card:nth-child(8) .card-desc { margin-bottom: 0; }
 
     .card-tags {
       display: flex; flex-wrap: wrap; gap: 6px;
       margin-bottom: 20px;
     }
     .card:nth-child(6) .card-tags,
-    .card:nth-child(7) .card-tags { margin-bottom: 0; }
+    .card:nth-child(7) .card-tags,
+    .card:nth-child(8) .card-tags { margin-bottom: 0; }
     .tag {
       font-family: 'DM Mono', monospace;
       font-size: .6rem; letter-spacing: .05em;
@@ -670,6 +679,7 @@
       <span class="marquee-item">Infographics</span><span class="marquee-dot">·</span>
       <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">새시즌 준비</span><span class="marquee-dot">·</span>
       <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
       <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
       <!-- 반복 -->
@@ -680,6 +690,7 @@
       <span class="marquee-item">Infographics</span><span class="marquee-dot">·</span>
       <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
       <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">새시즌 준비</span><span class="marquee-dot">·</span>
       <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
       <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
     </div>
@@ -692,7 +703,7 @@
         <div class="section-label">Core Archives</div>
         <h2 class="section-title">Knowledge<br>Repository</h2>
       </div>
-      <div class="section-count">07</div>
+      <div class="section-count">08</div>
     </div>
 
     <div class="card-grid">
@@ -841,6 +852,50 @@
         </div>
       </a>
 
+      <!-- 8. 26-27 새시즌 준비 (WIDE) — NEW -->
+      <a href="https://caddis-gr.github.io/fishing-technique/stillwater/micro-nymphing/2026-oct-micro-nymphing-strategy.html" target="_blank" class="card reveal" style="transition-delay:.4s;border-color:rgba(201,149,58,.25);background:linear-gradient(135deg,#0e0d0a 0%,#141209 60%,#181410 100%)">
+        <div class="card-body">
+          <div class="card-body-left">
+            <div class="card-meta">
+              Season Prep <span class="meta-slash">/</span> Strategy
+              · <span style="color:var(--gold2);font-weight:700">NEW</span>
+            </div>
+            <h3 class="card-title" style="color:var(--gold2)">26–27 새시즌 준비</h3>
+            <p class="card-desc">
+              25-26 시즌의 경험과 데이터를 바탕으로 설계한 10월 새시즌 전략 아카이브.
+              Micro Nymphing 채비 시스템, 수심별 운영표, 플라이 구성, 현장 판단 순서까지
+              새 시즌을 위한 모든 것을 한 문서에 집약했다.
+            </p>
+            <div class="card-tags">
+              <span class="tag">Micro Nymphing</span>
+              <span class="tag">시즌 전략</span>
+              <span class="tag">수심 운영</span>
+              <span class="tag">Float · Hover · CamoLux</span>
+            </div>
+            <div class="card-cta" style="margin-top:20px;color:var(--gold)">
+              전략 문서 열람하기
+              <span class="cta-icon" style="border-color:var(--gold3)"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span>
+            </div>
+          </div>
+          <div class="card-body-right">
+            <div class="wide-stat">
+              <div class="wide-stat-num" style="color:var(--gold2)">Oct</div>
+              <div class="wide-stat-lbl">New Season</div>
+            </div>
+            <div class="wide-stat-sep"></div>
+            <div class="wide-stat">
+              <div class="wide-stat-num" style="color:var(--gold2)">#14</div>
+              <div class="wide-stat-lbl">Core Size</div>
+            </div>
+            <div class="wide-stat-sep"></div>
+            <div class="wide-stat">
+              <div class="wide-stat-num" style="color:var(--gold2)">3</div>
+              <div class="wide-stat-lbl">Line Systems</div>
+            </div>
+          </div>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -854,7 +909,7 @@
       </div>
       <div class="footer-right">
         Maintained by <a href="https://github.com/CADDIS-GR" target="_blank">@CADDIS-GR</a><br>
-        <span style="opacity:.5; font-size:.62rem;">Last updated: 2026.05.18</span>
+        <span style="opacity:.5; font-size:.62rem;">Last updated: 2026.05.18 · 새시즌 준비 추가</span>
       </div>
     </div>
   </footer>

@@ -14,7 +14,9 @@
 - **[Fly Tying Archive](https://caddis-gr.github.io/fly-tying-archive/)** - 플라이 패턴 아카이브
 - **[Fishing Technique](https://caddis-gr.github.io/fishing-technique/)** - 낚시 기술과 노하우
 - **[Fishing Gear](https://caddis-gr.github.io/fishing-gear/)** - 장비 정보 및 리뷰
-- **[How Trout Feed](https://caddis-gr.github.io/trout-feeding-science/)** 🆕 - 송어 섭식의 과학 시리즈
+- **[How Trout Feed](https://caddis-gr.github.io/trout-feeding-science/)** - 송어 섭식의 과학 시리즈
+- **[Fly Fishing Science](https://caddis-gr.github.io/fly-fishing-science/)** - 빛·색·형광 이론 아카이브
+- **[Caddis Infographics](https://caddis-gr.github.io/caddis-infographics/)** 🆕 - 플라이낚시 비주얼 인포그래픽 아카이브
 
 ### 지원 도구
 

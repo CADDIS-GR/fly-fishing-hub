@@ -18,6 +18,12 @@
 - **[Fly Fishing Science](https://caddis-gr.github.io/fly-fishing-science/)** - 빛·색·형광 이론 아카이브
 - **[Caddis Infographics](https://caddis-gr.github.io/caddis-infographics/)** 🆕 - 플라이낚시 비주얼 인포그래픽 아카이브
 
+### 🗓️ 시즌 전략 문서
+
+- **[26–27 새시즌 준비](https://caddis-gr.github.io/fishing-technique/stillwater/micro-nymphing/2026-oct-micro-nymphing-strategy.html)** 🆕  
+  25-26 시즌 경험을 바탕으로 설계한 10월 Micro Nymphing 전략 아카이브.  
+  채비 시스템 (Float · Hover · CamoLux), 수심별 운영표, 플라이 구성, 현장 판단 순서 수록.
+
 ### 지원 도구
 
 - **[Expense Tracker](https://github.com/CADDIS-GR/fly-fishing-expense-tracker)** - 경비 관리

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Midge Collection - Ultra Small, Ultra Real · CADDIS-GR LAB</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%); min-height: 100vh; color: #0f172a; line-height: 1.6; overflow-x: hidden; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+    .hero { text-align: center; padding: 4rem 2rem 3rem; position: relative; }
+    .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 70%); filter: blur(60px); pointer-events: none; }
+    .hero-title { font-size: 3rem; font-weight: 200; letter-spacing: 0.2em; color: #5b21b6; margin-bottom: 0.5rem; text-transform: uppercase; position: relative; animation: float 6s ease-in-out infinite; }
+    .hero-subtitle { font-size: 1.2rem; color: #4c1d95; font-weight: 300; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .hero-divider { width: 100px; height: 1px; background: linear-gradient(90deg, transparent, #7c3aed, transparent); margin: 2rem auto; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .color-story { max-width: 900px; margin: 0 auto 5rem; padding: 3rem; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1rem; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(109, 40, 217, 0.1); }
+    .color-story::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #7c3aed, transparent); }
+    .story-title { font-size: 1.5rem; color: #5b21b6; margin-bottom: 2rem; font-weight: 300; text-align: center; letter-spacing: 0.05em; }
+    .story-content { font-size: 1rem; line-height: 1.9; color: #334155; text-align: justify; }
+    .story-content h3 { font-size: 1.2rem; color: #7c3aed; margin: 2rem 0 1rem; font-weight: 400; }
+    .story-content p { margin-bottom: 1.5rem; }
+    .summary-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; }
+    .summary-table th { background: rgba(139, 92, 246, 0.12); color: #5b21b6; padding: 0.75rem 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid rgba(139, 92, 246, 0.25); }
+    .summary-table td { padding: 0.65rem 1rem; border-bottom: 1px solid rgba(139, 92, 246, 0.1); color: #334155; vertical-align: top; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:hover td { background: rgba(139, 92, 246, 0.05); }
+    .patterns-section { padding: 3rem 0 5rem; }
+    .section-title { text-align: center; font-size: 2rem; color: #5b21b6; font-weight: 300; letter-spacing: 0.1em; margin-bottom: 3rem; text-transform: uppercase; }
+    .patterns-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; margin-bottom: 3rem; }
+    .pattern-card { background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 1rem; overflow: hidden; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.1); }
+    .pattern-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #7c3aed, transparent); opacity: 0; transition: opacity 0.5s; z-index: 1; }
+    .pattern-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.6); box-shadow: 0 20px 40px rgba(109, 40, 217, 0.2); }
+    .pattern-card:hover::before { opacity: 1; }
+    .pattern-image-container { position: relative; width: 100%; height: 300px; overflow: hidden; background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); cursor: pointer; }
+    .pattern-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+    .pattern-card:hover .pattern-image { transform: scale(1.08); }
+    .pattern-content { padding: 2rem; }
+    .pattern-number { font-size: 0.75rem; color: #c4b5fd; font-family: 'Courier New', monospace; font-weight: 600; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
+    .pattern-name { font-size: 1.5rem; color: #5b21b6; font-weight: 300; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+    .pattern-hook { font-size: 0.9rem; color: #64748b; margin-bottom: 1.5rem; font-family: 'Courier New', monospace; }
+    .pattern-description { color: #334155; line-height: 1.7; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .pattern-specs { border-top: 1px solid rgba(139, 92, 246, 0.2); padding-top: 1.5rem; }
+    .spec-item { display: flex; align-items: flex-start; margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .spec-label { color: #7c3aed; font-weight: 500; min-width: 110px; margin-right: 1rem; flex-shrink: 0; }
+    .spec-value { color: #475569; flex: 1; }
+    .technique-tag { display: inline-block; padding: 0.2rem 0.6rem; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 0.4rem; font-size: 0.78rem; color: #5b21b6; margin: 0.15rem 0.15rem 0; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 1000; justify-content: center; align-items: center; cursor: pointer; animation: fadeIn 0.3s; }
+    .modal.active { display: flex; }
+    .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; animation: zoomIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .footer { text-align: center; padding: 3rem 2rem; color: #475569; font-size: 0.9rem; border-top: 1px solid rgba(139, 92, 246, 0.2); }
+    .back-link { display: inline-block; margin-top: 2rem; padding: 0.75rem 2rem; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); color: #5b21b6; text-decoration: none; border-radius: 2rem; transition: all 0.3s; font-weight: 500; letter-spacing: 0.05em; }
+    .back-link:hover { background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.5); transform: translateY(-2px); }
+
+    /* TMC Hook Card */
+    .hook-card { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border: 1px solid rgba(139, 92, 246, 0.5); border-radius: 1rem; padding: 2rem 2.25rem; margin: 1.5rem 0 2rem; color: white; position: relative; overflow: hidden; }
+    .hook-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, transparent 70%); pointer-events: none; }
+    .hook-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; color: #a78bfa; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .hook-card-title { font-size: 1.1rem; font-weight: 600; color: #ede9fe; margin-bottom: 1.5rem; line-height: 1.4; }
+    .hook-features { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .hook-feature { background: rgba(255,255,255,0.07); border: 1px solid rgba(167, 139, 250, 0.25); border-radius: 0.6rem; padding: 1rem 1.1rem; }
+    .hook-feature-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .hook-feature-title { font-size: 0.82rem; font-weight: 700; color: #c4b5fd; margin-bottom: 0.3rem; letter-spacing: 0.03em; }
+    .hook-feature-desc { font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; }
+    .hook-spec-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .hook-spec-tag { padding: 0.3rem 0.85rem; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 2rem; font-size: 0.78rem; color: #ddd6fe; font-family: 'Courier New', monospace; }
+    .hook-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.25rem; background: rgba(139, 92, 246, 0.25); border: 1px solid rgba(139, 92, 246, 0.5); border-radius: 2rem; color: #ddd6fe; text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: all 0.3s; letter-spacing: 0.03em; }
+    .hook-link:hover { background: rgba(139, 92, 246, 0.4); border-color: rgba(167, 139, 250, 0.7); color: white; transform: translateY(-1px); }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2rem; }
+      .patterns-grid { grid-template-columns: 1fr; }
+      .color-story { padding: 2rem; }
+      .story-content { text-align: left; }
+      .summary-table { font-size: 0.8rem; }
+      .hook-features { grid-template-columns: 1fr; }
+    }
+  </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/nymph/midge-collection/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+  <div class="container">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero-title">Midge Larva, Pupa</h1>
+      <p class="hero-subtitle">Ultra Small, Ultra Real</p>
+      <div class="hero-divider"></div>
+      <p style="color: #4c1d95; font-size: 0.95rem; font-weight: 300;">극소 패턴의 극대 효과 | 3 Patterns</p>
+    </section>
+
+    <!-- Story Section -->
+    <section class="color-story">
+      <h2 class="story-title">작은 것이 더 많은 것을 말한다</h2>
+      <div class="story-content">
+
+        <p>밋지(Midge)는 낚시터에서 가장 흔히 간과되는 패턴이다. 너무 작아서 눈에 잘 보이지 않고, 타잉하기 까다로우며, 바늘 호수를 말하면 반응부터 달라진다. 그래서 많은 낚시인이 밋지를 마지막 수단으로 꺼내들거나, 아예 시도조차 하지 않는다.</p>
+
+        <p>하지만 관리형 저수지에서 오랫동안 낚시를 해온 경험은 반대를 말한다. 밋지가 가장 먼저 시도되어야 할 패턴일 때가 있다.</p>
+
+        <h3>왜 밋지인가</h3>
+        <p>관리형 저수지의 방류 송어는 대형 플라이에 이미 익숙하다. 마라부 리치, 존커, 거대한 버거플라이들이 매일 수면 아래로 내려온다. 그들이 가장 의심하지 않는 것은 오히려 자신이 평생 먹어온 작고 평범한 먹이다. 2mm짜리 유충, 퓨파, 그리고 수서곤충의 초기 단계.</p>
+
+        <p>밋지는 어트랙터가 아니다. 과장된 색도 없고, 긴 테일도 없으며, 시선을 강제로 끄는 반짝임도 없다. 밋지는 그저 '거기에 있다'는 사실을 조용히 전달할 뿐이다.</p>
+
+        <h3>소재가 모든 것을 결정한다</h3>
+        <p>극소 패턴에서는 소재의 선택이 패턴의 성패를 결정한다. 같은 #18 훅, 같은 유충 형태라도 어떤 소재를 쓰느냐에 따라 물속에서의 반응이 완전히 달라진다.</p>
+
+        <p>레진 바디는 투명도와 3D감을 준다. 실제 유충의 투명한 몸통을 가장 충실히 재현한다. 반면 퀼(Quill)은 천연 재료만의 명암 대비와 질감을 가진다. 실크 스레드는 레진이 따라갈 수 없는 거친 표면 질감과 젖었을 때의 깊은 색감을 만들어낸다.</p>
+
+        <p>이 세 가지 소재는 각자의 언어로 물속의 송어에게 말을 건다.</p>
+
+        <h3>핵심 요약</h3>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>패턴</th><th>훅</th><th>핵심 소재</th><th>상황</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>#20 Midge Larva</strong></td>
+              <td>TMC 2488H #20</td>
+              <td>화이트 GSP 스레드, 올리브 라운드 립 레진 바디</td>
+              <td>예민한 상황, 인디케이터/드롭퍼</td>
+            </tr>
+            <tr>
+              <td><strong>#18 Quill Body Midge</strong></td>
+              <td>TMC 2488H #18</td>
+              <td>퀼 바디 + 블루 플래시 포인트</td>
+              <td>맑은 물색, 대물 공략</td>
+            </tr>
+            <tr>
+              <td><strong>#18 Thread Midge</strong></td>
+              <td>TMC 2488H #18</td>
+              <td>SemperFli Pure Silk Brown #17</td>
+              <td>레진 패턴 무반응 시 체인저</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- TMC 2488H Hook Card -->
+        <div class="hook-card">
+          <p class="hook-card-label">🪝 Hook Guide</p>
+          <p class="hook-card-title">왜 TMC 2488H가 마이크로 님핑의 핵심인가?</p>
+
+          <div class="hook-features">
+            <div class="hook-feature">
+              <div class="hook-feature-icon">⚖️</div>
+              <div class="hook-feature-title">자체 비중</div>
+              <div class="hook-feature-desc">Heavy Wire 덕분에 별도의 비드나 납줄 없이도 자연스럽게 가라앉는다. 극소 사이즈에서 침강 속도를 컨트롤하는 핵심 요소.</div>
+            </div>
+            <div class="hook-feature">
+              <div class="hook-feature-icon">💪</div>
+              <div class="hook-feature-title">강한 복원력</div>
+              <div class="hook-feature-desc">#18~#20의 작은 사이즈임에도 대형 송어의 강한 힘을 충분히 버티는 강도를 가졌다. 가는 티펫과의 밸런스가 관건.</div>
+            </div>
+            <div class="hook-feature">
+              <div class="hook-feature-icon">📐</div>
+              <div class="hook-feature-title">Short Curved Shank</div>
+              <div class="hook-feature-desc">샹크가 짧고 갭(Gap)이 넓은 형태. 극소 패턴에서 바디를 짧고 통통하게 표현하기 적합하며, 훅업률을 높여준다.</div>
+            </div>
+            <div class="hook-feature">
+              <div class="hook-feature-icon">🎯</div>
+              <div class="hook-feature-title">Wide Gap</div>
+              <div class="hook-feature-desc">넓은 갭은 작은 훅에서 발생하기 쉬운 탈훅을 방지한다. 가는 플로로카본 6x 티펫 운용 시 특히 유리.</div>
+            </div>
+          </div>
+
+          <div class="hook-spec-row">
+            <span class="hook-spec-tag">TMC 2488H</span>
+            <span class="hook-spec-tag">Heavy Wire</span>
+            <span class="hook-spec-tag">Short Curved Shank</span>
+            <span class="hook-spec-tag">Wide Gap</span>
+            <span class="hook-spec-tag">#18 / #20</span>
+          </div>
+
+          <a class="hook-link" href="https://www.tiemco-global.com/en_US/fly-fishing/small-pack-tmc2488h-%2322/TMC22248810022.html" target="_blank" rel="noopener">
+            🔗 TMC 2488H 공식 제품 페이지 →
+          </a>
+        </div>
+
+        <h3>흔한 오해 바로잡기</h3>
+        <div style="background: linear-gradient(135deg, rgba(109,40,217,0.06) 0%, rgba(139,92,246,0.08) 100%); border: 1px solid rgba(139,92,246,0.3); border-left: 4px solid #7c3aed; border-radius: 0.75rem; padding: 1.5rem 1.75rem; margin: 1rem 0 1.5rem;">
+          <p style="font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; color: #7c3aed; text-transform: uppercase; margin-bottom: 1rem;">💡 Common Misconception</p>
+          <p style="font-size: 1.05rem; font-weight: 600; color: #5b21b6; margin-bottom: 1rem;">"밋지 = 작은 사이즈의 플라이"는 틀렸다</p>
+          <p style="color: #334155; line-height: 1.8; margin-bottom: 1rem;">밋지(Midge)는 사이즈를 뜻하는 말이 아니다. <strong style="color: #5b21b6;">Chironomidae(깔따구과)</strong>에 속하는 수서곤충의 종(種)을 가리키는 표현이다. 이 종의 실제 크기가 워낙 작기 때문에, 자연스럽게 작은 훅으로 표현되어 왔고 — 그 과정에서 "밋지 = 소형 플라이"라는 오해가 굳어졌다.</p>
+          <p style="color: #334155; line-height: 1.8; margin-bottom: 1rem;">정확히는 <strong style="color: #5b21b6;">Midge Larva(유충)</strong> 또는 <strong style="color: #5b21b6;">Midge Pupa(번데기)</strong>를 모방한 패턴이 밋지 플라이이며, 이론적으로는 <strong style="color: #5b21b6;">#14 사이즈까지도 충분히 표현이 가능하다.</strong> 실제로 일부 북미 호수 패턴에서는 #14~#16의 대형 밋지 퓨파가 쓰이기도 한다.</p>
+          <p style="color: #475569; line-height: 1.8; font-size: 0.92rem; border-top: 1px solid rgba(139,92,246,0.2); padding-top: 1rem; margin-bottom: 0;">다만 실전에서는 실제 깔따구의 체형에 맞춰 <strong style="color: #5b21b6;">#18~#22 이하의 극소 사이즈</strong>로 타잉하는 것이 통상적이며, 이것이 곧 밋지 패턴의 정체성으로 자리 잡은 것이다.</p>
+        </div>
+
+        <h3>운용 전략</h3>
+        <p>밋지 패턴은 단독 사용하거나 혹은 멀티 리그에서 진가를 발휘한다. Double Nymph 리그에서 Zebra Midge와 조합하거나, Dry-Dropper 리그에서 드롭퍼로 운용할 때 특히 효과적이다. 수심 1.5~3m 구간, 느린 리트리브 또는 정지 후 서서히 침강하는 마이크로 님핑 기법이 권장된다.</p>
+
+        <p>15ft 이상의 롱리더, 6x의 가는 플로로카본 티펫 사용이 필수이며, 수중 플라이의 직진성 확보를 위해 작은 스위벨도래 사용도 권장된다. 인디케이터는 6mm, 8mm 정도의 작은 사이즈의 또는 Bio Strike Putty 같은 소프트 타입이 적합하며, 인디케이터 없이 운영하는 채비도 충분히 훌륭하다.</p>
+
+        <p>소재의 변화만으로도 충분히 다른 자극을 줄 수 있다.</p>
+
+        <div style="margin-top: 2rem; padding: 1.5rem 2rem; background: linear-gradient(135deg, rgba(109,40,217,0.08) 0%, rgba(139,92,246,0.12) 100%); border: 1px solid rgba(139,92,246,0.35); border-left: 4px solid #7c3aed; border-radius: 0.75rem; text-align: center;">
+          <p style="font-size: 1.1rem; font-weight: 600; color: #5b21b6; margin-bottom: 0.4rem;">핵심은,</p>
+          <p style="font-size: 1.3rem; font-weight: 700; color: #4c1d95; letter-spacing: 0.03em; margin-bottom: 0.4rem;">이 작은 플라이가 통한다는 강한 믿음!!</p>
+          <p style="font-size: 1rem; color: #7c3aed; font-weight: 500; margin: 0;">이게 핵심이다.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Patterns Section -->
+    <section class="patterns-section">
+      <h2 class="section-title">Patterns</h2>
+      <div class="patterns-grid">
+
+        <!-- Pattern 1: #20 Midge Larva -->
+        <div class="pattern-card">
+          <div class="pattern-image-container" onclick="openModal('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/MidgeLarvaOlive.jpg')">
+            <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/MidgeLarvaOlive.jpg" alt="#20 Midge Larva" class="pattern-image">
+          </div>
+          <div class="pattern-content">
+            <p class="pattern-number">PATTERN 01</p>
+            <h3 class="pattern-name">#20 Midge Larva</h3>
+            <p class="pattern-hook">TMC 2488H #20 (Heavy Wire)</p>
+            <p class="pattern-description">가장 표준적이면서도 강력한 효과를 발휘하는 유충 패턴. 화이트 GSP 스레드 위에 올리브 라운드 립 레진 바디로 실제 수중 생물의 투명도를 완벽히 재현하고, 검은색 리브로 정교한 마디 분절을 표현한다.</p>
+            <div class="pattern-specs">
+              <div class="spec-item"><span class="spec-label">Body</span><span class="spec-value">화이트 GSP 스레드, 올리브 라운드 립 레진 바디</span></div>
+              <div class="spec-item"><span class="spec-label">Rib</span><span class="spec-value">검정 리브 (일정 간격 분절 표현)</span></div>
+              <div class="spec-item"><span class="spec-label">Head</span><span class="spec-value">볼륨감 있는 검은색 헤드 마감</span></div>
+              <div class="spec-item"><span class="spec-label">공략 포인트</span><span class="spec-value"><span class="technique-tag">인디케이터 채비</span><span class="technique-tag">Dropper 운용</span><span class="technique-tag">예민한 상황</span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pattern 2: #18 Quill Body Midge -->
+        <div class="pattern-card">
+          <div class="pattern-image-container" onclick="openModal('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/QuillBodyMidge.jpg')">
+            <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/QuillBodyMidge.jpg" alt="#18 Quill Body Midge" class="pattern-image">
+          </div>
+          <div class="pattern-content">
+            <p class="pattern-number">PATTERN 02</p>
+            <h3 class="pattern-name">#18 Quill Body Midge</h3>
+            <p class="pattern-hook">TMC 2488H #18 (Heavy Wire)</p>
+            <p class="pattern-description">천연 재료의 장점과 현대적인 포인트를 결합한 실전형 패턴. 퀼 바디는 인공 재료가 흉내 낼 수 없는 천연 깃털 특유의 명암 대비와 질감을 가진다. 흉부(Thorax)의 블루 플래시가 물속에서 조용하지만 확실한 시각 트리거를 만든다.</p>
+            <div class="pattern-specs">
+              <div class="spec-item"><span class="spec-label">Body</span><span class="spec-value">Quill Body (천연 깃털 - 명암 대비와 질감)</span></div>
+              <div class="spec-item"><span class="spec-label">Thorax</span><span class="spec-value">Blue Flash (시각적 트리거 포인트)</span></div>
+              <div class="spec-item"><span class="spec-label">Hook Wire</span><span class="spec-value">Heavy Wire - 빠른 침강 보조</span></div>
+              <div class="spec-item"><span class="spec-label">공략 포인트</span><span class="spec-value"><span class="technique-tag">맑은 물색</span><span class="technique-tag">내추럴 실루엣</span><span class="technique-tag">의심 많은 대물</span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pattern 3: #18 Thread Midge -->
+        <div class="pattern-card">
+          <div class="pattern-image-container" onclick="openModal('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/ThreadMidge.jpg')">
+            <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/ThreadMidge.jpg" alt="#18 Thread Midge" class="pattern-image">
+          </div>
+          <div class="pattern-content">
+            <p class="pattern-number">PATTERN 03</p>
+            <h3 class="pattern-name">#18 Thread Midge</h3>
+            <p class="pattern-hook">TMC 2488H #18 (Heavy Wire)</p>
+            <p class="pattern-description">소재 본연의 질감을 극대화하여 물속에서 생동감을 주는 패턴. 레진 코팅을 최소화하여 실크 스레드 표면의 미세한 잔털이 기포를 머금도록 설계된 '체인저(Changer)' 역할의 패턴이다.</p>
+            <div class="pattern-specs">
+              <div class="spec-item"><span class="spec-label">Thread</span><span class="spec-value">SemperFli Pure Silk, Brown #17</span></div>
+              <div class="spec-item"><span class="spec-label">Texture</span><span class="spec-value">Natural — 스레드 잔털이 기포를 머금음</span></div>
+              <div class="spec-item"><span class="spec-label">Finish</span><span class="spec-value">레진 코팅 최소화 (질감 보존)</span></div>
+              <div class="spec-item"><span class="spec-label">공략 포인트</span><span class="spec-value"><span class="technique-tag">레진 무반응 시</span><span class="technique-tag">소재 체인저</span><span class="technique-tag">기포 트리거</span></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Fly Tying Archive - Midge Collection</p>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: #64748b;">작은 것이 더 많은 것을 말한다</p>
+      <a href="/fly-fishing-hub/fly-patterns/index.html" class="back-link">← Back to Archive</a>
+    </footer>
+  </div>
+
+  <div class="modal" id="imageModal" onclick="closeModal()">
+    <img src="" alt="Pattern Detail" class="modal-content" id="modalImage">
+  </div>
+
+  <script>
+    function openModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = imageSrc;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') { closeModal(); }
+    });
+  </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

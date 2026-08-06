@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그곳이 알고 싶다 — 신기지 낚시터 분석 리포트 · CADDIS-GR LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:    #f5f2ec;
+  --cream:    #ece6d8;
+  --warm:     #e0d8c8;
+  --ink:      #14180f;
+  --ink-mid:  #252e1e;
+  --ink-soft: #2c3825;
+  --ink-mute: #4a5a40;
+  --moss:     #2e5c40;
+  --fern:     #4a7c58;
+  --sage:     #5a7c65;
+  --mint:     #b8d4c0;
+  --water:    #336a96;
+  --sky:      #b8d4ec;
+  --gold:     #9a6e18;
+  --amber:    #c09030;
+  --amber-lt: #e8cc80;
+  --rust:     #a04820;
+  --blush:    #ede6dc;
+  --border:   rgba(40,60,35,0.14);
+  --shadow:   rgba(20,35,15,0.10);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 2;
+  overflow-x: hidden;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── PAPER TEXTURE ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--ink);
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 8vw 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(90,143,106,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 15% 70%, rgba(74,126,168,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(45,90,61,0.25) 0%, transparent 50%);
+}
+
+/* Horizontal waterline stripes */
+.hero-lines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.06;
+}
+.hero-lines::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 50%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 18px,
+    rgba(90,143,106,0.8) 18px,
+    rgba(90,143,106,0.8) 19px
+  );
+}
+
+.hero-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  color: var(--sage);
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+  opacity: 0;
+  animation: riseIn 0.7s 0.3s forwards;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4rem, 10vw, 8.5rem);
+  font-weight: 900;
+  line-height: 0.92;
+  color: var(--paper);
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: riseIn 0.8s 0.5s forwards;
+}
+
+.hero-title span {
+  display: block;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--amber);
+}
+
+.hero-sub {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+  color: rgba(200,224,206,0.75);
+  font-weight: 400;
+  margin-top: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: riseIn 0.8s 0.7s forwards;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  opacity: 0;
+  animation: riseIn 0.8s 0.9s forwards;
+}
+
+.hero-stat-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  color: var(--sage);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat-val {
+  font-size: 0.9rem;
+  color: var(--paper);
+  font-weight: 400;
+}
+
+/* side label */
+.hero-side {
+  position: absolute;
+  right: 3vw;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: rgba(143,184,154,0.3);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fadeIn 1s 1.5s forwards;
+}
+
+@keyframes riseIn {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; } to { opacity:1; }
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(247,244,239,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8vw;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  box-shadow: 0 2px 16px var(--shadow);
+}
+.nav::-webkit-scrollbar { display:none; }
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--moss);
+  margin-right: 2rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 1rem 0;
+  border-right: 1px solid var(--border);
+  padding-right: 2rem;
+}
+
+.nav-item {
+  padding: 1rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.nav-item:hover {
+  color: var(--moss);
+  border-bottom-color: var(--moss);
+}
+.nav-spacer {
+  flex: 1;
+  min-width: 1rem;
+}
+
+.nav-ext-link {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  margin: 0.45rem 0 0.45rem 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--moss);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid rgba(46,92,64,0.3);
+  border-radius: 3px;
+  background: rgba(46,92,64,0.06);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.nav-ext-link:hover {
+  background: var(--moss);
+  color: white;
+  border-color: var(--moss);
+}
+.nav-ext-md {
+  color: var(--gold);
+  border-color: rgba(154,110,24,0.3);
+  background: rgba(154,110,24,0.06);
+}
+.nav-ext-md:hover {
+  background: var(--gold);
+  color: white;
+  border-color: var(--gold);
+}
+.nav-ext-icon {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.nav-item.active {
+  color: var(--moss);
+  border-bottom-color: var(--amber);
+}
+
+/* ── MAIN ── */
+.main { max-width: 1080px; margin: 0 auto; padding: 0 8vw; }
+
+/* ── SECTION ── */
+.section {
+  padding: 5rem 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.section.visible { opacity:1; transform:translateY(0); }
+
+.sec-header {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+
+.sec-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--sage);
+  padding-top: 0.6rem;
+  border-top: 2px solid var(--moss);
+}
+
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.sec-desc {
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 2;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  font-weight: 400;
+}
+
+/* ── PROFILE GRID ── */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pi {
+  background: white;
+  padding: 1.4rem 1.6rem;
+  transition: background 0.2s;
+}
+.pi:hover { background: var(--blush); }
+
+.pi-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--sage);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.pi-val {
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* ── POINT CARDS ── */
+.point-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+@media(max-width:580px) { .point-grid { grid-template-columns:1fr; } }
+
+.pc {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.6rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.pc:hover {
+  box-shadow: 0 8px 28px var(--shadow);
+  transform: translateY(-2px);
+}
+.pc::after {
+  content:'';
+  position: absolute;
+  top:0; left:0; right:0;
+  height: 3px;
+}
+.pc.p1::after { background: var(--water); }
+.pc.p2::after { background: var(--amber); }
+.pc.p3::after { background: var(--moss); }
+.pc.p4::after { background: var(--rust); }
+
+.pc-num {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 2.8rem;
+  color: var(--cream);
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.pc-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+
+.pc-depth {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--water);
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.pc-desc {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  margin-bottom: 0.8rem;
+  font-weight: 400;
+}
+
+.pc-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--gold);
+}
+
+/* ── DIAGRAM ── */
+.diagram {
+  background: var(--ink);
+  border-radius: 6px;
+  padding: 2rem 2.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 2.3;
+  overflow-x: auto;
+  color: var(--sage);
+}
+.diagram .dl { color: var(--paper); }
+.diagram .dn { color: var(--amber); font-size: 0.68rem; }
+.diagram .dd { color: var(--water); }
+.diagram .da { color: rgba(143,184,154,0.35); }
+
+/* ── INFO BOXES ── */
+.box {
+  padding: 1.1rem 1.4rem;
+  border-radius: 0 6px 6px 0;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.9;
+  font-weight: 400;
+}
+.box-gold  { background: #fef8e8; border-left: 3px solid var(--amber); color: #5a3e08; }
+.box-green { background: #eef6f0; border-left: 3px solid var(--moss);  color: #16341f; }
+.box-blue  { background: #eaf2f9; border-left: 3px solid var(--water); color: #14304a; }
+.box-red   { background: #fbeeea; border-left: 3px solid var(--rust);  color: #5a1e08; }
+
+/* ── TIMELINE ── */
+.timeline { position:relative; padding-left: 2.2rem; }
+.timeline::before {
+  content:'';
+  position: absolute;
+  left: 0; top:0; bottom:0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--moss), var(--mint) 80%, transparent);
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+.tl-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+
+.tl-dot {
+  position: absolute;
+  left: -2.2rem;
+  top: 0.4rem;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--moss);
+  transform: translateX(-4px);
+  box-shadow: 0 0 0 3px var(--mint);
+}
+
+.tl-period {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.tl-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.tl-body {
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 2;
+  font-weight: 400;
+}
+
+.tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1rem; }
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+.tg  { background:#eaf5ee; color:#1a3d26; border:1px solid #9ecfac; }
+.tb  { background:#e8f2fa; color:#0e2d46; border:1px solid #8cbcd8; }
+.ty  { background:#fdf5e0; color:#5a3c08; border:1px solid #d4b060; }
+.tr  { background:#faecea; color:#5a1a08; border:1px solid #d09080; }
+
+/* ── PRINCIPLE CARDS ── */
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 1px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+.pcard {
+  background: white;
+  padding: 1.4rem;
+  transition: background 0.2s;
+}
+.pcard:hover { background: var(--blush); }
+
+.pcard-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  margin-bottom: 0.5rem;
+}
+
+.pcard-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.pcard-body {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+/* ── TIME TABLE ── */
+.time-wrap {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.time-row {
+  display: grid;
+  grid-template-columns: 138px 90px 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.time-row:last-child { border-bottom:none; }
+.time-row:hover { background: var(--blush); }
+
+.time-row.th {
+  background: var(--ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+  text-transform: uppercase;
+}
+.time-row.th:hover { background: var(--ink); }
+
+.time-row.golden { background: #fffbf0; }
+.time-row.peak   { background: #fff8e8; }
+.time-row.slow   { background: var(--cream); }
+
+.tc {
+  padding: 0.95rem 1rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  border-right: 1px solid var(--border);
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+}
+.tc:last-child { border-right:none; }
+
+.tc.ttime {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.stars { color: var(--amber); font-size: 0.72rem; letter-spacing:0.04em; }
+.stars.lo { color: var(--sage); }
+.flash { color: var(--rust); font-weight:700; font-size:0.83rem; }
+.gold-txt { color: var(--gold); font-weight:600; }
+
+@media(max-width:600px){
+  .time-row { grid-template-columns: 110px 70px 1fr; }
+  .tc:nth-child(4) { display:none; }
+}
+
+/* ── DEPTH VIS ── */
+.depth-wrap {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.drow {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.drow:last-child { border-bottom:none; }
+.drow:hover { background: var(--blush); }
+
+.dlabel {
+  background: var(--ink-mid);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.dm {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.9rem;
+  color: var(--amber);
+  line-height: 1;
+}
+.dr {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--sage);
+  margin-top: 0.2rem;
+  letter-spacing: 0.05em;
+}
+
+.dcontent {
+  background: white;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.df {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.dp-period {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--gold);
+}
+.dp-desc {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  margin-top: 0.2rem;
+  font-weight: 400;
+}
+
+/* ── MATRIX TABLE ── */
+.matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.matrix {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: separate;
+  border-spacing: 1px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.matrix th {
+  background: var(--ink);
+  padding: 0.75rem 0.8rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--sage);
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 400;
+}
+.matrix th.pat-col { text-align:left; padding-left:1.2rem; }
+
+.matrix td {
+  background: white;
+  padding: 0.8rem;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: background 0.15s;
+}
+.matrix tr:hover td { background: var(--blush); }
+
+.matrix td.pat-name {
+  text-align: left;
+  padding-left: 1.2rem;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+.matrix td.note {
+  font-size: 0.82rem;
+  color: var(--ink-mute);
+  text-align: left;
+  padding-left: 0.8rem;
+}
+
+.sh { color: var(--amber); }
+.sm { color: var(--sage); }
+.sl { color: var(--warm); }
+
+/* ── COLOR FLOW ── */
+.cflow {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.cseas {
+  flex: 1;
+  background: white;
+  padding: 1.4rem 1.2rem;
+  transition: background 0.2s;
+}
+.cseas:hover { background: var(--blush); }
+
+.cs-lbl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--sage);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.cs-period-bar {
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 0.8rem;
+}
+
+.cs-title {
+  font-size: 0.84rem;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.7rem;
+}
+
+.swatches { display:flex; gap:0.4rem; flex-wrap:wrap; }
+.sw {
+  width:18px; height:18px;
+  border-radius:50%;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.cs-note {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-top: 0.5rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+@media(max-width:540px){ .cflow { flex-direction:column; } }
+
+/* ── ENV CARDS ── */
+.env-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px,1fr));
+  gap: 1rem;
+}
+
+.ecard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.4rem;
+  transition: box-shadow 0.25s;
+}
+.ecard:hover { box-shadow: 0 6px 22px var(--shadow); }
+
+.ecard-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.ecard-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  padding: 0.18rem 0.5rem;
+  border-radius: 2px;
+  font-weight: 500;
+}
+.bad-crit { background:#fef0ec; color:#b85a2a; border:1px solid #e8c0a8; }
+.bad-high { background:#fffbf0; color:#b8862a; border:1px solid #e8d090; }
+.bad-mid  { background:#f0f6fc; color:#4a7ea8; border:1px solid #b8d4e8; }
+.bad-low  { background:#f2f8f4; color:#3d6b4f; border:1px solid #c0dcc8; }
+
+.ebar {
+  height: 3px;
+  background: var(--cream);
+  border-radius: 2px;
+  margin-bottom: 0.8rem;
+  overflow: hidden;
+}
+.ebar-fill {
+  height: 100%;
+  border-radius: 2px;
+  width: 0;
+  transition: width 1.6s ease;
+}
+.ef-crit { background: linear-gradient(to right, var(--rust), var(--amber)); }
+.ef-high { background: linear-gradient(to right, var(--amber), #d4c060); }
+.ef-mid  { background: linear-gradient(to right, var(--water), var(--sage)); }
+.ef-low  { background: linear-gradient(to right, var(--sage), var(--mint)); }
+
+.ecard-desc { font-size:0.92rem; color:var(--ink-soft); line-height:1.9; font-weight:400; }
+
+/* ── CALENDAR ── */
+.cal-wrap {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.csn {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  padding: 1.2rem 1rem;
+  transition: background 0.2s;
+}
+.csn:hover { background: var(--blush); }
+
+.csn-period {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.csn-temp {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--water);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.csn-bars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 0.8rem;
+}
+.csn-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--cream);
+}
+.csn-bar.f { background: var(--fern); }
+.csn-bar.p { background: var(--amber); }
+
+.csn-lbl {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+.csn-pat {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+@media(max-width:680px){ .cal-wrap { flex-direction:column; } }
+
+/* ── 5 LAWS ── */
+.laws { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.law {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.law:last-child { border-bottom:none; }
+.law:hover { background: var(--blush); }
+
+.law-num {
+  padding: 2rem 1.2rem;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 2.8rem;
+  color: var(--mint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.law-body { padding: 1.8rem 2rem; }
+
+.law-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+.law-text {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 2;
+  font-weight: 400;
+}
+
+/* ── DATA TABLE ── */
+.dtable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dtable th {
+  background: var(--ink);
+  padding: 0.72rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--sage);
+  text-transform: uppercase;
+  text-align: left;
+  font-weight: 400;
+}
+
+.dtable td {
+  background: white;
+  padding: 0.82rem 1rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--border);
+  transition: background 0.15s;
+  font-weight: 400;
+}
+.dtable tr:hover td { background: var(--blush); }
+.dtable td:first-child {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+a.src-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--moss);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px dashed var(--sage);
+  padding-bottom: 1px;
+  transition: color 0.18s, border-color 0.18s;
+}
+a.src-link:hover {
+  color: var(--gold);
+  border-bottom-color: var(--amber);
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 4rem 8vw 3rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+.footer-logo {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 2.8rem;
+  color: var(--mint);
+  margin-bottom: 0.8rem;
+}
+
+.footer-txt {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--sage);
+  text-transform: uppercase;
+  line-height: 2;
+}
+
+/* ── UTILS ── */
+ul.sl {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+ul.sl li {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.9;
+  padding-left: 1.2rem;
+  position: relative;
+  font-weight: 400;
+}
+ul.sl li::before {
+  content: '▪';
+  position: absolute;
+  left: 0;
+  color: var(--fern);
+  font-size: 0.62rem;
+  top: 0.28em;
+}
+
+strong { color: var(--ink); font-weight: 600; }
+.hl-gold { color: var(--gold); font-weight: 600; }
+.hl-green { color: var(--moss); font-weight: 600; }
+.hl-blue { color: var(--water); font-weight: 600; }
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/singiji-light.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-side">Singiji Reservoir · 2025–2026</div>
+
+  <div class="hero-eyebrow">Fly Fishing Field Report · Singiji Reservoir</div>
+  <div class="hero-title">
+    그곳이<br>
+    <span>알고 싶다</span>
+  </div>
+  <div class="hero-sub">신기지 낚시터 정밀 분석 리포트</div>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-label">분석 기간</div>
+      <div class="hero-stat-val">2025.10 – 2026.02</div>
+    </div>
+    <div>
+      <div class="hero-stat-label">출조 기록</div>
+      <div class="hero-stat-val">12회</div>
+    </div>
+    <div>
+      <div class="hero-stat-label">대상어</div>
+      <div class="hero-stat-val">무지개 송어 · 산천어</div>
+    </div>
+    <div>
+      <div class="hero-stat-label">출처</div>
+      <div class="hero-stat-val">루어플라이하우스</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-logo">신기지</div>
+  <a href="#profile" class="nav-item">01 프로필</a>
+  <a href="#points"  class="nav-item">02 포인트</a>
+  <a href="#season"  class="nav-item">03 계절</a>
+  <a href="#timing"  class="nav-item">04 시간대</a>
+  <a href="#depth"   class="nav-item">05 수심층</a>
+  <a href="#patterns"class="nav-item">06 패턴</a>
+  <a href="#env"     class="nav-item">07 환경</a>
+  <a href="#calendar"class="nav-item">08 캘린더</a>
+  <a href="#laws"    class="nav-item">09 결론</a>
+  <div class="nav-spacer"></div>
+  <a href="/fly-fishing-hub/research/archive/techniques/260225-singiji-Attact.html" target="_blank" class="nav-ext-link">
+    <span class="nav-ext-icon">↗</span> 신기지 공략법
+  </a>
+  <a href="https://caddis-gr.github.io/fishing-technique/techniques/singiji-light_MD.md" target="_blank" class="nav-ext-link nav-ext-md">
+    <span class="nav-ext-icon">↗</span> MD 문서
+  </a>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+<!-- 01 PROFILE -->
+<section class="section" id="profile">
+  <div class="sec-header">
+    <div class="sec-num">01</div>
+    <div class="sec-title">낚시터 기본 프로필</div>
+  </div>
+  <p class="sec-desc">
+    신기지는 경기도 용인시 기흥구 명지대학교 아래에 위치한 <strong>계곡형 저수지 관리 낚시터</strong>입니다.
+    산속 밀폐형 구조로 인근 유료터 대비 기온·수온이 낮은 편이며,
+    2025년 시설 리노베이션으로 물색과 편의시설이 크게 개선되었습니다.
+  </p>
+  <div class="profile-grid">
+    <div class="pi"><div class="pi-label">위치</div><div class="pi-val">경기도 용인시 기흥구<br>(명지대학교 하류)</div></div>
+    <div class="pi"><div class="pi-label">형태</div><div class="pi-val">계곡형 저수지<br>산속 밀폐형 구조</div></div>
+    <div class="pi"><div class="pi-label">수심 범위</div><div class="pi-val">상류 1.5m →<br>부교 4.5m (급변)</div></div>
+    <div class="pi"><div class="pi-label">시즌</div><div class="pi-val">10월 말 오픈<br>이듬해 봄까지</div></div>
+    <div class="pi"><div class="pi-label">대상어</div><div class="pi-val">무지개 송어<br>산천어 (혼합 방류)</div></div>
+    <div class="pi"><div class="pi-label">2025 특이사항</div><div class="pi-val">리노베이션 완료<br>물색 대폭 개선</div></div>
+  </div>
+</section>
+
+<!-- 02 POINTS -->
+<section class="section" id="points">
+  <div class="sec-header">
+    <div class="sec-num">02</div>
+    <div class="sec-title">수역 구조 및 포인트</div>
+  </div>
+  <p class="sec-desc">
+    신기지는 4개 구역으로 나뉩니다. 수심·햇빛 조건·회유 패턴이 구역마다 뚜렷하게 달라
+    어느 시간에 어느 포인트를 공략하느냐가 조황의 핵심입니다.
+  </p>
+
+  <div class="point-grid">
+    <div class="pc p1">
+      <div class="pc-num">①</div>
+      <div class="pc-name">부교권</div>
+      <div class="pc-depth">DEPTH 3.0 – 4.5 m</div>
+      <div class="pc-desc">원거리 캐스팅 가능. 그물 아래 회유 개체 집결. 혹한기에도 회유 활발. 수심 깊어 경계심 낮은 개체 다수.</div>
+      <div class="pc-time">⏱ 오전 ~ 전일 · 피딩타임</div>
+    </div>
+    <div class="pc p2">
+      <div class="pc-num">②</div>
+      <div class="pc-name">관리소 앞</div>
+      <div class="pc-depth">DEPTH 2.0 – 3.0 m</div>
+      <div class="pc-desc">2m 전방 브레이크 라인. 회유 송어 집결. 오후 산 그늘이 지면서 활성도 폭발.</div>
+      <div class="pc-time">⏱ 오후 3~4시 이후 최고</div>
+    </div>
+    <div class="pc p3">
+      <div class="pc-num">③</div>
+      <div class="pc-name">상류 새물 유입구</div>
+      <div class="pc-depth">DEPTH 1.5 – 2.0 m</div>
+      <div class="pc-desc">산천어 선호 구역. 드라이 플라이 낚시 최적. 매이플라이·캐디스·깔따구 해치 발생.</div>
+      <div class="pc-time">⏱ 오전 이른 시간 · 드라이 타임</div>
+    </div>
+    <div class="pc p4">
+      <div class="pc-num">④</div>
+      <div class="pc-name">진입로 산 아래</div>
+      <div class="pc-depth">DEPTH 2.0 – 3.0 m</div>
+      <div class="pc-desc">바람이 막히는 피신처. 수온 안정적. 강풍 일수에 포인트 차이가 극심해질 때 유리.</div>
+      <div class="pc-time">⏱ 바람 강한 날 특히 유리</div>
+    </div>
+  </div>
+
+  <div class="diagram">
+<pre>  <span class="dl">[ 상류 새물 유입구 ]</span>   <span class="dd">▸ 1.5~2m</span>   <span class="dn">산천어 선호 / 드라이 / 해치</span>
+        <span class="da">│</span>
+        <span class="da">▼</span>
+  <span class="dl">[ 진입로 산 아래 ]</span>      <span class="dd">▸ 2~3m</span>    <span class="dn">바람 막힘 / 수온 안정</span>
+        <span class="da">│</span>
+        <span class="da">▼</span>
+  <span class="dl">[ 관리소 앞 ]</span>           <span class="dd">▸ 2~3m</span>    <span class="dn">브레이크 라인 2m / 오후 그늘 피딩</span>
+        <span class="da">│</span>
+        <span class="da">▼</span>
+  <span class="dl">[ 부교권 (중앙) ]</span>        <span class="dd">▸ 3~4.5m</span>  <span class="dn">원거리 / 그물 아래 회유 집결</span>
+        <span class="da">│</span>
+        <span class="da">▼</span>
+  <span class="dl">[ 하류 ]</span>                <span class="dd">▸ 결빙</span>     <span class="dn">1월 이후 얼음 발생</span></pre>
+  </div>
+
+  <div class="box box-blue">
+    💡 <strong>브레이크 라인</strong>(관리소 앞 2m 전방)은 회유 개체가 집결하는 핵심 포인트입니다.
+    폴링이 끝나는 순간 이 라인을 지나면 입질 확률이 <strong>70~80%</strong>에 달합니다.
+  </div>
+</section>
+
+<!-- 03 SEASON -->
+<section class="section" id="season">
+  <div class="sec-header">
+    <div class="sec-num">03</div>
+    <div class="sec-title">계절별 패턴 분석</div>
+  </div>
+  <p class="sec-desc">10월 개장부터 2월 봄 전환기까지 6단계의 뚜렷한 시즌 변화. 각 시기의 수온·물색·활성 패턴을 이해하는 것이 신기지 공략의 핵심입니다.</p>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-period">10월 말 · 시즌 오픈</div>
+      <div class="tl-title">초가을 오픈기 — 역대 최고 물색으로 개막</div>
+      <div class="tl-body">2025시즌 역대 최고 물색으로 개막. 무지개 송어 방류 직후 적응기로 초반 반응은 느린 편. 신규 부교·플랫폼 시설 오픈. 드라이는 오후 늦게만 간헐적 반응.</div>
+      <div class="tags">
+        <span class="tag tg">화이트 에그</span>
+        <span class="tag tg">미니 마라부 리치</span>
+        <span class="tag ty">오후 드라이 (간헐)</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-period">11월 초~중순</div>
+      <div class="tl-title">가을 시즌 — 수심 성층화 시작, 드라이 피딩 확립</div>
+      <div class="tl-body">
+        바람과 추가 방류가 이어지며 <span class="hl-green">수심 성층화</span>가 뚜렷해지는 시기.
+        산천어(상층 1~1.5m)와 무지개 송어(하층 2m+)가 뚜렷이 분리됨.
+        산천어는 산란기로 입질 예민. 드라이 피딩 윈도우 오후 3~5시 확립.
+        해치 확인: 깔따구·매이플라이·캐디스.
+      </div>
+      <div class="tags">
+        <span class="tag tg">마라부 리치 (화이트/치즈)</span>
+        <span class="tag tb">에그스터시 (핫핑크)</span>
+        <span class="tag ty">캐디스 드라이 (오후 3~5시)</span>
+        <span class="tag ty">밋지 (산천어용)</span>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-period">11월 말~12월 초</div>
+      <div class="tl-title">가을 깊어짐 — 물색이 조황의 결정적 변수</div>
+      <div class="tl-body">
+        드라이 피딩 윈도우가 명확해지고 에그 패턴이 강세.
+        <span class="hl-gold">물색 변화가 당일 조황을 결정</span>합니다.
+        11/30 비 후 탁수 → 에그 지배적, 부교권 3.5m 심층 에그 연속 입질.
+        12/08 밋지 라바·퓨파·매곳 본격 반응 시작 예고.
+      </div>
+      <div class="tags">
+        <span class="tag tr">맑은 날 = 최상 활성</span>
+        <span class="tag tb">에그스터시 (사카이/핫핑크)</span>
+        <span class="tag tg">미니 마라부 리치</span>
+        <span class="tag ty">메뚜기 패턴도 반응</span>
+      </div>
+      <div class="box box-gold">💡 정지수형 신기지는 물색 변화에 극도로 민감. 비 다음날 출조는 에그 위주로 준비하세요.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-period">12월 중하순</div>
+      <div class="tl-title">초겨울 — 사료 타임 폭발, 중하층 집중</div>
+      <div class="tl-body">
+        수면 부근 떠있는 개체는 반응 거의 없음. 중하층 개체 위주 반응.
+        <span class="hl-gold">오후 2시 사료 투척 시 활성도 폭발적 상승</span> — 사료 에그·드라이 반드시 준비.
+        전날 따뜻→당일 기온 하강 = 활성도 급락 패턴 반복.
+      </div>
+      <div class="tags">
+        <span class="tag tb">에그 패턴</span>
+        <span class="tag tg">UV 츄위스킨 라바</span>
+        <span class="tag ty">사료 에그/드라이 (오후 2시)</span>
+      </div>
+      <div class="box box-red">⚠️ 오후 2시 사료 투척 타임은 짧지만 폭발적. 사료 드라이·에그를 항상 준비하세요.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--water);box-shadow:0 0 0 3px var(--sky)"></div>
+      <div class="tl-period">1월~2월 초 · 혹한기</div>
+      <div class="tl-title">혹한기 — 작게 · 느리게 · 다양하게</div>
+      <div class="tl-body">
+        수온 1~3도. 연중 가장 까다롭지만 전략으로 극복 가능.
+        수온 4도 이하 섭이 활동성 급격 저하, 2도 이하 극저활성.
+        폴링 완료 시점 입질 <strong>70~80%</strong> 집중. 수차 꺼진 후 반응 좋음.
+        오후 3시 이후 관리소 앞 지그헤드 에그 폭발적 반응.
+      </div>
+      <div class="tags">
+        <span class="tag tb">밋지 라바/퓨파</span>
+        <span class="tag tg">화이트 미니 마라부</span>
+        <span class="tag tb">UV 츄위스킨 라바 (탄)</span>
+        <span class="tag ty">지그헤드 에그스터시 (화이트)</span>
+      </div>
+
+      <div class="principle-grid">
+        <div class="pcard"><div class="pcard-num">원칙 01</div><div class="pcard-title">작게</div><div class="pcard-body">훅 사이즈 18번 이하. 플라이가 작을수록 강한 입질. 티펫 5X 이하.</div></div>
+        <div class="pcard"><div class="pcard-num">원칙 02</div><div class="pcard-title">느리게</div><div class="pcard-body">폴링 완료 후 멈춤 → 짧고 간결한 액션. 빠른 리트리브 금지.</div></div>
+        <div class="pcard"><div class="pcard-num">원칙 03</div><div class="pcard-title">다양하게</div><div class="pcard-body">2~3마리 후 즉시 패턴 교체. 동일 포인트 반복 캐스팅 금지.</div></div>
+        <div class="pcard"><div class="pcard-num">원칙 04</div><div class="pcard-title">무채색</div><div class="pcard-body">흰색·검정 계열 우선. 경계심 낮고 저조도 인식률 높음.</div></div>
+      </div>
+
+      <div class="box box-green" style="margin-top:1rem">💡 혹한기에도 섭이 모드 개체는 반드시 존재. 라이즈도 발생. 포기하지 마세요.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--amber);box-shadow:0 0 0 3px var(--amber-lt)"></div>
+      <div class="tl-period">2월 중하순 · 봄 전환</div>
+      <div class="tl-title">봄 전환기 — 수온 6도, 파워 낚시 시작</div>
+      <div class="tl-body">
+        기온 12도까지 상승, 수온 6도 회복. 활성도와 어체 파워 동시 상승.
+        <span class="hl-green">블랙 미니 마라부 리치</span>가 가장 빠른 반응.
+        탁한 물색엔 마라부, 맑은 물색엔 라바가 효과적.
+        3월 이후 본격 파이팅 예상. 저수지 얼음 녹기 시작.
+      </div>
+      <div class="tags">
+        <span class="tag tg">블랙 미니 마라부 리치</span>
+        <span class="tag tb">UV 라바 (맑은 물)</span>
+        <span class="tag ty">2~3m 스위밍 위주</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 04 TIMING -->
+<section class="section" id="timing">
+  <div class="sec-header">
+    <div class="sec-num">04</div>
+    <div class="sec-title">시간대별 활성도 패턴</div>
+  </div>
+
+  <div class="time-wrap">
+    <div class="time-row th">
+      <div class="tc">시간대</div>
+      <div class="tc">활성도</div>
+      <div class="tc">추천 패턴</div>
+      <div class="tc">핵심 포인트</div>
+    </div>
+    <div class="time-row">
+      <div class="tc ttime">오전 9~10시</div>
+      <div class="tc"><span class="stars">★★★</span></div>
+      <div class="tc">라바, 밋지 퓨파, 마라부 리치</div>
+      <div class="tc">부교권</div>
+    </div>
+    <div class="time-row">
+      <div class="tc ttime">오전 10~11시</div>
+      <div class="tc"><span class="stars">★★★★</span></div>
+      <div class="tc">드라이 (11월), 에그, 마라부</div>
+      <div class="tc">부교, 상류</div>
+    </div>
+    <div class="time-row">
+      <div class="tc ttime">정오~오후 1시</div>
+      <div class="tc"><span class="stars">★★★</span></div>
+      <div class="tc">에그, 마라부</div>
+      <div class="tc">전역</div>
+    </div>
+    <div class="time-row slow">
+      <div class="tc ttime" style="color:var(--ink-soft)">오후 1~2시</div>
+      <div class="tc"><span class="stars lo">★★</span></div>
+      <div class="tc" style="color:var(--ink-soft)">소강상태 · 패턴 교체 타임</div>
+      <div class="tc" style="color:var(--ink-soft)">—</div>
+    </div>
+    <div class="time-row peak">
+      <div class="tc ttime" style="color:var(--rust)">⚡ 오후 2시</div>
+      <div class="tc"><span class="flash">순간폭발</span></div>
+      <div class="tc" style="color:var(--rust);font-weight:500">사료 에그, 사료 드라이</div>
+      <div class="tc" style="color:var(--rust)">전역 (사료 투척 시)</div>
+    </div>
+    <div class="time-row golden">
+      <div class="tc ttime">오후 3~4시</div>
+      <div class="tc"><span class="stars">★★★★</span></div>
+      <div class="tc">드라이, 지그헤드 에그, 마라부</div>
+      <div class="tc">관리소 앞~상류</div>
+    </div>
+    <div class="time-row peak">
+      <div class="tc ttime" style="color:var(--gold);font-weight:600">🌟 오후 4시 이후</div>
+      <div class="tc"><span class="stars" style="color:var(--gold)">★★★★★</span></div>
+      <div class="tc gold-txt">지그헤드 에그스터시, 마라부</div>
+      <div class="tc gold-txt">관리소 앞~상류 (그늘)</div>
+    </div>
+    <div class="time-row slow">
+      <div class="tc ttime" style="color:var(--ink-soft)">오후 4시+ (1월)</div>
+      <div class="tc"><span class="stars lo">☆</span></div>
+      <div class="tc" style="color:var(--ink-soft)">종료 권장</div>
+      <div class="tc" style="color:var(--ink-soft)">혹한기 한정</div>
+    </div>
+  </div>
+
+  <div class="box box-gold" style="margin-top:1.5rem">
+    🌟 <strong>황금 타임:</strong> 오후 4시 이후 산 그늘이 지면서 관리소 앞~상류 라인 활성도가 시즌 전반에 걸쳐 가장 높습니다.
+  </div>
+</section>
+
+<!-- 05 DEPTH -->
+<section class="section" id="depth">
+  <div class="sec-header">
+    <div class="sec-num">05</div>
+    <div class="sec-title">수심층별 어종 분포 및 공략법</div>
+  </div>
+
+  <div class="depth-wrap">
+    <div class="drow">
+      <div class="dlabel"><div class="dm">0.5m</div><div class="dr">표층 / 드라이 존</div></div>
+      <div class="dcontent">
+        <div class="df">무지개 송어 (라이즈)</div>
+        <div class="dp-period">11월, 2월 봄 전환기</div>
+        <div class="dp-desc">드라이 플라이 (캐디스, 밋지, 사료 드라이). 오후 3시 이후만 유효. 해치 연동 필수.</div>
+      </div>
+    </div>
+    <div class="drow">
+      <div class="dlabel"><div class="dm">1.5m</div><div class="dr">상층 / 산천어 존</div></div>
+      <div class="dcontent">
+        <div class="df">산천어</div>
+        <div class="dp-period">11월~1월 (산란기)</div>
+        <div class="dp-desc">밋지 패턴, 캐디스, 작은 에그. 산란기 입질 예민 — 섬세한 어프로치 필수.</div>
+      </div>
+    </div>
+    <div class="drow">
+      <div class="dlabel"><div class="dm">2m</div><div class="dr">중층 / 주력 존</div></div>
+      <div class="dcontent">
+        <div class="df">무지개 송어 (시즌 주력)</div>
+        <div class="dp-period">시즌 전반</div>
+        <div class="dp-desc">마라부 리치, 에그, 라바 전반. 브레이크 라인 경유 회유 개체 다수. <span class="hl-gold">폴링 완료 시 입질 70~80%.</span></div>
+      </div>
+    </div>
+    <div class="drow">
+      <div class="dlabel"><div class="dm">3.5m</div><div class="dr">심층 / 대형 존</div></div>
+      <div class="dcontent">
+        <div class="df">무지개 송어 대형 개체</div>
+        <div class="dp-period">11월 말~겨울 (부교권)</div>
+        <div class="dp-desc">에그 (폴링 후 완전 정지), 지그헤드 에그스터시. 경계심 가장 낮은 구역. 인디케이터 수심 3m 이상.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-blue" style="margin-top:1.5rem">
+    💡 중층~심층 개체는 천적으로부터 안전한 상태에서 눈앞에 나타난 먹이를 경계심 없이 공격합니다.
+    폴링 후 <strong>'멈춤' 동작 하나</strong>가 입질 확률을 극적으로 높입니다.
+  </div>
+</section>
+
+<!-- 06 PATTERNS -->
+<section class="section" id="patterns">
+  <div class="sec-header">
+    <div class="sec-num">06</div>
+    <div class="sec-title">플라이 패턴 종합 분석</div>
+  </div>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="pat-col">패턴</th>
+          <th>10~11월</th>
+          <th>11~12월</th>
+          <th>12월</th>
+          <th>1월</th>
+          <th>2월</th>
+          <th style="text-align:left;padding-left:0.8rem">비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="pat-name">마라부 리치</td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td class="note">화이트 → 블랙 색상 변화</td>
+        </tr>
+        <tr>
+          <td class="pat-name">에그 패턴</td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sm">★★★</span></td>
+          <td class="note">사카이/핫핑크 → 블랙</td>
+        </tr>
+        <tr>
+          <td class="pat-name">밋지 라바/퓨파</td>
+          <td><span class="sl">★★</span></td>
+          <td><span class="sm">★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td class="note">수온 낮을수록 강세</td>
+        </tr>
+        <tr>
+          <td class="pat-name">드라이 플라이</td>
+          <td><span class="sm">★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sl">★★</span></td>
+          <td><span class="sl">★</span></td>
+          <td><span class="sl">★★</span></td>
+          <td class="note">오후 3시 이후만 유효</td>
+        </tr>
+        <tr>
+          <td class="pat-name">UV 츄위스킨 라바</td>
+          <td><span class="sl">★★</span></td>
+          <td><span class="sm">★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sh">★★★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td class="note">맑은 물색에 특히 유효</td>
+        </tr>
+        <tr>
+          <td class="pat-name">사료 드라이/에그</td>
+          <td><span class="sl">★★</span></td>
+          <td><span class="sm">★★★</span></td>
+          <td><span class="sh">★★★★</span></td>
+          <td><span class="sm">★★★</span></td>
+          <td><span class="sl">★★</span></td>
+          <td class="note">오후 2시 사료 타임 한정</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:2.5rem">
+    <h3 style="font-family:'Noto Serif KR',serif;font-size:1rem;color:var(--ink);margin-bottom:1.2rem;font-weight:700">색상 전략 — 계절별 전환</h3>
+    <div class="cflow">
+      <div class="cseas">
+        <div class="cs-lbl">초가을 ~ 가을</div>
+        <div class="cs-period-bar" style="background:linear-gradient(to right,var(--fern),var(--amber))"></div>
+        <div class="cs-title">유채색 / 어필력 강화</div>
+        <div class="swatches">
+          <div class="sw" style="background:#f5f0e8" title="화이트"></div>
+          <div class="sw" style="background:#d4a55a" title="치즈"></div>
+          <div class="sw" style="background:#e8405a" title="핫핑크"></div>
+          <div class="sw" style="background:#e8a040" title="사카이"></div>
+        </div>
+        <div class="cs-note">화이트, 치즈, 핫핑크, 사카이</div>
+      </div>
+      <div class="cseas">
+        <div class="cs-lbl">겨울 혹한기</div>
+        <div class="cs-period-bar" style="background:linear-gradient(to right,var(--water),var(--ink-mid))"></div>
+        <div class="cs-title">무채색 / 경계심 최소화</div>
+        <div class="swatches">
+          <div class="sw" style="background:#f0ece4" title="화이트"></div>
+          <div class="sw" style="background:#1a1a1a" title="블랙"></div>
+          <div class="sw" style="background:#c8b89a" title="탄"></div>
+        </div>
+        <div class="cs-note">화이트, 블랙, 탄 계열</div>
+      </div>
+      <div class="cseas">
+        <div class="cs-lbl">봄 전환기</div>
+        <div class="cs-period-bar" style="background:linear-gradient(to right,var(--amber),var(--fern))"></div>
+        <div class="cs-title">블랙 마라부 / 탁수 대응</div>
+        <div class="swatches">
+          <div class="sw" style="background:#1a1a1a" title="블랙"></div>
+          <div class="sw" style="background:#c8b89a" title="탄"></div>
+          <div class="sw" style="background:#e8a580" title="핑크핑크"></div>
+        </div>
+        <div class="cs-note">블랙 강세, 탁수엔 어필력 UP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 ENV -->
+<section class="section" id="env">
+  <div class="sec-header">
+    <div class="sec-num">07</div>
+    <div class="sec-title">조황에 영향을 미치는 환경 변수</div>
+  </div>
+  <p class="sec-desc">신기지는 산속 계곡형 정지수 저수지이므로 환경 변화에 매우 민감합니다. 같은 낚시터에서도 조건에 따라 조황이 드라마틱하게 달라집니다.</p>
+
+  <div class="env-grid">
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">물색</div><div class="badge bad-crit">결정적</div></div>
+      <div class="ebar"><div class="ebar-fill ef-crit" style="width:100%"></div></div>
+      <div class="ecard-desc">맑음=최상 활성 / 탁함=급격 저하. 비 다음날 탁수 주의. 동일 낚시터에서도 드라마틱한 변화 발생.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">수온</div><div class="badge bad-crit">결정적</div></div>
+      <div class="ebar"><div class="ebar-fill ef-crit" style="width:100%"></div></div>
+      <div class="ecard-desc">6도+ 활발 / 3~4도 저활성 / 2도 이하 극저활성. 4도 이하 소형 플라이 필수.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">기온 변화</div><div class="badge bad-high">높음</div></div>
+      <div class="ebar"><div class="ebar-fill ef-high" style="width:80%"></div></div>
+      <div class="ecard-desc">급강하 당일 활성 저하. 전날 따뜻→당일 추움=최악. 안정적 추위가 오히려 조황 좋음.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">햇빛 / 그늘</div><div class="badge bad-high">높음</div></div>
+      <div class="ebar"><div class="ebar-fill ef-high" style="width:80%"></div></div>
+      <div class="ecard-desc">오후 3~4시 산 그늘 → 관리소 앞~상류 활성 급상승. 그늘 시간대가 황금 타임.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">바람</div><div class="badge bad-mid">중간</div></div>
+      <div class="ebar"><div class="ebar-fill ef-mid" style="width:60%"></div></div>
+      <div class="ecard-desc">강풍 시 수면 반응 없어짐. 중하층 패턴으로 전환. 포인트 차이 극심해짐.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">수차 작동</div><div class="badge bad-low">낮음</div></div>
+      <div class="ebar"><div class="ebar-fill ef-low" style="width:40%"></div></div>
+      <div class="ecard-desc">결빙 방지 수차: 가동 중보다 꺼진 후 반응 좋음. 수류 변화 영향 추정.</div>
+    </div>
+    <div class="ecard">
+      <div class="ecard-head"><div class="ecard-name">방류 직후</div><div class="badge bad-low">낮음</div></div>
+      <div class="ebar"><div class="ebar-fill ef-low" style="width:40%"></div></div>
+      <div class="ecard-desc">저수지 적응 1~2주 필요. 이후 파이팅 폭발적 증가. 대형 개체 방류 후 기대.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 CALENDAR -->
+<section class="section" id="calendar">
+  <div class="sec-header">
+    <div class="sec-num">08</div>
+    <div class="sec-title">시즌 종합 출조 가이드</div>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="csn">
+      <div class="csn-period">10월 말</div>
+      <div class="csn-temp">10~12°</div>
+      <div class="csn-bars">
+        <div class="csn-bar f"></div><div class="csn-bar f"></div><div class="csn-bar f"></div>
+        <div class="csn-bar"></div><div class="csn-bar"></div>
+      </div>
+      <div class="csn-lbl">시즌 오픈</div>
+      <div class="csn-pat">에그, 마라부<br>방류 적응 대기</div>
+    </div>
+    <div class="csn">
+      <div class="csn-period">11월</div>
+      <div class="csn-temp">5~10°</div>
+      <div class="csn-bars">
+        <div class="csn-bar p"></div><div class="csn-bar p"></div><div class="csn-bar p"></div>
+        <div class="csn-bar p"></div><div class="csn-bar f"></div>
+      </div>
+      <div class="csn-lbl">가을 성수기</div>
+      <div class="csn-pat">마라부, 에그, 드라이<br>오후 3~5시 드라이</div>
+    </div>
+    <div class="csn">
+      <div class="csn-period">11말~12월</div>
+      <div class="csn-temp">3~8°</div>
+      <div class="csn-bars">
+        <div class="csn-bar p"></div><div class="csn-bar p"></div><div class="csn-bar p"></div>
+        <div class="csn-bar p"></div><div class="csn-bar p"></div>
+      </div>
+      <div class="csn-lbl">최고 시즌</div>
+      <div class="csn-pat">에그, 마라부, 드라이<br>맑은 날 집중 출조</div>
+    </div>
+    <div class="csn">
+      <div class="csn-period">1월~2월초</div>
+      <div class="csn-temp">1~3°</div>
+      <div class="csn-bars">
+        <div class="csn-bar f"></div><div class="csn-bar f"></div><div class="csn-bar f"></div>
+        <div class="csn-bar"></div><div class="csn-bar"></div>
+      </div>
+      <div class="csn-lbl">혹한기</div>
+      <div class="csn-pat">밋지 라바, 퓨파<br>소형·느린·다양하게</div>
+    </div>
+    <div class="csn">
+      <div class="csn-period">2월말~3월</div>
+      <div class="csn-temp">4~7°</div>
+      <div class="csn-bars">
+        <div class="csn-bar p"></div><div class="csn-bar p"></div><div class="csn-bar p"></div>
+        <div class="csn-bar p"></div><div class="csn-bar f"></div>
+      </div>
+      <div class="csn-lbl">봄 전환기</div>
+      <div class="csn-pat">블랙 마라부, 라바<br>파워 낚시 개시</div>
+    </div>
+  </div>
+  <div style="font-size:0.68rem;color:var(--sage);margin-top:0.7rem;font-family:'IBM Plex Mono',monospace">
+    ▪ 황금바 = 피크 활성 &nbsp;▪ 녹색바 = 일반 활성
+  </div>
+</section>
+
+<!-- 09 LAWS -->
+<section class="section" id="laws">
+  <div class="sec-header">
+    <div class="sec-num">09</div>
+    <div class="sec-title">결론 — 신기지를 정복하는 5가지 법칙</div>
+  </div>
+  <p class="sec-desc">12회 출조 데이터를 관통하는 핵심 원칙 5가지. 신기지에서 반복적으로 검증된 법칙들입니다.</p>
+
+  <div class="laws">
+    <div class="law">
+      <div class="law-num">I</div>
+      <div class="law-body">
+        <div class="law-title">물색이 맑은 날을 노려라</div>
+        <div class="law-text">신기지 조황의 가장 큰 결정 변수. 비 온 다음 날보다 맑고 서늘한 날이 최고. 동일한 낚시터에서도 물색이 바뀌면 조황이 드라마틱하게 달라진다.</div>
+      </div>
+    </div>
+    <div class="law">
+      <div class="law-num">II</div>
+      <div class="law-body">
+        <div class="law-title">오후 그늘 타임(3~4시 이후)에 집중하라</div>
+        <div class="law-text">관리소 앞~상류 라인은 산 그늘이 지는 오후부터 폭발적으로 살아난다. 시즌 전반에 걸쳐 가장 안정적인 황금 타임이다.</div>
+      </div>
+    </div>
+    <div class="law">
+      <div class="law-num">III</div>
+      <div class="law-body">
+        <div class="law-title">마라부 리치와 에그는 시즌 내내 기본기</div>
+        <div class="law-text">패턴 선택이 막막하면 마라부 리치로 시작. 11~12월은 에그, 1~2월은 밋지 라바로 전환. 색상은 활성기엔 유채색, 혹한기엔 무채색으로.</div>
+      </div>
+    </div>
+    <div class="law">
+      <div class="law-num">IV</div>
+      <div class="law-body">
+        <div class="law-title">폴링 완료 순간을 절대 놓치지 마라</div>
+        <div class="law-text">인디케이터 님핑에서 폴링이 끝나는 그 순간이 입질의 70~80%. 이 시점에 집중하지 않으면 신기지에서는 크게 손해다.</div>
+      </div>
+    </div>
+    <div class="law">
+      <div class="law-num">V</div>
+      <div class="law-body">
+        <div class="law-title">혹한기에도 포기하지 마라 — 단, 전략을 바꿔라</div>
+        <div class="law-text">1~2월 극저온에도 섭이 모드 개체는 반드시 존재한다. 작게·느리게·자주 교체. 이 세 가지만 지키면 혹한기 신기지에서도 손맛은 온다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA SOURCE -->
+<section class="section" id="source">
+  <div class="sec-header">
+    <div class="sec-num">∗</div>
+    <div class="sec-title">데이터 출처 — 12회 조행기</div>
+  </div>
+  <table class="dtable" style="width:100%">
+    <thead><tr><th>날짜</th><th>조행기 제목</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3849&page=2" target="_blank" class="src-link">2025-10-25</a></td><td>신기지 송어터 개장일 모습 (물 맑은 신기지)</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3850&page=2" target="_blank" class="src-link">2025-11-01</a></td><td>바람 부는 신기지 플라이 낚시</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3852&page=2" target="_blank" class="src-link">2025-11-09</a></td><td>산천어 방류 이후 신기지</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3853&page=2" target="_blank" class="src-link">2025-11-16</a></td><td>에그, 마라부, 리치 신기지</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3854&page=2" target="_blank" class="src-link">2025-11-24</a></td><td>드라이부터 마라부, 님프, 에그까지 잘 먹히는 신기지</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3855&page=2" target="_blank" class="src-link">2025-11-30</a></td><td>에그 패턴에 가장 활발한 입질이 들어오는 신기지</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3857&page=1" target="_blank" class="src-link">2025-12-08</a></td><td>겨울 시즌이 시작된 신기지 송어터</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3860&page=1" target="_blank" class="src-link">2025-12-21</a></td><td>일요일(12/21) 신기지 송어 낚시 모습</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3861&page=1" target="_blank" class="src-link">2026-01-03</a></td><td>쌀쌀한 주말 신기지 플라이 낚시</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3862&page=1" target="_blank" class="src-link">2026-01-26</a></td><td>혹한기 저수지 플라이 낚시 (작게, 느리게, 다양하게)</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3863&page=1" target="_blank" class="src-link">2026-02-02</a></td><td>밋지 라바와 에그 패턴으로 짜릿한 손맛</td></tr>
+      <tr><td><a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fishinglog&wr_id=3865&page=1" target="_blank" class="src-link">2026-02-23</a></td><td>수온 오른 후 힘 붙은 신기지 송어</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div><!-- /main -->
+
+<footer class="footer">
+  <div class="footer-logo">Singiji</div>
+  <div class="footer-txt">
+    분석·정리 CADDIS-GR · 2026<br>
+    데이터 출처 루어플라이하우스 조행기
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        e.target.querySelectorAll('.ebar-fill').forEach(b => {
+          const w = b.style.width;
+          b.style.width = '0';
+          setTimeout(() => { b.style.width = w; }, 120);
+        });
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('.section').forEach(s => io.observe(s));
+
+  // Nav active state
+  const navLinks = document.querySelectorAll('.nav-item');
+  const secs = document.querySelectorAll('.section[id]');
+
+  const nio = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(n => n.classList.remove('active'));
+        const a = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+
+  secs.forEach(s => nio.observe(s));
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

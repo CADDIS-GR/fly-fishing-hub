@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신기낚시터 포인트 맵 · CADDIS-GR LAB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .map-image {
+            width: 100%;
+            display: block;
+        }
+
+        .marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 68, 68, 0.9);
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .marker:hover {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 68, 68, 1);
+            box-shadow: 0 6px 25px rgba(255, 68, 68, 0.5);
+            z-index: 20;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .marker:hover .marker-label {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .modal-header .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 35px;
+            height: 35px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-section h3 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .info-section p {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-card {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card strong {
+            display: block;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .legend h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .legend-item:hover {
+            background: #eef1ff;
+            transform: translateX(5px);
+        }
+
+        .legend-marker {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 68, 68, 0.9);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+
+            .legend-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/spot-maps/shingi-fishing-spot.html" target="_blank" rel="noopener">원본 저장소</a></div>
+    <div class="container">
+        <h1>🎣 신기낚시터 포인트 맵</h1>
+        
+        <div class="map-container">
+            <img src="images/field-bg.jpg" alt="신기낚시터" class="map-image">
+            
+            <!-- 포인트 마커들 -->
+            <div class="marker" style="top: 18%; left: 52%;" onclick="openModal(1)">
+                1
+                <div class="marker-label">상류 새물 유입부</div>
+            </div>
+            
+            <div class="marker" style="top: 68%; left: 25%;" onclick="openModal(2)">
+                2
+                <div class="marker-label">좌측 코너</div>
+            </div>
+            
+            <div class="marker" style="top: 68%; left: 82%;" onclick="openModal(3)">
+                3
+                <div class="marker-label">우측 코너</div>
+            </div>
+            
+            <div class="marker" style="top: 68%; left: 50%;" onclick="openModal(4)">
+                4
+                <div class="marker-label">중간 부교 (물골)</div>
+            </div>
+            
+            <div class="marker" style="top: 38%; left: 72%;" onclick="openModal(5)">
+                5
+                <div class="marker-label">우측 브레이크 라인</div>
+            </div>
+            
+            <div class="marker" style="top: 32%; left: 28%;" onclick="openModal(6)">
+                6
+                <div class="marker-label">관리소 앞 부터 상류 라인</div>
+            </div>
+        </div>
+
+        <!-- 범례 -->
+        <div class="legend">
+            <h3>📍 포인트 목록</h3>
+            <div class="legend-items">
+                <div class="legend-item" onclick="openModal(1)">
+                    <div class="legend-marker">1</div>
+                    <div class="legend-text">상류 새물 유입부</div>
+                </div>
+                <div class="legend-item" onclick="openModal(2)">
+                    <div class="legend-marker">2</div>
+                    <div class="legend-text">좌측 코너</div>
+                </div>
+                <div class="legend-item" onclick="openModal(3)">
+                    <div class="legend-marker">3</div>
+                    <div class="legend-text">우측 코너</div>
+                </div>
+                <div class="legend-item" onclick="openModal(4)">
+                    <div class="legend-marker">4</div>
+                    <div class="legend-text">중간 부교 (물골)</div>
+                </div>
+                <div class="legend-item" onclick="openModal(5)">
+                    <div class="legend-marker">5</div>
+                    <div class="legend-text">우측 브레이크 라인</div>
+                </div>
+                <div class="legend-item" onclick="openModal(6)">
+                    <div class="legend-marker">6</div>
+                    <div class="legend-text">관리소 앞 ~ 상류 라인</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 창 -->
+    <div id="modal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <div class="subtitle" id="modal-subtitle"></div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const spots = {
+            1: {
+                title: "상류 새물 유입부",
+                subtitle: "수심 변화 시작 지점",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>수심</strong>
+                                1.5미터
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                새물 유입 지점
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>수심이 낮고, 상류부터 중간 부교까지 수심이 급변하기 전 구간입니다. 송어들이 수온 변화에 따라 이 구간을 이동하며, 새물 유입으로 인해 활성도가 높을 때가 많습니다. 오후들면 송어들이 상류로의 이동이 확연합니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p>오전 11시 전후 활동성이 살아납니다. 수심 변화가 크지 않으므로 다양한 플라이로 탐색해보세요.</p>
+                    </div>
+                `
+            },
+            2: {
+                title: "좌측 코너",
+                subtitle: "사이드 휴식 구역",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>위치</strong>
+                                하단 부교 좌측 끝
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                사이드 휴식 포인트
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>혹한기에 송어들이 사이드로 나와 휴식 모드에 돌입하는 지점입니다. 물색이 맑아 개체 확인이 가능하며, 경계심이 높을 수 있으므로 조심스러운 접근이 필요합니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p>오전 시간대에 휴식 중인 개체들을 조심스럽게 공략해보세요. 사이드에 위치한 개체를 노리는 낚시에 적합합니다.</p>
+                    </div>
+                `
+            },
+            3: {
+                title: "우측 코너",
+                subtitle: "사이드 휴식 구역",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>위치</strong>
+                                하단 부교 우측 끝
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                사이드 휴식 포인트
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>좌측 코너와 유사하게 혹한기에 송어들이 사이드로 나와 휴식하는 지점입니다. 맑은 물색으로 개체 확인이 가능하며, 햇살이 좋아 송어들이 많이 떠 있는 게 보입니다. 매치더해치로 내츄럴한 플라이로 공략하면 좋습니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p>오전~오후 초반에 사이드 휴식 중인 개체를 공략하기 좋습니다. 햇빛 조건에 따라 송어의 위치가 변할 수 있습니다.</p>
+                    </div>
+                `
+            },
+            4: {
+                title: "중간 부교 (물골)",
+                subtitle: "깊은 수심 회유 구역",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>위치</strong>
+                                하단 부교 중앙
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                그물 아래, 깊은 수심
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>부교 그물 아래는 수심이 깊고 회유하는 개체들이 모이는 장소입니다. 실측해보면 4미터가 조금 넘고, 중앙을 기준으로 좌측으로 조금 더 깊습니다. 물골을 중심으로 깊은 수심에 위치한 경계심 낮은 개체를 노릴 수 있는 핵심 포인트입니다. 전방으로 싱킹라인 공략도 좋습니다. 송어가 회유하기 전 오전시간대 제일 핫한 포인트. 전방 축양 가두리를 향해 롱 캐스팅도 좋고, 발 앞 4미터 수심의 바닥찍고 30센치도 좋은 포인트입니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p>오전 11시 전후 활동성이 살아나며, 물골의 깊은 수심층을 공략하면 좋은 결과를 얻을 수 있습니다. 회유하는 개체들이 지나가는 통로입니다.</p>
+                    </div>
+                `
+            },
+            5: {
+                title: "우측 브레이크 라인",
+                subtitle: "수심 변화 구간",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>위치</strong>
+                                우측 쪽좌대 앞 5m 전방
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                브레이크 라인 존재
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>수심이 급격히 변하는 브레이크 라인 지점입니다. 송어들이 이동하거나 먹이 활동을 하는 주요 경로이며, 구조적 변화로 인해 송어가 머무는 경우가 많습니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p>오전부터 오후까지 다양한 시간대에 송어가 머무는 지점입니다. 브레이크 라인을 따라 탐색하면 좋은 결과를 얻을 수 있습니다.</p>
+                    </div>
+                `
+            },
+            6: {
+                title: "관리소 앞 부터 상류 라인",
+                subtitle: "오후 그늘 핵심 포인트",
+                content: `
+                    <div class="info-section">
+                        <h3>📊 기본 정보</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <strong>위치</strong>
+                                좌측 상단 관리소 전방
+                            </div>
+                            <div class="info-card">
+                                <strong>특징</strong>
+                                오후 산그늘 형성
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>🎣 낚시 특징</h3>
+                        <p>이곳은 오후에 반응이 살아나는 특징이 있습니다. 2미터 앞쪽에 브레이크 라인이 있는데 그 라인을 따라 회유하는 송어와 산천어가 많습니다.</p>
+                        <p style="margin-top: 10px;">플라이 사이즈가 작을수록 입질은 더 크게 들어옵니다. 브레이크 라인 주위에서 회유하는 개체들은 느린 스위밍 동작을 연출하면 강하게 끌고 가는 입질이 들어옵니다. 아마 저수지 님핑 방식 중에서 가장 섬세하고 효과적인 방식이 아닐까 생각합니다. 혹한기에 주로 사용하고 있습니다.</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>⏰ 추천 시간대</h3>
+                        <p><strong>오후 3시 이후 필수 공략 포인트!</strong> 산 그늘이 형성되면서 송어 활성도가 급상승합니다.</p>
+                        <p style="margin-top: 10px;">수차가 돌 때보다는 꺼져있을 때 반응이 좋았습니다. 부교는 그물 가까이에서 반응이 좋았으며, 수심을 3미터 이상 주는 것이 주효합니다.</p>
+                    </div>
+                `
+            }
+        };
+
+        function openModal(spotId) {
+            const spot = spots[spotId];
+            document.getElementById('modal-title').textContent = spot.title;
+            document.getElementById('modal-subtitle').textContent = spot.subtitle;
+            document.getElementById('modal-body').innerHTML = spot.content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target.id === 'modal') {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

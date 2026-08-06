@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zebra Midge | Fly Tying Archive · CADDIS-GR LAB</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+    .back-btn:hover { opacity: 1; }
+
+    /* Hero Card */
+    .hero-card {
+      background: white;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .fly-image-placeholder {
+      width: 160px;
+      height: 160px;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .fly-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-info { flex: 1; min-width: 200px; }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      background: rgba(167,139,250,0.3);
+      color: #c4b5fd;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(167,139,250,0.4);
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .meta-tags {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-tag {
+      padding: 0.35rem 0.85rem;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.85);
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: white;
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #6d28d9;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Why Fish It */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .why-item {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      border-left: 4px solid #7c3aed;
+    }
+
+    .why-item .why-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .why-item h4 { font-size: 0.9rem; font-weight: 700; color: #4c1d95; margin-bottom: 0.25rem; }
+    .why-item p { font-size: 0.8rem; color: #6d28d9; line-height: 1.4; }
+
+    /* Imitation Info */
+    .imitation-box {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      color: white;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .imitation-text { flex: 1; min-width: 200px; }
+    .imitation-text h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: #a78bfa; }
+    .imitation-text p { font-size: 0.875rem; line-height: 1.7; color: rgba(255,255,255,0.8); }
+
+    .lifecycle-steps {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .life-step {
+      padding: 0.4rem 0.9rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .life-step.active { background: #7c3aed; color: white; }
+    .life-step.inactive { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+    .life-arrow { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
+
+    /* Sizes */
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .size-item {
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .size-item:hover { border-color: #7c3aed; transform: translateY(-3px); box-shadow: 0 6px 16px rgba(124,58,237,0.15); }
+    .size-item.recommended { border-color: #7c3aed; background: #faf5ff; }
+
+    .size-number { font-size: 1.6rem; font-weight: 800; color: #1e293b; }
+    .size-label { font-size: 0.7rem; font-weight: 700; color: #7c3aed; text-transform: uppercase; margin: 0.3rem 0; }
+    .size-desc { font-size: 0.78rem; color: #64748b; line-height: 1.4; }
+    .recommended-badge { display: inline-block; background: #7c3aed; color: white; padding: 0.15rem 0.6rem; border-radius: 1rem; font-size: 0.65rem; font-weight: 700; margin-top: 0.5rem; }
+
+    /* Colors */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .color-item {
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s;
+    }
+    .color-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+    .color-swatch {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .swatch-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.5);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .color-info { padding: 1rem; background: white; }
+    .color-name { font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 0.25rem; }
+    .color-desc { font-size: 0.78rem; color: #64748b; }
+    .color-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 1rem; margin-top: 0.4rem; }
+
+    /* Rigging */
+    .rig-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .rig-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+    .rig-card:hover { border-color: #7c3aed; box-shadow: 0 6px 16px rgba(124,58,237,0.1); }
+
+    .rig-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .rig-name { font-size: 1.05rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
+    .rig-desc { font-size: 0.82rem; color: #64748b; line-height: 1.6; }
+
+    .rig-steps { margin-top: 1rem; }
+    .rig-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      background: #7c3aed;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Reservoir Tips */
+    .tips-list { display: flex; flex-direction: column; gap: 0.85rem; }
+
+    .tip-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      border-left: 4px solid #7c3aed;
+    }
+
+    .tip-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .tip-text h4 { font-size: 0.9rem; font-weight: 700; color: #1e293b; margin-bottom: 0.2rem; }
+    .tip-text p { font-size: 0.8rem; color: #64748b; line-height: 1.5; }
+
+    /* Footer meta */
+    .footer-meta {
+      background: white;
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 600px) {
+      .hero-title { font-size: 1.6rem; }
+      .size-grid { grid-template-columns: 1fr; }
+      .hero-header { flex-direction: column; align-items: flex-start; }
+      .fly-image-placeholder { width: 100px; height: 100px; font-size: 3.5rem; }
+    }
+  </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/nymph/zebra-midge/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+  <div class="container">
+
+    <a href="/fly-fishing-hub/fly-patterns/index.html" class="back-btn">
+      ← Fly Tying Archive
+    </a>
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div class="hero-header">
+        <div class="fly-image-placeholder"><img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/ZebraMidge-01.jpg" alt="Zebra Midge"></div>
+        <div class="hero-info">
+          <span class="category-badge">Nymph · Midge</span>
+          <h1 class="hero-title">Zebra Midge</h1>
+          <p class="hero-subtitle">미지 퓨파를 모방한 리얼리스틱 님프.<br>연중 사용 가능한 관리형 저수지 필수 패턴.</p>
+          <div class="meta-tags">
+            <span class="meta-tag">📏 Size #16~#20+</span>
+            <span class="meta-tag">⚓ Standard/Jig Hook</span>
+            <span class="meta-tag">📅 2026-02-13</span>
+            <span class="meta-tag">🔗 Source: Ventures Fly Co.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Fish It -->
+    <div class="section-card">
+      <div class="section-title">💡 Why Fish It?</div>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-icon">📅</div>
+          <h4>연중 사용 가능</h4>
+          <p>수온과 계절에 관계없이 미지는 항상 존재. 동절기 특히 효과적.</p>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">🎯</div>
+          <h4>빠른 침강</h4>
+          <p>텅스텐 비드헤드로 빠르게 원하는 수심 도달. 비드 사이즈로 속도 조절 가능.</p>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">🔧</div>
+          <h4>단순하고 내구성 우수</h4>
+          <p>최소한의 재료로 타잉 가능. 초보자도 쉽게 제작. 내구성이 뛰어나 여러 마리 대응.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- What Does It Imitate -->
+    <div class="section-card">
+      <div class="section-title">🔬 What Does It Imitate?</div>
+      <div class="imitation-box">
+        <div class="imitation-text">
+          <h3>Midge Pupa (미지 퓨파)</h3>
+          <p>제브라 미지는 <strong style="color:#a78bfa">리얼리스틱 님프 패턴</strong>으로, 특정 곤충의 형태를 매우 정밀하게 모방합니다. 미지(깔따구류)가 수면으로 부상하는 과정에서의 <strong style="color:#a78bfa">퓨파(번데기) 단계</strong>를 재현합니다. 부상 중인 퓨파는 트라우트에게 손쉬운 먹이로 인식되며, 특히 수중 중층~상층에서 강한 반응을 유발합니다.</p>
+          <div class="lifecycle-steps">
+            <span class="life-step inactive">Egg</span>
+            <span class="life-arrow">→</span>
+            <span class="life-step inactive">Larva</span>
+            <span class="life-arrow">→</span>
+            <span class="life-step active">Pupa ← 모방</span>
+            <span class="life-arrow">→</span>
+            <span class="life-step inactive">Adult</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorite Sizes -->
+    <div class="section-card">
+      <div class="section-title">📏 Favorite Sizes</div>
+      <div class="size-grid">
+        <div class="size-item">
+          <div class="size-number">#16</div>
+          <div class="size-label">Large</div>
+          <div class="size-desc">큰 비드 = 빠른 침강. 깊은 수심 공략 또는 빠른 레이어 탐색 시.</div>
+        </div>
+        <div class="size-item recommended">
+          <div class="size-number">#18</div>
+          <div class="size-label">Standard</div>
+          <div class="size-desc">올라운드 옵션. 대부분의 상황에서 최적의 균형.</div>
+          <div class="recommended-badge">⭐ Best All-Around</div>
+        </div>
+        <div class="size-item">
+          <div class="size-number">#20+</div>
+          <div class="size-label">Small</div>
+          <div class="size-desc">서틀한 프레젠테이션. 압박받은 물고기 또는 맑은 수질에서 효과적.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorite Colors -->
+    <div class="section-card">
+      <div class="section-title">🎨 Favorite Colors</div>
+      <div class="color-grid">
+
+        <div class="color-item">
+          <div class="color-swatch" style="background: linear-gradient(135deg, #1a1a1a, #333);">
+            <div class="swatch-dot" style="background:#111;"></div>
+            <div class="swatch-dot" style="background:#c0c0c0;"></div>
+          </div>
+          <div class="color-info">
+            <div class="color-name">Black / Silver</div>
+            <div class="color-desc">클래식. 가장 보편적이며 어떤 조건에서도 안정적인 반응.</div>
+            <span class="color-tag" style="background:#f1f5f9;color:#475569;">Classic · All-Condition</span>
+          </div>
+        </div>
+
+        <div class="color-item">
+          <div class="color-swatch" style="background: linear-gradient(135deg, #7f0000, #1a1a1a);">
+            <div class="swatch-dot" style="background:#cc0000;"></div>
+            <div class="swatch-dot" style="background:#111;"></div>
+          </div>
+          <div class="color-info">
+            <div class="color-name">Red / Black</div>
+            <div class="color-desc">강한 대비. 탁한 수질 또는 저조도 환경에서 시인성 극대화.</div>
+            <span class="color-tag" style="background:#fff1f2;color:#be123c;">High Contrast · Turbid Water</span>
+          </div>
+        </div>
+
+        <div class="color-item">
+          <div class="color-swatch" style="background: linear-gradient(135deg, #2d5a27, #8B6914);">
+            <div class="swatch-dot" style="background:#4a7c40;"></div>
+            <div class="swatch-dot" style="background:#b8860b;"></div>
+          </div>
+          <div class="color-info">
+            <div class="color-name">Olive / Copper</div>
+            <div class="color-desc">변화구. 패턴 로테이션 시 사용. 자연스러운 유기물 톤.</div>
+            <span class="color-tag" style="background:#f0fdf4;color:#166534;">Change-Up · Natural Tone</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- How to Fish It -->
+    <div class="section-card">
+      <div class="section-title">🎣 How to Fish It?</div>
+      <div class="rig-grid">
+
+        <div class="rig-card">
+          <div class="rig-icon">🪝🪝</div>
+          <div class="rig-name">Double Nymph Rig</div>
+          <div class="rig-desc">두 개의 님프를 동시에 운용. 다른 색상/크기 조합으로 트라우트 반응 탐색.</div>
+          <div class="rig-steps">
+            <div class="rig-step"><span class="step-num">1</span> 인디케이터 설치 (타깃 수심의 1.5배)</div>
+            <div class="rig-step"><span class="step-num">2</span> 리드 님프 (무거운 것, #16) 연결</div>
+            <div class="rig-step"><span class="step-num">3</span> 15~25cm 간격으로 트레일러 님프 (#18) 추가</div>
+            <div class="rig-step"><span class="step-num">4</span> 드리프트 중 인디케이터 변화 주시</div>
+          </div>
+        </div>
+
+        <div class="rig-card">
+          <div class="rig-icon">🪁🪝</div>
+          <div class="rig-name">Dry-Dropper Rig</div>
+          <div class="rig-desc">드라이 플라이를 인디케이터 겸 어태랙터로 사용. 상층부 활성 시 특히 효과적.</div>
+          <div class="rig-steps">
+            <div class="rig-step"><span class="step-num">1</span> 부력 좋은 드라이 플라이 선택 (Parachute Adams 등)</div>
+            <div class="rig-step"><span class="step-num">2</span> 드라이 훅 밴드에서 티펫 연결</div>
+            <div class="rig-step"><span class="step-num">3</span> 수심의 50~75% 길이로 제브라 미지 달기</div>
+            <div class="rig-step"><span class="step-num">4</span> 드라이가 잠기면 즉시 스트라이크</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Reservoir Tips -->
+    <div class="section-card">
+      <div class="section-title">🏞️ 관리형 저수지 적용 팁</div>
+      <div class="tips-list">
+        <div class="tip-item">
+          <div class="tip-icon">❄️</div>
+          <div class="tip-text">
+            <h4>동절기 주력 패턴</h4>
+            <p>수온이 낮은 겨울철, 트라우트는 에너지 효율이 높은 미지 퓨파를 선호합니다. Black/Silver #18을 기본으로 운용.</p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-icon">📐</div>
+          <div class="tip-text">
+            <h4>수심 설정</h4>
+            <p>인디케이터 시스템에서 저수지 바닥 직상 30~50cm를 타깃으로 설정. 미지 퓨파는 바닥에서 수면을 향해 부상하는 행동을 보입니다.</p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-icon">🔄</div>
+          <div class="tip-text">
+            <h4>컬러 로테이션 전략</h4>
+            <p>Black/Silver → Red/Black → Olive/Copper 순서로 로테이션. 반응 없을 시 사이즈를 한 단계 작게 (#20) 조정.</p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-icon">⚡</div>
+          <div class="tip-text">
+            <h4>멀티-스플릿 인디케이터 시스템 적용</h4>
+            <p>기존 멀티-스플릿 님프 리그의 트레일러 포지션에 제브라 미지 배치 시 효과적. 리드 패턴과 색상 대비를 주면 더욱 좋습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Original PDF -->
+    <div class="section-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: none;">
+      <div class="section-title" style="color: #a78bfa;">📄 Original Source</div>
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem;">Zebra Midge Cheat Sheet V1.0</p>
+          <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">by Ventures Fly Co. · venturesflyco.com</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <a href="Cheat_Sheet__Zebra_Midge__V1_0.pdf" target="_blank"
+             style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.4rem; background: #7c3aed; color: white; border-radius: 0.75rem; text-decoration: none; font-size: 0.875rem; font-weight: 700; transition: all 0.2s;"
+             onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'">
+            👁️ PDF 보기
+          </a>
+          <a href="Cheat_Sheet__Zebra_Midge__V1_0.pdf" download
+             style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.4rem; background: rgba(255,255,255,0.1); color: white; border-radius: 0.75rem; text-decoration: none; font-size: 0.875rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s;"
+             onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+            ⬇️ 다운로드
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-meta">
+      <span>📁 flies/nymph/zebra-midge/</span>
+      <span>Category: Nymph</span>
+      <span>Source: Ventures Fly Co. Cheat Sheet</span>
+      <span>Added: 2026-02-13</span>
+    </div>
+
+  </div>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

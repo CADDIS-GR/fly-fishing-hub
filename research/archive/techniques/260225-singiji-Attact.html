@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신기지 25-26 시즌 완전 정복 가이드 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* Chart Container Styling Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* max-w-xl equivalent */
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+
+        /* Fish Animation for Depth Visualizer */
+        .fish-icon {
+            transition: top 1s ease-in-out, left 3s ease-in-out;
+            position: absolute;
+        }
+
+        /* Water Gradient */
+        .water-column {
+            background: linear-gradient(to bottom, #bae6fd 0%, #0ea5e9 40%, #0c4a6e 100%);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; 
+            appearance: none;
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 32px;
+            height: 32px;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none; 
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-slate-50 text-slate-800 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/260225-singiji-Attact.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Header Section -->
+    <header class="bg-slate-900 text-white py-8 px-4 shadow-lg">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">🎣 그곳이 알고 싶다 : 신기낚시터</h1>
+            <p class="text-slate-400 text-sm md:text-base">2025-26 시즌 조행기 빅데이터 심층 분석 백서</p>
+        </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-8">
+
+        <!-- Fishing Ground Profile (NEW) -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-indigo-500">
+            <h2 class="text-xl font-bold text-slate-800 mb-3">📍 낚시터 기본 프로필</h2>
+            <p class="text-slate-600 leading-relaxed mb-6 text-sm md:text-base">
+                신기지는 경기도 용인시 기흥구 명지대학교 아래에 위치한 <strong>계곡형 저수지 관리 낚시터</strong>입니다. 산속 밀폐형 구조로 인근 유료터 대비 기온·수온이 낮은 편이며, 2025년 시설 리노베이션으로 크게 개선되었습니다.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
+                    <div class="text-xs text-slate-400 font-bold mb-1">위치</div>
+                    <div class="text-sm font-medium text-slate-700">경기도 용인시 기흥구<br><span class="text-xs text-slate-500 font-normal">(명지대학교 하류)</span></div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
+                    <div class="text-xs text-slate-400 font-bold mb-1">형태</div>
+                    <div class="text-sm font-medium text-slate-700">계곡형 저수지<br><span class="text-xs text-slate-500 font-normal">산속 밀폐형 구조</span></div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
+                    <div class="text-xs text-slate-400 font-bold mb-1">수심 범위</div>
+                    <div class="text-sm font-medium text-slate-700">상류 1.5m<br><span class="text-xs text-slate-500 font-normal">→ 부교 4.5m (급변)</span></div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
+                    <div class="text-xs text-slate-400 font-bold mb-1">시즌</div>
+                    <div class="text-sm font-medium text-slate-700">10월 말 오픈<br><span class="text-xs text-slate-500 font-normal">이듬해 봄까지</span></div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
+                    <div class="text-xs text-slate-400 font-bold mb-1">대상어</div>
+                    <div class="text-sm font-medium text-slate-700">무지개 송어<br><span class="text-xs text-slate-500 font-normal">산천어 (혼합 방류)</span></div>
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100 flex flex-col justify-center">
+                    <div class="text-xs text-indigo-500 font-bold mb-1">2025 특이사항 ✨</div>
+                    <div class="text-sm font-medium text-indigo-800">리노베이션 완료<br><span class="text-xs text-indigo-600 font-normal">물색 대폭 개선, 부교 신설</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Zone & Point Map (NEW) -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-emerald-500">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">🗺️ 수역 구조 및 핵심 포인트</h2>
+            <p class="text-slate-600 text-sm md:text-base mb-6">
+                신기지는 4개 구역으로 나뉘며 각 구역의 수심·햇빛·회유 패턴이 뚜렷하게 다릅니다. 어느 시간에 어느 포인트를 공략하느냐가 조황의 핵심입니다.
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Conceptual Flow Diagram -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col items-center justify-center">
+                    <h3 class="font-bold text-slate-700 mb-6 text-center text-sm">지형 흐름도 (상류 → 하류)</h3>
+                    <div class="flex flex-col items-center space-y-3 relative w-full">
+                        <!-- Connecting Line -->
+                        <div class="absolute w-1 bg-slate-200 h-full left-1/2 -translate-x-1/2 z-0 rounded-full"></div>
+                        
+                        <!-- Flow Nodes -->
+                        <div class="relative z-10 w-full max-w-[220px] bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 text-center text-sm">
+                            <span class="font-bold text-sky-600">① 상류 새물 유입구</span><br>
+                            <span class="text-xs text-slate-500 font-medium">1.5~2.0m (산천어/드라이)</span>
+                        </div>
+                        <div class="relative z-10 w-full max-w-[220px] bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 text-center text-sm">
+                            <span class="font-bold text-emerald-600">④ 진입로 산 아래</span><br>
+                            <span class="text-xs text-slate-500 font-medium">2.0~3.0m (바람막이)</span>
+                        </div>
+                        <div class="relative z-10 w-full max-w-[220px] bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 text-center text-sm">
+                            <span class="font-bold text-amber-600">② 관리소 앞</span><br>
+                            <span class="text-xs text-slate-500 font-medium">2.0~3.0m (오후 피딩/브레이크)</span>
+                        </div>
+                        <div class="relative z-10 w-full max-w-[220px] bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 text-center text-sm">
+                            <span class="font-bold text-indigo-600">③ 부교권 (중앙)</span><br>
+                            <span class="text-xs text-slate-500 font-medium">3.0~4.5m (회유 집결/원거리)</span>
+                        </div>
+                        <div class="relative z-10 w-full max-w-[220px] bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-center text-sm">
+                            <span class="font-bold text-slate-400">하류 결빙 구역</span><br>
+                            <span class="text-xs text-slate-400">1월 이후 얼음 발생</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Zone Details -->
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-indigo-700">① 부교권</h4>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono font-bold">3.0 - 4.5m</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 flex-grow">원거리 캐스팅 가능. 그물 아래 회유 개체 집결. 혹한기에도 회유 활발. 수심 깊어 경계심 낮은 개체 다수.</p>
+                        <div class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1.5 rounded inline-block self-start">⏱ 오전 ~ 전일 · 피딩타임 전</div>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-amber-700">② 관리소 앞</h4>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono font-bold">2.0 - 3.0m</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 flex-grow">2m 전방 브레이크 라인 존재. 회유 송어 집결 포인트. 오후 산 그늘이 지면서 활성도 폭발.</p>
+                        <div class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1.5 rounded inline-block self-start">⏱ 오후 3~4시 이후 최고</div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-sky-700">③ 상류 새물 유입구</h4>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono font-bold">1.5 - 2.0m</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 flex-grow">산천어 선호 구역. 드라이 플라이 낚시 최적. 매이플라이·캐디스·깔따구 해치 발생.</p>
+                        <div class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1.5 rounded inline-block self-start">⏱ 오전 이른 시간 · 드라이 타임</div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-emerald-700">④ 진입로 산 아래</h4>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono font-bold">2.0 - 3.0m</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 flex-grow">바람이 막히는 피신처. 수온 안정적. 강풍 일수에 포인트 차이가 극심해질 때 유리한 구역.</p>
+                        <div class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1.5 rounded inline-block self-start">⏱ 바람 강한 날 특히 유리</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Core Tip (Break line) -->
+            <div class="mt-6 bg-rose-50 border border-rose-200 p-5 rounded-xl flex items-start gap-4 shadow-sm">
+                <div class="text-2xl mt-1">💡</div>
+                <div>
+                    <h4 class="font-bold text-rose-800 text-base mb-1">핵심 구조: 관리소 앞 브레이크 라인</h4>
+                    <p class="text-sm md:text-base text-rose-700 leading-relaxed">
+                        관리소 앞 2m 전방에 위치한 브레이크 라인은 회유하는 개체들이 집결하는 가장 중요한 포인트입니다. <strong>폴링이 끝나는 순간 이 라인을 통과하게 만들면 입질 확률이 70~80%</strong>에 달합니다. 집중 공략하세요!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro Text -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-sky-500">
+            <h2 class="text-xl font-bold text-slate-800 mb-2">📊 분석 개요</h2>
+            <p class="text-slate-600 leading-relaxed">
+                본 가이드는 2025년 10월 개장부터 2026년 2월 해빙기까지 총 12회의 실전 조행기를 분석하여 제작되었습니다. 
+                신기지는 계곡형 저수지로 <strong>수온과 수심층(T棚)의 변화</strong>를 읽는 것이 핵심입니다. 
+                아래 타임라인 슬라이더를 움직여 <strong>시기별 공략법</strong>을 시뮬레이션 해보세요.
+            </p>
+        </section>
+
+        <!-- Timeline Control (The Core Interaction) -->
+        <section class="bg-white rounded-xl shadow-md p-6 sticky top-2 z-20 ring-1 ring-slate-200/50">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-bold text-slate-400">SEASON START</span>
+                <h3 class="text-2xl font-bold text-sky-600" id="current-month-display">11월: 가을 시즌</h3>
+                <span class="text-sm font-bold text-slate-400">THAW</span>
+            </div>
+            <div class="relative h-12 flex items-center">
+                <div class="absolute w-full h-2 bg-slate-200 rounded-full"></div>
+                <!-- Range Slider 0 to 4 corresponding to [Oct/Nov, Dec, Jan, Feb-Early, Feb-Late] -->
+                <input type="range" min="0" max="4" value="0" id="season-slider" class="absolute w-full h-full opacity-0 cursor-pointer z-20">
+                <div id="slider-thumb" class="absolute h-8 w-8 bg-sky-600 rounded-full shadow-lg border-4 border-white transition-all duration-200 ease-out pointer-events-none" style="left: 0%;"></div>
+                
+                <!-- Markers -->
+                <div class="absolute w-full flex justify-between px-1 pointer-events-none">
+                    <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                    <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                    <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                    <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                    <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+                </div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-500 mt-2 font-medium">
+                <span>10-11월<br>(활성기)</span>
+                <span>12월<br>(저수온)</span>
+                <span>1월<br>(혹한기)</span>
+                <span>2월 초<br>(해빙기)</span>
+                <span>2월 말<br>(파워업)</span>
+            </div>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- LEFT COL: Conditions & Visualizer (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Metrics Cards -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                        <div class="text-xs text-slate-400 uppercase tracking-wide">평균 수온</div>
+                        <div class="text-2xl font-bold text-slate-700" id="metric-temp">13°C</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                        <div class="text-xs text-slate-400 uppercase tracking-wide">물색 (Clarity)</div>
+                        <div class="text-xl font-bold text-blue-500" id="metric-clarity">맑음</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm text-center">
+                        <div class="text-xs text-slate-400 uppercase tracking-wide">난이도</div>
+                        <div class="text-xl font-bold text-amber-500" id="metric-difficulty">쉬움</div>
+                    </div>
+                </div>
+
+                <!-- Lake Cross-Section Visualizer -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-700">🌊 수심층(T棚) & 어종 분포도</h3>
+                        <span class="text-xs bg-sky-100 text-sky-800 px-2 py-1 rounded">실시간 시뮬레이션</span>
+                    </div>
+                    
+                    <!-- The Water Tank -->
+                    <div class="relative h-80 w-full water-column">
+                        <!-- Depth Markers -->
+                        <div class="absolute right-0 top-0 h-full w-12 bg-black/10 flex flex-col justify-between text-xs text-white/80 pr-1 py-2 text-right font-mono">
+                            <span>0m</span>
+                            <span>1m</span>
+                            <span>2m</span>
+                            <span>3m</span>
+                            <span>4m</span>
+                        </div>
+
+                        <!-- Bu-gyo (Pontoon) Representation -->
+                        <div class="absolute left-0 top-0 w-1/4 h-4 bg-amber-800/80 shadow-lg z-10 flex items-center justify-center text-[10px] text-white">부교</div>
+                        <div class="absolute left-4 top-4 w-0.5 h-full bg-slate-900/20 border-l border-dashed border-slate-400"></div> <!-- Net -->
+
+                        <!-- Fish Layers (Managed by JS) -->
+                        <!-- Yamame (Cherry Salmon) - Usually Upper -->
+                        <div id="fish-layer-upper" class="absolute w-full transition-all duration-1000 ease-in-out" style="top: 20%;">
+                            <div class="absolute left-[20%] text-2xl animate-pulse">🐟</div>
+                            <div class="absolute left-[50%] text-xl animate-pulse delay-75">🐟</div>
+                            <div class="text-xs text-white font-bold bg-blue-900/50 px-2 rounded absolute left-[25%] -top-4">산천어 (상층)</div>
+                        </div>
+
+                        <!-- Rainbow Trout - Usually Lower -->
+                        <div id="fish-layer-lower" class="absolute w-full transition-all duration-1000 ease-in-out" style="top: 60%;">
+                            <div class="absolute right-[20%] text-3xl">🐠</div>
+                            <div class="absolute right-[40%] text-4xl delay-150">🐠</div>
+                            <div class="absolute right-[60%] text-2xl delay-300">🐠</div>
+                            <div class="text-xs text-white font-bold bg-slate-900/50 px-2 rounded absolute right-[30%] -top-5">무지개송어 (심해/바닥)</div>
+                        </div>
+                        
+                        <!-- Info Overlay -->
+                        <div id="depth-desc" class="absolute bottom-4 left-4 bg-black/60 text-white text-xs p-2 rounded backdrop-blur-sm max-w-[70%]">
+                            데이터 로딩중...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Chart -->
+                <div class="bg-white p-4 rounded-xl shadow-sm">
+                    <h3 class="text-sm font-bold text-slate-500 mb-2">활성도 지수 (Activity Index)</h3>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COL: Tactics & Patterns (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- The Fly Box (Pattern Recommender) -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-200">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 rounded-t-xl">
+                        <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                            🪰 이달의 필승 패턴 (The Fly Box)
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="fly-recommendation" class="space-y-4">
+                            <!-- Dynamic Content -->
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">💡 타잉(Tying) 꿀팁</h4>
+                            <p id="tying-tip" class="text-sm text-slate-600 bg-amber-50 p-3 rounded-lg border border-amber-100">
+                                팁 로딩중...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tactical Map / Golden Time -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200">
+                        <h3 class="font-bold text-slate-700 flex items-center gap-2">
+                            ⏱️ 골든 타임 & 명당
+                        </h3>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="bg-amber-100 text-amber-600 p-2 rounded-lg text-xl">☀️</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-700">오전 (10시 전후)</h4>
+                                <p class="text-sm text-slate-600" id="tactic-morning">부교권 3.5m 깊은 수심 공략</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="bg-red-100 text-red-600 p-2 rounded-lg text-xl">🌇</div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-700">오후 (3시 ~ 해질녘)</h4>
+                                <p class="text-sm text-slate-600" id="tactic-afternoon">관리소 앞 브레이크 라인 (2m권)</p>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400 text-right">
+                            * 오후 2시 사료 타임 필참!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pro Tip Card -->
+                <div class="bg-slate-800 text-slate-200 rounded-xl p-5 shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-6xl text-slate-700 opacity-20">⚓</div>
+                    <h3 class="font-bold text-amber-400 mb-2">실전 액션 가이드</h3>
+                    <p id="action-guide" class="text-sm leading-relaxed">
+                        가이드 로딩중...
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 text-slate-500 py-6 mt-12 text-center text-sm">
+        <p>Source: 신기지 25-26시즌 조행기 (12건) 통합 분석</p>
+        <p class="mt-1">Generated by Interactive Field Guide System</p>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // --- 1. DATA SOURCE (Synthesized from Analysis) ---
+        const seasonData = [
+            {
+                // Index 0: 10-11월 (Early Season)
+                month: "10월~11월 (시즌 초반)",
+                temp: "10~13°C",
+                clarity: "보통",
+                difficulty: "★☆☆☆☆ (매우 좋음)",
+                activityScore: 90,
+                depthDesc: "전층 회유. 상층(1m) 산천어, 중하층(2m) 송어 분리.",
+                upperTop: "15%", // CSS top % for upper fish
+                lowerTop: "50%", // CSS top % for lower fish
+                flies: [
+                    { name: "드라이 플라이", icon: "🦟", desc: "오후 3-5시 해치 타임. 메이플라이/캐디스" },
+                    { name: "마라부 리치", icon: "〰️", desc: "올리브/화이트. 전천후 탐색용" }
+                ],
+                tyingTip: "아직 고기 힘이 좋습니다. 훅은 튼튼한 것으로, 티펫은 0.8호 이상을 권장합니다.",
+                morningTactic: "부교권 장타 님핑. 활성도가 좋아 전역에서 입질.",
+                afternoonTactic: "드라이 플라이 피딩! 상류 새물 유입구 및 산그늘.",
+                actionGuide: "다양한 기법이 통합니다. 리트리브 액션을 섞어주면 공격적으로 반응합니다."
+            },
+            {
+                // Index 1: 12월 (Winter Start)
+                month: "12월 (겨울 시작)",
+                temp: "5~7°C",
+                clarity: "맑아짐",
+                difficulty: "★★☆☆☆ (보통)",
+                activityScore: 70,
+                depthDesc: "수온 하강으로 깊은 곳으로 이동 시작. 2.5m 이하 집중.",
+                upperTop: "40%", 
+                lowerTop: "70%",
+                flies: [
+                    { name: "에그 (Egg)", icon: "🥚", desc: "핫핑크, 치즈색. 산란기 본능 자극" },
+                    { name: "미니 리치", icon: "⚫", desc: "블랙 컬러. 사이즈를 줄여야 함" }
+                ],
+                tyingTip: "날벌레가 사라지는 시기입니다. 에그 패턴에 텅스텐 비드를 끼워 깊은 수심을 노리세요.",
+                morningTactic: "부교 그물망 주변 깊은 수심(3m권) 탐색.",
+                afternoonTactic: "사료 타임(2시) 직후 반짝 피딩을 놓치지 마세요.",
+                actionGuide: "폴링(Falling) 바이트가 많습니다. 채비가 내려갈 때 라인의 움직임을 주시하세요."
+            },
+            {
+                // Index 2: 1월 (Deep Winter)
+                month: "1월 (혹한기)",
+                temp: "1~3°C",
+                clarity: "유리알 (매우 맑음)",
+                difficulty: "★★★★☆ (어려움)",
+                activityScore: 30,
+                depthDesc: "활동성 극도로 저하. 바닥권(3.5m+) 밀착 스쿨링.",
+                upperTop: "80%", 
+                lowerTop: "85%", // Almost at bottom
+                flies: [
+                    { name: "마이크로 님프", icon: "🐛", desc: "#18 이하 밋지 퓨파/라바" },
+                    { name: "지그헤드 에그", icon: "⚓", desc: "바닥 직공용 무거운 에그" }
+                ],
+                tyingTip: "무조건 작게(#18~#20). 맑은 물색 대비를 위해 '보라색(Purple)' 펄을 섞어 타잉해보세요.",
+                morningTactic: "이동하지 마세요. 부교권 가장 깊은 곳을 지켜야 합니다.",
+                afternoonTactic: "해질녘 짧은 시간, 관리소 앞 2m 브레이크 라인으로 잠시 올라옵니다.",
+                actionGuide: "★ 핵심: '스테이(Stay)'. 폴링 후 바닥에서 살짝 끌고 5초 이상 멈추세요. 그때 뭅니다."
+            },
+            {
+                // Index 3: 2월 초 (Thaw Start)
+                month: "2월 초 (해빙기)",
+                temp: "4~5°C",
+                clarity: "보통",
+                difficulty: "★★★☆☆ (변화 심함)",
+                activityScore: 50,
+                depthDesc: "수온 상승으로 조금씩 부상. 중층(2m) 활동 재개.",
+                upperTop: "40%", 
+                lowerTop: "65%",
+                flies: [
+                    { name: "츄위스킨 라바", icon: "🪱", desc: "탄(Tan), 핑크 컬러. 쫀득한 식감" },
+                    { name: "검정 리치", icon: "⬛", desc: "해빙기 탁도 발생 시 효과적" }
+                ],
+                tyingTip: "해빙으로 물색이 탁해지면 '검정색(Black)' 패턴의 실루엣이 가장 잘 먹힙니다.",
+                morningTactic: "수온이 오르는 11시 이후부터 입질이 활발해집니다.",
+                afternoonTactic: "연안 쪽으로 붙는 송어들이 목격됩니다.",
+                actionGuide: "아주 느린 리트리브(Slow Retrieve)를 섞어주세요."
+            },
+            {
+                // Index 4: 2월 말 (Power Up)
+                month: "2월 말 (활성도 폭발)",
+                temp: "6°C 이상",
+                clarity: "보통",
+                difficulty: "★★☆☆☆ (좋음)",
+                activityScore: 85,
+                depthDesc: "파워풀한 유영. 전층에서 먹이 활동.",
+                upperTop: "25%", 
+                lowerTop: "50%",
+                flies: [
+                    { name: "라바 패턴", icon: "🪱", desc: "UV 츄위스킨. 깔끔한 입질감" },
+                    { name: "스트리머", icon: "🐟", desc: "공격성 회복. 강한 훅셋 유도" }
+                ],
+                tyingTip: "이제 바늘을 키워도 됩니다(#14~#16). 송어 힘이 세졌으니 훅 펴짐에 주의하세요.",
+                morningTactic: "오전 일찍부터 활발한 입질. 부교권, 진입로 전역.",
+                afternoonTactic: "오후 늦게까지 파이팅 넘치는 손맛 가능.",
+                actionGuide: "강하게 채고 나가는 입질이 돌아옵니다. 시원한 챔질을 준비하세요."
+            }
+        ];
+
+        // --- 2. CHART INITIALIZATION ---
+        let activityChartInstance = null;
+
+        function initChart() {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            
+            // Register plugin for text inside doughnut
+            const centerTextPlugin = {
+                id: 'centerText',
+                beforeDraw: function(chart) {
+                    var width = chart.width,
+                        height = chart.height,
+                        ctx = chart.ctx;
+                    ctx.restore();
+                    var fontSize = (height / 114).toFixed(2);
+                    ctx.font = "bold " + fontSize + "em sans-serif";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#64748b"; // slate-500
+                    
+                    var text = chart.config.data.datasets[0].data[0] + "%",
+                        textX = Math.round((width - ctx.measureText(text).width) / 2),
+                        textY = height / 2;
+                    ctx.fillText(text, textX, textY);
+                    ctx.save();
+                }
+            };
+
+            activityChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['활성도', '비활성'],
+                    datasets: [{
+                        data: [90, 10], // Initial Data
+                        backgroundColor: ['#0ea5e9', '#f1f5f9'], // Sky-500, Slate-100
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                },
+                plugins: [centerTextPlugin]
+            });
+        }
+
+        // --- 3. DASHBOARD UPDATE LOGIC ---
+        function updateDashboard(index) {
+            const data = seasonData[index];
+
+            // Update Header & Slider Position
+            document.getElementById('current-month-display').innerText = data.month;
+            const percentage = (index / 4) * 100;
+            document.getElementById('slider-thumb').style.left = `calc(${percentage}% - ${percentage > 90 ? '2rem' : '0rem'})`; // Adjust for thumb width at end
+
+            // Update Metrics
+            document.getElementById('metric-temp').innerText = data.temp;
+            document.getElementById('metric-clarity').innerText = data.clarity;
+            document.getElementById('metric-difficulty').innerText = data.difficulty;
+            
+            // Update Activity Chart
+            if(activityChartInstance) {
+                activityChartInstance.data.datasets[0].data = [data.activityScore, 100 - data.activityScore];
+                
+                // Color Logic: High activity = Blue, Low = Slate/Red warning could be added
+                let color = '#0ea5e9'; // Blue
+                if(data.activityScore < 50) color = '#f59e0b'; // Amber for warning
+                if(data.activityScore < 40) color = '#ef4444'; // Red for danger
+                
+                activityChartInstance.data.datasets[0].backgroundColor = [color, '#f1f5f9'];
+                activityChartInstance.update();
+            }
+
+            // Update Fish Visualizer (The Cross Section)
+            document.getElementById('fish-layer-upper').style.top = data.upperTop;
+            document.getElementById('fish-layer-lower').style.top = data.lowerTop;
+            document.getElementById('depth-desc').innerText = data.depthDesc;
+
+            // Update Fly Patterns
+            const flyContainer = document.getElementById('fly-recommendation');
+            flyContainer.innerHTML = ''; // Clear previous
+            data.flies.forEach(fly => {
+                const flyHtml = `
+                    <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-100 rounded-lg hover:bg-sky-50 transition-colors">
+                        <div class="text-3xl">${fly.icon}</div>
+                        <div>
+                            <div class="font-bold text-slate-700">${fly.name}</div>
+                            <div class="text-xs text-slate-500">${fly.desc}</div>
+                        </div>
+                    </div>
+                `;
+                flyContainer.innerHTML += flyHtml;
+            });
+
+            // Update Text Content
+            document.getElementById('tying-tip').innerText = data.tyingTip;
+            document.getElementById('tactic-morning').innerText = data.morningTactic;
+            document.getElementById('tactic-afternoon').innerText = data.afternoonTactic;
+            document.getElementById('action-guide').innerText = data.actionGuide;
+        }
+
+        // --- 4. EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            
+            const slider = document.getElementById('season-slider');
+            
+            // Initial render
+            updateDashboard(slider.value);
+
+            // Listener
+            slider.addEventListener('input', (e) => {
+                updateDashboard(e.target.value);
+                
+                // Visual Thumb movement (manual sync for better styling control)
+                const val = e.target.value;
+                const min = e.target.min ? e.target.min : 0;
+                const max = e.target.max ? e.target.max : 100;
+                const newVal = Number(((val - min) * 100) / (max - min));
+                // Position adjustment handled in updateDashboard for state sync
+            });
+        });
+
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>낚시대장 Archive - 2026 Edt. · CADDIS-GR LAB</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #fcfaff;
+            color: #1e293b;
+        }
+        .text-gradient-purple {
+            background: linear-gradient(to right, #9333ea, #4f46e5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-shadow {
+            box-shadow: 0 25px 50px -15px rgba(124, 58, 237, 0.1);
+        }
+        .glass-purple {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(147, 51, 234, 0.1);
+        }
+        /* Smooth scale on hover */
+        .hover-scale {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .group:hover .hover-scale {
+            transform: scale(1.1);
+        }
+        /* Image Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s ease;
+        }
+        .image-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
+        }
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10000;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        .clickable-image {
+            cursor: zoom-in;
+            transition: opacity 0.3s;
+        }
+        .clickable-image:hover {
+            opacity: 0.9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="antialiased selection:bg-purple-200 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/chironomid/white-pupa-pink-larva/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Background Decor -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none opacity-40 -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-100 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-100 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-purple-100 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30">
+                    <i class="fas fa-crosshairs text-white text-sm"></i>
+                </div>
+                <span class="font-black tracking-tighter text-lg uppercase text-purple-900">낚시대장 Archive</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-widest text-slate-400">
+                <a href="/fly-fishing-hub/fly-patterns/index.html" class="hover:text-purple-600 transition-colors">← Back to Archive</a>
+                <a href="#patterns" class="hover:text-purple-600 transition-colors">Patterns</a>
+                <a href="#tactics" class="hover:text-purple-600 transition-colors">Tactics</a>
+                <button class="px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-100 rounded-full transition-all font-bold">
+                    2026 Series
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="max-w-6xl mx-auto pt-20 pb-12 px-6 flex flex-col items-center">
+        <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-purple-600 text-[9px] font-black tracking-[0.2em] uppercase mb-8">
+            <i class="fas fa-sparkles mr-2"></i> Master's Fly Tying Series
+        </div>
+        
+        <!-- Typography Layout -->
+        <div class="flex flex-col items-center md:items-end w-full max-w-4xl mx-auto mb-10">
+            <h1 class="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter leading-tight uppercase flex flex-wrap justify-center gap-x-3 md:gap-x-5 text-slate-900">
+                <span>White Pupa,</span>
+                <span class="text-purple-600">Pink</span>
+                <span class="text-indigo-600">Larva</span>
+            </h1>
+            <div class="w-full text-center md:text-right mt-2">
+                <span class="text-slate-400 font-black text-sm md:text-xl lg:text-2xl tracking-tighter opacity-80 uppercase">
+                    <span class="hidden md:inline-block mr-2 opacity-30">---------------------</span> 2026 Edt.
+                </span>
+            </div>
+        </div>
+        
+        <p class="text-slate-400 text-base md:text-lg max-w-xl mx-auto italic font-medium leading-relaxed">
+            "입질은 우연이 아니라, 완벽하게 설계된 <span class="text-purple-600 font-bold border-b-2 border-purple-200">'뉴앙스'</span>의 결과다."
+        </p>
+    </header>
+
+    <!-- Hero Content -->
+    <div class="max-w-4xl mx-auto px-6 mb-20">
+        <div class="relative rounded-[2.5rem] overflow-hidden border border-purple-100 shadow-xl bg-white group">
+            <div class="w-full h-56 md:h-[350px] overflow-hidden">
+                <img 
+                    src="https://images.unsplash.com/photo-1544376798-89aa6b82c6cd?auto=format&fit=crop&q=80&w=1200" 
+                    alt="Fly Fishing Workspace" 
+                    class="w-full h-full object-cover opacity-80 transition-transform duration-1000 group-hover:scale-105"
+                >
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6 md:p-10 text-left">
+                <span class="text-purple-600 text-[10px] font-black uppercase tracking-[0.3em] mb-2 block">Chironomid Collection</span>
+                <h2 class="text-2xl md:text-3xl font-black mb-2 text-slate-900 uppercase tracking-tighter">Attractor Masterpiece</h2>
+                <p class="text-slate-600 max-w-md text-xs md:text-sm leading-relaxed font-medium">
+                    저온기 관리형 저수지에서 송어의 본능을 깨우는 <span class="text-purple-500 font-bold">크로노미드</span> 시리즈
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Tech Section -->
+    <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+        <!-- Master's Specs -->
+        <div class="bg-white p-6 rounded-[2rem] border border-purple-50 shadow-sm">
+            <h3 class="flex items-center text-[11px] font-black mb-8 text-purple-600 uppercase tracking-widest">
+                <i class="fas fa-microscope mr-2.5"></i> Master's Touch
+            </h3>
+            <div class="space-y-6 text-[13px]">
+                <div class="flex justify-between items-center border-b border-purple-50 pb-3">
+                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-widest">Hook</span>
+                    <span class="text-slate-800 font-black tracking-tight">DAIICHI 1760 #14</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-purple-50 pb-3">
+                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-widest">Finish</span>
+                    <span class="text-slate-800 font-black tracking-tight">Thin UV Resin + Vanish Coat</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-purple-50 pb-3">
+                    <span class="text-slate-400 font-bold uppercase text-[9px] tracking-widest">Curing</span>
+                    <span class="text-slate-800 font-black tracking-tight">Instant Curing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bubble Dot Highlight -->
+        <div class="md:col-span-2 bg-gradient-to-br from-purple-600 to-indigo-700 p-8 rounded-[2rem] flex flex-col md:flex-row items-center relative overflow-hidden group shadow-lg shadow-purple-500/10 text-white">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="bg-white rounded-2xl p-5 mb-6 md:mb-0 md:mr-8 shadow-xl relative z-10 transform group-hover:scale-105 transition-transform">
+                <i class="fas fa-droplet text-purple-600 text-2xl"></i>
+            </div>
+            <div class="relative z-10 text-left">
+                <h3 class="text-xl md:text-2xl font-black mb-2 tracking-tighter uppercase">Core Tech: Bubble Dot</h3>
+                <p class="text-purple-100 text-[13px] leading-relaxed font-medium">
+                    바니시가 중력을 따라 비드 아래로 흐르며 형성되는 미세한 방울. 
+                    유충이 부상할 때 머금는 <span class="text-white font-bold underline underline-offset-4 decoration-purple-300">공기 방울</span>을 완벽하게 재현합니다.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pattern Grid -->
+    <section id="patterns" class="max-w-5xl mx-auto px-6 mb-24">
+        <div class="flex items-center justify-between mb-12 px-4">
+            <div class="h-px bg-purple-100 flex-grow"></div>
+            <h2 class="text-xl font-black px-8 flex items-center tracking-tighter uppercase text-slate-900">
+                <i class="fas fa-lightbulb text-purple-600 mr-3"></i> Pattern Line-up
+            </h2>
+            <div class="h-px bg-purple-100 flex-grow"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+            <!-- Pink Larva 3D -->
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-purple-50 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col h-full">
+                <div class="h-2 bg-gradient-to-r from-purple-600 to-rose-400"></div>
+                <div class="h-64 overflow-hidden relative bg-purple-50/30 shrink-0">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/PinkLarvar_3D.jpg" alt="Pink Larva 3D" class="w-full h-full object-cover hover-scale clickable-image" onclick="openImageModal(this.src)">
+                    <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none"></div>
+                </div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-black tracking-tight group-hover:text-purple-600 transition-colors text-slate-900">Pink Larva 3D</h3>
+                            <p class="text-[11px] font-bold tracking-wide italic text-rose-500 uppercase">입체적 반사, 공격성을 극대화하다</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-purple-50 text-rose-500 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                            <i class="fas fa-fire-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-slate-500 text-[13px] mb-8 leading-relaxed font-medium min-h-[4rem]">
+                        한사이즈 굵은 wire를 감아서 내부의 레드 와이어와 핑크 바디가 입체적으로 굴절되어 보입니다. 깊은 수심에서도 송어의 시선을 강렬하게 사로잡습니다.
+                    </p>
+                    <div class="space-y-3 mb-8 mt-auto">
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">UNDER THREAD</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">UTC FL Pink 70D</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">BODY MATERIAL</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">UTC FL Pink 70D</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">RIBBING</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">Red wire (BR)</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-purple-50">
+                        <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-purple-700 text-[11px] font-bold flex items-center">
+                            <i class="fas fa-sun mr-2 text-rose-400"></i> 한겨울 물색 맑고 햇살 좋은 날
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pink Larva 2D -->
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-purple-50 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col h-full">
+                <div class="h-2 bg-gradient-to-r from-rose-400 to-rose-200"></div>
+                <div class="h-64 overflow-hidden relative bg-purple-50/30 shrink-0">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/PinkLarva_2D.jpg" alt="Pink Larva 2D" class="w-full h-full object-cover hover-scale clickable-image" onclick="openImageModal(this.src)">
+                    <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none"></div>
+                </div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-black tracking-tight group-hover:text-purple-600 transition-colors text-slate-900">Pink Larva 2D</h3>
+                            <p class="text-[11px] font-bold tracking-wide italic text-rose-400 uppercase">슬림한 실루엣, 예민한 입질의 해답</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-purple-50 text-rose-400 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                    </div>
+                    <p class="text-slate-500 text-[13px] mb-8 leading-relaxed font-medium min-h-[4rem]">
+                        레진 코팅을 최소화하여 재료 본연의 질감을 살린 슬림 버전입니다. 입질이 예민하거나 물 흐름이 적은 상황에서 송어가 거부감 없이 흡입합니다.
+                    </p>
+                    <div class="space-y-3 mb-8 mt-auto">
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">UNDER THREAD</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">UTC FL Pink 70D</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">BODY MATERIAL</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">Veevus BQ14</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">RIBBING</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">Flat Red Wire (XS)</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-purple-50">
+                        <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-purple-700 text-[11px] font-bold flex items-center">
+                            <i class="fas fa-crosshairs mr-2 text-rose-400"></i> 활성도가 극도로 낮아진 정오 시간대
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- White Pupa -->
+            <div class="group bg-white rounded-[2rem] overflow-hidden border border-purple-50 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl flex flex-col h-full">
+                <div class="h-2 bg-gradient-to-r from-purple-200 to-indigo-100"></div>
+                <div class="h-64 overflow-hidden relative bg-purple-50/30 shrink-0">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/WhitePupa.jpg" alt="White Pupa" class="w-full h-full object-cover hover-scale clickable-image" onclick="openImageModal(this.src)">
+                    <div class="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none"></div>
+                </div>
+                <div class="p-8 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-black tracking-tight group-hover:text-purple-600 transition-colors text-slate-900">White Pupa</h3>
+                            <p class="text-[11px] font-bold tracking-wide italic text-purple-500 uppercase">순수한 화이트, UV의 신비로운 유혹</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-purple-50 text-purple-500 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                            <i class="fas fa-ghost"></i>
+                        </div>
+                    </div>
+                    <p class="text-slate-500 text-[13px] mb-8 leading-relaxed font-medium min-h-[4rem]">
+                        가장 무난한 선택지의 화이트 버전. 빛이 없는 곳에서 더 빛을 발하며, 저광도 상황에서도 송어의 시각을 자극하는 퓨어 화이트 모델입니다.
+                    </p>
+                    <div class="space-y-3 mb-8 mt-auto">
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">UNDER THREAD</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">GSP White 50D</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">BODY MATERIAL</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">Glo-Brite #16</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[11px] p-3 rounded-xl bg-purple-50/50 border border-purple-50">
+                            <span class="text-slate-400 font-bold uppercase tracking-widest text-[8px]">BEAD TYPE</span>
+                            <span class="text-slate-700 font-mono font-bold italic text-xs">White Bead</span>
+                        </div>
+                    </div>
+                    <div class="pt-6 border-t border-purple-50">
+                        <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-purple-700 text-[11px] font-bold flex items-center">
+                            <i class="fas fa-cloud-moon mr-2 text-purple-600"></i> 그늘지고 수심이 깊은 곳, 골든 타임
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Field Note Section -->
+    <section id="tactics" class="max-w-4xl mx-auto px-6 mb-24 text-center">
+        <div class="bg-white rounded-[3rem] p-10 md:p-16 border border-purple-100 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-12 opacity-5 scale-125 rotate-12 pointer-events-none">
+                <i class="fas fa-award text-[120px] text-purple-900"></i>
+            </div>
+            
+            <div class="relative z-10">
+                <h2 class="text-2xl md:text-3xl font-black mb-12 flex items-center justify-center tracking-tighter uppercase gap-6 text-slate-900">
+                    <span class="hidden md:block w-12 h-1 bg-purple-200 rounded-full"></span>
+                    Master's Field Note
+                    <span class="hidden md:block w-12 h-1 bg-purple-200 rounded-full"></span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="group">
+                        <div class="w-16 h-16 bg-purple-50 rounded-[1.5rem] flex items-center justify-center text-purple-600 mx-auto mb-6 border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                            <i class="fas fa-award text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-black mb-2 text-slate-900 tracking-tight uppercase">Sizing</h4>
+                        <p class="text-[12px] text-slate-500 leading-relaxed font-medium px-2">작을수록 송어는 부담 없이 삼키고 돌아섭니다. 입질 빈도가 확실히 올라갑니다.</p>
+                    </div>
+                    <div class="group">
+                        <div class="w-16 h-16 bg-purple-50 rounded-[1.5rem] flex items-center justify-center text-purple-600 mx-auto mb-6 border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                            <i class="fas fa-arrows-down-to-line text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-black mb-2 text-slate-900 tracking-tight uppercase">Depth</h4>
+                        <p class="text-[12px] text-slate-500 leading-relaxed font-medium px-2">카운트다운을 통해 송어가 유영하는 정확한 수심을 찾는 것이 먼저입니다.</p>
+                    </div>
+                    <div class="group">
+                        <div class="w-16 h-16 bg-purple-50 rounded-[1.5rem] flex items-center justify-center text-purple-600 mx-auto mb-6 border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                            <i class="fas fa-water text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-black mb-2 text-slate-900 tracking-tight uppercase">Action</h4>
+                        <p class="text-[12px] text-slate-500 leading-relaxed font-medium px-2">자연스러운 '스위밍' 동작으로 아주 느리게 유혹하는 것이 핵심입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl mx-auto pb-16 px-6 text-center border-t border-purple-50 pt-16">
+        <p class="text-slate-400 text-xs mb-8 font-medium italic">"보랏빛 그림자가 수면에 비칠 때, 가장 강력한 유혹이 시작됩니다."</p>
+        <div class="flex flex-col md:flex-row justify-center items-center gap-3">
+            <span class="px-6 py-2.5 bg-white rounded-full text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] border border-purple-100 shadow-sm">
+                © 2026 낚시대장 Archive
+            </span>
+            <span class="px-6 py-2.5 bg-purple-600 text-white rounded-full text-[9px] font-black uppercase tracking-[0.3em] shadow-lg shadow-purple-500/10">
+                Designed by Jeff
+            </span>
+        </div>
+    </footer>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="modal-close" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ESC 키로 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    </script>
+
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

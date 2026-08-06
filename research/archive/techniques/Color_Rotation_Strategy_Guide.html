@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>컬러 로테이션 전략 가이드 - Fly Fishing Archive · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .swatch {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+        .swatch-olive    { background: #6b7c3a; }
+        .swatch-black    { background: #1a1a1a; border-color: rgba(255,255,255,0.2); }
+        .swatch-chart    { background: #c8e61a; }
+        .swatch-white    { background: #f5f5f5; border-color: #cbd5e1; }
+        .swatch-purple   { background: #7c3aed; }
+        .swatch-tan      { background: #c9a96e; }
+        .flow-arrow {
+            color: #94a3b8;
+            font-size: 1.4rem;
+            font-weight: 300;
+            line-height: 1;
+            user-select: none;
+        }
+        .version-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .badge-verified   { background:#d1fae5; color:#065f46; }
+        .badge-theory     { background:#e0e7ff; color:#3730a3; }
+        .badge-pending    { background:#fef3c7; color:#92400e; }
+        .depth-bar-wrap { background: #e2e8f0; border-radius: 4px; overflow: hidden; height: 8px; }
+        .depth-bar      { height: 100%; border-radius: 4px; transition: width 0.4s; }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="text-slate-800 antialiased archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Color_Rotation_Strategy_Guide.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <nav class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-wider flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                FLY FISHING ARCHIVE
+            </div>
+            <div class="text-sm font-light text-slate-300">Technique Reference</div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 sm:py-12 space-y-8">
+
+        <header class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-10 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+            <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-semibold rounded-full mb-3">Technique Reference</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight mb-3">
+                <span class="text-emerald-600">컬러 로테이션</span> 전략 가이드
+            </h1>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">
+                관리형 저수지 플라이낚시 / 심수(4~6m) 풀싱킹 채비 기준<br>
+                필드 데이터 축적에 따라 지속 업데이트 예정
+            </p>
+            <div class="flex flex-wrap gap-3 text-xs">
+                <span class="px-3 py-1 rounded-full badge-verified font-semibold">✅ 필드 검증됨</span>
+                <span class="px-3 py-1 rounded-full badge-theory font-semibold">📐 이론 기반</span>
+                <span class="px-3 py-1 rounded-full badge-pending font-semibold">🔄 검증 예정</span>
+            </div>
+        </header>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">1</span>
+                왜 로테이션인가 — 과학적 근거
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="text-2xl mb-2">🐟</div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-sm">Habituation (습관화)</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">동일한 시각 자극이 반복되면 송어의 신경계는 해당 자극을 무의미한 것으로 처리하기 시작합니다. 입질이 뜸해지는 것은 물고기가 없어진 게 아니라, 익숙해진 것입니다.</p>
+                </div>
+                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                    <div class="text-2xl mb-2">👁️</div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-sm">Visual Reset (시각 리셋)</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">색상 교체는 명도·채도·파장을 동시에 바꿔 "새로운 물체"로 인식시킵니다. habituation이 쌓인 뇌가 다시 경계 모드로 전환되며 반응성이 회복됩니다.</p>
+                </div>
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-sm">Reaction Bite (리액션 바이트)</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">저활성 상태에서는 포식 본능보다 반사적 공격 반응이 유효합니다. 강한 시각 대비가 반사 공격을 유발하고, 이것이 측면 훅킹으로 증명됩니다.</p>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-800 rounded-xl text-white text-sm leading-relaxed">
+                <span class="text-emerald-400 font-bold">핵심 원칙 :</span> 로테이션은 "어떤 색이 좋은가"의 탐색이 아닙니다. <strong>대비(Contrast)를 통해 habituation을 선제적으로 차단</strong>하는 것이 목적입니다. 특정 색이 답이 아니라, <strong>변화 자체가 답</strong>입니다.
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Reference Image</span>
+                <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 5×5 컬러 로테이션 실물</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <img
+                    src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/5_5color.jpg"
+                    alt="5×5 컬러 로테이션 플라이 실물"
+                    class="w-full max-w-lg rounded-xl border border-slate-100 shadow-sm object-contain"
+                    style="max-height: 360px;"
+                >
+                <p class="text-xs text-slate-400 text-center leading-relaxed">
+                    존커테일 미니 리치 #16 — 올리브 / 블랙 / 차트리우스 / 화이트 / 퍼플 / 탄 컬러군<br>
+                    한터낚시터 6m 바닥 운용 기준
+                </p>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">2</span>
+                수심별 색상 투과력 — 색 선택의 물리적 기반
+            </h2>
+            <p class="text-sm text-slate-500 mb-5">빛은 수심에 따라 파장별로 흡수됩니다. 6m 바닥 기준으로 각 색상의 상대적 투과력과 실루엣 강도를 정리했습니다.</p>
+            <div class="space-y-3">
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-purple"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>퍼플 / UV</span><span class="text-purple-600">투과력 ★★★★★</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-purple-500" style="width:95%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">UV 파장은 수심 6m에서도 가장 강하게 투과. 송어의 UV 시각 수용체를 직접 자극.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-chart"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>차트리우스</span><span class="text-lime-600">투과력 ★★★★☆</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-lime-400" style="width:82%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">형광 황록. 탁수에서 산란광을 형광 발색으로 재방출. 비상 자극용.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-white"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>화이트</span><span class="text-blue-500">투과력 ★★★☆☆ / 실루엣 ★★★★★</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-blue-300" style="width:65%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">파장 투과보다 반사광 활용. 어두운 배경 대비 실루엣이 가장 강렬.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-olive"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>올리브</span><span class="text-lime-700">투과력 ★★★☆☆</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-lime-700" style="width:58%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">자연 먹이색. 자극보다 친화성. 경계심 낮출 때 유효한 베이스 컬러.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-tan"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>탄 / 베이지</span><span class="text-amber-600">투과력 ★★☆☆☆</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-amber-400" style="width:42%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">새우·유충 색 근사. 피딩 바이트 유도용. 마무리 컬러로 활용.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="swatch swatch-black"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span>블랙</span><span class="text-slate-700">투과력 낮음 / 실루엣 ★★★★★</span>
+                        </div>
+                        <div class="depth-bar-wrap"><div class="depth-bar bg-slate-700" style="width:30%"></div></div>
+                        <p class="text-xs text-slate-400 mt-1">파장 투과 최저. 그러나 수중 배경광 대비 실루엣이 가장 강렬. 심수 리액션 특효.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">3</span>
+                추천 컬러 로테이션 세트
+            </h2>
+            <p class="text-xs text-slate-400 mb-6">한터낚시터 6m 바닥 / SA Sonar Titan 3D 풀싱킹 / 존커테일 미니 리치 기준</p>
+            <div class="mb-6 p-5 bg-slate-50 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-1 mb-4">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Primary Rotation</span>
+                    <span class="ml-2 px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 2026-03-14 필드 검증</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="swatch swatch-olive"></div>
+                        <span class="text-xs font-bold text-slate-600">올리브</span>
+                        <span class="text-xs text-slate-400">베이스</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="swatch swatch-black"></div>
+                        <span class="text-xs font-bold text-slate-600">블랙</span>
+                        <span class="text-xs text-slate-400">실루엣</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="swatch swatch-chart"></div>
+                        <span class="text-xs font-bold text-slate-600">차트리우스</span>
+                        <span class="text-xs text-slate-400">비상자극</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="swatch swatch-white"></div>
+                        <span class="text-xs font-bold text-slate-600">화이트</span>
+                        <span class="text-xs text-slate-400">명도리셋</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="swatch swatch-purple"></div>
+                        <span class="text-xs font-bold text-slate-600">퍼플</span>
+                        <span class="text-xs text-slate-400">UV마무리</span>
+                    </div>
+                    <span class="flow-arrow text-emerald-500">↩</span>
+                    <div class="text-xs text-emerald-600 font-bold">리로테이션</div>
+                </div>
+                <div class="space-y-2 text-xs text-slate-600">
+                    <div class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span><span><strong>올리브 → 블랙:</strong> 자연색에서 최강 실루엣으로. 경계심 낮춤 → 충격 자극.</span></div>
+                    <div class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span><span><strong>블랙 → 차트리우스:</strong> 어두운 실루엣에서 형광 자극으로. 가장 큰 명도·채도 점프.</span></div>
+                    <div class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span><span><strong>차트리우스 → 화이트:</strong> 형광에서 무채색 밝기로. 채도 제거 + 실루엣 유지.</span></div>
+                    <div class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span><span><strong>화이트 → 퍼플:</strong> 밝은 무채색에서 UV 유채색으로. 파장 스펙트럼 완전 전환.</span></div>
+                    <div class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span><span><strong>퍼플 → 올리브 (리로테이션):</strong> UV 한색 계열에서 자연 난색 계열로. 스펙트럼상 가장 먼 점프. 최강 Visual Reset.</span></div>
+                </div>
+            </div>
+            <div class="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                <h3 class="font-bold text-amber-800 mb-2 text-sm">⏱️ 교체 타이밍</h3>
+                <p class="text-xs text-amber-900 leading-relaxed">입질이 <strong>완전히 끊긴 후</strong>보다 <strong>빈도가 줄어드는 시점</strong>에 선제 교체하는 것이 원칙입니다. 다만 입질이 이어지는 동안의 타이밍 판단은 경험치 축적이 필요한 영역으로, 조행 데이터 누적 후 업데이트 예정입니다.</p>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">4</span>
+                색상별 운용 가이드
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border-2 border-lime-200 bg-lime-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-olive" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">올리브 (Olive)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 검증됨</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: 베이스 컬러, 선제 투입</li>
+                        <li>• 자연 먹이(수서곤충·새우) 색과 근사</li>
+                        <li>• 경계심 낮추고 관찰 유도</li>
+                        <li>• 젖었을 때 짙은 암록색으로 변화 — 실제 생물감 극대</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-slate-300 bg-slate-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-black" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">블랙 (Black)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 검증됨</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: 실루엣 충격, habituation 리셋</li>
+                        <li>• 탁수·심수에서 수중 배경광 대비 최강 실루엣</li>
+                        <li>• 리액션 바이트 유발력 최상</li>
+                        <li>• 올리브 직후 투입 시 명도 반전 효과 극대</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-lime-300 bg-lime-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-chart" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">차트리우스 (Chartreuse)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 검증됨</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: 비상 자극, 탁수 특효</li>
+                        <li>• 형광 발색 — 탁수에서도 파장 유지</li>
+                        <li>• 관리형 낚시터 사료색과 근사 → 피딩 본능 자극</li>
+                        <li>• 블랙 직후 투입 시 가장 큰 명도·채도 점프</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-blue-100 bg-blue-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-white" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">화이트 (White)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 검증됨</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: 명도 리셋, 범용 대비</li>
+                        <li>• 어떤 색 다음에 넣어도 강한 반전 효과</li>
+                        <li>• 탁수에서 반사광으로 시인성 확보</li>
+                        <li>• 젖으면 반투명해져 생물감 부여</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-purple-200 bg-purple-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-purple" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">퍼플 (Purple / UV)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 검증됨</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: UV 파장 자극, 심수 마무리</li>
+                        <li>• UV 파장이 6m 수심에서 가장 강하게 투과</li>
+                        <li>• 블랙과 실루엣 유사, 파장은 정반대 → habituation 회피</li>
+                        <li>• 리로테이션 직전 마지막 투입 최적</li>
+                    </ul>
+                </div>
+                <div class="p-4 rounded-xl border-2 border-amber-200 bg-amber-50">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="swatch swatch-tan" style="width:36px;height:36px;"></div>
+                        <div>
+                            <div class="font-bold text-slate-800">탄 / 베이지 (Tan)</div>
+                            <span class="px-2 py-0.5 rounded-full badge-theory text-xs font-bold">📐 이론 기반</span>
+                        </div>
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li>• 역할: 피딩 바이트 마무리용 (보조)</li>
+                        <li>• 새우·갑각류 색 근사 → 피딩 본능 직접 자극</li>
+                        <li>• 리액션 → 피딩 전환 시점에 유효 예상</li>
+                        <li>• 향후 피딩 타임(4시 이후)에 집중 검증 예정</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ★★★ 섹션 5 — 업데이트된 필드 데이터 로그 ★★★ -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">5</span>
+                필드 데이터 업데이트 로그
+            </h2>
+            <p class="text-xs text-slate-400 mb-5">조행을 거듭하며 아래에 검증 결과를 추가합니다. 이론 → 검증됨 → 수정 순으로 상태가 변경됩니다.</p>
+            <div class="space-y-4">
+
+                <!-- v1.0 -->
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="version-dot bg-emerald-500"></div>
+                        <div class="w-0.5 bg-slate-200 flex-1"></div>
+                    </div>
+                    <div class="pb-5 flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-slate-500">v1.0</span>
+                            <span class="text-xs text-slate-400">2026-02-21</span>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ 초기 필드 검증</span>
+                        </div>
+                        <p class="text-sm text-slate-700 leading-relaxed">한터낚시터 6m 바닥. 존커테일 미니 리치 #16. 퍼플→화이트→올리브→블랙 로테이션으로 20수. <strong>컬러 변경 직후 입질 재개 패턴 반복 확인.</strong> "변화 자체가 답"이라는 가설 최초 검증. 주둥이 측면 훅킹으로 리액션 바이트 확인.</p>
+                        <a href="/fly-fishing-hub/field-log/logs/2026-02-21_daedae.html" class="text-xs text-emerald-600 font-semibold hover:underline mt-1 inline-block">→ 출조 로그 전문 보기</a>
+                    </div>
+                </div>
+
+                <!-- v1.1 ★ 신규 추가 -->
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="version-dot bg-emerald-500"></div>
+                        <div class="w-0.5 bg-slate-200 flex-1"></div>
+                    </div>
+                    <div class="pb-5 flex-1">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="text-xs font-bold text-slate-500">v1.1</span>
+                            <span class="text-xs text-slate-400">2026-03-14</span>
+                            <span class="px-2 py-0.5 rounded-full badge-verified text-xs font-bold">✅ Primary Rotation 전 구간 검증</span>
+                            <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">🌟 뉴노멀 선언</span>
+                        </div>
+                        <p class="text-sm text-slate-700 leading-relaxed">한터낚시터 6m 바닥. 존커테일 미니 리치 #16. 풀싱킹 채비(센트릭 + Titan 3D)로 종일 운용, <strong>51수(개인 최다)</strong>로 마무리. 올리브→블랙→차트리우스→화이트→퍼플 5단계를 처음으로 한 세션에서 모두 돌렸고, 컬러 변경 직후 입질이 다시 붙는 흐름은 이날도 반복됐다. 다만 활성도 자체가 좋은 날이었기 때문에, 로테이션 효과인지 단순히 물고기가 많이 떠서인지는 솔직히 아직 구분하기 어렵다.</p>
+                        <p class="text-sm text-slate-700 leading-relaxed mt-2">한 가지 느낀 건, 5가지 색을 순서대로 기계적으로 돌리는 것보다 <strong>"어두운 계열 → 유채색 → 밝은 계열"</strong> 같은 군(群) 단위로 묶어서 상황에 맞게 쓰는 게 더 자연스럽다는 것. 아직 가설에 가깝지만, 다음 조행부터 이 방향으로 의식적으로 운용해볼 생각이다.</p>
+                        <!-- 3대 컬러군 시각화 -->
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="font-bold text-slate-500 uppercase tracking-wider mb-2" style="font-size:0.62rem;">1군 · 다크 실루엣</div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1a1a1a;border:1px solid #ccc;flex-shrink:0;"></span>블랙</span>
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5c3a1e;flex-shrink:0;"></span>브라운</span>
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#5b2d8e;flex-shrink:0;"></span>퍼플</span>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-lime-50 border border-lime-100">
+                                <div class="font-bold text-lime-700 uppercase tracking-wider mb-2" style="font-size:0.62rem;">2군 · 유채색</div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#556b2f;flex-shrink:0;"></span>올리브</span>
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#c8e61a;border:1px solid #bbb;flex-shrink:0;"></span>차트</span>
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-amber-50 border border-amber-100">
+                                <div class="font-bold text-amber-700 uppercase tracking-wider mb-2" style="font-size:0.62rem;">3군 · 브라이트</div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f5f5f0;border:1px solid #ccc;flex-shrink:0;"></span>화이트</span>
+                                    <span class="flex items-center gap-1"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#c9a96e;flex-shrink:0;"></span>탄</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/fly-fishing-hub/field-log/logs/2026-03-14_daedae.html" class="text-xs text-emerald-600 font-semibold hover:underline mt-3 inline-block">→ 출조 로그 전문 보기 (침잠 작전 · 51수)</a>
+                    </div>
+                </div>
+
+                <!-- v1.2 -->
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="version-dot bg-slate-300"></div>
+                        <div class="w-0.5 bg-slate-100 flex-1"></div>
+                    </div>
+                    <div class="pb-5 flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-slate-400">v1.2</span>
+                            <span class="text-xs text-slate-300">업데이트 예정</span>
+                            <span class="px-2 py-0.5 rounded-full badge-pending text-xs font-bold">🔄 컬러군 로테이션 심화 검증</span>
+                        </div>
+                        <p class="text-sm text-slate-400 leading-relaxed italic">3대 컬러군 단위 로테이션의 교체 타이밍 정량화. 군(群) 내 색상 선택 기준 및 컬러군 간 전환 최적 순서 데이터화. 피딩 타임(4시 이후) 3군(브라이트 — 탄/화이트) 집중 검증 예정.</p>
+                    </div>
+                </div>
+
+                <!-- v1.3 -->
+                <div class="flex gap-4">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="version-dot bg-slate-300"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-slate-400">v1.3</span>
+                            <span class="text-xs text-slate-300">업데이트 예정</span>
+                            <span class="px-2 py-0.5 rounded-full badge-pending text-xs font-bold">🔄 인터미디어트 중층 컬러 검증</span>
+                        </div>
+                        <p class="text-sm text-slate-400 leading-relaxed italic">RIO Sub-surface Camolux WF5I 인터미디어트 채비에서의 컬러 반응 데이터 수집 예정. 3/14 중층 강렬한 입질 3회 확인(랜딩 미성공) — 중층 레이어에서의 컬러 로테이션 유효성 검증 과제로 등록.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="text-center text-slate-400 text-sm pb-8 border-t border-slate-200 pt-8">
+            <p>Captain's Fly Fishing Archive — Technique Reference</p>
+            <p class="mt-1">© 2026 Captain's Log. 데이터는 계속 쌓입니다.</p>
+        </footer>
+
+    </main>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

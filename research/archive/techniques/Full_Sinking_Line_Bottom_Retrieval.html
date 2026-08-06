@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플라이 낚시 시뮬레이션 - 낚시대장 & Jeff · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .font-mono { font-family: 'JetBrains+Mono', monospace; }
+        .glow { filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8)); }
+        .water-gradient {
+            background: linear-gradient(to bottom, rgba(30, 58, 138, 0.2) 0%, rgba(15, 23, 42, 0.9) 80%, #000 100%);
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Full_Sinking_Line_Bottom_Retrieval.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<div class="max-w-5xl w-full bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-slate-800">
+    <!-- 상단 대시보드 -->
+    <div class="p-6 border-b border-slate-800 bg-slate-900/80 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex gap-8">
+            <div class="flex flex-col">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Target Distance</span>
+                <span class="text-2xl font-mono text-blue-400">18.0<span class="text-sm ml-1">m</span></span>
+            </div>
+            <div class="flex flex-col border-l border-slate-800 pl-8">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Current Distance</span>
+                <span id="ui-dist" class="text-2xl font-mono text-white">0.0<span class="text-sm ml-1 text-slate-500">m</span></span>
+            </div>
+            <div class="flex flex-col border-l border-slate-800 pl-8">
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Current Depth</span>
+                <span id="ui-depth" class="text-2xl font-mono text-emerald-400">0.0<span class="text-sm ml-1">m</span></span>
+            </div>
+        </div>
+        <div class="px-4 py-2 bg-slate-800 rounded-xl border border-slate-700 flex items-center gap-3">
+            <div id="ui-status-dot" class="w-2 h-2 rounded-full animate-pulse bg-blue-500"></div>
+            <span id="ui-stage" class="text-xs font-black uppercase tracking-tighter text-white">READY</span>
+        </div>
+    </div>
+
+    <!-- 시뮬레이션 영역 -->
+    <div class="relative w-full bg-slate-950 overflow-hidden" style="height: 400px;">
+        <!-- 배경 및 가이드 -->
+        <div class="absolute top-[60px] w-full h-full water-gradient"></div>
+        <div class="absolute top-[60px] w-full h-[1px] bg-blue-500/20"></div>
+        
+        <!-- 거리 눈금 -->
+        <div class="absolute bottom-0 w-full h-8 flex items-end px-[100px]">
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">0m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">3m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">6m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">9m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">12m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">15m</span></div>
+            <div class="flex-1 border-l border-white/5 h-4 relative"><span class="absolute -top-6 -left-2 text-[9px] text-white/20 font-mono">18m</span></div>
+        </div>
+
+        <!-- 수심 눈금 -->
+        <div class="absolute left-4 top-[60px] h-[210px] flex flex-col justify-between border-l border-white/10 pl-2">
+            <span class="text-[9px] text-white/30 font-mono">0m</span>
+            <span class="text-[9px] text-white/30 font-mono">2m</span>
+            <span class="text-[9px] text-white/30 font-mono">4m</span>
+            <span class="text-[9px] text-white/30 font-mono">6m</span>
+        </div>
+
+        <!-- 앵글러 -->
+        <div class="absolute left-[90px] top-[10px] z-30 opacity-80">
+            <div class="w-1 h-14 bg-slate-400 rounded-full rotate-[12deg] origin-bottom shadow-lg"></div>
+            <div class="w-4 h-6 bg-slate-700 rounded-t-full -mt-1 ml-[-2px]"></div>
+        </div>
+
+        <!-- SVG 레이어 -->
+        <svg id="sim-svg" class="absolute inset-0 w-full h-full z-20 pointer-events-none">
+            <!-- 바닥 지형 -->
+            <path id="ground" d="M0,376 Q200,365 400,372 T800,368 T1200,378 L1200,400 L0,400 Z" fill="#080604" />
+            
+            <!-- 라인 -->
+            <path id="fly-line" stroke="white" stroke-width="0.8" fill="none" stroke-opacity="0.5" d="M 0 0" />
+            
+            <!-- 플라이 그룹 -->
+            <g id="fly-group">
+                <circle id="bead" r="3.5" fill="#fbbf24" class="glow" />
+                <path id="fly-body" d="M 0 0 L 10 -3 L 10 3 Z" fill="#ef4444" />
+                <path d="M 5 0 Q 8 6 4 6" stroke="#ccc" fill="none" stroke-width="1" />
+            </g>
+
+            <!-- 분진 효과 -->
+            <circle id="dust" r="0" fill="rgba(139, 115, 85, 0.25)" />
+        </svg>
+
+        <!-- 하단 진행바 -->
+        <div id="progress-bar" class="absolute bottom-0 left-0 h-1 bg-blue-600 transition-all shadow-[0_0_10px_#2563eb]" style="width: 0%;"></div>
+    </div>
+
+    <!-- 컨트롤 패널 -->
+    <div class="p-8 bg-slate-900 flex flex-col md:flex-row gap-8 items-start border-t border-slate-800">
+        <div class="w-full md:w-1/3 space-y-4">
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Tippet Material Configuration</label>
+            <div class="grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-2xl border border-white/5">
+                <button id="btn-carbon" class="py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-lg">CARB (Heavy)</button>
+                <button id="btn-nylon" class="py-3 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-white">NYLN (Light)</button>
+            </div>
+            <div id="jeff-tip" class="text-[10px] text-slate-500 italic p-2 bg-black/20 rounded-lg">
+                * 카본은 바닥을 긁는 소리와 진동이 송어를 자극합니다.
+            </div>
+        </div>
+
+        <div class="flex-1 bg-black/20 p-6 rounded-3xl border border-white/5 relative overflow-hidden">
+            <h4 class="text-xs font-bold text-slate-400 mb-4 uppercase flex items-center gap-2">
+                <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></span>
+                Jeff's Physics Report
+            </h4>
+            <div id="report-text" class="text-[11px] text-slate-400 leading-relaxed space-y-2">
+                <strong>Diagonal Sinking (사선 하강)</strong>
+                <p>라인이 수면 위에서 꺾이지 않고 낚싯대 끝부터 바닥의 텅스텐까지 직선 사선으로 연결되어 내려갑니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 액션 버튼 -->
+    <div class="p-6 bg-slate-900 flex justify-center gap-4 border-t border-slate-800">
+        <button id="btn-reset" class="bg-blue-600 hover:bg-blue-500 text-white px-12 py-3 rounded-full text-xs font-black tracking-widest transition-all shadow-xl shadow-blue-900/40">RE-CAST (18m)</button>
+        <button id="btn-toggle" class="bg-slate-800 hover:bg-slate-700 text-white px-10 py-3 rounded-full text-xs font-black tracking-widest transition-all border border-slate-700">PAUSE</button>
+    </div>
+</div>
+
+<script>
+    // 상태 관리
+    let state = {
+        progress: 0,
+        isAnimating: true,
+        tippetType: 'carbon',
+        lastTime: 0
+    };
+
+    // 설정값
+    const METER_PX = 35;
+    const SURFACE_Y = 60;
+    const BOTTOM_Y = SURFACE_Y + (6 * METER_PX);
+    const START_X = 100;
+    const CAST_DISTANCE = 18 * METER_PX;
+    const TARGET_X = START_X + CAST_DISTANCE;
+
+    // 구간 설정
+    const CAST_END = 20;
+    const FALL_END = 55;
+    const CRAWL_END = 88;
+    const LIFT_END = 100;
+
+    // DOM 요소
+    const elFly = document.getElementById('fly-group');
+    const elLine = document.getElementById('fly-line');
+    const elDust = document.getElementById('dust');
+    const elProgressBar = document.getElementById('progress-bar');
+    const elDist = document.getElementById('ui-dist');
+    const elDepth = document.getElementById('ui-depth');
+    const elStage = document.getElementById('ui-stage');
+    const elDot = document.getElementById('ui-status-dot');
+    const elReport = document.getElementById('report-text');
+    const elJeffTip = document.getElementById('jeff-tip');
+
+    function update(time) {
+        if (state.isAnimating) {
+            state.progress = (state.progress + 0.085) % 100;
+            render();
+        }
+        requestAnimationFrame(update);
+    }
+
+    function render() {
+        const { progress, tippetType } = state;
+        const tippetOffset = tippetType === 'carbon' ? 0 : 10;
+        let x, y, rot, stageText, distM, depthM;
+
+        if (progress < CAST_END) {
+            const p = progress / CAST_END;
+            x = START_X + CAST_DISTANCE * p;
+            y = SURFACE_Y - Math.sin(p * Math.PI) * 80;
+            rot = (p * 180) - 30;
+            stageText = "Casting";
+            distM = (x - START_X) / METER_PX;
+            depthM = 0;
+            elLine.setAttribute('d', `M 100 50 Q ${100 + (x-100)/2} ${y - 60} ${x} ${y}`);
+            elLine.setAttribute('stroke-dasharray', '0');
+            elDust.setAttribute('r', '0');
+        } 
+        else if (progress < FALL_END) {
+            const p = (progress - CAST_END) / (FALL_END - CAST_END);
+            x = TARGET_X;
+            y = SURFACE_Y + (BOTTOM_Y - 5 - tippetOffset - SURFACE_Y) * p;
+            rot = 90;
+            stageText = "Falling";
+            distM = 18;
+            depthM = (y - SURFACE_Y) / METER_PX;
+            elLine.setAttribute('d', `M 100 50 L ${x} ${y}`); // 사선 형식
+            elLine.setAttribute('stroke-dasharray', '4,2');
+            elDust.setAttribute('r', '0');
+        }
+        else if (progress < CRAWL_END) {
+            const p = (progress - FALL_END) / (CRAWL_END - FALL_END);
+            x = TARGET_X - (TARGET_X - (START_X + 2 * METER_PX)) * p;
+            const vib = Math.sin(x * 0.1) * (tippetType === 'carbon' ? 2 : 3);
+            y = BOTTOM_Y - 5 - tippetOffset + vib;
+            rot = 180;
+            stageText = "Retrieving";
+            distM = (x - START_X) / METER_PX;
+            depthM = (y - SURFACE_Y) / METER_PX;
+            elLine.setAttribute('d', `M 100 50 Q 150 ${y + 30} ${x} ${y}`);
+            elLine.setAttribute('stroke-dasharray', '0');
+            
+            // 분진 효과
+            if (tippetType === 'carbon' || Math.random() > 0.5) {
+                elDust.setAttribute('cx', x);
+                elDust.setAttribute('cy', BOTTOM_Y);
+                elDust.setAttribute('r', tippetType === 'carbon' ? 5 : 2);
+            }
+        }
+        else {
+            const p = (progress - CRAWL_END) / (LIFT_END - CRAWL_END);
+            const easeP = p * p * (3 - 2 * p);
+            x = (START_X + 2 * METER_PX) - (2 * METER_PX) * easeP;
+            y = (BOTTOM_Y - 5 - tippetOffset) - (BOTTOM_Y - 5 - tippetOffset - SURFACE_Y + 20) * easeP;
+            rot = 180 + (90 * easeP);
+            stageText = "Lifting";
+            distM = Math.max(0, (x - START_X) / METER_PX);
+            depthM = Math.max(0, (y - SURFACE_Y) / METER_PX);
+            elLine.setAttribute('d', `M 100 50 Q 120 ${y + 40} ${x} ${y}`);
+            elDust.setAttribute('r', '0');
+        }
+
+        // DOM 업데이트
+        elFly.setAttribute('transform', `translate(${x}, ${y}) rotate(${rot})`);
+        elProgressBar.style.width = `${progress}%`;
+        elDist.innerHTML = `${distM.toFixed(1)}<span class="text-sm ml-1 text-slate-500">m</span>`;
+        elDepth.innerHTML = `${depthM.toFixed(1)}<span class="text-sm ml-1">m</span>`;
+        elStage.innerText = stageText;
+        
+        // 상태 도트 색상
+        if(stageText === "Falling") elDot.className = "w-2 h-2 rounded-full animate-pulse bg-yellow-400 shadow-[0_0_8px_#facc15]";
+        else elDot.className = "w-2 h-2 rounded-full animate-pulse bg-blue-500 shadow-[0_0_8px_#3b82f6]";
+
+        // 리포트 업데이트 (성능을 위해 스테이지 변경 시에만 업데이트하는 게 좋으나 일단 단순 구현)
+        updateReport(stageText);
+    }
+
+    function updateReport(stage) {
+        let html = "";
+        if (stage === "Casting") {
+            html = "<strong>1단계: Casting (18m)</strong><p>18미터 비거리를 확보하여 먼 곳의 송어를 공략합니다. 라인 안착 시 텐션을 유지하세요.</p>";
+        } else if (stage === "Falling") {
+            html = "<strong>2단계: Diagonal Sinking (사선 하강)</strong><p>라인이 낚싯대 끝부터 바닥까지 사선으로 팽팽하게 잠겨 들어갑니다. 폴링 바이트에 집중하세요.</p>";
+        } else if (stage === "Retrieving") {
+            html = "<strong>3단계: Bottom Crawling</strong><p>8cm씩 지속적으로 끌어옵니다. 바닥의 유충이 이동하는 모습을 완벽하게 재현합니다.</p>";
+        } else {
+            html = "<strong>4단계: Final Lift</strong><p>발밑에서 급격히 솟구치는 먹잇감의 움직임! 송어의 공격 본능을 깨우는 순간입니다.</p>";
+        }
+        elReport.innerHTML = html;
+    }
+
+    // 이벤트 리스너
+    document.getElementById('btn-carbon').onclick = function() {
+        state.tippetType = 'carbon';
+        this.className = "py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-lg";
+        document.getElementById('btn-nylon').className = "py-3 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-white";
+        document.getElementById('fly-body').setAttribute('fill', '#ef4444');
+        elJeffTip.innerText = "* 카본은 바닥을 긁는 소리와 진동이 송어를 자극합니다.";
+    };
+
+    document.getElementById('btn-nylon').onclick = function() {
+        state.tippetType = 'nylon';
+        this.className = "py-3 rounded-xl text-xs font-bold transition-all bg-emerald-600 text-white shadow-lg";
+        document.getElementById('btn-carbon').className = "py-3 rounded-xl text-xs font-bold transition-all text-slate-500 hover:text-white";
+        document.getElementById('fly-body').setAttribute('fill', '#10b981');
+        elJeffTip.innerText = "* 나일론은 물의 흐름에 따라 플라이가 더 부드럽게 유영합니다.";
+    };
+
+    document.getElementById('btn-toggle').onclick = function() {
+        state.isAnimating = !state.isAnimating;
+        this.innerText = state.isAnimating ? "PAUSE" : "RESUME";
+    };
+
+    document.getElementById('btn-reset').onclick = function() {
+        state.progress = 0;
+        if(!state.isAnimating) {
+            state.isAnimating = true;
+            document.getElementById('btn-toggle').innerText = "PAUSE";
+        }
+    };
+
+    // 시작
+    requestAnimationFrame(update);
+</script>
+
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

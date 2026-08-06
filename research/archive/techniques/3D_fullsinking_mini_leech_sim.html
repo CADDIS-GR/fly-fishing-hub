@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D 풀싱킹 미니리치 물속 움직임의 시뮬레이션 · CADDIS-GR LAB</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --water-deep: #0a1628;
+    --water-mid: #0d2240;
+    --water-surface: #1a3a5c;
+    --water-light: #2563a8;
+    --accent-lime: #a8e63d;
+    --accent-red: #e63d3d;
+    --accent-gold: #f0c040;
+    --line-color: #e8d5a3;
+    --leader-color: #c8e8ff;
+    --leader-nylon: #ffe8a0;
+    --text-main: #d0e8ff;
+    --text-dim: #6a8aaa;
+    --panel-bg: rgba(10,22,40,0.92);
+    --panel-border: rgba(37,99,168,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--water-deep);
+    color: var(--text-main);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER === */
+  header {
+    padding: 24px 32px 16px;
+    border-bottom: 1px solid var(--panel-border);
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    background: linear-gradient(180deg, rgba(10,22,40,1) 0%, rgba(10,22,40,0) 100%);
+  }
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent-lime);
+    letter-spacing: 0.08em;
+  }
+  header span {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* === MAIN LAYOUT === */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0;
+    height: calc(100vh - 65px);
+  }
+
+  /* === LEFT PANEL === */
+  .left-panel {
+    background: var(--panel-bg);
+    border-right: 1px solid var(--panel-border);
+    padding: 20px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    grid-row: 1 / 3;
+  }
+
+  .panel-section {
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .panel-section-title {
+    background: rgba(37,99,168,0.2);
+    padding: 8px 12px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent-lime);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .panel-section-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Spec rows */
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+  }
+  .spec-label { color: var(--text-dim); }
+  .spec-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-main);
+    text-align: right;
+  }
+  .spec-value.highlight { color: var(--accent-lime); }
+
+  /* Toggle switches */
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    padding: 4px 0;
+  }
+  .toggle-label { color: var(--text-main); font-size: 0.73rem; }
+  .toggle-sub { color: var(--text-dim); font-size: 0.65rem; margin-top: 2px; }
+
+  .switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: rgba(37,99,168,0.3);
+    border: 1px solid var(--panel-border);
+    border-radius: 22px;
+    transition: 0.3s;
+  }
+  .slider:before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 2px; bottom: 2px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  input:checked + .slider { background: rgba(168,230,61,0.25); border-color: var(--accent-lime); }
+  input:checked + .slider:before { transform: translateX(18px); background: var(--accent-lime); }
+
+  /* Sliders */
+  .slider-row { display: flex; flex-direction: column; gap: 5px; font-size: 0.72rem; }
+  .slider-header { display: flex; justify-content: space-between; }
+  .slider-label { color: var(--text-dim); }
+  .slider-val {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent-gold);
+    font-size: 0.68rem;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(37,99,168,0.4);
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    cursor: pointer;
+    border: 2px solid var(--water-deep);
+  }
+
+  /* Phase buttons */
+  .phase-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .phase-btn {
+    padding: 8px 6px;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.68rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+  }
+  .phase-btn:hover { border-color: var(--accent-lime); color: var(--accent-lime); }
+  .phase-btn.active {
+    background: rgba(168,230,61,0.15);
+    border-color: var(--accent-lime);
+    color: var(--accent-lime);
+  }
+
+  /* === CANVAS AREA === */
+  .canvas-wrap {
+    position: relative;
+    background: linear-gradient(180deg,
+      #1a3a5c 0%, #0d2240 20%, #0a1e38 50%, #071428 100%);
+    overflow: hidden;
+  }
+
+  canvas#simCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Depth ruler overlay */
+  .depth-ruler {
+    position: absolute;
+    right: 12px;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .depth-mark {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-align: right;
+  }
+
+  /* Info overlay */
+  .info-overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.68rem;
+    font-family: 'Space Mono', monospace;
+    line-height: 1.8;
+    pointer-events: none;
+  }
+  .info-row { display: flex; gap: 10px; }
+  .info-key { color: var(--text-dim); }
+  .info-val { color: var(--accent-gold); }
+
+  /* Phase label */
+  .phase-label {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10,22,40,0.85);
+    border: 1px solid var(--accent-lime);
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 0.72rem;
+    color: var(--accent-lime);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+  }
+
+  /* === BOTTOM PANEL === */
+  .bottom-panel {
+    background: var(--panel-bg);
+    border-top: 1px solid var(--panel-border);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background-color: var(--panel-border);
+    max-height: 160px;
+  }
+  .metric-card {
+    background: var(--panel-bg);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .metric-title {
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .metric-bar-wrap {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .metric-bar-label { font-size: 0.62rem; color: var(--text-dim); width: 60px; }
+  .metric-bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(37,99,168,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .metric-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .bar-current { background: var(--accent-gold); }
+  .bar-modified { background: var(--accent-lime); }
+  .metric-note {
+    font-size: 0.65rem;
+    color: var(--text-main);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* Legend */
+  .legend {
+    position: absolute;
+    top: 12px;
+    right: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    pointer-events: none;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+  .legend-line {
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+  }
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/3D_fullsinking_mini_leech_sim.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<header>
+  <h1>3D FULL SINKING MINI LEECH SIM</h1>
+  <span>Sonar Titan 3D SINK I/3/5 · WF-6-S · 한터낚시터 6m | 3D 풀싱킹 미니리치 물속 움직임의 시뮬레이션</span>
+  <a href="fly_hovering_simulation.html" style="margin-left:auto; font-family:'Space Mono',monospace; font-size:0.68rem; color:#a8e63d; border:1px solid rgba(168,230,61,0.4); border-radius:4px; padding:4px 10px; text-decoration:none; white-space:nowrap; transition:0.2s;" onmouseover="this.style.background='rgba(168,230,61,0.1)'" onmouseout="this.style.background='none'">🪰 Fly Hovering Sim →</a>
+</header>
+
+<div class="main-grid">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <div class="panel-section">
+      <div class="panel-section-title">📋 채비 스펙</div>
+      <div class="panel-section-body">
+        <div class="spec-row">
+          <span class="spec-label">라인</span>
+          <span class="spec-value">WF-6-S</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">헤드길이</span>
+          <span class="spec-value">10.2m (5ips)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">러닝라인</span>
+          <span class="spec-value">21.8m (1ips)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">0x 카본</span>
+          <span class="spec-value">0.8m</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">5x 티펫</span>
+          <span class="spec-value highlight" id="tippetSpec">카본 0.7m</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">캐스팅</span>
+          <span class="spec-value">18m</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">수심</span>
+          <span class="spec-value">6m</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">카운트</span>
+          <span class="spec-value">~30sec</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title">⚙️ 변수 설정</div>
+      <div class="panel-section-body">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">나일론 티펫</div>
+            <div class="toggle-sub">카본 → 나일론 (비중 1.78→1.14)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="nylonToggle" onchange="updateSim()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Collar 증량</div>
+            <div class="toggle-sub">존커 파이버 저항 면적 ↑</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="collarToggle" onchange="updateSim()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="slider-row">
+          <div class="slider-header">
+            <span class="slider-label">리트리브 속도</span>
+            <span class="slider-val" id="retrieveVal">느림</span>
+          </div>
+          <input type="range" id="retrieveSlider" min="1" max="3" value="1" step="1" oninput="updateRetrieve(this.value)">
+        </div>
+        <div class="slider-row">
+          <div class="slider-header">
+            <span class="slider-label">카운트 (침강)</span>
+            <span class="slider-val" id="countVal">30</span>
+          </div>
+          <input type="range" id="countSlider" min="15" max="45" value="30" step="5" oninput="updateCount(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title">🎬 페이즈</div>
+      <div class="panel-section-body">
+        <div class="phase-btns">
+          <button class="phase-btn active" onclick="setPhase(0)">① 착수</button>
+          <button class="phase-btn" onclick="setPhase(1)">② 침강중</button>
+          <button class="phase-btn" onclick="setPhase(2)">③ 착저</button>
+          <button class="phase-btn" onclick="setPhase(3)">④ 리트리브</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap" style="grid-column:2; grid-row:1;">
+    <canvas id="simCanvas"></canvas>
+
+    <div class="info-overlay">
+      <div class="info-row">
+        <span class="info-key">플라이 수심</span>
+        <span class="info-val" id="flyDepth">- m</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">바닥 간격</span>
+        <span class="info-val" id="flyGap">- cm</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">티펫 각도</span>
+        <span class="info-val" id="tippetAngle">-°</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-line" style="background:#e8d5a3;"></div>
+        <span>싱킹라인</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line" style="background:#c8e8ff; border-top: 1px dashed #c8e8ff; background:none; border-bottom:none; border-left:none; border-right:none;width:20px;height:0;border-top: 2px dashed #c8e8ff;"></div>
+        <span>0x 리더</span>
+      </div>
+      <div class="legend-item" id="legendTippet">
+        <div class="legend-line" style="background:#ffe8a0;"></div>
+        <span>5x 티펫</span>
+      </div>
+    </div>
+
+    <div class="phase-label" id="phaseLabel">① 착수 직후</div>
+
+    <div class="depth-ruler">
+      <div class="depth-mark">0m</div>
+      <div class="depth-mark">1m</div>
+      <div class="depth-mark">2m</div>
+      <div class="depth-mark">3m</div>
+      <div class="depth-mark">4m</div>
+      <div class="depth-mark">5m</div>
+      <div class="depth-mark">6m</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM METRICS -->
+  <div class="bottom-panel" style="grid-column:2; grid-row:2;">
+
+    <div class="metric-card">
+      <div class="metric-title">바닥 이격 거리</div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">현재채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-current" id="barGap1" style="width:30%"></div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">변경채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-modified" id="barGap2" style="width:30%"></div>
+        </div>
+      </div>
+      <div class="metric-note" id="noteGap">리트리브 시 플라이의 바닥 이격</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-title">플라이 액션 활성도</div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">현재채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-current" id="barAction1" style="width:55%"></div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">변경채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-modified" id="barAction2" style="width:55%"></div>
+        </div>
+      </div>
+      <div class="metric-note" id="noteAction">마라부 나풀거림 + collar 저항 복합</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-title">어필 종합 지수</div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">현재채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-current" id="barAppeal1" style="width:50%"></div>
+        </div>
+      </div>
+      <div class="metric-bar-wrap">
+        <span class="metric-bar-label">변경채비</span>
+        <div class="metric-bar-track">
+          <div class="metric-bar-fill bar-modified" id="barAppeal2" style="width:50%"></div>
+        </div>
+      </div>
+      <div class="metric-note" id="noteAppeal">바닥 이격 + 액션 + 시인성 종합</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+let currentPhase = 0;
+let animFrame = 0;
+let animating = false;
+
+// State
+let useNylon = false;
+let useCollar = false;
+let retrieveSpeed = 1;
+let countVal = 30;
+
+const phaseLabels = [
+  '① 착수 직후',
+  '② 침강중 (카운트 진행)',
+  '③ 착저 완료 (~30카운트)',
+  '④ 리트리브 (8자 느린 회수)'
+];
+
+function resizeCanvas() {
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  draw();
+}
+
+function setPhase(p) {
+  currentPhase = p;
+  document.querySelectorAll('.phase-btn').forEach((b,i) => {
+    b.classList.toggle('active', i === p);
+  });
+  document.getElementById('phaseLabel').textContent = phaseLabels[p];
+  animFrame = 0;
+  draw();
+  updateMetrics();
+}
+
+function updateSim() {
+  useNylon = document.getElementById('nylonToggle').checked;
+  useCollar = document.getElementById('collarToggle').checked;
+  document.getElementById('tippetSpec').textContent = useNylon ? '나일론 0.7m' : '카본 0.7m';
+  draw();
+  updateMetrics();
+}
+
+function updateRetrieve(v) {
+  retrieveSpeed = parseInt(v);
+  const labels = ['느림', '보통', '빠름'];
+  document.getElementById('retrieveVal').textContent = labels[v-1];
+  draw();
+  updateMetrics();
+}
+
+function updateCount(v) {
+  countVal = parseInt(v);
+  document.getElementById('countVal').textContent = v;
+  draw();
+  updateMetrics();
+}
+
+// ===== DRAWING =====
+function draw() {
+  if (!canvas.width) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawWater();
+  drawBubbles();
+  drawRig();
+  drawFly();
+  updateInfoOverlay();
+}
+
+function drawWater() {
+  const W = canvas.width, H = canvas.height;
+
+  // Water layers
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#1a3a5c');
+  grad.addColorStop(0.15, '#0d2240');
+  grad.addColorStop(0.6, '#091c35');
+  grad.addColorStop(1, '#050f1e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Surface shimmer
+  const surfaceY = H * 0.06;
+  ctx.save();
+  ctx.globalAlpha = 0.6;
+  const sGrad = ctx.createLinearGradient(0, 0, 0, surfaceY);
+  sGrad.addColorStop(0, 'rgba(26,90,160,0.8)');
+  sGrad.addColorStop(1, 'rgba(13,34,64,0)');
+  ctx.fillStyle = sGrad;
+  ctx.fillRect(0, 0, W, surfaceY);
+  ctx.restore();
+
+  // Surface line
+  ctx.save();
+  ctx.strokeStyle = 'rgba(100,180,255,0.35)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(0, surfaceY);
+  ctx.lineTo(W, surfaceY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Surface label
+  ctx.save();
+  ctx.fillStyle = 'rgba(100,180,255,0.5)';
+  ctx.font = '10px Space Mono, monospace';
+  ctx.fillText('SURFACE', 8, surfaceY - 5);
+  ctx.restore();
+
+  // Bottom
+  const bottomY = H * 0.94;
+  ctx.save();
+  const bGrad = ctx.createLinearGradient(0, bottomY - 8, 0, H);
+  bGrad.addColorStop(0, 'rgba(40,25,10,0)');
+  bGrad.addColorStop(0.3, 'rgba(40,25,10,0.6)');
+  bGrad.addColorStop(1, 'rgba(30,18,5,0.9)');
+  ctx.fillStyle = bGrad;
+  ctx.fillRect(0, bottomY - 8, W, H - bottomY + 8);
+  ctx.restore();
+
+  // Bottom line
+  ctx.save();
+  ctx.strokeStyle = 'rgba(120,80,40,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(0, bottomY);
+  ctx.lineTo(W, bottomY);
+  ctx.stroke();
+  ctx.restore();
+
+  // Bottom label
+  ctx.save();
+  ctx.fillStyle = 'rgba(120,80,40,0.6)';
+  ctx.font = '10px Space Mono, monospace';
+  ctx.fillText('BOTTOM 6m', 8, bottomY + 14);
+  ctx.restore();
+
+  // Depth grid lines
+  ctx.save();
+  ctx.strokeStyle = 'rgba(37,99,168,0.08)';
+  ctx.lineWidth = 1;
+  for (let d = 1; d <= 5; d++) {
+    const y = surfaceY + (bottomY - surfaceY) * (d / 6);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+let bubbles = [];
+function initBubbles() {
+  bubbles = [];
+  for (let i = 0; i < 20; i++) {
+    bubbles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.9,
+      r: Math.random() * 2 + 0.5,
+      vy: -(Math.random() * 0.3 + 0.1),
+      alpha: Math.random() * 0.15 + 0.03
+    });
+  }
+}
+
+function drawBubbles() {
+  ctx.save();
+  bubbles.forEach(b => {
+    b.y += b.vy;
+    if (b.y < 0) { b.y = canvas.height * 0.9; b.x = Math.random() * canvas.width; }
+    ctx.globalAlpha = b.alpha;
+    ctx.strokeStyle = 'rgba(150,200,255,0.6)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function getRigPoints() {
+  const W = canvas.width, H = canvas.height;
+  const surfaceY = H * 0.06;
+  const bottomY = H * 0.94;
+  const waterH = bottomY - surfaceY;
+
+  // Rod tip: left upper area
+  const rodX = W * 0.05;
+  const rodY = surfaceY - 20;
+
+  // Entry point (water surface)
+  const entryX = W * 0.12;
+  const entryY = surfaceY;
+
+  // Phase-based geometry
+  let headEndX, headEndY, leaderEndX, leaderEndY, flyX, flyY;
+  const t = animFrame / 60;
+
+  // Tippet buoyancy factor
+  const tippetBuoy = useNylon ? 1.0 : 0;
+  const collarResist = useCollar ? 1.0 : 0;
+  const speedFactor = retrieveSpeed;
+  const countFactor = countVal / 30;
+
+  if (currentPhase === 0) {
+    // Just landed - everything near surface, diagonal
+    headEndX = W * 0.75;
+    headEndY = surfaceY + waterH * 0.15;
+    leaderEndX = W * 0.85;
+    leaderEndY = surfaceY + waterH * 0.05;
+    flyX = W * 0.88;
+    flyY = surfaceY + waterH * 0.02;
+  } else if (currentPhase === 1) {
+    // Sinking - head pulling fly down, fly just slightly above head end
+    const sinkProgress = Math.min(countFactor * 0.6, 0.8);
+    const oneCm = waterH / 600;
+    headEndX = W * 0.6;
+    headEndY = surfaceY + waterH * sinkProgress * 0.85;
+    // 리더는 헤드엔드에서 살짝 뒤, 거의 같은 깊이
+    leaderEndX = W * 0.66;
+    leaderEndY = headEndY - oneCm * 8;
+    // 플라이는 헤드엔드 대비 10~15cm 위 수준
+    flyX = W * 0.70;
+    flyY = headEndY - oneCm * 14;
+  } else if (currentPhase === 2) {
+    // Bottom contact - head on bottom, fly almost touching bottom (1~2cm)
+    // 6m water = waterH px, so 1cm = waterH/600 px
+    const oneCm = waterH / 600;
+    const liftNylon = tippetBuoy * oneCm * 0.8;   // 나일론: +0.8cm
+    const liftCollar = collarResist * oneCm * 0.5; // collar: +0.5cm
+    headEndX = W * 0.55;
+    headEndY = bottomY - 3;
+    leaderEndX = W * 0.65;
+    leaderEndY = bottomY - oneCm * 3;
+    flyX = W * 0.70;
+    flyY = bottomY - oneCm * 1.5 - liftNylon - liftCollar; // ~1~2cm
+  } else {
+    // Retrieve - fly barely above bottom, intermittent touch
+    const oneCm = waterH / 600;
+    const retrieveLift = speedFactor * oneCm * 0.4; // 속도에 따라 최대 +1.2cm
+    const nylonLift = tippetBuoy * oneCm * 0.8;
+    const collarLift = collarResist * oneCm * 0.5;
+    // 간헐적 바닥 터치 표현: wave가 아주 작게
+    const wave = Math.sin(t * 2) * oneCm * 0.6;
+
+    headEndX = W * 0.42;
+    headEndY = bottomY - 3;
+    leaderEndX = W * 0.53;
+    leaderEndY = bottomY - oneCm * 4;
+    flyX = W * 0.58;
+    // 실제 수치는 1~2cm지만 시각적으로 인지 가능한 최소 높이 보장 (10px)
+    const visualMin = 10;
+    const calcY = oneCm * 1.0 + retrieveLift + nylonLift + collarLift + wave;
+    flyY = bottomY - Math.max(visualMin, calcY);
+  }
+
+  return { rodX, rodY, entryX, entryY, headEndX, headEndY, leaderEndX, leaderEndY, flyX, flyY };
+}
+
+function drawRig() {
+  const p = getRigPoints();
+  const W = canvas.width, H = canvas.height;
+  const surfaceY = H * 0.06;
+  const bottomY = H * 0.94;
+
+  // Above water line (rod to entry)
+  ctx.save();
+  ctx.strokeStyle = 'rgba(232,213,163,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(p.rodX, p.rodY);
+  ctx.lineTo(p.entryX, p.entryY);
+  ctx.stroke();
+  ctx.restore();
+
+  // Running line (entry to head end) - solid gold
+  ctx.save();
+  ctx.strokeStyle = 'rgba(232,213,163,0.85)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(p.entryX, p.entryY);
+  // curve through water
+  const cpX = (p.entryX + p.headEndX) / 2;
+  const cpY = p.entryY + (p.headEndY - p.entryY) * 0.4;
+  ctx.quadraticCurveTo(cpX, cpY, p.headEndX, p.headEndY);
+  ctx.stroke();
+  ctx.restore();
+
+  // 0x leader - dashed cyan
+  ctx.save();
+  ctx.strokeStyle = 'rgba(200,232,255,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  ctx.moveTo(p.headEndX, p.headEndY);
+  ctx.lineTo(p.leaderEndX, p.leaderEndY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // 5x tippet
+  const tippetColor = useNylon
+    ? 'rgba(255,232,160,0.9)'
+    : 'rgba(200,232,255,0.7)';
+  ctx.save();
+  ctx.strokeStyle = tippetColor;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(p.leaderEndX, p.leaderEndY);
+  ctx.lineTo(p.flyX, p.flyY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Head marker dot
+  ctx.save();
+  ctx.fillStyle = 'rgba(240,192,64,0.8)';
+  ctx.beginPath();
+  ctx.arc(p.headEndX, p.headEndY, 4, 0, Math.PI*2);
+  ctx.fill();
+  // label
+  ctx.fillStyle = 'rgba(240,192,64,0.6)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.fillText('HEAD END', p.headEndX + 6, p.headEndY - 6);
+  ctx.restore();
+
+  // Bottom gap indicator (phase 3 & 4)
+  if (currentPhase >= 2) {
+    const gapPx = bottomY - p.flyY;
+    if (gapPx > 2) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(168,230,61,0.5)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2,2]);
+      ctx.beginPath();
+      ctx.moveTo(p.flyX + 18, p.flyY);
+      ctx.lineTo(p.flyX + 18, bottomY);
+      ctx.stroke();
+      // arrows
+      ctx.setLineDash([]);
+      ctx.strokeStyle = 'rgba(168,230,61,0.8)';
+      ctx.lineWidth = 1;
+      // top arrow
+      ctx.beginPath(); ctx.moveTo(p.flyX+15, p.flyY+4); ctx.lineTo(p.flyX+18, p.flyY); ctx.lineTo(p.flyX+21, p.flyY+4); ctx.stroke();
+      // bottom arrow
+      ctx.beginPath(); ctx.moveTo(p.flyX+15, bottomY-4); ctx.lineTo(p.flyX+18, bottomY); ctx.lineTo(p.flyX+21, bottomY-4); ctx.stroke();
+
+      const gapCm = Math.round(gapPx / (bottomY - canvas.height*0.06) * 600);
+      ctx.fillStyle = 'rgba(168,230,61,0.8)';
+      ctx.font = '9px Space Mono, monospace';
+      ctx.fillText(gapCm+'cm', p.flyX + 22, p.flyY + (bottomY - p.flyY)/2 + 4);
+      ctx.restore();
+    }
+  }
+}
+
+function drawFly() {
+  const p = getRigPoints();
+  const t = animFrame / 60;
+
+  // Marabou wave animation (phase 3 & 4)
+  const waving = currentPhase === 3;
+  const waveAmp = waving ? (3 + (useCollar ? 1.5 : 0)) : 0.5;
+
+  ctx.save();
+  ctx.translate(p.flyX, p.flyY);
+
+  // Tail marabou fibers
+  const fiberCount = 16 + (useCollar ? 6 : 0);
+  for (let i = 0; i < fiberCount; i++) {
+    const baseAngle = (i / fiberCount) * Math.PI * 0.6 - Math.PI * 0.3;
+    const len = 18 + Math.random() * 8;
+    const wave = waving ? Math.sin(t * 3 + i * 0.5) * waveAmp : 0;
+    const ax = Math.cos(baseAngle + wave * 0.1) * len + 6;
+    const ay = Math.sin(baseAngle + wave * 0.1) * (len * 0.5);
+    const alpha = 0.4 + Math.random() * 0.4;
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = i % 3 === 0 ? '#ffffff' : '#a8e63d';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(ax * 0.5, ay + wave, ax, ay);
+    ctx.stroke();
+  }
+
+  // Collar
+  const collarSize = useCollar ? 7 : 5;
+  ctx.globalAlpha = 1;
+  for (let i = 0; i < (useCollar ? 14 : 10); i++) {
+    const a = (i / (useCollar ? 14 : 10)) * Math.PI * 2;
+    const w = waving ? Math.sin(t * 2 + i) * 1.5 : 0;
+    ctx.strokeStyle = i % 2 === 0 ? '#a8e63d' : '#c8ff80';
+    ctx.lineWidth = 0.8;
+    ctx.globalAlpha = 0.7;
+    ctx.beginPath();
+    ctx.moveTo(2, 0);
+    ctx.lineTo(2 + Math.cos(a) * collarSize + w, Math.sin(a) * collarSize * 0.5);
+    ctx.stroke();
+  }
+
+  // Hook shank
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(6, 0);
+  ctx.stroke();
+
+  // Hook bend
+  ctx.beginPath();
+  ctx.arc(6, 3, 3, -Math.PI/2, Math.PI*0.3, false);
+  ctx.stroke();
+
+  // Tungsten bead
+  const beadGrad = ctx.createRadialGradient(-3, -3, 1, 0, 0, 6);
+  beadGrad.addColorStop(0, '#e0ff80');
+  beadGrad.addColorStop(0.5, '#a8e63d');
+  beadGrad.addColorStop(1, '#5a8020');
+  ctx.fillStyle = beadGrad;
+  ctx.beginPath();
+  ctx.arc(0, 0, 5, 0, Math.PI*2);
+  ctx.fill();
+
+  // Red thread collar behind bead
+  ctx.strokeStyle = '#e63d3d';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(3, 0, 3, -Math.PI*0.6, Math.PI*0.6);
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Animate
+  animFrame++;
+  if (currentPhase === 3) {
+    requestAnimationFrame(() => { draw(); });
+  }
+}
+
+function updateInfoOverlay() {
+  const p = getRigPoints();
+  const H = canvas.height;
+  const surfaceY = H * 0.06;
+  const bottomY = H * 0.94;
+  const waterH = bottomY - surfaceY;
+
+  const depthPx = p.flyY - surfaceY;
+  const depthM = (depthPx / waterH * 6).toFixed(1);
+  const gapPx = bottomY - p.flyY;
+  const gapCm = Math.round(gapPx / waterH * 600);
+
+  const leaderDX = p.flyX - p.leaderEndX;
+  const leaderDY = p.flyY - p.leaderEndY;
+  const angle = Math.round(Math.atan2(leaderDY, leaderDX) * 180 / Math.PI);
+
+  document.getElementById('flyDepth').textContent = depthM + ' m';
+  document.getElementById('flyGap').textContent = gapCm + ' cm';
+  document.getElementById('tippetAngle').textContent = Math.abs(angle) + '°';
+}
+
+function updateMetrics() {
+  const nylon = useNylon ? 1 : 0;
+  const collar = useCollar ? 1 : 0;
+  const speed = retrieveSpeed;
+
+  // Gap: current vs modified (단위: cm 스케일, 최대 3cm 수준)
+  const baseGap = currentPhase >= 3 ? 35 + speed * 5 : (currentPhase === 2 ? 25 : 10);
+  const modGap = baseGap + nylon * 8 + collar * 5;  // 누적해도 +13% 이내
+
+  // Action
+  const baseAction = 50 + speed * 5;
+  const modAction = baseAction + nylon * 8 + collar * 15;
+
+  // Appeal
+  const baseAppeal = 45 + speed * 5;
+  const modAppeal = baseAppeal + nylon * 10 + collar * 12;
+
+  document.getElementById('barGap1').style.width = Math.min(baseGap, 90) + '%';
+  document.getElementById('barGap2').style.width = Math.min(modGap, 90) + '%';
+  document.getElementById('barAction1').style.width = Math.min(baseAction, 90) + '%';
+  document.getElementById('barAction2').style.width = Math.min(modAction, 90) + '%';
+  document.getElementById('barAppeal1').style.width = Math.min(baseAppeal, 90) + '%';
+  document.getElementById('barAppeal2').style.width = Math.min(modAppeal, 90) + '%';
+
+  const gapDiff = modGap - baseGap;
+  const actionDiff = modAction - baseAction;
+  const appealDiff = modAppeal - baseAppeal;
+
+  document.getElementById('noteGap').textContent =
+    gapDiff > 0 ? `나일론+${nylon ? '~0.8cm' : '0'} / collar+${collar ? '~0.5cm' : '0'} (총 ~${(1 + nylon*0.8 + collar*0.5).toFixed(1)}cm)` : '기본: ~1cm 이격 (간헐 바닥터치)';
+  document.getElementById('noteAction').textContent =
+    actionDiff > 0 ? `+${actionDiff}% 액션 증가 (나일론+${nylon*8}% / collar+${collar*15}%)` : '변경없음';
+  document.getElementById('noteAppeal').textContent =
+    appealDiff > 0 ? `+${appealDiff}% 어필 향상 (누적 변수 효과)` : '기본 채비';
+}
+
+// Init
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+initBubbles();
+updateMetrics();
+
+// Continuous animation for bubbles
+function animLoop() {
+  if (currentPhase !== 3) {
+    draw();
+  }
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

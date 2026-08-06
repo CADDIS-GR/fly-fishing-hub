@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CADDIS-GR · Infographics · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ─── CSS 변수 (라이트 테마) ─── */
+:root {
+  --bg:        #f5f0e8;
+  --bg2:       #ede7db;
+  --bg3:       #e4ddd0;
+  --surface:   #ffffff;
+  --ink:       #1a1f1c;
+  --ink2:      #2e3830;
+  --ink3:      #506058;
+  --gold:      #9a7820;
+  --gold-lt:   #c49d35;
+  --gold-bg:   rgba(154,120,32,.08);
+  --water:     #2d5c50;
+  --water-lt:  #3d7a6a;
+  --accent:    #b83030;
+  --border:    rgba(26,31,28,.1);
+  --border-md: rgba(26,31,28,.16);
+  --shadow:    0 2px 16px rgba(26,31,28,.08);
+  --shadow-lg: 0 8px 40px rgba(26,31,28,.12);
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; scroll-padding-top:58px; font-size:16px; }
+body {
+  font-family:'Noto Sans KR', sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 종이 질감 */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff8f0' surfaceScale='1.4'%3E%3CfeDistantLight azimuth='45' elevation='75'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 400px 400px;
+  opacity:.7;
+}
+
+.wrap { max-width:1060px; margin:0 auto; padding:0 32px; position:relative; z-index:1; }
+
+/* ─── STICKY NAV ─── */
+.sticky-nav {
+  position:fixed; top:0; left:0; right:0; z-index:8000;
+  background:rgba(245,240,232,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border-md);
+  height:48px; display:flex; align-items:center;
+}
+.sticky-nav-inner { display:flex; align-items:center; gap:0; height:100%; }
+.sticky-nav-brand {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--gold);
+  border-right:1px solid var(--border-md); padding-right:20px; margin-right:20px;
+  white-space:nowrap; text-decoration:none; flex-shrink:0;
+  transition:color .2s;
+}
+.sticky-nav-brand:hover { color:var(--gold-lt); }
+.sticky-nav-links { display:flex; align-items:center; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.sticky-nav-links::-webkit-scrollbar { display:none; }
+.snl {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em;
+  color:var(--ink3); text-decoration:none;
+  padding:5px 12px; border-radius:20px; white-space:nowrap;
+  transition:background .2s, color .2s;
+}
+.snl:hover  { background:var(--gold-bg); color:var(--gold); }
+.snl.active { background:var(--gold-bg); color:var(--gold); font-weight:500; }
+@media(max-width:600px){ .sticky-nav-brand{font-size:9px;padding-right:12px;margin-right:12px;} .snl{padding:5px 8px;font-size:9px;} }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 112px 0 72px;
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--border-md);
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0; z-index:0;
+  background-image: repeating-linear-gradient(
+    -45deg, transparent, transparent 56px,
+    rgba(154,120,32,.04) 56px, rgba(154,120,32,.04) 57px
+  );
+}
+.hero-content { position:relative; z-index:1; }
+
+.hero-avatar { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+.hero-avatar img {
+  width:44px; height:44px; border-radius:50%; object-fit:cover;
+  border:2px solid rgba(154,120,32,.4); flex-shrink:0;
+}
+.hero-avatar-name {
+  font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--gold);
+}
+
+.hero-label {
+  font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:18px;
+  display:flex; align-items:center; gap:12px;
+}
+.hero-label::before { content:''; display:block; width:28px; height:1px; background:var(--gold); opacity:.7; }
+
+.hero h1 {
+  font-family:'DM Serif Display', serif;
+  font-size: clamp(3rem, 7.5vw, 6.5rem);
+  line-height:.93; letter-spacing:-.03em;
+  color:var(--ink);
+}
+.hero h1 em { display:block; font-style:italic; color:var(--gold); font-size:.58em; }
+
+.hero-sub {
+  font-family:'DM Mono',monospace; font-size:12px; letter-spacing:.08em;
+  color:var(--ink3); margin-top:22px; max-width:480px; line-height:1.9;
+}
+
+.hero-stats {
+  display:flex; align-items:center; gap:28px;
+  margin-top:44px; padding-top:28px;
+  border-top:1px solid var(--border-md);
+}
+.hero-stat-item { text-align:center; }
+.hero-stat-num {
+  font-family:'DM Serif Display',serif; font-size:2.2rem;
+  color:var(--gold); line-height:1; display:block;
+}
+.hero-stat-label {
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--ink3); margin-top:4px; display:block;
+}
+.hero-stat-sep { width:1px; height:44px; background:var(--border-md); }
+
+/* ─── SECTION 공통 ─── */
+section { position:relative; z-index:1; }
+
+.series-section { padding:72px 0; border-bottom:1px solid var(--border); }
+
+.section-header { display:flex; align-items:baseline; gap:14px; margin-bottom:40px; }
+.section-num {
+  font-family:'DM Serif Display',serif; font-size:3.6rem;
+  color:rgba(154,120,32,.12); line-height:1; flex-shrink:0; letter-spacing:-.04em;
+}
+.section-label {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:5px;
+}
+.section-title {
+  font-family:'Noto Sans KR',sans-serif; font-weight:700;
+  font-size:1.4rem; color:var(--ink); letter-spacing:-.02em;
+}
+
+/* ─── 카드 그리드 — 동일 크기 3열 ─── */
+.card-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:24px;
+}
+@media(max-width:960px){ .card-grid{ grid-template-columns:1fr 1fr; } }
+@media(max-width:600px){ .card-grid{ grid-template-columns:1fr; } }
+
+/* ─── 인포그래픽 카드 (통일 스타일) ─── */
+.ig-card {
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  border-radius:6px;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  transition: transform .3s ease, border-color .3s, box-shadow .3s;
+  cursor:pointer;
+  position:relative;
+  box-shadow: var(--shadow);
+}
+.ig-card:hover {
+  transform:translateY(-4px);
+  border-color:rgba(154,120,32,.35);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 이미지 영역 */
+.ig-card-img-wrap {
+  position:relative; aspect-ratio:4/3; overflow:hidden;
+  background: var(--bg3); flex-shrink:0;
+}
+.ig-card-img-wrap img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .5s ease; display:block;
+}
+.ig-card:hover .ig-card-img-wrap img { transform:scale(1.04); }
+
+/* 이미지 하단 그라데이션 */
+.ig-card-img-wrap::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:60px;
+  background:linear-gradient(to top, rgba(255,255,255,.25), transparent);
+  pointer-events:none;
+}
+
+/* 배지 */
+.ig-card-badge {
+  position:absolute; top:12px; left:12px; z-index:2;
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.15em;
+  text-transform:uppercase;
+  background:var(--gold); color:#fff;
+  padding:3px 9px; border-radius:2px; line-height:1.5;
+}
+.ig-card-badge.pre { background:var(--water); }
+
+/* 컷 카운트 */
+.ig-card-cuts {
+  position:absolute; bottom:10px; right:12px; z-index:2;
+  font-family:'DM Serif Display',serif; font-size:1.5rem;
+  color:rgba(26,31,28,.15); line-height:1;
+}
+
+/* 카드 바디 */
+.ig-card-body {
+  padding:20px 22px 0; flex:1; display:flex; flex-direction:column;
+}
+.ig-card-meta {
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--gold);
+  display:flex; align-items:center; gap:7px; margin-bottom:8px;
+}
+.ig-card-meta-dot { width:3px; height:3px; border-radius:50%; background:rgba(154,120,32,.4); }
+.ig-card-title {
+  font-family:'Noto Sans KR',sans-serif; font-weight:700;
+  font-size:1.05rem; color:var(--ink); line-height:1.45;
+  margin-bottom:10px; letter-spacing:-.01em;
+}
+.ig-card-desc {
+  font-family:'Noto Sans KR',sans-serif; font-size:.82rem;
+  color:var(--ink3); line-height:1.8; flex:1;
+}
+
+/* 카드 푸터 */
+.ig-card-footer {
+  padding:14px 22px 16px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:16px;
+}
+.ig-card-tag {
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink3); opacity:.6;
+}
+.ig-card-arrow {
+  font-family:'DM Mono',monospace; font-size:12px; color:var(--gold);
+  opacity:.5; transition:opacity .2s, transform .2s;
+}
+.ig-card:hover .ig-card-arrow { opacity:1; transform:translateX(3px); }
+.ig-card-log-link {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em;
+  color:var(--water); text-decoration:none;
+  border:1px solid rgba(45,92,80,.25); border-radius:20px;
+  padding:4px 12px;
+  transition:background .2s, border-color .2s, color .2s;
+  white-space:nowrap;
+}
+.ig-card-log-link:hover {
+  background:rgba(45,92,80,.08);
+  border-color:rgba(45,92,80,.5);
+  color:var(--water-lt);
+}
+
+/* ─── ABOUT ─── */
+.about-section { padding:72px 0 64px; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:40px; }
+@media(max-width:640px){ .about-grid{ grid-template-columns:1fr; } }
+
+.about-block {
+  padding:28px 28px 30px;
+  border:1px solid var(--border-md);
+  border-radius:6px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+.about-block-icon { font-size:1.5rem; margin-bottom:14px; }
+.about-block-title {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+}
+.about-block-body {
+  font-family:'Noto Sans KR',sans-serif; font-size:.86rem;
+  color:var(--ink3); line-height:1.85;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  padding:44px 0 36px;
+  border-top:1px solid var(--border-md);
+  position:relative; z-index:1;
+}
+.ft-brand {
+  font-family:'DM Serif Display',serif; font-size:1.5rem;
+  color:var(--gold); margin-bottom:14px; letter-spacing:-.02em;
+}
+.ft-nav { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+.ft-nav a {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--ink3); text-decoration:none;
+  transition:color .2s;
+}
+.ft-nav a:hover { color:var(--gold); }
+.ft-copy {
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em;
+  color:var(--ink3); opacity:.5;
+}
+
+/* ─── 라이트박스 ─── */
+#lb {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(20,24,22,.92); backdrop-filter:blur(8px);
+  align-items:center; justify-content:center; padding:24px;
+}
+#lb.open { display:flex; }
+#lb-inner { position:relative; display:inline-flex; }
+#lb-img { max-width:92vw; max-height:88vh; object-fit:contain; border-radius:3px; display:block; }
+#lb-cap {
+  position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
+  font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em;
+  color:rgba(255,255,255,.4); white-space:nowrap;
+}
+.lb-close {
+  position:absolute; top:8px; right:8px;
+  background:rgba(0,0,0,.5); backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.15); color:#fff;
+  font-size:14px; cursor:pointer; line-height:1;
+  padding:6px 8px; border-radius:50%; z-index:10; transition:background .2s;
+}
+.lb-close:hover { background:rgba(180,48,48,.7); }
+.lb-arrow {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+  color:#fff; font-size:22px; cursor:pointer; border-radius:50%;
+  width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+}
+.lb-arrow:hover { background:rgba(154,120,32,.3); }
+.lb-prev { left:16px; } .lb-next { right:16px; }
+
+@media(max-width:600px){
+  .wrap { padding:0 20px; }
+  .hero { padding:88px 0 56px; }
+  .hero h1 { font-size:clamp(2.4rem,11vw,4rem); }
+  .hero-stats { gap:18px; flex-wrap:wrap; }
+  .series-section { padding:52px 0; }
+}
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html" aria-current="page">Library</a></nav></div><div class="lab-archive-source"><span>INFOGRAPHICS · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/caddis-infographics/blob/main/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- ─── STICKY NAV ─── -->
+<nav class="sticky-nav">
+  <div class="sticky-nav-inner wrap">
+    <a href="https://caddis-gr.github.io" class="sticky-nav-brand">CADDIS-GR</a>
+    <div class="sticky-nav-links">
+      <a href="#sec-top"       class="snl">홈</a>
+      <a href="#sec-tackle"    class="snl">채비 체계</a>
+      <a href="#sec-newseason" class="snl">새시즌 준비</a>
+      <a href="#sec-flytying"  class="snl">플라이 타잉</a>
+      <a href="#sec-about"     class="snl">소개</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero" id="sec-top">
+  <div class="wrap hero-content">
+    <div class="hero-avatar">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG" alt="낚시대장 프로필">
+      <span class="hero-avatar-name">낚시대장 · CADDIS-GR</span>
+    </div>
+    <div class="hero-label">Visual Archive</div>
+    <h1>
+      Infographics
+      <em>플라이낚시 비주얼 아카이브</em>
+    </h1>
+    <p class="hero-sub">
+      현장에서 건진 인사이트를<br>
+      4컷으로 압축한 플라이낚시 인포그래픽 아카이브.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">10</span>
+        <span class="hero-stat-label">Infographics</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">3</span>
+        <span class="hero-stat-label">Series</span>
+      </div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">26–27</span>
+        <span class="hero-stat-label">New Season</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ─── 채비 체계 시리즈 ─── -->
+<section class="series-section" id="sec-tackle">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title-wrap">
+        <div class="section-label">Tackle System Series</div>
+        <div class="section-title">채비 체계 시리즈</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+
+      <!-- 카드 A: 헝거게임 — 라스트 찬스 -->
+      <div class="ig-card" onclick="openLb(1)">
+        <div class="ig-card-img-wrap">
+          <img src="images/tackle-system/2026-05-16-Pre-hanter.png" alt="헝거게임 — 라스트 찬스 4컷">
+          <span class="ig-card-badge pre">2026 · 5/16</span>
+          <span class="ig-card-cuts">4컷</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.16</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>한터낚시터</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>출조 전 플랜</span>
+          </div>
+          <div class="ig-card-title">
+            헝거게임 — 라스트 찬스<br>번외편, 패자부활전!
+          </div>
+          <div class="ig-card-desc">
+            시즌 종료 선언 후 내가 만든 번외전. 4채비로 전 수층을 커버하고,
+            새벽 피딩이면 CamoLux, 해 뜨면 DI5 바텀, 애매하면 인디케이터 6m+HELIX.
+            잘 되면 새로운 무기, 안 되면 데이터다.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># pre-trip · 현장판단 분기</span>
+          <a href="/fly-fishing-hub/field-log/logs/2026-05-16-hanter.html"
+             target="_blank" class="ig-card-log-link" onclick="event.stopPropagation()">
+            📄 조행기 보기
+          </a>
+        </div>
+      </div>
+
+      <!-- 카드 B: 한터 채비 체계 핵심 요약 -->
+      <div class="ig-card" onclick="openLb(0)">
+        <div class="ig-card-img-wrap">
+          <img src="images/tackle-system/2026-hanter-tackle-system.png" alt="한터 채비 체계 핵심 요약 4컷">
+          <span class="ig-card-badge">2026 · SPRING</span>
+          <span class="ig-card-cuts">4컷</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026 Spring</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>한터낚시터</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>채비 체계</span>
+          </div>
+          <div class="ig-card-title">
+            한터 채비 체계 핵심 요약<br>— 최근 4회 조행이 알려준 것
+          </div>
+          <div class="ig-card-desc">
+            풀싱킹 바닥권 공식에서 출발해, 패턴이 아닌 채비·제시 방식의 문제를 발견하고,
+            플로팅 롱리더 마이크로님핑으로 다시 반응을 얻기까지.
+            "바닥에 갇히지 않는다"는 새 채비 체계의 탄생 과정을 4컷으로 압축했다.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># tackle-system · 4cut infographic</span>
+          <a href="/fly-fishing-hub/field-log/logs/2026-hanter-tackle-system.html"
+             target="_blank" class="ig-card-log-link" onclick="event.stopPropagation()">
+            📄 조행기 보기
+          </a>
+        </div>
+      </div>
+
+      <!-- 카드 C: 2026.05.16 피날레 4컷 툰 -->
+      <div class="ig-card" onclick="openLb(2)">
+        <div class="ig-card-img-wrap">
+          <img src="images/tackle-system/2026-05-16-hanter-report.png" alt="2026.05.16 한터 번외편 피날레 4컷">
+          <span class="ig-card-badge">2026 · 5/16</span>
+          <span class="ig-card-cuts">4컷</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.16</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>한터낚시터</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>번외편 피날레</span>
+          </div>
+          <div class="ig-card-title">
+            한터낚시터 번외편 · 4컷 툰<br>Finale 🎬
+          </div>
+          <div class="ig-card-desc">
+            인터미디어트도 바텀도 무반응 → 옆 사람 힌트로 흰색 계열+마이크로님핑 발견 → 수심 6m가 아닌 4m였다! → Balanced Leech + DI5 바텀으로 연속 히트. 최종 23수로 시즌 마무리.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># post-trip · 피날레</span>
+          <a href="/fly-fishing-hub/field-log/logs/2026-05-16-hanter-report.html"
+             target="_blank" class="ig-card-log-link" onclick="event.stopPropagation()">
+            📄 조행기 보기
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── 새시즌 준비 시리즈 ─── -->
+<section class="series-section" id="sec-newseason">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title-wrap">
+        <div class="section-label">New Season Prep Series</div>
+        <div class="section-title">새시즌 준비 시리즈</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+
+      <!-- 카드 D: 가을 송어 마이크로 님핑 가이드 -->
+      <div class="ig-card" onclick="openLb(3)">
+        <div class="ig-card-img-wrap">
+          <img src="images/tackle-system/MicroNymphingGuideForAutumnTrout.png"
+               alt="가을 송어 마이크로 님핑 가이드 4컷 인포그래픽">
+          <span class="ig-card-badge" style="background:var(--water)">26–27 · NEW</span>
+          <span class="ig-card-cuts">4컷</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026 · Oct</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>한터낚시터</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>새시즌 전략</span>
+          </div>
+          <div class="ig-card-title">
+            가을 송어 마이크로 님핑 가이드<br>— 26–27 새시즌 준비
+          </div>
+          <div class="ig-card-desc">
+            아직 정착하지 않은 초기 방류 송어를 공략하는 핵심 원칙 4컷.
+            작게·가볍게·조용히·수심 우선. Float / Hover / CamoLux 채비 시스템과
+            수심별 탐색 순서를 한눈에 압축했다.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># micro-nymphing · 새시즌 준비</span>
+          <a href="/fly-fishing-hub/research/archive/stillwater/micro-nymphing/2026-oct-micro-nymphing-strategy.html"
+             target="_blank" class="ig-card-log-link" onclick="event.stopPropagation()">
+            📋 전략 문서 보기
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── 플라이 타잉 시리즈 ─── -->
+<section class="series-section" id="sec-flytying">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title-wrap">
+        <div class="section-label">Fly Tying Series</div>
+        <div class="section-title">플라이 타잉 시리즈</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+
+      <!-- 카드 E: 마이크로 밸런스드 리치 (영문) -->
+      <div class="ig-card" onclick="openLb(4)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0523-BalancedLeech-en.png" alt="Micro Balanced Leech 영문 카드">
+          <span class="ig-card-badge">2026 · 5/23</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.23</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>Fly Tying</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>Balanced Leech</span>
+          </div>
+          <div class="ig-card-title">
+            Micro Balanced Leech<br>— Small but Mighty
+          </div>
+          <div class="ig-card-desc">
+            DOHIKU #16 훅에 오렌지 비드 3.0mm를 조합한 마이크로 밸런스드 리치.
+            #16 사이즈에서 수평 밸런스 세팅에 성공한 패턴.
+            인디케이터 채비, 정지·슬로우 운용에 최적화.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># balanced-leech · DOHIKU #16 · en</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- 카드 F: 마이크로 밸런스드 리치 (한국어 ver.1) -->
+      <div class="ig-card" onclick="openLb(5)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0523-BalancedLeech-kr.png" alt="마이크로 밸런스드 리치 한국어 카드 v1">
+          <span class="ig-card-badge">2026 · 5/23</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.23</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>플라이 타잉</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>밸런스드 리치 kr v1</span>
+          </div>
+          <div class="ig-card-title">
+            마이크로 밸런스드 리치<br>— 작지만 강하다
+          </div>
+          <div class="ig-card-desc">
+            오렌지 비드 · 마이크로 사이즈 · 밸런스 세팅 · 블랙+플래시 바디.
+            인디케이터 채비용, 바닥권 공략, 미세 스윙, 예민한 송어 대응.
+            티펫을 걸었을 때 수평 밸런스 유지 확인.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># 밸런스드리치 · DOHIKU #16 · kr v1</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- 카드 G: 마이크로 밸런스드 리치 (한국어 ver.2) -->
+      <div class="ig-card" onclick="openLb(6)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0523-BalancedLeech-kr02.png" alt="마이크로 밸런스드 리치 한국어 카드 v2">
+          <span class="ig-card-badge">2026 · 5/23</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.23</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>플라이 타잉</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>밸런스드 리치 kr v2</span>
+          </div>
+          <div class="ig-card-title">
+            마이크로 밸런스드 리치<br>— 상세 스펙 버전
+          </div>
+          <div class="ig-card-desc">
+            한국어 카드 두 번째 버전. 핵심 특징·역할과 운용·제품 스펙을
+            섹션별로 구조화한 상세 인포그래픽.
+            처음 보면 작아 보이지만, 물속에선 존재감이 다르다.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># 밸런스드리치 · DOHIKU #16 · kr v2</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- 카드 H: 키로노미드 메인 카드 -->
+      <div class="ig-card" onclick="openLb(7)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0525-chironomid-card.png" alt="키로노미드 메인 카드">
+          <span class="ig-card-badge">2026 · 5/25</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.25</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>플라이 타잉</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>Chironomid</span>
+          </div>
+          <div class="ig-card-title">
+            키로노미드<br>— 한터 핵심 패턴
+          </div>
+          <div class="ig-card-desc">
+            한터낚시터 6m 수층을 공략하는 키로노미드 패턴 카드.
+            Daiichi 1760 #14 훅 기반, FL 소재를 활용한
+            UV 레이어링 전략의 핵심을 담은 메인 카드.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># chironomid · Daiichi 1760 · FL</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- 카드 I: 키로노미드 상세 스펙 -->
+      <div class="ig-card" onclick="openLb(8)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0525-chironomid-detail.png" alt="키로노미드 상세 스펙 카드">
+          <span class="ig-card-badge">2026 · 5/25</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.25</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>플라이 타잉</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>Chironomid Detail</span>
+          </div>
+          <div class="ig-card-title">
+            키로노미드 상세 스펙<br>— UV 레이어링 전략
+          </div>
+          <div class="ig-card-desc">
+            FL Red 언더바디 + 표준 레드 오버랩, 화이트 버전은
+            Globrite + GSP 50D 스파스-투-덴스 권사로 불균일 UV 발광.
+            6m 수층에서도 FL 소재가 색을 유지하는 원리까지 담은 상세 카드.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># chironomid · FL-red · UV-layering</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- 카드 J: 키로노미드 화이트 버전 -->
+      <div class="ig-card" onclick="openLb(9)">
+        <div class="ig-card-img-wrap">
+          <img src="images/card/0525-chironomid-white.png" alt="키로노미드 화이트 버전 카드">
+          <span class="ig-card-badge">2026 · 5/25</span>
+          <span class="ig-card-cuts">카드</span>
+        </div>
+        <div class="ig-card-body">
+          <div class="ig-card-meta">
+            <span>2026.05.25</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>플라이 타잉</span>
+            <span class="ig-card-meta-dot"></span>
+            <span>Chironomid White</span>
+          </div>
+          <div class="ig-card-title">
+            키로노미드 화이트 버전<br>— Globrite + GSP 50D
+          </div>
+          <div class="ig-card-desc">
+            화이트 키로노미드 전용 카드. Globrite + GSP 50D를
+            스파스-투-덴스로 권사해 불균일 UV 발광을 구현.
+            5/16 번외편에서 흰색 계열로 반응을 살린 그 패턴.
+          </div>
+        </div>
+        <div class="ig-card-footer">
+          <span class="ig-card-tag"># chironomid · white · Globrite · GSP50D</span>
+          <span class="ig-card-arrow">→</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="about-section" id="sec-about">
+  <div class="wrap">
+    <div class="section-header">
+      <div class="section-num">00</div>
+      <div class="section-title-wrap">
+        <div class="section-label">About This Archive</div>
+        <div class="section-title">이 아카이브에 대하여</div>
+      </div>
+    </div>
+    <div class="about-grid">
+      <div class="about-block">
+        <div class="about-block-icon">📐</div>
+        <div class="about-block-title">왜 인포그래픽인가</div>
+        <div class="about-block-body">
+          조행기는 현장의 흐름을 담지만, 핵심 인사이트는 단 몇 컷으로 압축될 때 더 잘 기억된다.
+          여러 회차의 출조가 가르쳐준 것들을 시각 언어로 정제한 결과물이 이 아카이브다.
+        </div>
+      </div>
+      <div class="about-block">
+        <div class="about-block-icon">🎣</div>
+        <div class="about-block-title">CADDIS-GR 아카이브 연결</div>
+        <div class="about-block-body">
+          각 인포그래픽은 <a href="/fly-fishing-hub/field-log/index.html" style="color:var(--gold);text-decoration:none;">Fishing Log</a>의
+          실제 출조 데이터에 기반한다. 카드를 클릭하면 원본 이미지를 크게 볼 수 있다.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="wrap">
+    <div class="ft-brand">CADDIS-GR</div>
+    <nav class="ft-nav">
+      <a href="https://caddis-gr.github.io">Home</a>
+      <a href="/fly-fishing-hub/field-log/index.html">Fishing Log</a>
+      <a href="/fly-fishing-hub/research/index.html">Technique</a>
+      <a href="/fly-fishing-hub/fly-patterns/index.html">Fly Tying</a>
+    </nav>
+    <p class="ft-copy">© 2026 CADDIS-GR · 낚시대장 · Visual Archive</p>
+  </div>
+</footer>
+
+<!-- ─── 라이트박스 ─── -->
+<div id="lb">
+  <button class="lb-arrow lb-prev" onclick="moveLb(-1)">‹</button>
+  <div id="lb-inner">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <img id="lb-img" src="" alt="">
+    <span id="lb-cap"></span>
+  </div>
+  <button class="lb-arrow lb-next" onclick="moveLb(1)">›</button>
+</div>
+
+<script>
+const LB_ITEMS = [
+  { src:'images/tackle-system/2026-hanter-tackle-system.png',       cap:'2026 한터 채비 체계 핵심 요약 · 4컷 인포그래픽' },
+  { src:'images/tackle-system/2026-05-16-Pre-hanter.png',           cap:'2026.05.16 헝거게임 — 라스트 찬스 · 번외편 패자부활전' },
+  { src:'images/tackle-system/2026-05-16-hanter-report.png',        cap:'2026.05.16 한터 번외편 피날레 · 23수 시즌 마무리' },
+  { src:'images/tackle-system/MicroNymphingGuideForAutumnTrout.png', cap:'가을 송어 마이크로 님핑 가이드 · 26–27 새시즌 준비' },
+  { src:'images/card/0523-BalancedLeech-en.png',                    cap:'Micro Balanced Leech · DOHIKU #16 · 영문 카드' },
+  { src:'images/card/0523-BalancedLeech-kr.png',                    cap:'마이크로 밸런스드 리치 · 한국어 카드 v1' },
+  { src:'images/card/0523-BalancedLeech-kr02.png',                  cap:'마이크로 밸런스드 리치 · 한국어 카드 v2 상세 스펙' },
+  { src:'images/card/0525-chironomid-card.png',                     cap:'키로노미드 · Daiichi 1760 #14 · FL UV 레이어링 · 메인 카드' },
+  { src:'images/card/0525-chironomid-detail.png',                   cap:'키로노미드 상세 스펙 · UV 레이어링 전략 · 2026.05.25' },
+  { src:'images/card/0525-chironomid-white.png',                    cap:'키로노미드 화이트 버전 · Globrite + GSP 50D · 불균일 UV 발광' },
+];
+let lbIdx = 0;
+function openLb(i) {
+  lbIdx = i;
+  document.getElementById('lb-img').src = LB_ITEMS[i].src;
+  document.getElementById('lb-cap').textContent = LB_ITEMS[i].cap;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function moveLb(dir) {
+  lbIdx = (lbIdx + dir + LB_ITEMS.length) % LB_ITEMS.length;
+  document.getElementById('lb-img').src = LB_ITEMS[lbIdx].src;
+  document.getElementById('lb-cap').textContent = LB_ITEMS[lbIdx].cap;
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') moveLb(-1);
+  if (e.key === 'ArrowRight') moveLb(1);
+});
+document.getElementById('lb').addEventListener('click', e => {
+  if (e.target === document.getElementById('lb')) closeLb();
+});
+
+const navLinks = document.querySelectorAll('.snl');
+const sections = ['sec-top','sec-tackle','sec-newseason','sec-flytying','sec-about'];
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) current = id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+navLinks.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 58, behavior:'smooth' });
+  });
+});
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/library/index.html">← Library 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

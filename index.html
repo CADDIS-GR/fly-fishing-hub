@@ -1,963 +1,239 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta name="google-site-verification" content="zlvvH38VHirh0ppLFnqvqMaCH3RuCmdNtGjibnLGHys" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>플라이낚시 아카이브 허브 | 낚시대장</title>
+  <meta name="description" content="CADDIS-GR LAB — Stillwater Fly Fishing Research Lab">
+  <title>CADDIS-GR LAB · Stillwater Fly Fishing Research Lab</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-  <style>
-    /* ── TOKENS ── */
-    :root {
-      --black:   #080806;
-      --dark:    #0e0d0a;
-      --dark2:   #161410;
-      --dark3:   #1e1b15;
-      --surface: #252118;
-      --surf2:   #2e2921;
-      --border:  rgba(255,255,255,.07);
-      --border2: rgba(255,255,255,.13);
-      --white:   #f5f2eb;
-      --white2:  #cdc8be;
-      --white3:  #8a8070;
-      --gold:    #c9953a;
-      --gold2:   #f0c96a;
-      --gold3:   #7a5e18;
-      --water:   #2eb88a;
-      --water2:  #1d8a67;
-      --red:     #e05038;
-      --accent:  #f0c96a;
-    }
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: var(--black);
-      color: var(--white);
-      line-height: 1.7;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      cursor: none;
-    }
-
-    /* ── CURSOR ── */
-    .cursor {
-      position: fixed; z-index: 99999;
-      width: 12px; height: 12px;
-      background: var(--gold2);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform .1s, width .3s, height .3s, background .3s;
-      mix-blend-mode: difference;
-    }
-    .cursor-ring {
-      position: fixed; z-index: 99998;
-      width: 36px; height: 36px;
-      border: 1.5px solid rgba(240,201,106,.4);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform .18s ease-out, width .3s, height .3s, border-color .3s;
-    }
-    body:has(a:hover) .cursor { width: 20px; height: 20px; }
-    body:has(a:hover) .cursor-ring { width: 54px; height: 54px; border-color: var(--gold); }
-
-    /* ── GRAIN ── */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 9998;
-      pointer-events: none; opacity: .032;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 128px 128px;
-    }
-
-    /* ── NAV ── */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      padding: 0 48px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
-      transition: background .4s, border-color .4s;
-    }
-    .nav.scrolled {
-      background: rgba(8,8,6,.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem; letter-spacing: .12em;
-      color: var(--gold2); text-decoration: none;
-      transition: color .2s;
-    }
-    .nav-logo:hover { color: var(--white); }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: .67rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--white3); text-decoration: none;
-      transition: color .2s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute; bottom: -3px; left: 0; right: 0; height: 1px;
-      background: var(--gold2);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform .25s ease;
-    }
-    .nav-links a:hover { color: var(--white2); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      position: relative; overflow: hidden;
-      display: grid;
-      grid-template-rows: 1fr auto;
-    }
-
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        url('https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_3621.jpg')
-        center 40% / cover no-repeat;
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(to right, rgba(8,8,6,.92) 0%, rgba(8,8,6,.6) 55%, rgba(8,8,6,.2) 100%),
-        linear-gradient(to top, rgba(8,8,6,1) 0%, rgba(8,8,6,.5) 30%, transparent 70%);
-    }
-
-    .hero-diagonal {
-      position: absolute; bottom: -1px; left: 0; right: 0;
-      height: 120px;
-      background: var(--black);
-      clip-path: polygon(0 60%, 100% 0%, 100% 100%, 0% 100%);
-      z-index: 3;
-    }
-
-    .hero-content {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 0 80px 100px;
-      max-width: 1100px;
-    }
-
-    .hero-number {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28vw;
-      line-height: .82;
-      position: absolute;
-      right: -2vw; bottom: 60px; z-index: 1;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(201,149,58,.08);
-      pointer-events: none;
-      user-select: none;
-      letter-spacing: -.02em;
-    }
-
-    .hero-eyebrow {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 24px;
-    }
-    .eyebrow-line { width: 40px; height: 1px; background: var(--gold); }
-    .eyebrow-text {
-      font-family: 'DM Mono', monospace;
-      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4.5rem, 10vw, 9rem);
-      line-height: .92;
-      letter-spacing: .03em;
-      color: var(--white);
-      margin-bottom: 28px;
-    }
-    .hero-title .accent { color: var(--gold2); }
-    .hero-title .outline {
-      color: transparent;
-      -webkit-text-stroke: 2px var(--white2);
-    }
-
-    .hero-sub {
-      font-size: .92rem; font-weight: 300;
-      color: var(--white3);
-      line-height: 1.9; margin-bottom: 52px;
-      max-width: 380px;
-      border-left: 2px solid var(--gold3);
-      padding-left: 18px;
-    }
-
-    .hero-stats { display: flex; gap: 0; }
-    .hero-stat {
-      display: flex; flex-direction: column;
-      padding: 20px 36px 20px 0;
-      margin-right: 36px;
-      border-right: 1px solid var(--border2);
-    }
-    .hero-stat:last-child { border-right: none; }
-    .stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3rem; line-height: 1;
-      color: var(--gold2);
-    }
-    .stat-lbl {
-      font-family: 'DM Mono', monospace;
-      font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--white3); margin-top: 4px;
-    }
-
-    .hero-badge {
-      position: absolute; right: 80px; bottom: 120px; z-index: 2;
-      width: 120px; height: 120px;
-      border: 1px solid var(--gold3);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; text-align: center;
-      animation: spin-badge 20s linear infinite;
-    }
-    .hero-badge-inner {
-      font-family: 'DM Mono', monospace;
-      font-size: .55rem; letter-spacing: .15em; text-transform: uppercase;
-      color: var(--gold);
-      line-height: 1.6;
-      animation: spin-badge 20s linear infinite reverse;
-    }
-    @keyframes spin-badge {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* ── MARQUEE ── */
-    .marquee-wrap {
-      background: var(--gold);
-      overflow: hidden; white-space: nowrap;
-      padding: 14px 0;
-      position: relative; z-index: 4;
-    }
-    .marquee-track {
-      display: inline-flex; gap: 0;
-      animation: marquee 28s linear infinite;
-    }
-    .marquee-item {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.05rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--black);
-      padding: 0 32px;
-    }
-    .marquee-dot {
-      color: var(--dark3);
-      font-size: 1.3rem;
-      vertical-align: middle;
-      padding: 0 8px;
-    }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-
-    /* ── ARCHIVE SECTION ── */
-    .archive {
-      background: var(--black);
-      padding: 100px 80px 120px;
-      position: relative;
-    }
-
-    .section-header {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      margin-bottom: 64px;
-    }
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .section-label::before {
-      content: '';
-      display: inline-block; width: 20px; height: 1px;
-      background: var(--gold);
-    }
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.4rem, 4.5vw, 4rem);
-      letter-spacing: .05em;
-      color: var(--white);
-      line-height: 1;
-    }
-    .section-count {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 5rem; line-height: 1;
-      color: transparent;
-      -webkit-text-stroke: 1px var(--border2);
-      letter-spacing: -.02em;
-    }
-
-    /* ── CARD GRID ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: auto auto auto;
-      gap: 16px;
-    }
-
-    /* 카드 배치 — 8개 */
-    .card:nth-child(1) { grid-column: span 7; }
-    .card:nth-child(2) { grid-column: span 5; }
-    .card:nth-child(3) { grid-column: span 4; }
-    .card:nth-child(4) { grid-column: span 4; }
-    .card:nth-child(5) { grid-column: span 4; }
-    .card:nth-child(6) { grid-column: span 12; }
-    .card:nth-child(7) { grid-column: span 12; }
-    .card:nth-child(8) { grid-column: span 12; }
-
-    .card {
-      background: var(--dark2);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      display: flex; flex-direction: column;
-      text-decoration: none; color: inherit;
-      position: relative;
-      transition: border-color .35s ease;
-    }
-    .card::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0;
-      background: linear-gradient(135deg, rgba(201,149,58,.06), transparent 60%);
-      opacity: 0;
-      transition: opacity .4s ease;
-    }
-    .card:hover { border-color: var(--gold3); }
-    .card:hover::before { opacity: 1; }
-
-    .card-thumb {
-      width: 100%; aspect-ratio: 16/8;
-      overflow: hidden;
-      position: relative; flex-shrink: 0;
-      background: var(--dark3);
-    }
-    .card:nth-child(1) .card-thumb { aspect-ratio: 16/6; }
-    .card:nth-child(6) .card-thumb,
-    .card:nth-child(7) .card-thumb,
-    .card:nth-child(8) .card-thumb { display: none; }
-
-    .card-thumb img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: saturate(.7) brightness(.85);
-      transition: transform .7s cubic-bezier(.25,.46,.45,.94), filter .5s ease;
-    }
-    .card:hover .card-thumb img {
-      transform: scale(1.07);
-      filter: saturate(1) brightness(.95);
-    }
-    .card-thumb::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(14,13,10,.7) 100%);
-      pointer-events: none;
-    }
-
-    .card-index {
-      position: absolute; top: 16px; left: 20px; z-index: 2;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3.5rem; line-height: 1;
-      color: rgba(240,201,106,.15);
-      pointer-events: none;
-    }
-    .card:nth-child(6) .card-index,
-    .card:nth-child(7) .card-index,
-    .card:nth-child(8) .card-index { display: none; }
-
-    .card-badge {
-      position: absolute; bottom: 14px; left: 16px; z-index: 2;
-      font-family: 'DM Mono', monospace;
-      font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
-      background: rgba(8,8,6,.75); backdrop-filter: blur(8px);
-      color: var(--white2);
-      padding: 5px 12px;
-      border: 1px solid var(--border2);
-    }
-    .card-badge.new {
-      background: var(--water2);
-      border-color: var(--water);
-      color: #fff;
-    }
-
-    .card-body {
-      padding: 22px 24px 26px;
-      display: flex; flex-direction: column; flex: 1;
-      position: relative; z-index: 1;
-    }
-
-    /* 와이드 카드 (6, 7, 8번) 가로 레이아웃 */
-    .card:nth-child(6) .card-body,
-    .card:nth-child(7) .card-body,
-    .card:nth-child(8) .card-body {
-      flex-direction: row;
-      align-items: center;
-      padding: 32px 40px;
-      gap: 48px;
-    }
-    .card:nth-child(6) .card-body-left,
-    .card:nth-child(7) .card-body-left,
-    .card:nth-child(8) .card-body-left { flex: 1; }
-    .card:nth-child(6) .card-body-right,
-    .card:nth-child(7) .card-body-right,
-    .card:nth-child(8) .card-body-right {
-      flex-shrink: 0;
-      display: flex; gap: 32px;
-    }
-
-    .card-meta {
-      font-family: 'DM Mono', monospace;
-      font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .meta-slash { color: var(--white3); }
-
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.55rem; letter-spacing: .05em;
-      color: var(--white); line-height: 1.1;
-      margin-bottom: 10px;
-      transition: color .25s;
-    }
-    .card:nth-child(1) .card-title { font-size: 2rem; }
-    .card:nth-child(6) .card-title,
-    .card:nth-child(7) .card-title,
-    .card:nth-child(8) .card-title { font-size: 2.2rem; }
-    .card:hover .card-title { color: var(--gold2); }
-
-    .card-desc {
-      font-size: .84rem; color: var(--white3);
-      line-height: 1.8; flex: 1; margin-bottom: 20px;
-      font-weight: 300;
-    }
-    .card:nth-child(6) .card-desc,
-    .card:nth-child(7) .card-desc,
-    .card:nth-child(8) .card-desc { margin-bottom: 0; }
-
-    .card-tags {
-      display: flex; flex-wrap: wrap; gap: 6px;
-      margin-bottom: 20px;
-    }
-    .card:nth-child(6) .card-tags,
-    .card:nth-child(7) .card-tags,
-    .card:nth-child(8) .card-tags { margin-bottom: 0; }
-    .tag {
-      font-family: 'DM Mono', monospace;
-      font-size: .6rem; letter-spacing: .05em;
-      color: var(--white3);
-      background: var(--dark3);
-      border: 1px solid var(--border);
-      padding: 3px 10px;
-    }
-
-    .card-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--white3);
-      margin-top: auto;
-      transition: color .25s;
-    }
-    .card:hover .card-cta { color: var(--gold2); }
-    .cta-icon {
-      width: 28px; height: 28px;
-      border: 1px solid var(--border2);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: background .25s, border-color .25s, transform .25s;
-    }
-    .card:hover .cta-icon {
-      background: var(--gold);
-      border-color: var(--gold);
-      transform: translateX(4px);
-    }
-    .cta-icon svg {
-      width: 10px; height: 10px;
-      stroke: currentColor; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-      transition: stroke .25s;
-    }
-    .card:hover .cta-icon svg { stroke: var(--black); }
-
-    /* 와이드 카드 스탯 */
-    .wide-stat { text-align: center; }
-    .wide-stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.8rem; line-height: 1;
-      color: var(--gold2);
-    }
-    .wide-stat-lbl {
-      font-family: 'DM Mono', monospace;
-      font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--white3); margin-top: 4px;
-    }
-    .wide-stat-sep {
-      width: 1px; background: var(--border2);
-      align-self: stretch;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--dark);
-      border-top: 1px solid var(--border);
-      padding: 64px 80px;
-    }
-    .footer-inner {
-      max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr auto 1fr;
-      align-items: center; gap: 40px;
-    }
-    .footer-brand {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3rem; letter-spacing: .08em;
-      color: transparent;
-      -webkit-text-stroke: 1px var(--gold3);
-      line-height: 1;
-    }
-    .footer-quote {
-      text-align: center;
-      font-family: 'Noto Serif KR', serif;
-      font-style: italic; font-size: .95rem;
-      color: var(--gold);
-      line-height: 1.7;
-    }
-    .footer-quote span {
-      display: block;
-      font-family: 'DM Mono', monospace;
-      font-style: normal; font-size: .62rem; letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--white3); margin-top: 8px;
-    }
-    .footer-right {
-      text-align: right;
-      font-family: 'DM Mono', monospace;
-      font-size: .68rem; letter-spacing: .06em;
-      color: var(--white3); line-height: 2;
-    }
-    .footer-right a { color: var(--water); text-decoration: none; transition: color .2s; }
-    .footer-right a:hover { color: var(--water2); }
-
-    /* ── SCROLL REVEAL ── */
-    .reveal {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity .7s cubic-bezier(.25,.46,.45,.94),
-                  transform .7s cubic-bezier(.25,.46,.45,.94);
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-    .reveal-left {
-      opacity: 0; transform: translateX(-32px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .reveal-left.visible { opacity: 1; transform: none; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      .archive { padding: 80px 48px 100px; }
-      .hero-content { padding: 0 48px 100px; }
-      .hero-badge { display: none; }
-      .card:nth-child(1) { grid-column: span 12; }
-      .card:nth-child(2) { grid-column: span 6; }
-      .card:nth-child(3) { grid-column: span 6; }
-      .card:nth-child(4) { grid-column: span 6; }
-      .card:nth-child(5) { grid-column: span 6; }
-      .card:nth-child(6) { grid-column: span 12; }
-      .card:nth-child(7) { grid-column: span 12; }
-    }
-    @media (max-width: 768px) {
-      .nav { padding: 0 24px; }
-      .nav-links { display: none; }
-      .hero-content { padding: 0 24px 80px; }
-      .hero-title { font-size: 3.5rem; }
-      .hero-number { display: none; }
-      .archive { padding: 64px 24px 80px; }
-      .card:nth-child(n) { grid-column: span 12; }
-      .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .card:nth-child(6) .card-body,
-      .card:nth-child(7) .card-body { flex-direction: column; gap: 24px; }
-      .card:nth-child(6) .card-body-right,
-      .card:nth-child(7) .card-body-right { flex-wrap: wrap; justify-content: center; }
-      footer { padding: 48px 24px; }
-      .footer-inner { grid-template-columns: 1fr; text-align: center; }
-      .footer-right { text-align: center; }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <!-- CURSOR -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
-
-  <!-- NAV -->
-  <nav class="nav" id="mainNav">
-    <a class="nav-logo" href="#">CADDIS · GR</a>
-    <ul class="nav-links">
-      <li><a href="https://caddis-gr.github.io/fishing-log/" target="_blank">Logs</a></li>
-      <li><a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank">Tying</a></li>
-      <li><a href="https://caddis-gr.github.io/fishing-technique/" target="_blank">Technique</a></li>
-      <li><a href="https://caddis-gr.github.io/fishing-gear/" target="_blank">Gear</a></li>
-      <li><a href="https://caddis-gr.github.io/caddis-infographics/" target="_blank">Infographics</a></li>
-      <li><a href="https://github.com/CADDIS-GR" target="_blank">GitHub ↗</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <header class="hero" id="sec-top">
-    <div class="hero-bg"></div>
-    <div class="hero-diagonal"></div>
-    <div class="hero-number" aria-hidden="true">GR</div>
-
-    <div class="hero-content">
-      <div class="hero-eyebrow reveal">
-        <div class="eyebrow-line"></div>
-        <span class="eyebrow-text">Fly Fishing Knowledge Hub · Since 2024</span>
-      </div>
-
-      <h1 class="hero-title reveal" style="transition-delay:.1s">
-        Archive<br>
-        <span class="outline">For The</span><br>
-        <span class="accent">Devoted</span>
-      </h1>
-
-      <p class="hero-sub reveal" style="transition-delay:.2s">
-        관리형 낚시터에서의 20년 경험과 노하우,<br>
-        데이터와 AI가 만나 완성된<br>
-        플라이낚시 지식 아카이브.
-      </p>
-
-      <div class="hero-stats reveal" style="transition-delay:.3s">
-        <div class="hero-stat">
-          <span class="stat-num">10</span>
-          <span class="stat-lbl">Repositories</span>
-        </div>
-        <div class="hero-stat">
-          <span class="stat-num">100+</span>
-          <span class="stat-lbl">Fishing Logs</span>
-        </div>
-        <div class="hero-stat">
-          <span class="stat-num">50+</span>
-          <span class="stat-lbl">Fly Patterns</span>
-        </div>
-        <div class="hero-stat">
-          <span class="stat-num">∞</span>
-          <span class="stat-lbl">Passion</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-badge" aria-hidden="true">
-      <div class="hero-badge-inner">
-        Fly · Fishing<br>Archive<br>낚시대장
-      </div>
-    </div>
-  </header>
-
-  <!-- MARQUEE -->
-  <div class="marquee-wrap" aria-hidden="true">
-    <div class="marquee-track">
-      <span class="marquee-item">Fishing Log</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Fly Tying Archive</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Techniques & Tips</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Gear Review</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Infographics</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">새시즌 준비</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
-      <!-- 반복 -->
-      <span class="marquee-item">Fishing Log</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Fly Tying Archive</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Techniques & Tips</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Gear Review</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Infographics</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">How Trout Feed</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">Fly Fishing Science</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">새시즌 준비</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">한터낚시터</span><span class="marquee-dot">·</span>
-      <span class="marquee-item">관리형 낚시터</span><span class="marquee-dot">·</span>
-    </div>
+<header class="site-header" id="siteHeader">
+  <div class="wrap nav">
+    <a class="brand" href="#top">CADDIS-GR LAB</a>
+    <nav class="nav-links" id="navLinks" aria-label="주요 메뉴">
+      <a href="research/index.html">Research</a>
+      <a href="gear/index.html">Gear</a>
+      <a href="fly-patterns/index.html">Fly Patterns</a>
+      <a href="field-log/index.html">Field Log</a>
+      <a href="library/index.html">Library</a>
+      <a href="about/index.html">About</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks">MENU</button>
   </div>
+</header>
 
-  <!-- ARCHIVE -->
-  <section class="archive" id="archive">
-    <div class="section-header reveal-left">
-      <div>
-        <div class="section-label">Core Archives</div>
-        <h2 class="section-title">Knowledge<br>Repository</h2>
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-content">
+      <div class="eyebrow">Stillwater Fly Fishing Research Lab</div>
+      <h1>CADDIS-GR<br><em>LAB</em></h1>
+      <p class="hero-copy">
+        장비를 소개하는 데 그치지 않고, 물속에서 채비가 어떻게 움직이며
+        어떤 조건에서 작동하는지를 현장 기록과 실사용 결과로 분석합니다.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="research/index.html">연구 자료 보기</a>
+        <a class="btn btn-secondary" href="field-log/index.html">최근 필드 기록</a>
       </div>
-      <div class="section-count">08</div>
-    </div>
-
-    <div class="card-grid">
-
-      <!-- 1. Fishing Log (FEATURED) -->
-      <a href="https://caddis-gr.github.io/fishing-log/" target="_blank" class="card reveal" style="transition-delay:.05s">
-        <div class="card-index">01</div>
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/HanTer.JPEG" alt="한터낚시터 전경">
-          <span class="card-badge">출조 기록</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">Data <span class="meta-slash">/</span> Dashboard</div>
-          <h3 class="card-title">Fishing Log</h3>
-          <p class="card-desc">매 출조의 날씨, 수온, 사용 패턴과 조과를 기록한 데이터 대시보드. 한터낚시터 세션 아카이브를 한눈에 탐색.</p>
-          <div class="card-tags">
-            <span class="tag">출조 기록</span><span class="tag">데이터 분석</span><span class="tag">한터낚시터</span>
-          </div>
-          <div class="card-cta">기록 열람하기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-        </div>
-      </a>
-
-      <!-- 2. Fly Tying -->
-      <a href="https://caddis-gr.github.io/fly-tying-archive/" target="_blank" class="card reveal" style="transition-delay:.1s">
-        <div class="card-index">02</div>
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-01.jpg" alt="플라이 패턴">
-          <span class="card-badge">패턴 라이브러리</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">Tying <span class="meta-slash">/</span> Recipe</div>
-          <h3 class="card-title">Fly Tying Archive</h3>
-          <p class="card-desc">Chironomid, Mini Leech 등 직접 타잉한 패턴 레시피와 고화질 이미지 갤러리.</p>
-          <div class="card-tags"><span class="tag">패턴</span><span class="tag">레시피</span></div>
-          <div class="card-cta">패턴 보기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-        </div>
-      </a>
-
-      <!-- 3. Techniques -->
-      <a href="https://caddis-gr.github.io/fishing-technique/" target="_blank" class="card reveal" style="transition-delay:.15s">
-        <div class="card-index">03</div>
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Field-01.JPEG" alt="현장 기법">
-          <span class="card-badge">기법 가이드</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">Technique <span class="meta-slash">/</span> Guide</div>
-          <h3 class="card-title">Techniques & Tips</h3>
-          <p class="card-desc">마이크로 님핑, 딥 라이닝 등 현장 검증 고급 운용 기법 문서.</p>
-          <div class="card-tags"><span class="tag">낚시 기법</span><span class="tag">노하우</span></div>
-          <div class="card-cta">기술 문서 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-        </div>
-      </a>
-
-      <!-- 4. Gear Review -->
-      <a href="https://caddis-gr.github.io/fishing-gear/" target="_blank" class="card reveal" style="transition-delay:.2s">
-        <div class="card-index">04</div>
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0425/0425-Hanter.JPEG" alt="장비 채비">
-          <span class="card-badge">장비 리뷰</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">Gear <span class="meta-slash">/</span> Review</div>
-          <h3 class="card-title">Gear Review</h3>
-          <p class="card-desc">로드, 릴, 플라이 라인 등 장비 선택 기준과 솔직한 현장 사용 경험.</p>
-          <div class="card-tags"><span class="tag">장비 정보</span><span class="tag">리뷰</span></div>
-          <div class="card-cta">장비 정보 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-        </div>
-      </a>
-
-      <!-- 5. How Trout Feed -->
-      <a href="https://caddis-gr.github.io/trout-feeding-science/" target="_blank" class="card reveal" style="transition-delay:.25s">
-        <div class="card-index">05</div>
-        <div class="card-thumb">
-          <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG" alt="한터 수면">
-          <span class="card-badge">섭식 과학</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">Science <span class="meta-slash">/</span> Series</div>
-          <h3 class="card-title">How Trout Feed</h3>
-          <p class="card-desc">탐색 이미지, 4~6mm 법칙, 깔따구의 중요성 — 송어 섭식의 과학 시리즈.</p>
-          <div class="card-tags"><span class="tag">섭식 과학</span><span class="tag">인터랙티브</span></div>
-          <div class="card-cta">시리즈 열람 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-        </div>
-      </a>
-
-      <!-- 6. Fly Fishing Science (WIDE) -->
-      <a href="https://caddis-gr.github.io/fly-fishing-science/" target="_blank" class="card reveal" style="transition-delay:.3s">
-        <div class="card-body">
-          <div class="card-body-left">
-            <div class="card-meta">Theory <span class="meta-slash">/</span> Reference · <span style="color:var(--water)">NEW</span></div>
-            <h3 class="card-title">Fly Fishing Science</h3>
-            <p class="card-desc">수중 빛 감쇄, 형광 효과, UV/FL 소재 전략 — 플라이 낚시의 "왜(Why)"에 답하는 이론 아카이브.</p>
-            <div class="card-tags">
-              <span class="tag">빛·색·형광</span><span class="tag">어류 생태</span><span class="tag">이론</span>
-            </div>
-            <div class="card-cta" style="margin-top:20px">아카이브 열람하기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-          </div>
-          <div class="card-body-right">
-            <div class="wide-stat">
-              <div class="wide-stat-num">UV</div>
-              <div class="wide-stat-lbl">광학 분석</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num">FL</div>
-              <div class="wide-stat-lbl">형광 효과</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num">∞</div>
-              <div class="wide-stat-lbl">이론 탐구</div>
-            </div>
-          </div>
-        </div>
-      </a>
-
-      <!-- 7. Caddis Infographics (WIDE) — NEW -->
-      <a href="https://caddis-gr.github.io/caddis-infographics/" target="_blank" class="card reveal" style="transition-delay:.35s">
-        <div class="card-body">
-          <div class="card-body-left">
-            <div class="card-meta">Visual <span class="meta-slash">/</span> Archive · <span style="color:var(--gold2)">NEW</span></div>
-            <h3 class="card-title">Infographics</h3>
-            <p class="card-desc">현장에서 건진 인사이트를 4컷으로 압축한 플라이낚시 비주얼 아카이브. 채비 체계, 출조 전략, 현장 판단 분기를 한눈에.</p>
-            <div class="card-tags">
-              <span class="tag">채비 체계</span><span class="tag">4컷 인포그래픽</span><span class="tag">비주얼 아카이브</span>
-            </div>
-            <div class="card-cta" style="margin-top:20px">인포그래픽 보기 <span class="cta-icon"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span></div>
-          </div>
-          <div class="card-body-right">
-            <div class="wide-stat">
-              <div class="wide-stat-num">2</div>
-              <div class="wide-stat-lbl">Infographics</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num">4컷</div>
-              <div class="wide-stat-lbl">Per Each</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num">2026</div>
-              <div class="wide-stat-lbl">Season</div>
-            </div>
-          </div>
-        </div>
-      </a>
-
-      <!-- 8. 26-27 새시즌 준비 (WIDE) — NEW -->
-      <a href="https://caddis-gr.github.io/fishing-technique/stillwater/micro-nymphing/2026-oct-micro-nymphing-strategy.html" target="_blank" class="card reveal" style="transition-delay:.4s;border-color:rgba(201,149,58,.25);background:linear-gradient(135deg,#0e0d0a 0%,#141209 60%,#181410 100%)">
-        <div class="card-body">
-          <div class="card-body-left">
-            <div class="card-meta">
-              Season Prep <span class="meta-slash">/</span> Strategy
-              · <span style="color:var(--gold2);font-weight:700">NEW</span>
-            </div>
-            <h3 class="card-title" style="color:var(--gold2)">26–27 새시즌 준비</h3>
-            <p class="card-desc">
-              25-26 시즌의 경험과 데이터를 바탕으로 설계한 10월 새시즌 전략 아카이브.
-              Micro Nymphing 채비 시스템, 수심별 운영표, 플라이 구성, 현장 판단 순서까지
-              새 시즌을 위한 모든 것을 한 문서에 집약했다.
-            </p>
-            <div class="card-tags">
-              <span class="tag">Micro Nymphing</span>
-              <span class="tag">시즌 전략</span>
-              <span class="tag">수심 운영</span>
-              <span class="tag">Float · Hover · CamoLux</span>
-            </div>
-            <div class="card-cta" style="margin-top:20px;color:var(--gold)">
-              전략 문서 열람하기
-              <span class="cta-icon" style="border-color:var(--gold3)"><svg viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3"/></svg></span>
-            </div>
-          </div>
-          <div class="card-body-right">
-            <div class="wide-stat">
-              <div class="wide-stat-num" style="color:var(--gold2)">Oct</div>
-              <div class="wide-stat-lbl">New Season</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num" style="color:var(--gold2)">#14</div>
-              <div class="wide-stat-lbl">Core Size</div>
-            </div>
-            <div class="wide-stat-sep"></div>
-            <div class="wide-stat">
-              <div class="wide-stat-num" style="color:var(--gold2)">3</div>
-              <div class="wide-stat-lbl">Line Systems</div>
-            </div>
-          </div>
-        </div>
-      </a>
-
+      <div class="hero-meta">
+        <span>Field Test</span>
+        <span>System Analysis</span>
+        <span>Fly Pattern</span>
+        <span>Gear Review</span>
+      </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-brand">CADDIS<br>GR</div>
-      <div class="footer-quote">
-        "플라이낚시는 평생의 배움입니다"
-        <span>관리형 낚시터에서의 기록과 탐구를 아카이브합니다</span>
-      </div>
-      <div class="footer-right">
-        Maintained by <a href="https://github.com/CADDIS-GR" target="_blank">@CADDIS-GR</a><br>
-        <span style="opacity:.5; font-size:.62rem;">Last updated: 2026.05.18 · 새시즌 준비 추가</span>
+  <section id="research">
+    <div class="wrap">
+      <div class="section-kicker">Featured Research</div>
+      <h2 class="section-title">2026 Stillwater System</h2>
+      <p class="section-desc">
+        표층에서 6m 바닥까지, 각 라인이 만드는 플라이의 수중 궤적과 역할을
+        하나의 운용 체계로 정리합니다.
+      </p>
+
+      <div class="featured">
+        <article class="featured-copy">
+          <span class="status">FIELD TESTED · UPDATED</span>
+          <h3>라인을 고르는 것이 아니라<br>수중 궤적을 선택합니다.</h3>
+          <p>
+            Floating, Hover, Intermediate, Parabolic Sink, Titan i/3/5를
+            단순한 제품 분류가 아니라 수층과 궤적의 역할로 연결합니다.
+          </p>
+          <div class="system-list">
+            <div>01 · Surface / Floating</div>
+            <div>02 · Upper–Mid / Hover</div>
+            <div>03 · All Layer / Intermediate</div>
+            <div>04 · Bottom / Titan i/3/5</div>
+          </div>
+          <a class="text-link" href="research/four-line-system.html">4단 라인 시스템 보기</a>
+        </article>
+
+        <div class="diagram">
+          <div class="diagram-head">
+            <span>Fly Trajectory</span>
+            <span>6m · 15m Cast</span>
+          </div>
+          <svg viewBox="0 0 620 360" role="img" aria-label="표층부터 바닥까지 네 가지 라인의 개념 궤적">
+            <defs>
+              <linearGradient id="waterBg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#9dcbd7" stop-opacity=".24"/>
+                <stop offset="100%" stop-color="#315d68" stop-opacity=".65"/>
+              </linearGradient>
+            </defs>
+            <rect x="20" y="20" width="580" height="300" rx="12" fill="url(#waterBg)" stroke="rgba(255,255,255,.12)"/>
+            <line x1="20" y1="55" x2="600" y2="55" stroke="#b9e2e7" opacity=".55"/>
+            <rect x="20" y="292" width="580" height="28" fill="#6b5a42" opacity=".75"/>
+            <path d="M65 58 Q190 55 320 58 T555 57" fill="none" stroke="#77d49e" stroke-width="4"/>
+            <path d="M65 60 Q190 95 320 165 T555 286" fill="none" stroke="#73b6d1" stroke-width="4"/>
+            <path d="M65 60 Q150 100 220 180 Q300 288 390 294 Q480 285 550 150" fill="none" stroke="#e9865e" stroke-width="4"/>
+            <path d="M65 60 Q95 145 110 292 L490 292 Q535 287 555 245" fill="none" stroke="#9c82df" stroke-width="4"/>
+            <text x="45" y="48" fill="rgba(255,255,255,.55)" font-size="11">SURFACE</text>
+            <text x="45" y="311" fill="rgba(255,255,255,.55)" font-size="11">BOTTOM · 6m</text>
+          </svg>
+        </div>
       </div>
     </div>
-  </footer>
+  </section>
 
-  <script>
-    // ── CURSOR ──
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animateCursor() {
-      cursor.style.left = mx + 'px';
-      cursor.style.top  = my + 'px';
-      rx += (mx - rx) * .14;
-      ry += (my - ry) * .14;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
+  <section class="depth-section" id="depth">
+    <div class="wrap">
+      <div class="section-kicker">Explore by Depth</div>
+      <h2 class="section-title">어느 수층을 공략하시겠습니까?</h2>
+      <p class="section-desc">
+        제품명이 아니라 목표 수층을 기준으로 관련 라인, 리더, 플라이와 실전 기록을 찾습니다.
+      </p>
 
-    // ── NAV SCROLL ──
-    const nav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
-    });
+      <div class="depth-grid">
+        <a class="depth-card" href="research/index.html">
+          <span class="depth-no">01 · SURFACE</span>
+          <h3>표층</h3>
+          <div class="depth-range">0–2m</div>
+          <div class="depth-water"><span></span></div>
+          <div class="tag-row">
+            <span class="tag">Floating</span><span class="tag">Long Leader</span><span class="tag">Micro Nymph</span>
+          </div>
+        </a>
 
-    // ── SCROLL REVEAL ──
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const delay = parseFloat(e.target.style.transitionDelay || 0);
-          setTimeout(() => e.target.classList.add('visible'), delay * 1000);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.07 });
-    document.querySelectorAll('.reveal, .reveal-left').forEach(el => io.observe(el));
+        <a class="depth-card" href="research/index.html">
+          <span class="depth-no">02 · MID WATER</span>
+          <h3>중층</h3>
+          <div class="depth-range">2–4m</div>
+          <div class="depth-water"><span></span></div>
+          <div class="tag-row">
+            <span class="tag">Hover</span><span class="tag">Intermediate</span><span class="tag">Chironomid</span>
+          </div>
+        </a>
 
-    // ── 히어로 패럴랙스 ──
-    const heroBg = document.querySelector('.hero-bg');
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y < window.innerHeight) {
-        heroBg.style.transform = `translateY(${y * 0.3}px)`;
-      }
-    }, { passive: true });
-  </script>
+        <a class="depth-card" href="gear/fly-line/sa-parabolic-sink.html">
+          <span class="depth-no">03 · MID–LOW</span>
+          <h3>중하층</h3>
+          <div class="depth-range">4–6m</div>
+          <div class="depth-water"><span></span></div>
+          <div class="tag-row">
+            <span class="tag">Intermediate</span><span class="tag">Sink Tip</span><span class="tag">Slow Retrieve</span>
+          </div>
+        </a>
 
+        <a class="depth-card" href="gear/fly-line/sa-parabolic-sink.html">
+          <span class="depth-no">04 · BOTTOM</span>
+          <h3>바닥권</h3>
+          <div class="depth-range">6m</div>
+          <div class="depth-water"><span></span></div>
+          <div class="tag-row">
+            <span class="tag">Titan i/3/5</span><span class="tag">Indicator</span><span class="tag">Balanced Leech</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="patterns">
+    <div class="wrap">
+      <div class="section-kicker">Core Systems</div>
+      <h2 class="section-title">CADDIS-GR의 핵심 연구</h2>
+      <div class="core-grid">
+        <article class="core-card">
+          <div class="core-number">01</div>
+          <div><h3>Micro Nymphing</h3><p>작은 플라이, 가는 티펫, 롱리더와 느린 유영을 이용한 스틸워터 피네스 시스템.</p></div>
+        </article>
+        <article class="core-card">
+          <div class="core-number">02</div>
+          <div><h3>Four-Line System</h3><p>표층·전층·중하층·바닥을 담당하는 라인별 수중 궤적 체계.</p></div>
+        </article>
+        <article class="core-card">
+          <div class="core-number">03</div>
+          <div><h3>Indicator System</h3><p>4–6m 수심을 고정하고 저활성 송어에게 플라이를 오래 노출하는 방법.</p></div>
+        </article>
+        <article class="core-card">
+          <div class="core-number">04</div>
+          <div><h3>Hang Zone</h3><p>리트리브 후반 발 앞 수직상승 구간에서 집중되는 입질을 분석합니다.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes-section" id="field">
+    <div class="wrap">
+      <div class="section-kicker">Field Notes</div>
+      <h2 class="section-title">최근 현장 기록</h2>
+      <p class="section-desc">
+        성공한 채비만이 아니라 무반응과 판단 수정까지 같은 비중으로 기록합니다.
+      </p>
+
+      <div class="notes-grid">
+        <article class="note-card">
+          <div class="note-date">2026.05.16 · HANTER</div>
+          <h3>플로팅 인디케이터 채비의 반응 회복</h3>
+          <p>저활성 조건에서 바닥권 고정과 장시간 노출이 다시 반응을 만들었습니다.</p>
+          <span class="note-result">FIELD TESTED</span>
+        </article>
+
+        <article class="note-card">
+          <div class="note-date">2026.05.08 · HANTER</div>
+          <h3>Hover·Intermediate 마이크로 님핑 무반응</h3>
+          <p>유영형 마이크로 님핑이 항상 유효하지 않다는 실패 사례를 기록했습니다.</p>
+          <span class="note-result">FAILURE LOG</span>
+        </article>
+
+        <article class="note-card">
+          <div class="note-date">2026.05.01 · HANTER</div>
+          <h3>바닥 시스템과 플로팅 인디케이터 비교</h3>
+          <p>기존 바닥 킬존이 무반응일 때 플로팅 채비의 필요성을 확인했습니다.</p>
+          <span class="note-result">REVISED</span>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="about">
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-brand">CADDIS-GR LAB</div>
+      <div class="footer-copy">
+        공식 스펙, 현장 관찰, 개인적 해석을 구분하여 기록합니다.
+        실측되지 않은 수중 궤적은 가설 또는 개념도로 표시하며, 실사용 결과에 따라 기존 판단을 수정합니다.
+      </div>
+    </div>
+    <div class="footer-links" id="library">
+      <a href="research/index.html">Research</a>
+      <a href="gear/index.html">Gear</a>
+      <a href="fly-patterns/index.html">Patterns</a>
+      <a href="field-log/index.html">Field Log</a>
+      <a href="#">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
 </body>
 </html>

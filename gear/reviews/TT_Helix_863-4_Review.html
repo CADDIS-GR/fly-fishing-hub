@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T&T Helix 863-4 리뷰 | CADDIS-GR Gear · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --navy:    #1a2744;
+            --navy-mid:#2d3f6b;
+            --navy-lt: #4a6491;
+            --paper:   #f7f5f0;
+            --paper-2: #eceae3;
+            --gold:    #b8952a;
+            --gold-lt: #f0e6c8;
+            --rule:    #d4cfc4;
+            --ink:     #1a1a1a;
+            --ink-mid: #444;
+            --ink-soft:#888;
+            --water:     #4a7c6f;
+            --water-dk:  #2d5248;
+            --water-lt:  #a8c5be;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.8;
+        }
+        .hero {
+            background:
+                linear-gradient(to bottom, rgba(26,39,68,.7) 0%, rgba(26,39,68,.85) 100%),
+                url('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-07.jpg') center/cover no-repeat;
+            min-height: 480px;
+        }
+        .serif { font-family: 'DM Serif Display', serif; }
+        .mono  { font-family: 'DM Mono', monospace; }
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            border-top: 1px solid var(--rule);
+            padding-top: 32px;
+            margin-bottom: 20px;
+        }
+        .spec-row {
+            display: flex;
+            border-bottom: 1px solid var(--rule);
+            padding: 12px 0;
+            font-size: 14px;
+            gap: 16px;
+        }
+        .spec-row:last-child { border-bottom: none; }
+        .spec-key {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            width: 120px;
+            flex-shrink: 0;
+            padding-top: 3px;
+        }
+        .tag {
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 3px;
+            letter-spacing: .08em;
+        }
+        .tag-navy  { background: var(--navy); color: #fff; }
+        .tag-gold  { background: var(--gold); color: #fff; }
+        .tag-paper { background: var(--paper-2); color: var(--ink-mid); border: 1px solid var(--rule); }
+
+        /* 사진 갤러리 */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        @media(max-width:600px) { .photo-grid { grid-template-columns: repeat(2,1fr); } }
+        .photo-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: zoom-in;
+            background: var(--paper-2);
+        }
+        .photo-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+        .photo-item:hover img { transform: scale(1.05); }
+        .photo-item.wide {
+            grid-column: span 2;
+            aspect-ratio: 2/1;
+        }
+
+        /* 라이트박스 */
+        #lb {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(10,16,30,.92);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        #lb.open { display: flex; }
+        #lb img {
+            max-width: 90vw; max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 24px 80px rgba(0,0,0,.6);
+        }
+        #lb-close {
+            position: fixed; top: 20px; right: 24px;
+            background: none; border: none;
+            color: rgba(255,255,255,.7); font-size: 28px;
+            cursor: pointer; transition: color .2s;
+        }
+        #lb-close:hover { color: #fff; }
+
+        /* 비교 테이블 */
+        .cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .cmp-table th {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px; letter-spacing: .15em;
+            text-transform: uppercase;
+            background: var(--navy);
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+        }
+        .cmp-table td { padding: 10px 16px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+        .cmp-table tr:last-child td { border-bottom: none; }
+        .cmp-table tr:nth-child(even) td { background: var(--paper-2); }
+
+        /* 포럼 인용 */
+        .forum-quote {
+            border-left: 3px solid var(--navy-lt);
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 0 6px 6px 0;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--ink-mid);
+            font-style: italic;
+        }
+        .forum-source {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--ink-soft);
+            font-style: normal;
+            margin-top: 8px;
+        }
+
+        /* 매칭 카드 */
+        .match-card {
+            background: var(--navy);
+            color: #e8edf5;
+            border-radius: 6px;
+            padding: 20px 24px;
+            font-size: 14px;
+        }
+        .match-card h4 {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.45);
+            margin-bottom: 12px;
+        }
+        .match-row {
+            display: flex; gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            align-items: flex-start;
+        }
+        .match-row:last-child { border-bottom: none; }
+        .match-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px; padding: 2px 8px;
+            border-radius: 3px; flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .mb-main   { background: #b8952a; color: #fff; }
+        .mb-sub    { background: rgba(255,255,255,.15); color: #ccc; }
+
+        p { margin-bottom: 20px; font-size: 15px; color: var(--ink-mid); line-height: 1.95; }
+        h2 { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+
+        /* ── FIELD REPORT 섹션 ── */
+        .fr-header {
+            background: var(--water-dk);
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fr-header-left {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--water-lt);
+        }
+        .fr-header-right {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            color: var(--gold);
+        }
+        .fr-body {
+            background: #fff;
+            border: 1px solid var(--rule);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 28px;
+        }
+
+        .fr-verdict {
+            background: var(--water-dk);
+            color: rgba(255,255,255,.9);
+            border-radius: 6px;
+            padding: 20px 24px;
+            font-size: 15px;
+            line-height: 1.85;
+            font-style: italic;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .fr-verdict::before {
+            content: '"';
+            font-family: 'DM Serif Display', serif;
+            font-size: 64px;
+            color: rgba(255,255,255,.12);
+            position: absolute;
+            top: -4px;
+            left: 16px;
+            line-height: 1;
+        }
+        .fr-verdict p {
+            color: rgba(255,255,255,.9);
+            margin: 0;
+            padding-left: 8px;
+        }
+
+        .fr-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media(max-width: 600px) { .fr-stats { grid-template-columns: 1fr 1fr; } }
+        .fr-stat {
+            background: var(--paper);
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        .fr-stat-num {
+            font-family: 'DM Serif Display', serif;
+            font-size: 36px;
+            color: var(--water-dk);
+            line-height: 1;
+            display: block;
+        }
+        .fr-stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .fr-highlight {
+            border-left: 3px solid var(--water);
+            padding: 14px 18px;
+            background: rgba(74,124,111,.06);
+            border-radius: 0 6px 6px 0;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--ink-mid);
+            font-style: italic;
+        }
+
+        .fr-findings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        @media(max-width: 560px) { .fr-findings { grid-template-columns: 1fr; } }
+        .fr-finding {
+            background: var(--paper);
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            padding: 16px 18px;
+        }
+        .fr-finding-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--water);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .fr-finding p {
+            font-size: 13px;
+            color: var(--ink-mid);
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .fr-log-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .1em;
+            color: var(--water-dk);
+            border: 1px solid var(--water);
+            border-radius: 4px;
+            padding: 7px 14px;
+            text-decoration: none;
+            transition: background .2s, color .2s;
+            margin-top: 4px;
+        }
+        .fr-log-link:hover {
+            background: var(--water-dk);
+            color: #fff;
+        }
+
+        footer {
+            background: var(--navy);
+            color: rgba(255,255,255,.35);
+            padding: 28px 24px;
+            text-align: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .1em;
+        }
+        footer a { color: rgba(255,255,255,.5); text-decoration: none; }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/TT_Helix_863-4_Review.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- HERO -->
+<header class="hero flex items-end pb-0">
+    <div class="max-w-3xl mx-auto px-6 pb-0 w-full">
+        <div class="pb-12">
+            <div class="mono text-xs tracking-widest text-blue-300 opacity-70 mb-4 uppercase">
+                CADDIS-GR · Gear Review · Fly Rod
+            </div>
+            <h1 class="serif text-white mb-3" style="font-size:clamp(40px,8vw,72px);line-height:1;">
+                T&T Helix<br>
+                <span style="font-size:60%;color:rgba(255,255,255,.6);">HE863-4</span>
+            </h1>
+            <p class="text-blue-100 text-sm mb-6" style="opacity:.75;">
+                #3 · 8'6" · 4-Piece · Medium Action · Graphite<br>
+                Thomas &amp; Thomas · Greenfield, MA · USA
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag tag-gold">드라이플라이</span>
+                <span class="tag tag-gold">피네스 님핑</span>
+                <span class="tag" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);">단종 빈티지</span>
+                <span class="tag" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);">T&T 미디엄 계열</span>
+            </div>
+        </div>
+        <!-- wave -->
+        <svg viewBox="0 0 1440 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%">
+            <path d="M0 40 C360 0 1080 0 1440 40 L1440 40 L0 40Z" fill="#f7f5f0"/>
+        </svg>
+    </div>
+</header>
+
+<!-- SUMMARY CARD -->
+<div class="max-w-3xl mx-auto px-6" style="margin-top:-8px;">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden mb-12">
+        <div class="flex items-center justify-between px-6 py-4" style="background:var(--navy);">
+            <span class="mono text-xs tracking-widest text-blue-200 uppercase opacity-70">Review Summary</span>
+            <span class="serif text-yellow-400" style="font-size:22px;">★ 5.0</span>
+        </div>
+        <div class="p-6 grid grid-cols-3 gap-6 text-center border-b border-gray-100">
+            <div>
+                <div class="mono text-xs tracking-widest text-gray-400 uppercase mb-1">Action</div>
+                <div class="font-bold text-gray-800">Medium</div>
+            </div>
+            <div>
+                <div class="mono text-xs tracking-widest text-gray-400 uppercase mb-1">Length</div>
+                <div class="font-bold text-gray-800">8'6"</div>
+            </div>
+            <div>
+                <div class="mono text-xs tracking-widest text-gray-400 uppercase mb-1">Line</div>
+                <div class="font-bold text-gray-800">#3</div>
+            </div>
+        </div>
+        <div class="p-6">
+            <p class="text-sm text-gray-600 leading-relaxed m-0">
+                T&T 미디엄 계열의 클래식 빈티지 로드. 현재 라인업의 Paradigm이 다듬어지기 이전의 원형에 가까운 감성을 가지고 있다.
+                <strong>#3 미디엄 액션</strong>이라는 조합은 드라이플라이와 피네스 마이크로님핑에서 극도의 감도와 섬세함을 제공한다.
+                관리형 낚시터 표층권 피네스 피싱(& 마이크로님핑)의 최적의 태클로 선택한, <strong>처음으로 작정하고 고른 드라이플라이 전용 로드.</strong>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="max-w-3xl mx-auto px-6 pb-16 space-y-16">
+
+    <!-- 스펙 -->
+    <section>
+        <div class="section-label">Specifications</div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="spec-row"><div class="spec-key">Model</div><div>HE863-4 (Helix Series)</div></div>
+            <div class="spec-row"><div class="spec-key">Brand</div><div>Thomas &amp; Thomas · Greenfield, MA, USA</div></div>
+            <div class="spec-row"><div class="spec-key">Length</div><div>8'6" (259cm)</div></div>
+            <div class="spec-row"><div class="spec-key">Line Weight</div><div>#3</div></div>
+            <div class="spec-row"><div class="spec-key">Pieces</div><div>4-Piece</div></div>
+            <div class="spec-row"><div class="spec-key">Action</div><div>Medium <span class="text-sm text-gray-500">— 체감: Medium과 Medium-Fast 사이</span></div></div>
+            <div class="spec-row"><div class="spec-key">Material</div><div>Graphite (Carbon Fiber) · 다크 네이비 블루 샌디드 블랭크</div></div>
+            <div class="spec-row"><div class="spec-key">Reel Seat</div><div>업-로킹 퓨터(Pewter) 릴시트 + 부빙가(Bubinga) 목재 스페이서</div></div>
+            <div class="spec-row"><div class="spec-key">Grip</div><div>웨스턴 스타일 코르크 그립</div></div>
+            <div class="spec-row"><div class="spec-key">Tube</div><div>다크 네이비 알루미늄 로드 튜브 (T&T 정품)</div></div>
+            <div class="spec-row"><div class="spec-key">Status</div><div><span class="tag tag-paper">단종 (Discontinued)</span></div></div>
+            <div class="spec-row"><div class="spec-key">정가 (당시)</div><div>USD $700+ 수준 (하이엔드급)</div></div>
+        </div>
+    </section>
+
+    <!-- 구매 배경 -->
+    <section>
+        <div class="section-label">Why This Rod</div>
+        <h2>처음으로 작정하고 고른 드라이플라이 로드</h2>
+        <p>
+            기존 보유 로드들 — Scott Centric, Sage Foundation, Sage R8 Core, T&T Paradigm — 은 모두 풀싱킹 바닥권이나 마이크로님핑 용도로 운용되어왔다.
+            Paradigm 905-4도 명실상부한 T&T의 최고 드라이플라이 로드이지만, 처음부터 드라이플라이를 위해 의도적으로 구매한 것은 아니었다.
+        </p>
+        <p>
+            Helix 863-4는 달랐다. <strong>드라이플라이와 피네스 마이크로님핑</strong>을 위해 처음부터 작정하고 선택한 로드다.
+            #3 미디엄 액션이라는 조합이 Paradigm과의 차별점을 만들어낼 것이라는 확신, 그리고 T&T 미디엄 계열의 감성을
+            더 가볍고 더 섬세한 번대로 경험하고 싶다는 욕구가 결합된 선택이었다.
+        </p>
+        <p>
+            단종된 빈티지 로드라는 점, 외부 칠 상태가 좋지 않다는 점에도 불구하고 — <strong>블랭크 이상 없음, 가이드 손상 없음</strong>이라는 핵심 조건이 충족되었고,
+            하이엔드급 미국 수제 로드를 중고로 만날 수 있는 기회를 놓치지 않았다.
+        </p>
+    </section>
+
+    <!-- 로드 성격 분석 -->
+    <section>
+        <div class="section-label">Rod Character</div>
+        <h2>미디엄 액션이 주는 것</h2>
+        <p>
+            현대 플라이 로드 시장은 패스트 액션으로 수렴하는 흐름이 강하다. 빠른 복원력, 원거리 캐스팅, 바람 대응 — 모두 패스트 액션의 강점이다.
+            그 흐름 속에서 미디엄 액션을 고른다는 것은 <strong>다른 무언가를 의도적으로 선택하는 행위</strong>다.
+        </p>
+
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden my-6">
+            <table class="cmp-table">
+                <thead>
+                    <tr>
+                        <th>항목</th>
+                        <th>T&T Paradigm 905-4</th>
+                        <th>T&T Helix 863-4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="mono text-xs">액션</td><td>Moderate</td><td>Medium</td></tr>
+                    <tr><td class="mono text-xs">길이</td><td>9'0"</td><td>8'6"</td></tr>
+                    <tr><td class="mono text-xs">라인</td><td>#5</td><td>#3</td></tr>
+                    <tr><td class="mono text-xs">설계 철학</td><td>프리젠테이션 · Feel</td><td>Feel 극대화 · 피네스</td></tr>
+                    <tr><td class="mono text-xs">티펫</td><td>5x~6x</td><td>6x~7x</td></tr>
+                    <tr><td class="mono text-xs">캐스팅 범위</td><td>중~원거리</td><td>근~중거리</td></tr>
+                    <tr><td class="mono text-xs">매칭 라인</td><td>RIO Elite Gold Classic WF5F</td><td>RIO Elite Technical Trout WF4F</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            둘 다 T&T 미디엄 계열이라 기본 DNA는 같다. 손에 쥐었을 때 "이게 T&T구나" 하는 느낌 — 캐스팅 리듬, 로딩 방식, 전체적인 감성은 공통적이다.
+            차이는 섬세하게 나타난다. Paradigm이 <em>"만능"</em>이라면, Helix 863-4는 <em>"감각의 극대화"</em>다.
+        </p>
+
+        <div class="forum-quote">
+            "Helix is the most pleasurable casting piece of graphite I own, and the best looking."
+            <div class="forum-source">— The Fly Fishing Forum 사용자</div>
+        </div>
+
+        <div class="forum-quote">
+            "It casts like a dream: very powerful and also very soft and delicate. And when you hook a fish it looks like a middle action rod."
+            <div class="forum-source">— Washington Fly Fishing Forum · Helix 864-4 사용자</div>
+        </div>
+    </section>
+
+    <!-- 매칭 시스템 -->
+    <section>
+        <div class="section-label">Matching System</div>
+        <h2>관리형 낚시터 운용 채비</h2>
+
+        <div class="match-card mb-6">
+            <h4>Helix 863-4 · 표층 피네스 세팅</h4>
+            <div class="match-row">
+                <span class="match-badge mb-main">ROD</span>
+                <span>T&T Helix 863-4 — #3 / 8'6" / Medium</span>
+            </div>
+            <div class="match-row">
+                <span class="match-badge mb-main">LINE</span>
+                <span>RIO Elite Technical Trout WF4F — 롱 파인 프론트 테이퍼, 오버라이닝 세팅</span>
+            </div>
+            <div class="match-row">
+                <span class="match-badge mb-sub">LEADER</span>
+                <span>9ft 4x 테이퍼드 + 6x~7x Fluorocarbon 티펫 2~3m</span>
+            </div>
+            <div class="match-row">
+                <span class="match-badge mb-sub">FLY</span>
+                <span>Chironomid Larva/Pupa #16~20 · Zebra Midge · Dry Fly</span>
+            </div>
+        </div>
+
+        <p>
+            RIO Elite Technical Trout WF4F를 #3 로드에 얹는 것은 의도적인 오버라이닝이다.
+            미디엄 액션 로드에 한 번대 위 라인을 올리면 로드가 더 깊게 로딩되어 캐스팅이 자연스러워진다 — 포럼에서도 공통적으로 권장하는 정석 세팅이다.
+        </p>
+        <p>
+            7x 극세 티펫과 #18~20 소형 크로노미드의 조합에서 이 로드의 진가가 나온다. 미디엄 액션의 유연한 팁이 쿠션 역할을 해 티펫 단선을 막아주면서,
+            동시에 미세한 입질을 손끝으로 생생하게 전달한다.
+        </p>
+    </section>
+
+    <!-- 관리형 낚시터 시나리오 -->
+    <section>
+        <div class="section-label">Field Application</div>
+        <h2>관리형 낚시터에서의 활용</h2>
+        <p>
+            관리형 낚시터에서 이 로드의 무대는 <strong>표층~중층 피네스 피싱</strong>이다.
+            풀싱킹 바닥권 시스템(Centric + Titan 3D, Foundation + Airflo Sixth Sense 2 DI5)이 메인을 담당하는 동안,
+            Helix는 송어가 표층으로 떠오르는 조건에서 등장한다.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="mono text-xs tracking-wider text-blue-700 mb-2 uppercase">봄철 전도기 이후</div>
+                <p class="text-sm text-gray-600 m-0">수층 균일화로 송어가 표층에 분산. 눈에 보이지만 입질이 없는 상황 — 7x 티펫 + #18 크로노미드 퓨파로 피네스 마이크로님핑.</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <div class="mono text-xs tracking-wider text-slate-700 mb-2 uppercase">드라이플라이 라이즈</div>
+                <p class="text-sm text-gray-600 m-0">피딩타임 라이즈 시 드라이플라이 운용. #3 미디엄 액션의 부드러운 프리젠테이션으로 스푸키한 송어 공략.</p>
+            </div>
+        </div>
+
+        <p>
+            Paradigm + RIO Gold 조합이 마이크로님핑의 올라운드 메인이라면, Helix + Technical Trout는 <strong>한 단계 더 섬세한 피네스의 영역</strong>을 담당한다.
+            중복처럼 보이지만 실제로는 6x와 7x의 차이, #5와 #3의 차이가 만드는 엄연히 다른 세계다.
+        </p>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         FIELD REPORT — 신규 추가 섹션
+    ════════════════════════════════════════ -->
+    <section>
+        <div class="section-label">Field Report</div>
+        <h2>첫 실전 — "니가 오늘 장원이다!"</h2>
+
+        <!-- 데뷔전 결과 카드 -->
+        <div style="border-radius:8px;overflow:hidden;margin-bottom:24px;">
+            <div class="fr-header">
+                <div>
+                    <div class="fr-header-left">2026 · 04 · 11 · 한터낚시터 데뷔전</div>
+                    <div style="font-size:13px;color:var(--water-lt);margin-top:4px;">꽃샘추위 직후 · 봄 강풍 · 표층 피네스</div>
+                </div>
+                <div class="fr-header-right">🏆</div>
+            </div>
+            <div class="fr-body">
+
+                <!-- 인용 -->
+                <div class="fr-verdict">
+                    <p>날씨 예측으로는 상층부를 기대하기 어려운 상황 — 그래서 로드는 그저 테스트용이었는데. 12시를 지나면서 거짓말처럼 잿빛 하늘이 걷히고 해가 나기 시작한다.</p>
+                </div>
+
+                <!-- 수치 통계 -->
+                <div class="fr-stats">
+                    <div class="fr-stat">
+                        <span class="fr-stat-num">20+</span>
+                        <span class="fr-stat-label">Helix로 올린 수</span>
+                    </div>
+                    <div class="fr-stat">
+                        <span class="fr-stat-num">58</span>
+                        <span class="fr-stat-label">당일 총 조과</span>
+                    </div>
+                    <div class="fr-stat">
+                        <span class="fr-stat-num">#1</span>
+                        <span class="fr-stat-label">오후 장원 채비</span>
+                    </div>
+                </div>
+
+                <!-- 현장 관찰 그리드 -->
+                <div class="fr-findings">
+                    <div class="fr-finding">
+                        <span class="fr-finding-label">캐스팅 · 라인</span>
+                        <p>라인이 스무스하게 날아가고, <strong>턴오버가 예술</strong>. 10미터 근방까지는 아무런 노력 없이도 그대로 날아간다.</p>
+                    </div>
+                    <div class="fr-finding">
+                        <span class="fr-finding-label">티펫 · 훅셋</span>
+                        <p>카본 <strong>6X 티펫으로도 충분히 랜딩</strong>이 가능할 정도로 로드의 휨새와 라인의 탄성이 잘 버텨준다.</p>
+                    </div>
+                    <div class="fr-finding">
+                        <span class="fr-finding-label">인디케이터 반응</span>
+                        <p>다분할 Strike Putty가 <strong>쭉~ 하고 빨려 들어가면서</strong> 한수, 두수, 세수 — Strike Putty 폭발.</p>
+                    </div>
+                    <div class="fr-finding">
+                        <span class="fr-finding-label">강풍 조건</span>
+                        <p>종일 봄 강풍 속에서도 <strong>등바람 위치에서 안정적 운용</strong>. 미디엄 액션 특유의 리듬이 바람 속에서도 캐스팅을 이어주었다.</p>
+                    </div>
+                </div>
+
+                <!-- 현장 인용 -->
+                <div class="fr-highlight" style="margin-top:20px;">
+                    "이미 훌륭한 Paradigm + RIO Gold 조합이 있었는데 — Helix가 오후를 통째로 가져가버렸다. 이참에 이걸 메인으로…"
+                </div>
+
+                <!-- 조행기 링크 -->
+                <div style="margin-top:20px;">
+                    <a href="../../field-log/logs/2026-04-11-hanter.html"
+                       class="fr-log-link" target="_blank">
+                        📋 2026 · 04 · 11 조행기 전문 읽기 →
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 데뷔전 이후 평가 -->
+        <p>
+            테스트 투입 예정이었던 로드가 오후 최다 조과 채비로 등극한 하루였다.
+            이전까지 Paradigm + RIO Gold Classic이 마이크로님핑의 기준점이었다면 — Helix 863-4는 <strong>그 기준점을 한 단계 더 섬세하게 밀어올린 채비</strong>임이 현장에서 증명되었다.
+        </p>
+        <p>
+            특히 봄 강풍이라는 불리한 조건에서 RIO Elite Technical Trout WF4F의 롱 파인 프론트 테이퍼가 라인을 안정적으로 펼쳐주고, 미디엄 액션의 느린 리듬이 바람에 흔들리지 않는 캐스팅을 가능하게 해주었다.
+            이론으로 예상했던 것들이 현장에서 그대로 검증된 데뷔전이었다.
+        </p>
+    </section>
+    <!-- ════════════════════════════════════════ -->
+
+    <!-- 실물 갤러리 -->
+    <section>
+        <div class="section-label">Field Photos</div>
+        <h2>실물 사진</h2>
+        <div class="photo-grid">
+            <div class="photo-item wide" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-07.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-07.jpg" alt="T&T Helix 863-4 전체">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-01.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-01.jpg" alt="로드 튜브 캡 라벨">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-02.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-02.jpg" alt="T&T 빈티지 로고">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-03.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-03.jpg" alt="블랭크 각인">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-04.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-04.jpg" alt="Thomas & Thomas 필기체 각인">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-05.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-05.jpg" alt="래핑 및 가이드 근접">
+            </div>
+            <div class="photo-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-06.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/Helix/Helix-06.jpg" alt="시리얼 넘버 및 래핑">
+            </div>
+        </div>
+        <p class="text-xs text-gray-400 mono mt-3">
+            🔍 이미지를 클릭하면 확대해서 볼 수 있습니다.
+        </p>
+    </section>
+
+    <!-- 로드의 연대기 -->
+    <section>
+        <div class="section-label">Rod Chronicle</div>
+        <h2>Helix 시리즈의 연대기</h2>
+
+        <div class="relative pl-8 space-y-0" style="border-left:2px solid var(--rule);">
+
+            <div class="relative pb-10">
+                <div class="absolute -left-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white mono"
+                     style="background:var(--navy);top:0;">01</div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="mono text-xs tracking-widest mb-2" style="color:var(--navy-lt);text-transform:uppercase;">등장 배경 · 2000년대 초반</div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-3">T&T 전성기의 산물</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed m-0">
+                        Helix는 T&T가 Paradigm, LPS, Vector, Horizon과 함께 운영하던 주요 그라파이트 시리즈 중 하나다.
+                        짙은 네이비 블루 블랭크에 흰색 필기체 각인 — 이 시기 T&T의 상징적인 마감이었다.
+                        당시 T&T는 연간 12,000개의 그라파이트 로드를 생산하며 미국을 넘어 영국, 일본, 프랑스, 독일 등
+                        전 세계에 수출하는 하이엔드 로드 메이커로서 전성기를 구가하고 있었다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative pb-10">
+                <div class="absolute -left-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white mono"
+                     style="background:var(--navy);top:0;">02</div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="mono text-xs tracking-widest mb-2" style="color:var(--navy-lt);text-transform:uppercase;">현역 시절의 위상 · 2000년대</div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-3">T&T의 현대적 올라운더</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+                        이 시기 Helix는 T&T 라인업 중 가장 <strong>'범용성 높은 퍼포먼스 로드'</strong>로 평가받았다.
+                    </p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="rounded-lg p-3 text-sm" style="background:var(--paper-2);">
+                            <div class="mono text-xs mb-1" style="color:var(--ink-soft);">PARADIGM</div>
+                            <div class="text-gray-700">극한의 부드러움을 추구하는 <strong>클래식</strong></div>
+                        </div>
+                        <div class="rounded-lg p-3 text-sm" style="background:var(--gold-lt);">
+                            <div class="mono text-xs mb-1" style="color:var(--gold);">HELIX</div>
+                            <div class="text-gray-700">힘과 T&T 감성을 겸비한 <strong>더 활용도 높은 미디엄 로드</strong></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-3 mb-0 italic">
+                        당시 미국 포럼에서는 "Sage XP의 파워는 좋지만 손맛이 아쉽다"는 유저들이 대거 Helix로 넘어오기도 했다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute -left-10 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white mono"
+                     style="background:var(--navy-lt);top:0;">03</div>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="mono text-xs tracking-widest mb-2" style="color:var(--navy-lt);text-transform:uppercase;">은퇴와 계승 · 2005년 이후</div>
+                    <h3 class="font-bold text-gray-800 text-lg mb-3">경영 혼란기와 라인업 정리</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed m-0">
+                        2005년 T&T가 UK 투자자 그룹에 인수되면서 회사는 장기간의 경영 불안정을 겪게 된다.
+                        R&D 투자가 급감하고 신제품 출시가 줄어드는 과정에서 Helix를 포함한 여러 시리즈가
+                        자연스럽게 단종되었다. 이후 T&T는 새 오너십 하에 재건을 시작했고,
+                        현재의 Avantt, Paradigm 리뉴얼, Zone 등으로 그 기술적 유산을 이어가고 있다.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-8 rounded-lg p-6 border" style="background:var(--gold-lt);border-color:#d4b86a;">
+            <div class="mono text-xs tracking-widest mb-4" style="color:var(--gold);text-transform:uppercase;">현재의 가치</div>
+            <p class="text-sm text-gray-700 leading-relaxed mb-3">
+                이 로드는 최소 <strong>15~20년 전</strong>에 생산된 빈티지 로드다. 당시 USD $700을 상회하던 하이엔드급이었다.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed m-0">
+                지금의 초경량 로드들에 비하면 약간의 무게감이 느껴질 수 있지만,
+                T&T 특유의 <strong>'로드 전체가 일을 하는 쫀득한 액션'</strong>은
+                요즘 로드들이 쉽게 흉내 내지 못하는 부분이다.
+            </p>
+        </div>
+    </section>
+
+    <!-- 총평 -->
+    <section>
+        <div class="section-label">Final Verdict</div>
+        <div style="background:var(--navy);color:#e8edf5;border-radius:6px;padding:36px 40px;">
+            <div class="mono text-xs tracking-widest mb-6" style="color:rgba(255,255,255,.4);text-transform:uppercase;">낚시대장의 총평</div>
+            <p style="color:rgba(255,255,255,.85);font-size:16px;line-height:2;margin-bottom:16px;">
+                같은 T&T 미디엄 계열이지만, Paradigm이 <em>"우연히 만난 인연"</em>이라면 Helix는 <em>"의도적으로 선택한 로드"</em>다.
+                처음으로 작정하고 고른 드라이플라이 전용 로드로서, 풀싱킹으로 바닥을 장악하고 마이크로님핑으로 표층을 경험했던 여정의 다음 챕터를 열어줄 로드다.
+            </p>
+            <p style="color:rgba(255,255,255,.65);font-size:14px;line-height:1.8;margin-bottom:0;">
+                바닥부터 표층까지 — 수직으로 전 수층을 커버하는 앵글러로 나아가는 과정에서, Helix 863-4는 가장 섬세한 끝단을 담당하게 된다.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<!-- 라이트박스 -->
+<div id="lb" onclick="closeLb()">
+    <button id="lb-close" onclick="closeLb()">✕</button>
+    <img id="lb-img" src="" alt="">
+</div>
+
+<footer>
+    <div style="margin-bottom:10px;display:flex;justify-content:center;gap:24px;">
+        <a href="../index.html">CADDIS-GR Home</a>
+        <a href="../index.html">Gear Reviews</a>
+        <a href="../../field-log/logs/2026-04-11-hanter.html">4·11 조행기</a>
+    </div>
+    <p>© 2026 CADDIS-GR · 낚시대장</p>
+</footer>
+
+<script>
+    function openLb(src) {
+        document.getElementById('lb-img').src = src;
+        document.getElementById('lb').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLb() {
+        document.getElementById('lb').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+</script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

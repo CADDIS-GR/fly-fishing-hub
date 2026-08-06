@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그대 이름은 바람 · 2026.05.01 한터낚시터 · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #1a1a1a;
+  --ink-mid:   #444;
+  --ink-soft:  #888;
+  --paper:     #f7f4ef;
+  --paper-2:   #eeeae2;
+  --water:     #4a7c6f;
+  --water-dk:  #2d5248;
+  --water-lt:  #a8c5be;
+  --accent:    #c0392b;
+  --accent-lt: #f5e6e5;
+  --gold:      #b8952a;
+  --rule:      #d6d0c4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background-color:#e8e2d8;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.6'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.88'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  color:var(--ink);line-height:1.7;font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:92vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:0 0 64px;overflow:hidden;
+  background:url('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG') center/cover no-repeat;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(20,45,38,.35) 0%,rgba(20,45,38,.75) 100%);
+}
+.hero>*{position:relative;z-index:1}
+.hero-tag{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,.6);
+  padding:40px 48px 0;margin-bottom:auto;
+}
+.hero h1{
+  font-family:'Noto Sans KR',sans-serif;font-weight:700;
+  font-size:clamp(40px,7vw,80px);
+  color:#fff;line-height:1.1;
+  padding:0 48px;margin-bottom:18px;
+}
+.hero-sub{
+  font-size:clamp(15px,2vw,19px);font-weight:300;
+  color:rgba(255,255,255,.62);padding:0 48px;margin-bottom:28px;
+  max-width:680px;
+}
+.hero-meta{
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.15em;
+  color:rgba(255,255,255,.55);padding:0 48px;
+}
+/* BGM 버튼 */
+.bgm-wrap{position:absolute;bottom:72px;right:48px;z-index:4}
+.bgm-btn-inner{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:32px;padding:10px 18px}
+.bgm-play{width:28px;height:28px;background:var(--accent);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;padding:0}
+.bgm-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;line-height:1.4;color:#fff}
+.hero-wave{position:absolute;bottom:-1px;left:0;width:100%;pointer-events:none;z-index:2}
+
+/* ── WRAP ── */
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+/* ── SUMMARY ── */
+.summary{
+  background-color:#faf7f2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.2'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.7'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 32px rgba(0,0,0,.08);margin:56px auto;max-width:860px;padding:0 24px;
+}
+.summary-inner{max-width:860px;margin:0 auto}
+.summary-head{
+  background:var(--ink);color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 28px;margin:0 -24px;
+}
+.summary-head span{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.summary-score{font-family:'DM Serif Display',serif;font-size:38px;color:var(--gold)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 32px;padding:28px 4px}
+.sg-item label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px}
+.sg-item p{font-size:14px;color:var(--ink-mid);line-height:1.6}
+.sg-full{grid-column:1/-1}
+.pattern-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pattern-item{font-family:'DM Mono',monospace;font-size:12px;padding:4px 12px;border-radius:20px}
+.pattern-item.dead{text-decoration:line-through;color:var(--ink-soft);background:var(--paper-2)}
+.pattern-item.mid{background:#fff3cd;color:#7a5c00}
+.pattern-item.win{background:var(--water-dk);color:#fff;font-weight:700}
+.summary-verdict{
+  background:var(--accent-lt);border-left:3px solid var(--accent);
+  padding:16px 20px;margin:4px 0 24px;border-radius:0 8px 8px 0;
+  font-size:14px;color:var(--ink-mid);line-height:1.7;
+}
+
+/* ── ARTICLE ── */
+.article{padding:8px 0 64px}
+.sec-title{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-top:1px solid var(--rule);padding-top:14px;margin:56px 0 24px;
+}
+h2.ch-title{
+  font-family:'Noto Sans KR',sans-serif;font-weight:700;
+  font-size:clamp(22px,3.5vw,30px);color:var(--ink);margin-bottom:20px;line-height:1.3;
+}
+.article p{color:var(--ink-mid);margin-bottom:18px;font-size:15.5px;line-height:1.85}
+.article strong{color:var(--ink);font-weight:700}
+
+/* ── COUNT WRAP ── */
+.count-wrap{display:flex;gap:16px;flex-wrap:wrap;margin:32px 0}
+.count-item{
+  flex:1;min-width:100px;background:#faf7f2;border:1px solid var(--rule);
+  border-radius:12px;padding:18px 20px;text-align:center;
+}
+.count-num{font-family:'DM Serif Display',serif;font-size:40px;color:var(--water-dk);line-height:1;display:block}
+.count-num.accent{color:var(--accent)}
+.count-num.gold{color:var(--gold)}
+.count-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;display:block}
+
+/* ── GEAR BOX ── */
+.gear-box{background:var(--ink);color:#e8e8e8;border-radius:14px;padding:32px;margin:32px 0}
+.gear-box h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:24px}
+.gear-item{border-bottom:1px solid rgba(255,255,255,.08);padding:16px 0;display:flex;gap:16px;align-items:flex-start}
+.gear-item:last-child{border-bottom:none}
+.gl-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:4px;flex-shrink:0;margin-top:3px}
+.gl-bot{background:#444;color:#ccc}
+.gl-mid{background:var(--water);color:#fff}
+.gl-top{background:var(--water);color:#fff}
+.gl-new{background:var(--accent);color:#fff}
+.gear-info strong{color:#fff;font-size:14px;display:block;margin-bottom:4px}
+.gear-info span{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* ── PULLQUOTE ── */
+.pullquote{border-left:4px solid var(--water);padding:16px 24px;margin:32px 0;background:rgba(74,124,111,.06);border-radius:0 8px 8px 0}
+.pullquote p{font-family:'Noto Sans KR',sans-serif;font-weight:500;font-size:clamp(16px,2.2vw,20px);color:var(--water-dk);line-height:1.7;margin:0}
+
+/* ── TIME TABLE ── */
+.time-table{border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin:32px 0}
+.tt-head{background:var(--ink);color:#fff;display:grid;grid-template-columns:110px 1fr 1fr;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:12px 16px;gap:16px}
+.tt-row{display:grid;grid-template-columns:110px 1fr 1fr;padding:14px 16px;gap:16px;border-bottom:1px solid var(--rule);font-size:14px;align-items:center}
+.tt-row:last-child{border-bottom:none}
+.tt-row:nth-child(even){background:rgba(0,0,0,.02)}
+.tt-time{font-family:'DM Mono',monospace;font-size:12px;color:var(--water-dk);font-weight:500}
+
+/* ── 갤러리 ── */
+.gallery-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:32px 0}
+.gallery-item{overflow:hidden;border-radius:10px;cursor:zoom-in;aspect-ratio:1}
+.gallery-item.tall{aspect-ratio:.7}
+.gallery-section{padding:56px 0}
+.gallery-section h2{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:24px;margin-bottom:28px;color:var(--ink)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.g3 .gallery-item{aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:zoom-in}
+
+/* 매거진 갤러리 */
+.mg-featured{position:relative;overflow:hidden;border-radius:12px;cursor:zoom-in;margin-bottom:12px;height:380px}
+.mg-featured img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.mg-featured:hover img{transform:scale(1.02)}
+.mg-featured-label{position:absolute;top:20px;left:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#fff;background:rgba(45,82,72,.75);padding:5px 14px;border-radius:4px;backdrop-filter:blur(4px)}
+.mg-row-a{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.mg-large{overflow:hidden;border-radius:12px;cursor:zoom-in}
+.mg-large img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.mg-large:hover img{transform:scale(1.03)}
+.mg-small-stack{display:flex;flex-direction:column;gap:12px}
+.mg-small{flex:1;overflow:hidden;border-radius:10px;cursor:zoom-in;min-height:0}
+.mg-small img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.mg-small:hover img{transform:scale(1.04)}
+.mg-row-b{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.mg-eq{overflow:hidden;border-radius:10px;cursor:zoom-in;aspect-ratio:.85}
+.mg-eq img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.mg-eq:hover img{transform:scale(1.04)}
+.mg-counter-strip{display:flex;gap:12px;margin-bottom:12px}
+.mg-counter-item{flex:1;position:relative;overflow:hidden;border-radius:10px;cursor:zoom-in;aspect-ratio:1;background:var(--ink)}
+.mg-counter-item img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s}
+.mg-counter-item:hover img{opacity:1}
+.mg-counter-label{position:absolute;bottom:0;left:0;right:0;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:#fff;background:rgba(0,0,0,.55);padding:8px 10px;text-align:center}
+
+/* ── CLOSING ── */
+.closing{
+  background:var(--water-dk);color:rgba(255,255,255,.88);
+  padding:64px 48px;margin:56px -24px 0;border-radius:16px;
+  position:relative;overflow:hidden;
+}
+.closing::before{
+  content:'風';font-family:'Noto Sans KR',sans-serif;
+  font-size:240px;color:rgba(255,255,255,.04);
+  position:absolute;right:-10px;top:-40px;line-height:1;pointer-events:none;
+}
+.closing>*{position:relative;z-index:1}
+.closing h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:20px}
+.closing p{font-size:15px;margin-bottom:16px;line-height:1.85;color:rgba(255,255,255,.88)}
+.closing p:last-child{color:rgba(255,255,255,.95);font-weight:500}
+
+/* ── SCIENCE ── */
+.science-section{
+  background-color:#faf7f2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.2'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.7'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  padding:56px 0;border-top:1px solid var(--rule);
+}
+.sci-item{margin-bottom:40px}
+.sci-num{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--water);display:block;margin-bottom:8px}
+.sci-item h3{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:18px;margin-bottom:12px;color:var(--ink)}
+.sci-item p{font-size:14px;color:var(--ink-mid);line-height:1.8;margin-bottom:10px}
+.sci-summary{background:var(--paper-2);border-radius:10px;padding:20px 24px;margin-top:32px;font-size:14px;color:var(--ink-mid);line-height:1.8}
+.sci-summary strong{color:var(--ink)}
+.sci-ref{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ink-soft);margin-top:20px}
+
+/* ── LIGHTBOX ── */
+#lb{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,20,18,.92);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+#lb.open{display:flex}
+#lb-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:90vw}
+#lb-img{max-width:min(90vw,820px);max-height:82vh;object-fit:contain;border-radius:10px;box-shadow:0 24px 72px rgba(0,0,0,.7)}
+#lb-cap{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,.5)}
+#lb-close{position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;opacity:.7;line-height:1}
+#lb-close:hover{opacity:1}
+.lb-arr{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:28px;cursor:pointer;padding:12px 18px;border-radius:8px;z-index:10000}
+.lb-arr:hover{background:rgba(255,255,255,.25)}
+#lb-prev{left:20px}
+#lb-next{right:20px}
+
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:40px 24px;text-align:center}
+.ft-nav{display:flex;justify-content:center;gap:24px;margin-bottom:14px;flex-wrap:wrap}
+.ft-nav a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .2s}
+.ft-nav a:hover{color:var(--water-lt)}
+footer p{font-size:12px}
+
+@media(max-width:600px){
+  .hero{padding-bottom:48px}
+  .hero h1,.hero-sub,.hero-meta,.hero-tag{padding-left:20px;padding-right:20px}
+  .bgm-wrap{right:20px;bottom:60px}
+  .summary{margin:32px 16px}
+  .summary-head{margin:0 -24px}
+  .summary-grid{grid-template-columns:1fr;gap:16px}
+  .sg-full{grid-column:1}
+  .count-wrap{gap:10px}
+  .gear-box{padding:20px}
+  .closing{padding:40px 24px;margin:40px -24px 0}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .gallery-2col{grid-template-columns:1fr}
+  .tt-head,.tt-row{grid-template-columns:80px 1fr;font-size:12px}
+  .tt-head>:last-child,.tt-row>:last-child{display:none}
+  .mg-row-a{grid-template-columns:1fr}
+  .mg-row-b{grid-template-columns:repeat(2,1fr)}
+  .mg-small-stack{flex-direction:row}
+}
+@media(max-width:540px){.lb-arr{display:none}}
+</style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html" aria-current="page">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>FIELD LOG · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-log/blob/main/logs/2026-05-01-hanter.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-tag">
+    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG"
+      style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.4);vertical-align:middle;margin-right:10px;">
+    CADDIS-GR · Fly Fishing Log · 한터낚시터
+  </div>
+  <h1>그대 이름은<br>바람 🌬️</h1>
+  <p class="hero-sub">봄 똥바람이 아쉬웠던 시즌 마지막 날 — 그래도 됐다, 31수</p>
+  <div class="hero-meta">📅 2026 · 05 · 01 &nbsp;&nbsp; 📍 한터낚시터, 용인 &nbsp;&nbsp; 🎣 31수</div>
+
+  <!-- BGM -->
+  <div class="bgm-wrap">
+    <div class="bgm-btn-inner">
+      <button class="bgm-play" onclick="toggleBgm()">
+        <svg id="bgm-icon-play" width="10" height="12" viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+        <svg id="bgm-icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="white" style="display:none"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>
+      </button>
+      <span class="bgm-label">된다 된다 오늘도 된다<br><span style="opacity:.6;font-size:10px">되고송 🎶</span></span>
+    </div>
+    <audio id="bgm" loop>
+      <source src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/OK-Song.m4a" type="audio/mp4">
+    </audio>
+  </div>
+
+  <svg class="hero-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 48 C360 0 1080 0 1440 48 L1440 48 L0 48Z" fill="#e8e2d8"/>
+  </svg>
+</header>
+
+<!-- ── SUMMARY ── -->
+<div class="summary">
+  <div class="summary-inner">
+    <div class="summary-head">
+      <span>오늘의 조행 요약</span>
+      <span class="summary-score">75점</span>
+    </div>
+    <div class="summary-grid">
+      <div class="sg-item">
+        <label>장소 · 날씨</label>
+        <p>한터낚시터, 용인 양지<br>흐림 · 추움 · <strong>종일 강풍</strong><br>
+        <span style="font-size:12px;color:var(--accent)">봄 똥바람 — 퇴근도 없이 종일</span></p>
+      </div>
+      <div class="sg-item">
+        <label>조과</label>
+        <p>
+          <strong style="font-size:22px;font-family:'DM Serif Display',serif;color:var(--water-dk)">31수</strong><br>
+          새벽 피딩 1시간 — 7~8수<br>
+          Hang 기법 — 약 10수
+        </p>
+      </div>
+      <div class="sg-item">
+        <label>Only Sinking · 4채비</label>
+        <p>
+          Hover WF5-H + Sage DS2 — 표층 저격<br>
+          CamoLux WF5I + Foundation — 중층 전층<br>
+          Parabolic Sink + Vision VPU — 중하층<br>
+          Titan 3D + Scott Centric — 바텀
+        </p>
+      </div>
+      <div class="sg-item">
+        <label>유효 패턴</label>
+        <p>
+          Chironomid Red 그라데이션 Larva ⭐<br>
+          Chironomid White Larva / Pupa ⭐<br>
+          Midge Larva/Pupa<br>
+          <span style="font-size:12px;color:var(--accent)">Zonker Leech — 오후 바텀 무반응</span>
+        </p>
+      </div>
+      <div class="sg-full">
+        <label>패턴 전환 흐름</label>
+        <div class="pattern-flow">
+          <span class="pattern-item win">Hover 표층 피딩 ⭐ 새벽</span>
+          <span style="color:var(--ink-soft);font-size:18px">→</span>
+          <span class="pattern-item win">인터미디어트 중층 Larva</span>
+          <span style="color:var(--ink-soft);font-size:18px">→</span>
+          <span class="pattern-item dead">바텀 Leech (오후 무반응)</span>
+          <span style="color:var(--ink-soft);font-size:18px">→</span>
+          <span class="pattern-item win">Hang 기법 반응 집중 🎯</span>
+        </div>
+      </div>
+    </div>
+    <div class="summary-verdict">
+      종일 봄 똥바람이라는 예상치 못한 변수 — 그러나 <strong>Only 싱킹 채비였기에 바람 속에서도 낚시가 가능했다.</strong> 하버라인의 성공적인 표층 데뷔, Hang 기법의 약 10수 기여, 바텀 킬존 약화 경향 확인 — 아쉬움 속에서도 <strong>데이터는 풍성했던 하루.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ── ARTICLE ── -->
+<main class="article wrap">
+
+  <!-- 시즌 시리즈 -->
+  <div class="sec-title">2026 시즌 조과 시리즈</div>
+  <div class="count-wrap">
+    <div class="count-item">
+      <span class="count-num" style="font-size:36px">39</span>
+      <span class="count-label">03 · 01 서울대전</span>
+    </div>
+    <div class="count-item">
+      <span class="count-num" style="font-size:36px">51</span>
+      <span class="count-label">03 · 14 침잠</span>
+    </div>
+    <div class="count-item">
+      <span class="count-num" style="font-size:36px">23</span>
+      <span class="count-label">03 · 29 무용담</span>
+    </div>
+    <div class="count-item">
+      <span class="count-num" style="font-size:36px">58</span>
+      <span class="count-label">04 · 11 경험·집중</span>
+    </div>
+    <div class="count-item">
+      <span class="count-num" style="font-size:36px">48</span>
+      <span class="count-label">04 · 25 올리고내리고</span>
+    </div>
+    <div class="count-item" style="border:2px solid var(--water-dk)">
+      <span class="count-num accent" style="font-size:36px">31</span>
+      <span class="count-label" style="color:var(--water-dk)">05 · 01 Last Dance</span>
+    </div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div class="sec-title">Chapter 01</div>
+  <h2 class="ch-title">"그대 이름은 바람 바람 바람 🌬️"</h2>
+
+  <p>종일 봄 똥바람이 아쉬웠던 하루. 저수지에서의 봄바람이야 뭐 — 유명하지만, 불어도 너~무 불어댔던 하루였다. 그나마 뒷바람 위치라서 다행이었지만, 엉키고, 걸리고. <strong>백 캐스팅이 잘되야 포워드 캐스팅도 잘되는 것인데</strong> — 바람은 퇴근도 없었다.</p>
+
+  <div class="pullquote">
+    <p>"뒷바람이라 그나마 다행이었다 — 그래도 바람은 종일 퇴근이 없었다."</p>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="sec-title">Chapter 02</div>
+  <h2 class="ch-title">"하버 줄까? 인터미디어트 줄까? — 하버라인의 데뷔"</h2>
+
+  <p>새벽시간 — 분명 떠 있는데, 육안으로는 참 애매했다. 긴 듯, 아닌 듯. <strong>인터미디어트로 시작해서 3캐스팅 만에 첫 수</strong>를 하였고, 그리곤 바로 하버라인으로 채비를 바꿔 좀 더 수면층 가까운 곳을 공략했다.</p>
+
+  <p>그렇게 하버라인이 첫 머리를 올린 날이 되었다. 새벽 피딩 한 시간 동안 7~8수 정도 — <strong>2년여 만에 하버라인의 화려한 데뷔</strong>가 이루어졌다. 게다가 Sage DS2 6902 로드와의 매칭이 너무 좋았다. 짝을, 용처를 찾은 느낌 — <strong>표층권 저격수로서 하버 채비의 가능성이 확인된 날</strong>이었다.</p>
+
+  <div class="pullquote">
+    <p>"짝을 찾은 느낌 — Hover WF5-H + Sage DS2, 표층권에서 통했다."</p>
+  </div>
+
+  <!-- 채비 박스 -->
+  <div class="gear-box">
+    <h3>5 · 01 채비 라인업 — Only Sinking</h3>
+    <div class="gear-item">
+      <span class="gl-label gl-new">HOVER ⭐</span>
+      <div class="gear-info">
+        <strong>SA Sonar Stillwater Hover WF5-H + Sage DS2 6902 — 표층 저격</strong>
+        <span>새벽 피딩 1시간 7~8수 · DS2와 매칭 최적<br>
+        표층권 저격수 가능성 확인 · Chironomid Larva/Pupa</span>
+      </div>
+    </div>
+    <div class="gear-item">
+      <span class="gl-label gl-mid">INTER</span>
+      <div class="gear-info">
+        <strong>Rio Sub Surface CamoLux WF5I + Sage Foundation 690-4 — 중층 전층</strong>
+        <span>전층 커버 · Chironomid Red/White Larva · Hang 기법 주력</span>
+      </div>
+    </div>
+    <div class="gear-item">
+      <span class="gl-label gl-mid">PARA</span>
+      <div class="gear-info">
+        <strong>SA Sonar Stillwater Parabolic Sink WF5S + Vision VPU 4906 — 중하층</strong>
+        <span>중간 싱크율 · 바닥 위 Larva 자연 유영 탐색</span>
+      </div>
+    </div>
+    <div class="gear-item">
+      <span class="gl-label gl-bot">TITAN</span>
+      <div class="gear-info">
+        <strong>SA Sonar Titan 3D i/3/5 WF6S + Scott Centric 690-4 — 바텀</strong>
+        <span>풀싱킹 · Zonker Tail Mini Leech #16<br>
+        <span style="color:rgba(255,100,80,.8)">오후 피딩타임 유효 반응 없음 — 바텀 효율 저하 확인</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="sec-title">Chapter 03</div>
+  <h2 class="ch-title">"덜덜덜 — 5월인데 추웠다"</h2>
+
+  <p>아침은 오히려 추웠다. 구름이 해를 가리고, 이내 불어대기 시작한 바람으로 <strong>한기까지 느껴진 아침시간</strong>. 5월의 시작인데 춥다니.</p>
+
+  <p>송어들이 가라앉기 시작하면서 이도 저도 아닌 애매한 상황이 펼쳐졌지만, <strong>인터미디어트와 하버를 교대로 운용</strong>하며 그런대로 다양한 수심층의 송어를 만날 수 있었다.</p>
+
+  <p>바람 속에서 싱킹 채비가 빛나는 이유는 두 가지다. 첫째, 착수 즉시 수중으로 내려가기 때문에 <strong>라인이 수면 위에서 바람에 날리지 않는다.</strong> 둘째 — 그리고 이게 더 결정적인데 — 싱킹 채비는 리더 시스템을 <strong>5~6ft로 짧게 설정</strong>한다. 플로팅 채비의 9~12ft 롱리더와 달리, 짧은 리더는 캐스팅 루프가 작고 타이트하게 유지되어 <strong>심한 바람 속에서도 엉킴 없이 안정적인 캐스팅이 가능하다.</strong> 오늘처럼 종일 강풍이 부는 날, Only 싱킹의 진가가 발휘되는 순간이었다.</p>
+
+  <!-- CHAPTER 4 -->
+  <div class="sec-title">Chapter 04</div>
+  <h2 class="ch-title">"바텀 킬존 약화 경향 — 송어들이 상당 부분 떠 있다"</h2>
+
+  <p>한터지는 뭐? 바텀이 답이다!! 그런데 말야 — <strong>이 시기가 되니 이것도 항상 답은 아닌 것 같다.</strong> 바텀에서 아예 반응이 없는 것은 아니었지만, 예전 같은 퍼포먼스를 보여주지 못했다.</p>
+
+  <p>더군다나 <strong>오후 피딩타임(4시 이후)에는 바텀에서 유효한 반응을 받지 못했다.</strong> 그리고 킬존 — 바텀으로 수평으로 끌려오다 발 앞에서 수직으로 회수되는 그 지점 — 에서의 반응도 이전보다 뚜렷하게 약해진 느낌이었다. 결론을 내리자면 '바텀이 끝났다'가 아니라 — <strong>'5월 1일 이 조건에서는 바텀보다 중상층·Hang 구간 반응이 더 유효했다'</strong>로 정리하는 것이 안전하다.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0">
+    <div style="background:#faf7f2;border:1px solid var(--rule);border-radius:10px;padding:20px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--water);margin-bottom:10px">겨울 · 초봄</div>
+      <div style="font-size:13px;color:var(--ink-mid);line-height:1.85">
+        <strong style="color:var(--ink)">바텀 6m 직공</strong><br>
+        킬존 활성 폭발<br>
+        Titan 3D + Leech → 주력
+      </div>
+    </div>
+    <div style="background:#faf7f2;border:2px solid var(--accent);border-radius:10px;padding:20px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px">4월 말 · 5월 ⚠</div>
+      <div style="font-size:13px;color:var(--ink-mid);line-height:1.85">
+        <strong style="color:var(--ink)">4~5m 중층으로 부상</strong><br>
+        킬존 반응 약화 · 오후 바텀 저조<br>
+        Hover + 인터미디어트 → 주력
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 5 — HANG -->
+  <div class="sec-title">Chapter 05</div>
+  <h2 class="ch-title">"Hang이 새로운 기준을 제시하다 🎯"</h2>
+
+  <p>지난 낚시(4/25)에서 Hang을 경험하고 이야기한 바 있는데 — <strong>이날은 반응이 더 확실했다.</strong> 아마도 이래저래 10여 수는 족히 이 Hang으로 걷어 올린 것 같다.</p>
+
+  <p>참, 특이하다. 15m 그 먼 거리를 천천히 손으로 걷어들일 땐 아무 반응이 없다가 — <strong>발 앞 지점(행마커)에서 로드를 세우며 천천히 들어올리는 동작에 아주 야무지게 반응을 해댄다.</strong> 투둑거리는 입질까지 헤아리자면 반응이 정말 뜨겁다.</p>
+
+  <div class="pullquote">
+    <p>"이해할 수 없으면 외우라고 했지 — 이 동작이 된다. 그것으로 충분하다."</p>
+  </div>
+
+  <p>또 하나 — <strong>Zonker Leech류 루어 스타일 플라이에는 거의 반응이 없고, Chironomid · Midge Larva · Pupa에는 반응이 폭발적</strong>(이렇게 표현도 될 정도로)이다. 송어 — 그대 이름은 <strong>"Mr. Lee"</strong>이다. 미스테리.</p>
+
+  <!-- 타임테이블 -->
+  <div class="time-table">
+    <div class="tt-head">
+      <span>시간대</span>
+      <span>채비 · 전략</span>
+      <span>비고</span>
+    </div>
+    <div class="tt-row" style="background:rgba(74,124,111,.06)">
+      <span class="tt-time">새벽~07:00</span>
+      <span><strong>Hover 표층 데뷔 · 인터미디어트 병행</strong></span>
+      <span>7~8수 · 새벽 피딩 황금 1시간</span>
+    </div>
+    <div class="tt-row">
+      <span class="tt-time">07:00~10:00</span>
+      <span>구름 + 바람 강해짐 · 한기</span>
+      <span>Hover ↔ 인터미디어트 교대</span>
+    </div>
+    <div class="tt-row" style="background:rgba(192,57,43,.04)">
+      <span class="tt-time">10:00~14:00</span>
+      <span>바람 절정 · 이도저도 애매한 구간</span>
+      <span style="color:var(--accent)">옆 낚시인 곁눈질 중 ㅎㅎ</span>
+    </div>
+    <div class="tt-row">
+      <span class="tt-time">14:00~16:00</span>
+      <span>Hang 기법 집중 · Chironomid Larva</span>
+      <span>10여수 Hang으로 기여</span>
+    </div>
+    <div class="tt-row" style="background:rgba(192,57,43,.04)">
+      <span class="tt-time">16:00~</span>
+      <span>바텀 오후 피딩 기대 → 유효 반응 없음</span>
+      <span style="color:var(--accent)">킬존 약화 경향 재확인</span>
+    </div>
+    <div class="tt-row" style="background:rgba(184,149,42,.06)">
+      <span class="tt-time">20:36</span>
+      <span><strong>31수 · Last Dance · Goal Reached 🏆</strong></span>
+      <span style="color:var(--gold)">유종의 미</span>
+    </div>
+  </div>
+
+  <!-- 갤러리 중간 -->
+  <div class="gallery-2col">
+    <div class="gallery-item tall" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout01.JPEG','레인보우 트라우트 · Hover 채비 랜딩')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout01.JPEG" alt="Hover 첫 랜딩" loading="lazy">
+    </div>
+    <div class="gallery-item tall" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout02.JPEG','Hang 기법 랜딩')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout02.JPEG" alt="Hang 기법 랜딩" loading="lazy">
+    </div>
+  </div>
+
+  <!-- EPISODE -->
+  <div class="sec-title">Episode</div>
+  <h2 class="ch-title">"다 너 때문이야!! — 사료 스타일 에그였을까?"</h2>
+
+  <p>옆쪽에 낚시하는 사람이 말야 — 낚시를 아주 잘한다. 플로팅(with Indicator) 채비였고, 인디케이터 위치로 보아 거의 <strong>4~5m권을 공략하는 것 같았다.</strong> 두세 번 캐스팅만에 따박따박 송어를 걷어올리는데 — 그 똥바람 환경에서도 캐스팅도 잘하고, 계속 건져올리고. 아주 간만에 실력을 인정해줄 만한 낚시인이었다.</p>
+
+  <p>그러니 계속 곁눈질로 적어도 수심층을 훔쳐보며 내 낚시를 고쳐대고 있었던 게지. 사실 결론적으로 보자면 이 덕에 이도 저도 아닌 시간을 보낸 셈이었다. 나중에 사용한 훅을 보니 — <strong>사료 스타일 에그 계열로 보였다. 경험적으로 이건 실제 사료인 걸로 보인다.</strong>, 지난 3/14 낚시에서 내가 경험한 상황과 딱 맞아떨어진다.</p>
+
+  <p>이미 지난 3/14 낚시에서 내가 경험해 보았고, 상황이 딱 맞아떨어진다. <strong>이건 반칙이다!!</strong> ㅎㅎ</p>
+
+  <!-- EPISODE 2 -->
+  <h2 class="ch-title">"아~ 웃겨.. 때려! 때리라고!!"</h2>
+
+  <p>옆에선 송어를 릴리즈한다고 제법 시끌하다. 바늘을 빼줬는데 — 송어가 배를 보이고 드러 누운 것 같다. 젊은 부부 루어낚시인과 나이 많은 플라이낚시인이 한 팀이다. 젊은 부부는 당황스러움에 안절부절인데, 나이 많은 낚시인이 솔루션을 제공한다.</p>
+
+  <div class="pullquote">
+    "때려! 한대 때리라고.."<br>
+    <span style="font-size:14px;opacity:.7">"네~? 때려요?"</span>
+  </div>
+
+  <p>답답했는지 직접 다가가서 스틱으로 툭툭 친다. 오~~ 뒤집어진 송어가 갑자기 후르륵~ 정신을 차리고 냅다 줄행랑. 헐~ 대박, 아 웃겨.. 등등 잠시 난리통이다.</p>
+
+  <p>그런데 비슷한 상황이 나한테도 생겼다. <em>때리라고?</em> 툭툭.. 스틱으로 두들기니 — 송어가 정신차리고 슝~ 그 뒤로 나에겐 괜찮은 솔루션이 하나 생겼다. <strong>"때려! 때리라고!!"</strong></p>
+
+  <p style="font-size:14px;color:var(--ink-soft);border-left:3px solid var(--rule);padding-left:16px;margin-top:20px">나중에 찾아보니 — 배를 뒤집는 건 격렬한 파이팅으로 젖산이 쌓여 평형감각 신경계가 일시적으로 먹통이 되는 것이라고. 거기에 물리적 자극을 주면 뇌간의 회피 반사가 깨어나면서 균형 반사도 함께 살아난다고 한다. 그 "슝~"이 바로 그 순간. 이론보다 먼저 알고 계셨던 그 낚시인 — 역시 고수는 달랐다. ㅎㅎ</p>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <h3>Closing Note · Last Dance</h3>
+    <p>작정하고 화려한 피날레를 기대했던 시즌 마지막 낚시 — "봄 똥바람"이라는 생각도 않았던 변수에 아쉬움이 짙게 남는 낚시가 되었다. 한때 장안의 화제였던 오징어게임, 시즌1의 아쉬운 엔딩이 시즌2를 기다리게 했던 것처럼.</p>
+    <p>그래도 예전 같으면 그 똥바람에 낚시 자체가 어려웠을 것을 — <strong>31수를 찍으며 준수하게 마무리</strong>했다. Only 싱킹 채비만으로도 충분히 낚시가 가능했고 — 싱킹 채비의 짧은 리더(5~6ft)는 바람 속 캐스팅 엉킴을 막아줬고, 착수 즉시 수중으로 내려가는 라인은 바람의 영향을 받지 않았다. <strong>봄 똥바람 속에서 Only Sinking의 장점이 꽤 뚜렷하게 드러난 셈이다.</strong></p>
+    <p>하버라인의 표층 데뷔, Hang 기법 10여 수, 바텀 킬존 약화 경향 확인 — 데이터는 풍성했다. 그리고 2026 시즌 한터낚시터의 마지막 장이 닫혔다.</p>
+    <p style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;color:rgba(255,255,255,.6);font-style:italic">
+      시즌2에서 만나자. 그리고 그때는 — 바람 없는 날로.<br>
+      <strong style="color:rgba(255,255,255,.85);font-style:normal">2026 한터낚시터 시즌, 완료. 🎣</strong>
+    </p>
+  </div>
+
+</main>
+
+<!-- ── 시즌 총결산 ── -->
+<section style="
+  background-color:#faf7f2;
+  background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27500%27 height=%27500%27%3E%3Cfilter id=%27p%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.55%27 numOctaves=%276%27 stitchTiles=%27stitch%27/%3E%3CfeDiffuseLighting in=%27noise%27 lighting-color=%27%23fff8f0%27 surfaceScale=%271.2%27%3E%3CfeDistantLight azimuth=%2750%27 elevation=%2765%27/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width=%27500%27 height=%27500%27 filter=%27url(%23p)%27 opacity=%270.7%27/%3E%3C/svg%3E');
+  background-repeat:repeat;background-size:500px 500px;
+  padding:72px 0;border-top:1px solid var(--rule);">
+  <div class="wrap">
+    <div class="sec-title">2026 시즌 최종 결산</div>
+    <h2 class="ch-title" style="margin-bottom:8px">한터낚시터 6회 출조 완료</h2>
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:48px;font-family:'DM Mono',monospace;letter-spacing:.06em">
+      2026 시즌 총 6회 출조 · 총 230수 · 회당 평균 38.3수
+    </p>
+
+    <!-- 시즌 바 -->
+    <div style="display:flex;gap:0;margin-bottom:56px;overflow-x:auto;border-radius:12px;overflow:hidden">
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--water-dk);color:#fff">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--water-lt);margin-bottom:8px">03·01</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">39</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">서울대전</div>
+      </div>
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--water-dk);color:#fff;border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--water-lt);margin-bottom:8px">03·14</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">51</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">침잠</div>
+      </div>
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--water-dk);color:#fff;border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--water-lt);margin-bottom:8px">03·29</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">23</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">무용담</div>
+      </div>
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--water-dk);color:#fff;border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--water-lt);margin-bottom:8px">04·11</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">58</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">경험·집중</div>
+      </div>
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--water-dk);color:#fff;border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--water-lt);margin-bottom:8px">04·25</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">48</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">올리고내리고</div>
+      </div>
+      <div style="flex:1;min-width:85px;text-align:center;padding:20px 8px;background:var(--accent);color:#fff;border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px">05·01</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:32px;line-height:1">31</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.7);margin-top:4px">Last Dance</div>
+      </div>
+    </div>
+
+    <!-- 시즌 핵심 발견 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:48px">
+      <div style="background:#fff;border-radius:12px;padding:24px;border:1px solid var(--rule)">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--water);margin-bottom:12px">발견 01</div>
+        <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:10px">하버 = 표층 저격수</div>
+        <div style="font-size:13px;color:var(--ink-mid);line-height:1.8">Hover WF5-H + Sage DS2 조합 — 오늘 새벽 피딩에서 통했다. 새벽 1시간이 황금 구간. 다음 시즌부터 적극 투입 예정.</div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:24px;border:1px solid var(--rule)">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--water);margin-bottom:12px">발견 02</div>
+        <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:10px">Hang 기법 = 10수 기여</div>
+        <div style="font-size:13px;color:var(--ink-mid);line-height:1.8">15m 리트리브엔 무반응, 행마커에서 로드 세우는 동작에 폭발적 반응. 이해 안 돼도 된다 — 그냥 쓴다.</div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:24px;border:2px solid var(--accent)">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px">발견 03 ⚠</div>
+        <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:10px">바텀 킬존 약화 경향</div>
+        <div style="font-size:13px;color:var(--ink-mid);line-height:1.8">4월 말~5월 조건에서 바텀보다 중상층·Hang 구간 반응이 더 유효했다. 시즌 후반 Hover·인터미디어트 비중을 높이는 쪽을 고려할 만하다.</div>
+      </div>
+    </div>
+
+    <!-- Only Sinking 총평 -->
+    <div style="background:var(--water-dk);border-radius:12px;padding:28px 32px;position:relative;overflow:hidden">
+      <div style="position:absolute;right:-10px;top:-20px;font-family:'DM Serif Display',serif;font-size:120px;color:rgba(255,255,255,.04);line-height:1;pointer-events:none">S</div>
+      <div style="position:relative;z-index:1">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--water-lt);margin-bottom:12px">2026 시즌 결론</div>
+        <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:10px">Only Sinking — 충분히 가능하다</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.65);line-height:1.8">
+          플로팅 없이도 싱킹 라인 4개만으로 한터낚시터 주요 수층을 상당 부분 커버할 수 있었다.<br>
+          짧은 리더(5~6ft) → 타이트한 루프 → 바람 속 캐스팅 엉킴 최소화.<br>
+          바람 속에서도 라인이 날리지 않는 싱킹의 강점 — 봄 똥바람 속에서 장점이 뚜렷하게 드러났다.<br>
+          <span style="color:var(--gold)">→ 다음 시즌도 Only Sinking으로 간다.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCIENCE ── -->
+<section class="science-section">
+  <div class="wrap">
+    <div class="sec-title">검색해보니</div>
+    <h2 class="ch-title" style="margin-bottom:36px">Hang 기법 — 왜 발 앞에서 다시 반응했는가</h2>
+
+    <div class="sci-item">
+      <span class="sci-num">분석 01</span>
+      <h3>사선 하강 리트리브와 마지막 상승 전환</h3>
+      <p>이날의 운용은 일반적인 “카운트다운 후 특정 수심 고정” 방식과는 조금 달랐다. 평균 15m 정도를 캐스팅한 뒤, 하버든 인터미디어트든 카운트다운을 거의 주지 않고 곧바로 아주 느린 8자 리트리브를 시작했다.</p>
+      <p>이때 플라이는 처음에는 수면층에서 출발하지만, 싱킹라인 자체의 침강 속도에 따라 천천히 아래로 내려가면서 동시에 낚시꾼 쪽으로 끌려온다. 즉 플라이는 한 수심에 고정된 것이 아니라, 수면에서 시작해 점차 아래로 내려가는 사선 궤적을 그린다.</p>
+      <p>하버라인은 발앞에 도달할 무렵 대략 3m권 전후까지 내려간 것으로 보이고, 인터미디어트는 조건에 따라 5~6m권까지 내려갔을 가능성이 있다. 그리고 바로 그 지점에서 Hang이 시작된다.</p>
+      <p>따라서 Hang은 단순한 마무리 동작이 아니다. <strong>싱킹라인이 만들어낸 하강 궤적의 끝에서, 플라이를 다시 상승으로 전환시키는 마지막 프레젠테이션</strong>이다.</p>
+      <p>이날 반응이 Hang에서만 나온 것도 아니었다. 끌고 오는 어느 지점에서는 투둑, 또는 쾅 하는 공격이 들어왔고, 다 와서 Hang을 넣으면 다시 투툭거리는 반응이 이어졌다. 훅셋까지 이어진 입질만 따지면 조과 숫자는 제한적이지만, 짧은 터치까지 포함하면 이날 라바류 프레젠테이션에 대한 반응은 꽤 많았다.</p>
+      <p>결국 이 방식은 <strong>하강 중 한 번 먹이고, 마지막 상승 전환에서 다시 한 번 먹이는 구조</strong>에 가깝다.</p>
+    </div>
+
+    <div class="sci-item">
+      <span class="sci-num">분석 02</span>
+      <h3>기존 킬존과 이번 Hang 반응은 다르다</h3>
+      <p>시즌 내내 발앞 6m 바닥층은 분명한 킬존이었다. 그래서 이 구간을 킬존이라고 불렀다. 당시에는 로드를 세우는 Hang 동작이 아니라, 손으로 천천히 라인을 회수하는 동작만으로도 반응이 꾸준했다.</p>
+      <p>이 점을 보면, 그 구간 자체가 송어의 체류·회유·스쿨링 포인트였을 가능성이 높다. 하지만 지난번과 이번 조행에서는 느낌이 조금 달랐다.</p>
+      <p>같은 발앞 구간이라도 손으로 천천히 끌어오는 동작과, 행마커 이후 로드를 세워 플라이를 들어올리는 동작 사이에는 분명한 차이가 있었다. 손 회수는 수평 이동에 가깝고, Hang은 라인 각도가 세워지며 플라이가 상승 전환하는 동작에 가깝다.</p>
+      <p>특히 이번에는 반응 수심도 기존의 6m 바닥층이라기보다 대략 3m권 전후에 가까웠던 것으로 보인다.</p>
+      <p>따라서 이번 반응은 단순히 “발앞이라서”만도 아니고, 단순히 “로드를 세워서”만도 아닌 듯하다. 기존 킬존의 장소성 위에, 라바류 플라이가 중층권에서 상승 전환하는 Hang 동작이 겹치면서 반응이 집중된 것으로 보는 편이 자연스럽다.</p>
+      <p>정리하자면, 기존 킬존은 <strong>6m 바닥의 장소성</strong>이 핵심이었다. 이번 Hang은 <strong>3m권 전후의 상승 전환</strong>이 핵심에 가까웠다.</p>
+    </div>
+
+    <div class="sci-item">
+      <span class="sci-num">분석 03</span>
+      <h3>강풍은 방해였지만, 반드시 악재만은 아니었다</h3>
+      <p>이날 가장 큰 변수는 바람이었다. 미친 듯이 부는 바람 때문에 라인이 이리저리 흔들렸고, 예전 같으면 프레젠테이션이 무너졌다고 보고 포기했을 상황이었다. 그런데도 송어는 반응했다.</p>
+      <p>이유는 싱킹라인의 특성과도 관련이 있어 보인다. 싱킹라인은 플로팅 라인보다 자중이 있고, 수면 위에 길게 떠 있는 구조가 아니다. 이미 상당 부분이 수중으로 들어가 있기 때문에 바람이 직접 잡아 흔드는 구간이 제한된다. 여기에 리더 시스템도 5~6ft 정도로 짧기 때문에, 플로팅 라인 + 롱리더 조합보다 흔들림 전달이 작았을 가능성이 크다.</p>
+      <p>낚시꾼 눈에는 라인이 크게 흔들리는 것처럼 보여도, 수중에서는 그 움직임이 어느 정도 감쇠되었을 수 있다. 실제 플라이는 급격하게 튀었다기보다, 천천히 상승하면서 미세하게 흔들리는 정도였을 가능성이 있다.</p>
+      <p>이날은 오히려 그 불규칙한 상승감이 라바류 플라이에 생동감을 더했을지도 모른다.</p>
+      <p>물론 바람은 캐스팅과 라인 컨트롤에는 분명한 악재였다. 하지만 <strong>강풍 + 중층권 활성 + 라바류/퓨파류 + Hang 상승 전환</strong>이 겹친 조건에서는, 바람에 의한 미세한 불규칙성이 반드시 나쁘게만 작용하지는 않았던 것으로 보인다.</p>
+    </div>
+
+    <div class="sci-item">
+      <span class="sci-num">분석 04</span>
+      <h3>라바류에는 반응했고, 리치류에는 반응이 약했다</h3>
+      <p>이날 같은 Hang 구간에서도 플라이 종류에 따른 차이가 있었다. 크게 보면 라바류와 리치류를 모두 운용했지만, 리치류에는 뚜렷한 반응을 얻지 못했다.</p>
+      <p>반면 Chironomid Larva, Midge Larva/Pupa 계열에는 순간순간 딱 떨어지는 반응이 있었다. 백발백중은 아니었지만, 적어도 이날의 반응 방향은 분명히 라바류 쪽에 가까웠다.</p>
+      <p>이 차이는 중요하다. 리치류는 비교적 큰 실루엣과 움직임으로 송어의 추격 또는 공격성을 끌어내는 플라이에 가깝다. 반면 라바류·퓨파류는 작고, 느리고, 미세한 움직임에 가까운 먹이 이미지다.</p>
+      <p>이날 송어는 큰 먹이를 멀리서 추격하는 모드라기보다, 중층권에서 천천히 움직이거나 상승하는 작은 수서곤충 계열 실루엣에 더 민감하게 반응했을 가능성이 있다.</p>
+      <p>따라서 이날의 핵심은 단순히 “Hang이 먹혔다”가 아니라, <strong>라바류 플라이가 사선으로 내려오고, 마지막에 상승 전환하는 전체 과정에 송어가 반응했다</strong>고 보는 편이 더 정확하다.</p>
+    </div>
+
+    <div class="sci-summary">
+      <strong>종합:</strong> 이번 조행에서 확인한 것은 하나의 기술이 아니라, 하나의 연속된 프레젠테이션이었다. 착수 직후 플라이는 수면층에서 시작한다. 카운트다운 없이 아주 느린 8자 리트리브를 시작하면, 싱킹라인은 자체 침강 속도에 따라 천천히 내려가고, 플라이는 낚시꾼 쪽으로 끌려오면서 사선으로 다양한 수심층을 통과한다.<br><br>
+      그 과정 중 어느 지점에서든 송어의 반응이 들어올 수 있다. 그리고 마지막 발앞 구간에서 로드를 세우면, 하강하던 플라이가 다시 상승으로 전환된다. 이날은 바로 이 마지막 상승 전환에서도 추가 반응이 나왔다.<br><br>
+      기존의 발앞 6m 바닥 킬존은 시즌 내내 뜨거웠던 장소 기반 포인트였다. 그러나 이번에는 그 바닥 킬존보다, 대략 3m권 전후에서 라바류가 상승 전환하는 Hang 구간의 반응이 더 뚜렷했다.<br><br>
+      따라서 이날의 결론은 다음과 같이 정리하는 것이 가장 안전하다. <strong>이번에는 바닥 킬존을 긁은 것이 아니라, 싱킹라인이 만든 사선 하강 궤적과 마지막 상승 Hang이 함께 작동했다. 특히 3m권 전후에서 라바류 플라이가 상승 전환하는 순간에 송어의 반응이 집중된 것으로 보인다.</strong><br><br>
+      한 줄로 줄이면 이렇다. <strong>이날의 핵심은 Hang 하나가 아니라, “사선 하강 리트리브 + 마지막 상승 Hang”이라는 연속 프레젠테이션이었다.</strong>
+    </div>
+    <p class="sci-ref">참고: CADDIS-GR 4/25 조행기 · 5/1 한터낚시터 현장 관찰 · Chironomid/Midge Larva 반응 · Hover/Intermediate 사선 하강 리트리브 · Hang/Lift 운용 기록</p>
+  </div>
+</section>
+
+<!-- ── 현장 갤러리 ── -->
+<section class="gallery-section wrap">
+  <div class="sec-title">현장 기록</div>
+  <h2>2026 · 05 · 01 · 한터낚시터 · Last Dance</h2>
+
+  <!-- 카운터 스트립 -->
+  <div class="mg-counter-strip">
+    <div class="mg-counter-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter01.PNG','카운터 중간 기록')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter01.PNG" alt="카운터 중간" loading="lazy">
+      <span class="mg-counter-label">중간 기록</span>
+    </div>
+    <div class="mg-counter-item" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter02.PNG','20:36 · 31수 · Last Dance · Goal Reached')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter02.PNG" alt="31수 Goal Reached" loading="lazy">
+      <span class="mg-counter-label">20:36 · 31 · Last Dance 🏆</span>
+    </div>
+  </div>
+
+  <!-- 피처드 — Trout03 -->
+  <div class="mg-featured" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout03.JPEG','레인보우 트라우트 · 5/1 한터낚시터')">
+    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout03.JPEG" alt="레인보우 트라우트" loading="lazy">
+    <div class="mg-featured-label">FEATURED</div>
+  </div>
+
+  <!-- 2/3 + 1/3 — Trout04 피처드 + Trout05·06 스택 -->
+  <div class="mg-row-a">
+    <div class="mg-large" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout04.JPEG','랜딩 · 5/1')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout04.JPEG" alt="랜딩" loading="lazy">
+    </div>
+    <div class="mg-small-stack">
+      <div class="mg-small" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout05.JPEG','Hang 기법 랜딩')">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout05.JPEG" alt="Hang 기법 랜딩" loading="lazy">
+      </div>
+      <div class="mg-small" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout06.JPEG','레인보우')">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout06.JPEG" alt="레인보우" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3균등 — Trout01·02·07 -->
+  <div class="mg-row-b">
+    <div class="mg-eq" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout01.JPEG','레인보우 · Hover 채비')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout01.JPEG" alt="Hover 채비 랜딩" loading="lazy">
+    </div>
+    <div class="mg-eq" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout02.JPEG','레인보우 · 인터미디어트')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout02.JPEG" alt="인터미디어트 랜딩" loading="lazy">
+    </div>
+    <div class="mg-eq" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout07.JPEG','Last Dance · 마지막 랜딩')">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout07.JPEG" alt="마지막 랜딩" loading="lazy">
+    </div>
+  </div>
+
+  <!-- 풍경 풀와이드 -->
+  <div class="mg-featured" style="height:260px;margin-top:12px" onclick="openLb('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG','한터낚시터 · 2026.05.01')">
+    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG" alt="한터낚시터 전경" loading="lazy">
+    <div class="mg-featured-label">한터낚시터 · 2026 · 05 · 01 · Last Dance</div>
+  </div>
+</section>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lb" onclick="closeLb()">
+  <div id="lb-inner" onclick="event.stopPropagation()">
+    <button id="lb-close" onclick="closeLb()">✕</button>
+    <img id="lb-img" src="" alt="">
+    <span id="lb-cap"></span>
+  </div>
+  <button class="lb-arr" id="lb-prev" onclick="event.stopPropagation();moveLb(-1)">‹</button>
+  <button class="lb-arr" id="lb-next" onclick="event.stopPropagation();moveLb(1)">›</button>
+</div>
+
+<footer>
+  <div class="ft-nav">
+    <a href="../../index.html">CADDIS-GR Home</a>
+    <a href="../../field-log/index.html">Fishing Log</a>
+    <a href="https://caddis-gr.github.io/fly-tying-archive/">Fly Tying</a>
+    <a href="https://caddis-gr.github.io/fishing-technique/">Technique</a>
+  </div>
+  <p>© 2026 CADDIS-GR · 낚시대장</p>
+</footer>
+
+<script>
+// BGM
+function toggleBgm() {
+  const audio  = document.getElementById('bgm');
+  const play   = document.getElementById('bgm-icon-play');
+  const pause  = document.getElementById('bgm-icon-pause');
+  if (audio.paused) {
+    audio.play();
+    play.style.display  = 'none';
+    pause.style.display = 'block';
+  } else {
+    audio.pause();
+    play.style.display  = 'block';
+    pause.style.display = 'none';
+  }
+}
+
+// Lightbox
+const LB_ITEMS = [
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout01.JPEG', cap:'레인보우 트라우트 · Hover 채비' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout02.JPEG', cap:'레인보우 · 인터미디어트' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout03.JPEG', cap:'레인보우 트라우트 · 5/1 한터낚시터' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout04.JPEG', cap:'랜딩 · 5/1' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout05.JPEG', cap:'Hang 기법 랜딩' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout06.JPEG', cap:'레인보우' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Trout07.JPEG', cap:'Last Dance · 마지막 랜딩' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter01.PNG', cap:'카운터 중간 기록' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Counter02.PNG', cap:'20:36 · 31수 · Last Dance · Goal Reached 🏆' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0501/0501-Hanter.JPEG', cap:'한터낚시터 · 2026.05.01' },
+];
+let lbIdx = 0;
+
+function openLb(src, cap) {
+  document.getElementById('lb').dataset.mode = 'field';
+  lbIdx = LB_ITEMS.findIndex(i => i.src === src);
+  if (lbIdx < 0) lbIdx = 0;
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-cap').textContent = cap;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function moveLb(dir) {
+  lbIdx = (lbIdx + dir + LB_ITEMS.length) % LB_ITEMS.length;
+  document.getElementById('lb-img').src = LB_ITEMS[lbIdx].src;
+  document.getElementById('lb-cap').textContent = LB_ITEMS[lbIdx].cap;
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') moveLb(-1);
+  if (e.key === 'ArrowRight') moveLb(1);
+});
+</script>
+<footer class="lab-archive-footer"><a href="../../field-log/index.html">← FIELD LOG 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

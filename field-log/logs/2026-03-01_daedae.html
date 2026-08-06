@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>작전명 "서울 대전 대구 부산 찍고!!" - 작정하고 시작한 컬러 로테이션 · CADDIS-GR LAB</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.75)), url('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Field01.JPEG') center/cover no-repeat;
+        }
+
+        /* Field photo strip */
+        .field-strip img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            cursor: zoom-in;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .field-strip img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.4rem;
+            top: 0.3rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 4px #eff6ff;
+        }
+
+        /* Gallery */
+        .gallery-thumb {
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            cursor: zoom-in;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .gallery-thumb:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+
+        /* Lightbox */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+        #lightbox.active { display: flex; }
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            cursor: default;
+        }
+        #lightbox-prev, #lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.3); }
+        #lightbox-prev { left: 1rem; }
+        #lightbox-next { right: 1rem; }
+        #lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #lightbox-close:hover { background: rgba(255,255,255,0.3); }
+        #lightbox-counter {
+            position: absolute;
+            bottom: 1.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="text-slate-800 antialiased archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html" aria-current="page">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>FIELD LOG · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-log/blob/main/logs/2026-03-01_daedae.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Back Navigation -->
+    <div class="bg-slate-800 text-white py-3 px-6">
+        <div class="max-w-4xl mx-auto">
+            <a href="../index.html" class="inline-flex items-center text-slate-300 hover:text-white text-sm transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                조행기 목록으로 돌아가기
+            </a>
+        </div>
+    </div>
+
+    <!-- Header / Hero Section -->
+    <header class="hero-bg text-white py-20 px-6 lg:px-8 relative">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-sm font-medium mb-6">
+                <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> 한터지 (대대저수지)
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                작전명 "서울 대전 대구 부산 찍고!!"
+                <span class="block text-2xl md:text-3xl font-medium text-slate-300 mt-2">작정하고 시작한 컬러 로테이션</span>
+            </h1>
+            <p class="text-lg text-slate-400 mb-8 max-w-2xl mx-auto">
+                2026년 3월 1일 (일) · 최저 5.7°C / 최고 12.8°C · 북동풍 2~4m/s (돌풍 최대 10m/s) · 맑음
+            </p>
+            <div class="inline-block bg-white text-slate-900 px-6 py-3 rounded-xl font-bold text-xl shadow-lg transform -rotate-2 hover:rotate-0 transition duration-300">
+                총 조과: 39수 🐟
+            </div>
+        </div>
+    </header>
+
+    <!-- Field Photo Strip -->
+    <div class="max-w-4xl mx-auto px-6 lg:px-8 pt-8 pb-2">
+        <div class="field-strip grid grid-cols-2 gap-4">
+            <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Field01.JPEG" alt="현장 사진 01" onclick="openLightbox(8)">
+            <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Field02.JPEG" alt="현장 사진 02" onclick="openLightbox(9)">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 lg:px-8 py-8 relative z-10">
+        
+        <!-- Summary Card -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border-l-4 border-blue-500 mb-10 transform hover:-translate-y-1 transition duration-300">
+            <h2 class="text-xl font-bold mb-4 flex items-center text-slate-900">
+                <i data-lucide="book-open" class="w-6 h-6 mr-2 text-blue-500"></i> 요약
+            </h2>
+            <p class="text-slate-600 leading-relaxed text-lg">
+                전형적인 봄날의 강한 맞바람 속에서, 20여년이 훌쩍 지난 (Sage DS2)와 풀싱킹 라인, 그리고 짧은 리더 시스템으로 6m 바닥권을 공략해 총 39수의 송어를 랜딩한 하루. '존커테일 미니리치 5색 로테이션' 실험도 성공적으로 첫발을 내디뎠다.<br><br>
+                <span class="font-bold text-blue-600">"3주 연속 32, 20, 39" — 이 채비와 테크닉은 적어도 한터지에서는 충분히 검증되지 않았을 까... 처음 한터지에서 종일토록 한두 마리, 노피쉬한 적도 있었는데... 한터지는 바닥이 답인 것 같다.</span><br><br>1주전만해도 하류 제방권에 있던 얼음도 다 녹아내렸고, 녹아내린 얼음으로 생기는 냉수대가 이미 또는 지금 형성되고 있는 것으로 보인다. 또 한 주가 지나면 이 냉수대도 자연스레 사라질 것이고, 이제 송어에게 좋은 환경이 마련될 것 같다. 나도 기대된다!!
+            </p>
+        </section>
+
+        <!-- Grid: Tackle & Timeline -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            
+            <!-- Tackle Box -->
+            <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+                <h2 class="text-xl font-bold mb-6 flex items-center text-slate-900 border-b pb-4">
+                    <i data-lucide="anchor" class="w-6 h-6 mr-2 text-blue-500"></i> 메인 태클 (Tackle)
+                </h2>
+                <ul class="space-y-4">
+                    <li class="flex">
+                        <span class="font-bold text-slate-700 w-24 shrink-0">Rod:</span>
+                        <span class="text-slate-600">Sage DS2 6902 <br><span class="text-sm text-slate-400">(20년 세월이 지난 올드스쿨 명기)</span></span>
+                    </li>
+                    <li class="flex">
+                        <span class="font-bold text-slate-700 w-24 shrink-0">Line:</span>
+                        <span class="text-slate-600">SA Sonar Titan 3D i/3/5 WF6S <br><span class="text-sm text-slate-400">(풀싱킹 라인)</span></span>
+                    </li>
+                    <li class="flex">
+                        <span class="font-bold text-slate-700 w-24 shrink-0">Leader:</span>
+                        <span class="text-slate-600">1.5m 짧은 카본 리더</span>
+                    </li>
+                    <li class="flex">
+                        <span class="font-bold text-slate-700 w-24 shrink-0">Fly:</span>
+                        <span class="text-slate-600">직접 타잉한 #16 존커테일 미니리치 <br><span class="text-sm text-slate-400">(5색 로테이션)</span></span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Timeline -->
+            <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+                <h2 class="text-xl font-bold mb-6 flex items-center text-slate-900 border-b pb-4">
+                    <i data-lucide="clock" class="w-6 h-6 mr-2 text-blue-500"></i> 시간대별 흐름
+                </h2>
+                <div class="relative pl-6 border-l-2 border-slate-200 space-y-6">
+                    <div class="relative timeline-item pl-2">
+                        <h3 class="font-bold text-slate-800 text-sm">새벽 ~ 08:00</h3>
+                        <p class="text-slate-600 text-sm mt-1">당혹스러운 1m 표층. Chironomid Larva #14, Mini Egg #16 등으로 대응해 보았으나 실패. 표층 공략에 대한 숙제를 남김.</p>
+                    </div>
+                    <div class="relative timeline-item pl-2">
+                        <h3 class="font-bold text-slate-800 text-sm">오전</h3>
+                        <p class="text-slate-600 text-sm mt-1">6m 바닥권 공략 시작. 작전명 <strong>"서울 대전 대구 부산 찍고!!"</strong> 개시. 바닥에서 10여 수 랜딩.</p>
+                    </div>
+                    <div class="relative timeline-item pl-2">
+                        <h3 class="font-bold text-slate-800 text-sm">12:00 ~ 14:00</h3>
+                        <p class="text-slate-600 text-sm mt-1">소강상태 후 2시경 사료 타임. 수면에서 이른바 '우당탕탕' 반응.</p>
+                    </div>
+                    <div class="relative timeline-item pl-2">
+                        <h3 class="font-bold text-slate-800 text-sm">15:00 ~ 철수</h3>
+                        <p class="text-slate-600 text-sm mt-1">바닥권 활성도 부활. 꾸준히 랜딩하며 아쉽지만 39!로 마무리.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Key Points -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-slate-900 text-center">💡 오늘의 Key Point 리뷰</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4 text-blue-600">
+                        <i data-lucide="activity"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Sage DS2와 풀싱킹</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        20년이 넘은 명기의 진가. 미디엄 패스트 액션이 풀싱킹 라인의 로딩 타임을 길게 확보해 주어 강한 맞바람에도 유연하게 대응 가능. 훌륭한 휨새로 찰진 손맛 제공.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-600">
+                        <i data-lucide="target"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">바닥 공략 시스템 완성</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        3D 싱킹라인 + 1.5m 짧은 카본리더 + 느린 8자 리트리브. 15m 이상 캐스팅해도 꼬임 없이 타겟 수심에 안착. 한터지 바닥 공략 테크닉의 정점을 찍다.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4 text-purple-600">
+                        <i data-lucide="palette"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">컬러 로테이션 실험</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        올리브→블랙→챠트루즈→퍼플→화이트. 2~3수 후 따박따박 색상 로테이션. 이번 낚시에서 처음 작정하고 시도해본 실험으로, 효과가 있었는지는 아직 단정할 수 없다. 데이터가 쌓이면 검증될 것.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-12">
+            <h2 class="text-xl font-bold mb-6 flex items-center text-slate-900 border-b pb-4">
+                <i data-lucide="camera" class="w-6 h-6 mr-2 text-blue-500"></i> 현장 기록 갤러리
+                <span class="ml-auto text-sm font-normal text-slate-400">클릭하면 확대됩니다</span>
+            </h2>
+
+            <!-- 3-column layout: Fly | Stacked Trout | Counter -->
+            <div class="flex flex-col md:flex-row gap-4 items-stretch">
+
+                <!-- 좌측: 히트 패턴 플라이 -->
+                <div class="md:w-1/4 flex flex-col">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 text-center">Hit Pattern</p>
+                    <img
+                        src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-ZonkerTailLeech.jpg"
+                        alt="Zonker Tail Mini Leech"
+                        onclick="openLightbox(7)"
+                        class="gallery-thumb flex-1 object-cover rounded-xl cursor-zoom-in"
+                        style="aspect-ratio: auto; width:100%; height:100%; object-fit:cover;">
+                    <p class="text-xs text-center text-slate-500 mt-2">#16 Zonker Tail Mini Leech<br><span class="text-slate-400">5색 로테이션</span></p>
+                </div>
+
+                <!-- 가운데: 송어 6장 스택 (3×2) -->
+                <div class="md:w-2/4 flex flex-col">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 text-center">Trout Gallery</p>
+                    <div class="grid grid-cols-3 gap-2 flex-1">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout01.JPEG" alt="송어 01" onclick="openLightbox(0)">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout02.JPEG" alt="송어 02" onclick="openLightbox(1)">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout03.JPEG" alt="송어 03" onclick="openLightbox(2)">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout04.JPEG" alt="송어 04" onclick="openLightbox(3)">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout05.JPEG" alt="송어 05" onclick="openLightbox(4)">
+                        <img class="gallery-thumb" src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout06.JPEG" alt="송어 06" onclick="openLightbox(5)">
+                    </div>
+                </div>
+
+                <!-- 우측: 카운터 -->
+                <div class="md:w-1/4 flex flex-col">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2 text-center">Final Count</p>
+                    <img
+                        src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Counter.PNG"
+                        alt="39수 카운터"
+                        onclick="openLightbox(6)"
+                        class="gallery-thumb flex-1 object-cover rounded-xl cursor-zoom-in"
+                        style="aspect-ratio: auto; width:100%; height:100%; object-fit:cover;">
+                    <p class="text-xs text-center text-slate-500 mt-2">최종 카운터<br><span class="font-bold text-blue-600 text-sm">39수 🐟</span></p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Lightbox -->
+        <div id="lightbox" onclick="closeLightbox(event)">
+            <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+            <button id="lightbox-prev" onclick="event.stopPropagation(); moveLightbox(-1)">‹</button>
+            <img id="lightbox-img" src="" alt="">
+            <button id="lightbox-next" onclick="event.stopPropagation(); moveLightbox(1)">›</button>
+            <div id="lightbox-counter"></div>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="bg-slate-900 text-white rounded-2xl p-8 text-center mt-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            <div class="relative z-10">
+                <i data-lucide="quote" class="w-12 h-12 mx-auto text-blue-400 mb-4 opacity-50"></i>
+                <p class="text-lg md:text-xl font-medium leading-relaxed mb-6">
+                    종일 맞바람과 싸워야 했지만, 잘 준비된 채비와 테크닉으로 "맞바람"속에서도 즐거운 낚시를 할 수 있었다. 39!
+                </p>
+                <p class="text-blue-300">
+                    숙제! 일, 이른 새벽 1m 권에 떠오르는 송어를 공략할 패턴이나 테크닉을 슬슬 준비해야지 싶다. 이, 생각했던 부비(Boobie)플라이의 싱킹채비운영은 생각도 못해봤네.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8 text-slate-500 text-sm">
+        <p>ⓒ 2026 낚시대장의 플라이 피싱 다이어리. All rights reserved.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Lightbox
+        const images = [
+            // 0~5: 송어
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout01.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout02.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout03.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout04.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout05.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Trout06.JPEG',
+            // 6: 카운터, 7: 플라이
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Counter.PNG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-ZonkerTailLeech.jpg',
+            // 8~9: 필드
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Field01.JPEG',
+            'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0301-Field02.JPEG',
+        ];
+        let currentIdx = 0;
+
+        function openLightbox(idx) {
+            currentIdx = idx;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(e) {
+            if (e && e.target !== document.getElementById('lightbox') && e.target !== document.getElementById('lightbox-close')) return;
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function moveLightbox(dir) {
+            currentIdx = (currentIdx + dir + images.length) % images.length;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            document.getElementById('lightbox-img').src = images[currentIdx];
+            document.getElementById('lightbox-counter').textContent = `${currentIdx + 1} / ${images.length}`;
+        }
+
+        // 키보드 지원
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'ArrowLeft') moveLightbox(-1);
+            if (e.key === 'ArrowRight') moveLightbox(1);
+            if (e.key === 'Escape') { document.getElementById('lightbox').classList.remove('active'); document.body.style.overflow = ''; }
+        });
+    </script>
+<footer class="lab-archive-footer"><a href="../../field-log/index.html">← FIELD LOG 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

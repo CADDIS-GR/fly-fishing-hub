@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>싱킹 플라이라인 드레싱 완전정복 | CADDIS-GR · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a2e;
+            --water: #0f4c75;
+            --water-light: #1b6ca8;
+            --surface: #e8f4f8;
+            --amber: #d4891a;
+            --amber-light: #f0a830;
+            --danger: #c0392b;
+            --safe: #1e8449;
+            --caution: #b7950b;
+            --muted: #6c7a89;
+            --card-bg: #ffffff;
+            --page-bg: #f0f4f8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--page-bg);
+            color: var(--ink);
+            line-height: 1.7;
+        }
+
+        h1, h2, h3 { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; }
+
+        .dm-serif { font-family: 'DM Serif Display', serif; }
+
+        .hero {
+            background: linear-gradient(160deg, #0d3b66 0%, #1b6ca8 50%, #2980b9 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(41,128,185,0.3) 0%, transparent 50%);
+        }
+
+        .wave-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--page-bg);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--water);
+            border-left: 4px solid var(--amber);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .section-title .num {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.6rem;
+            margin-right: 0.25rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 1.75rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-ok { background: #d5f5e3; color: var(--safe); }
+        .badge-ng { background: #fadbd8; color: var(--danger); }
+        .badge-tip { background: #fef9e7; color: var(--caution); }
+        .badge-new { background: #eaf0fb; color: #2471a3; }
+
+        .product-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .product-card:hover { transform: translateY(-4px); }
+
+        .product-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .product-body { background: white; padding: 1.5rem; }
+
+        .verdict-ok { border-left: 5px solid var(--safe); }
+        .verdict-ng { border-left: 5px solid var(--danger); }
+        .verdict-tip { border-left: 5px solid var(--caution); }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            background: #f1f5f9;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--water);
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            background: var(--water);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th {
+            background: var(--water);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .comparison-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e8ecf0;
+            font-size: 0.9rem;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) td { background: #f8fafc; }
+
+        .insight-box {
+            background: linear-gradient(135deg, #eaf4fb, #d6eaf8);
+            border-left: 4px solid var(--water-light);
+            border-radius: 0 12px 12px 0;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .warn-box {
+            background: linear-gradient(135deg, #fdedec, #fad7d3);
+            border-left: 4px solid var(--danger);
+            border-radius: 0 12px 12px 0;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e8f4f8;
+            color: var(--water);
+            border-radius: 6px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin: 0.15rem;
+        }
+
+        /* nav */
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.15); color: white; }
+
+        /* TOC */
+        .toc-item {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.15s;
+        }
+        .toc-item:hover { background: #eaf4fb; color: var(--water); }
+
+        @media (max-width: 768px) {
+            .hero { padding-top: 3rem; }
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/flyline_dressing_guide.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- Nav -->
+<nav class="hero" style="min-height:0; padding: 0.75rem 1.5rem;">
+    <div class="relative z-10 max-w-6xl mx-auto flex items-center justify-between">
+        <a href="../index.html" class="text-white font-bold text-sm flex items-center gap-2">
+            🎣 <span>CADDIS-GR</span>
+        </a>
+        <div class="flex gap-1">
+            <a href="../index.html" class="nav-link">홈</a>
+            <a href="#" class="nav-link">기어 리뷰</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero pt-16 pb-24 px-6">
+    <div class="wave-line"></div>
+    <div class="relative z-10 max-w-4xl mx-auto text-white">
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="badge badge-new">관리형 저수지 필드노트</span>
+            <span class="badge" style="background:rgba(255,255,255,0.15);color:white;">2026.03</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+            싱킹 플라이라인 드레싱<br>
+            <span class="dm-serif">완전정복</span>
+        </h1>
+        <p class="text-lg text-blue-100 mb-6 max-w-2xl">
+            종일 싱킹라인만 쓰다 보면 반나절 후 라인이 뻣뻣해진다.<br>
+            전용 드레싱은 구하기 어렵고, 그래서 찾아낸 현실적인 해답들.
+        </p>
+        <div class="flex flex-wrap gap-2">
+            <span class="tag" style="background:rgba(255,255,255,0.15);color:white;">싱킹라인</span>
+            <span class="tag" style="background:rgba(255,255,255,0.15);color:white;">드레싱</span>
+            <span class="tag" style="background:rgba(255,255,255,0.15);color:white;">한터낚시터</span>
+            <span class="tag" style="background:rgba(255,255,255,0.15);color:white;">SA Sonar Titan 3D</span>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-10">
+
+    <!-- TOC -->
+    <div class="card mb-10">
+        <h2 class="text-base font-bold text-slate-500 uppercase tracking-widest mb-3">목차</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+            <a href="#problem" class="toc-item">① 문제 정의 — 왜 뻣뻣해지나</a>
+            <a href="#warning" class="toc-item">② 절대 금지 — 플로팅 드레싱을 싱킹라인에?</a>
+            <a href="#products" class="toc-item">③ 제품 리뷰 — 4종 비교</a>
+            <a href="#science" class="toc-item">④ 원리 — 소수성 실리콘이란</a>
+            <a href="#howto" class="toc-item">⑤ 현장 사용법</a>
+            <a href="#verdict" class="toc-item">⑥ 최종 결론</a>
+            <a href="#finger" class="toc-item">⑦ 보너스 — 스트리핑 가드 로테이션 전략</a>
+        </div>
+    </div>
+
+    <!-- ① 문제 정의 -->
+    <section id="problem" class="mb-12">
+        <h2 class="section-title"><span class="num">①</span> 문제 정의</h2>
+        <div class="card">
+            <p class="text-lg font-semibold text-slate-700 mb-3">
+                "종일 싱킹라인만 쓰면, 반나절 지나 라인이 뻣뻣해진다"
+            </p>
+            <p class="text-slate-600 mb-4">
+                관리형 저수지에서 SA Sonar Titan 3D i/3/5 WF6S로 풀데이 조업 시 오전 세션 이후 라인 유연성이 눈에 띄게 저하된다.
+                가이드 마찰이 늘고, 캐스팅 거리가 짧아지며, 라인 회수 감도도 떨어진다.
+            </p>
+            <div class="insight-box">
+                <p class="font-semibold text-blue-800 mb-1">🔍 원인</p>
+                <p class="text-blue-900 text-sm">
+                    현대 플라이라인은 제조 시 실리콘 계열 윤활제가 코팅 내부에 함침되어 있다.
+                    지속적인 캐스팅과 수중 침지로 이 윤활 성분이 마모·증발하면서 표면이 건조해지고 뻣뻣한 감촉이 나타난다.
+                    냉수 환경에서는 이 현상이 더 빠르게 진행된다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ② 절대 금지 -->
+    <section id="warning" class="mb-12">
+        <h2 class="section-title"><span class="num">②</span> 절대 금지 — 플로팅 드레싱을 싱킹라인에 바르면?</h2>
+
+        <div class="warn-box mb-6">
+            <p class="font-bold text-red-800 text-lg mb-2">⛔ 싱킹라인에 일반 플로팅 드레싱 사용 금지</p>
+            <p class="text-red-900 text-sm">
+                일반 플라이라인 드레싱/클리너의 핵심 성분은 <strong>소수성(hydrophobic) 실리콘</strong>이다.
+                이 성분은 라인 표면에 발수막을 형성해 물을 튕겨낸다.
+                싱킹라인에 바르면 텅스텐 분말로 설계된 밀도를 이기지는 못하지만,
+                표면장력과 결합해 싱킹 속도를 심각하게 저하시키고,
+                싱크팁 라인의 플로팅 바디가 영구적으로 떠버리는 사례도 보고된다.
+            </p>
+        </div>
+
+        <div class="card verdict-ng mb-4">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">❌</span>
+                <div>
+                    <span class="badge badge-ng">사용 금지</span>
+                    <h3 class="font-bold text-slate-800 mt-1">Armor All (아머올)</h3>
+                </div>
+            </div>
+            <p class="text-slate-600 text-sm">
+                국내 마트에서 쉽게 구할 수 있어 추천 글이 많지만 — <strong>사용하면 안 된다.</strong>
+                디에틸렌글리콜(DEG) 등 용제 성분이 PVC 코팅의 가소제를 빼내어 장기적으로 라인을 딱딱하게 만들고 갈라지게 한다.
+                처음엔 매끄러운 느낌이 나지만 2~3년 후 라인이 조기 노화된다.
+            </p>
+        </div>
+
+        <div class="insight-box">
+            <p class="font-semibold text-blue-800 mb-1">💡 왜 싱킹라인은 따로 뜨지 않나?</p>
+            <p class="text-blue-900 text-sm">
+                싱킹라인이 가라앉는 이유는 <strong>물을 흡수해서가 아니라, 텅스텐 분말이 배합되어 라인 자체 밀도가 물보다 높기 때문</strong>이다.
+                따라서 발수막을 씌워도 코팅 밀도 자체는 변하지 않는다.
+                "드레싱 발랐더니 싱킹라인이 떴다"는 경험담은 대부분 싱크팁 라인의 <em>플로팅 바디</em> 얘기다.
+                풀 싱킹라인에서는 드레싱이 완전 부상을 만들지 않고, 싱킹 속도를 늦추는 수준의 영향을 준다.
+            </p>
+        </div>
+    </section>
+
+    <!-- ③ 제품 리뷰 -->
+    <section id="products" class="mb-12">
+        <h2 class="section-title"><span class="num">③</span> 제품 리뷰 — 4종 비교</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- 립밤 -->
+            <div class="product-card verdict-ok">
+                <div class="product-header" style="background:linear-gradient(135deg,#d5f5e3,#a9dfbf);">
+                    <span class="text-3xl">🫦</span>
+                    <div>
+                        <span class="badge badge-ok">1순위 추천</span>
+                        <h3 class="font-bold text-slate-800 mt-1">립밤 (ChapStick 류)</h3>
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="tag">비용 0원</span>
+                        <span class="tag">현장 즉시 사용</span>
+                        <span class="tag">풀싱킹 적합</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-3">
+                        ChapStick Classic 성분: <span class="mono">Phenyl Trimethicone</span>(실리콘 폴리머) + Petrolatum(왁스 기반 보호막).
+                        플라스틱·PVC에 안전한 성분이며, 소수성이 약해 싱킹 성능에 거의 영향을 주지 않는다.
+                    </p>
+                    <div class="insight-box text-sm">
+                        💡 어차피 집에 굴러다니는 것. 주머니에 하나 상시 비치.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loon Sink Fast -->
+            <div class="product-card verdict-ok">
+                <div class="product-header" style="background:linear-gradient(135deg,#d6eaf8,#aed6f1);">
+                    <span class="text-3xl">🏆</span>
+                    <div>
+                        <span class="badge badge-new">정품 전용</span>
+                        <h3 class="font-bold text-slate-800 mt-1">Loon Sink Fast</h3>
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="tag">싱킹라인 전용</span>
+                        <span class="tag">수성 실리콘</span>
+                        <span class="tag">현장 즉시 사용</span>
+                        <span class="tag">직구 ~$9</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-3">
+                        싱킹/솔트워터 라인 전용 설계. 비소수성(non-hydrophobic) 수성 실리콘으로
+                        싱킹 성능을 유지하면서 윤활·보호한다. 1oz 스프레이 캡 타입.
+                        버핑·건조 시간 없이 현장에서 바로 사용 가능.
+                    </p>
+                    <div class="warn-box text-sm">
+                        ⚠️ 단품 직구는 배송비가 본체보다 비쌈. 다음 용품 직구 시 끼워넣기 전략 권장.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 303 -->
+            <div class="product-card verdict-tip">
+                <div class="product-header" style="background:linear-gradient(135deg,#fef9e7,#fdebd0);">
+                    <span class="text-3xl">🚗</span>
+                    <div>
+                        <span class="badge badge-tip">플로팅/싱크팁 적합</span>
+                        <h3 class="font-bold text-slate-800 mt-1">303 Aerospace Protectant</h3>
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="tag">국내 구매 가능</span>
+                        <span class="tag">473ml ~17,000원</span>
+                        <span class="tag">Orvis 공식 추천</span>
+                        <span class="tag">무실리콘·무용제</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-3">
+                        Orvis가 플라이라인에 직접 테스트·추천한 제품. 무실리콘·무석유계 용제 성분으로
+                        PVC 코팅에 안전하다. UV 보호력도 뛰어나다.
+                        단, 발수 성분이 있어 <strong>풀 싱킹라인보다 플로팅/싱크팁 라인 관리에 더 적합</strong>.
+                    </p>
+                    <div class="insight-box text-sm">
+                        💡 사용법: 티슈에 칙칙 → 라인 주욱 통과 → 마른 티슈로 한 번 더 닦기.
+                        완전히 닦아내야 효과 발휘.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Armor All -->
+            <div class="product-card verdict-ng">
+                <div class="product-header" style="background:linear-gradient(135deg,#fadbd8,#f1948a);">
+                    <span class="text-3xl">⛔</span>
+                    <div>
+                        <span class="badge badge-ng">사용 금지</span>
+                        <h3 class="font-bold text-slate-800 mt-1">Armor All (아머올)</h3>
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="tag" style="background:#fadbd8;color:#c0392b;">DEG 용제 포함</span>
+                        <span class="tag" style="background:#fadbd8;color:#c0392b;">장기 코팅 손상</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-3">
+                        국내 마트에서 쉽게 구할 수 있고 추천 글도 많지만, 플라이라인에는 절대 사용하지 말 것.
+                        단기적으로는 매끄럽게 느껴지지만 PVC 코팅의 가소제를 빼내어
+                        2~3년 후 라인 조기 노화, 경화, 균열을 유발한다.
+                    </p>
+                    <div class="warn-box text-sm">
+                        ❌ 303 Aerospace와 혼동 주의. 이름이 비슷한 자동차 보호제라도 성분이 전혀 다르다.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ④ 원리 -->
+    <section id="science" class="mb-12">
+        <h2 class="section-title"><span class="num">④</span> 원리 — 소수성 실리콘이란</h2>
+        <div class="card">
+            <div class="overflow-x-auto">
+                <table class="comparison-table w-full rounded-xl overflow-hidden text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left rounded-tl-xl">성분 유형</th>
+                            <th class="text-left">작용</th>
+                            <th class="text-left">플로팅라인</th>
+                            <th class="text-left rounded-tr-xl">싱킹라인</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>소수성 실리콘</strong><br><span class="text-xs text-slate-500">일반 드레싱 성분</span></td>
+                            <td>발수막 형성 → 물 튕겨냄</td>
+                            <td>✅ 부력 회복</td>
+                            <td>⚠️ 싱킹 속도 저하</td>
+                        </tr>
+                        <tr>
+                            <td><strong>비소수성 실리콘</strong><br><span class="text-xs text-slate-500">Loon Sink Fast</span></td>
+                            <td>윤활·보호만</td>
+                            <td>△ 부력 효과 없음</td>
+                            <td>✅ 성능 유지·향상</td>
+                        </tr>
+                        <tr>
+                            <td><strong>왁스+실리콘 혼합</strong><br><span class="text-xs text-slate-500">립밤</span></td>
+                            <td>표면 보호막 형성</td>
+                            <td>△ 미미한 효과</td>
+                            <td>✅ 싱킹 영향 최소</td>
+                        </tr>
+                        <tr>
+                            <td><strong>UV 보호 폴리머</strong><br><span class="text-xs text-slate-500">303 Protectant</span></td>
+                            <td>코팅 보호 + 발수</td>
+                            <td>✅ 코팅 보호·윤활</td>
+                            <td>△ 싱킹 약간 영향 가능</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ⑤ 현장 사용법 -->
+    <section id="howto" class="mb-12">
+        <h2 class="section-title"><span class="num">⑤</span> 현장 사용법</h2>
+
+        <div class="mb-6">
+            <h3 class="font-bold text-slate-700 mb-3">🫦 립밤 — 풀 싱킹라인 현장 드레싱</h3>
+            <div class="space-y-3">
+                <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">립밤을 면티슈에 쓱 문지른다</p>
+                        <p class="text-sm text-slate-500">티슈 면적 3~4cm 정도에 얇게 도포</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">티슈로 라인을 잡고 주욱~ 당긴다</p>
+                        <p class="text-sm text-slate-500">라인 전체 또는 작업 구간(약 15~20m)을 통과시킴</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">완료. 바로 캐스팅 가능</p>
+                        <p class="text-sm text-slate-500">건조 시간 불필요. 오전 세션 끝날 즈음 적용 권장</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-slate-700 mb-3">🚗 303 Aerospace — 라인 전체 관리 (귀가 후)</h3>
+            <div class="space-y-3">
+                <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">티슈/극세사 천에 303을 칙칙 뿌린다</p>
+                        <p class="text-sm text-slate-500">직접 라인에 뿌리지 말 것</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">라인 전체를 티슈로 통과시킨다</p>
+                        <p class="text-sm text-slate-500">플로팅/싱크팁 라인에 특히 효과적</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">마른 천으로 한 번 더 통과 — 완전히 닦아낸다</p>
+                        <p class="text-sm text-slate-500">303은 닦아내야 효과가 발휘됨 (에어드라이 안 됨)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ⑥ 최종 결론 -->
+    <section id="verdict" class="mb-12">
+        <h2 class="section-title"><span class="num">⑥</span> 최종 결론</h2>
+        <div class="card">
+            <div class="overflow-x-auto">
+                <table class="comparison-table w-full rounded-xl overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="text-left rounded-tl-xl">상황</th>
+                            <th class="text-left">추천 제품</th>
+                            <th class="text-left rounded-tr-xl">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>풀 싱킹라인 현장 드레싱</td>
+                            <td><strong>🫦 립밤</strong></td>
+                            <td>비용 0원, 주머니 상시 비치</td>
+                        </tr>
+                        <tr>
+                            <td>싱킹라인 전용 정품</td>
+                            <td><strong>🏆 Loon Sink Fast</strong></td>
+                            <td>직구 시 끼워넣기 (~$9)</td>
+                        </tr>
+                        <tr>
+                            <td>플로팅/싱크팁 귀가 후 관리</td>
+                            <td><strong>🚗 303 Aerospace</strong></td>
+                            <td>국내 구매 가능, 473ml ~17,000원</td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--danger);font-weight:600;">절대 사용 금지</td>
+                            <td style="color:var(--danger);">⛔ Armor All</td>
+                            <td style="color:var(--danger);">PVC 코팅 장기 손상</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                <p class="text-sm text-slate-500 font-semibold mb-1">📋 현장 키트 (한터낚시터 기준)</p>
+                <p class="text-slate-700 text-sm">
+                    조끼 주머니 → <strong>립밤 1개</strong> + <strong>티타늄 슬리브 2개</strong> &nbsp;|&nbsp;
+                    차 트렁크 → <strong>303 Aerospace 1통</strong> &nbsp;|&nbsp;
+                    다음 직구 시 → <strong>Loon Sink Fast</strong> 추가 예정
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ⑦ 스트리핑 가드 -->
+    <section id="finger" class="mb-12">
+        <h2 class="section-title"><span class="num">⑦</span> 보너스 — 스트리핑 가드 로테이션 전략</h2>
+
+        <div class="card mb-5">
+            <p class="text-slate-600 mb-4">
+                드레싱과는 다른 접근이지만 같은 문제를 해결하는 보완 솔루션.
+                라인이 뻣뻣해진 오후 세션에 드레싱 대신 <strong>손가락과 라인 사이의 마찰 자체를 소재로 흡수</strong>하는 방법이다.
+            </p>
+
+            <!-- 제품 카드 -->
+            <div class="product-card verdict-ok mb-5">
+                <div class="product-header" style="background:linear-gradient(135deg,#e8e8e8,#d0d0d0);">
+                    <span class="text-3xl">🖐️</span>
+                    <div>
+                        <span class="badge badge-ok">보완 솔루션</span>
+                        <h3 class="font-bold text-slate-800 mt-1">뉴 핑글가드 — Titanium Finger Guard</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">LITTLE PRESENTS · 10,000원 · 2개입</p>
+                    </div>
+                </div>
+                <div class="product-body">
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="tag">티타늄 특수 코팅</span>
+                        <span class="tag">발수 처리</span>
+                        <span class="tag">신축성 착용감</span>
+                        <span class="tag">2개입</span>
+                        <span class="tag">국내 구매 가능</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-4">
+                        표면 티타늄 특수 코팅으로 일반 소재 대비 발수·내마모 성능이 뛰어나다.
+                        라인 통과 시 마찰 저항이 낮고, 젖어도 일반 천 소재보다 건조가 빠른 것이 핵심 장점.
+                    </p>
+
+                    <!-- 솔직한 단점 -->
+                    <div class="warn-box text-sm mb-4">
+                        <p class="font-semibold text-red-800 mb-1">😅 솔직한 단점 (개인 사용 경험)</p>
+                        <p class="text-red-900">
+                            두어 번 라인을 통과시키면 축축하게 젖어버린다.
+                            종일 젖은 것을 손가락에 끼우고 있으면 매우 불쾌하고,
+                            벗겨보면 손가락이 쭈글쭈글해져 있기도 하다.
+                            <strong>단독으로 종일 사용하기엔 불호.</strong>
+                        </p>
+                    </div>
+
+                    <div class="insight-box text-sm">
+                        <p class="font-semibold text-blue-800 mb-1">💡 티타늄 코팅의 의미</p>
+                        <p class="text-blue-900">
+                            일반 소재와 달리 발수막이 형성되어 있어 젖는 속도가 느리고 건조가 빠르다.
+                            이 특성이 아래의 로테이션 전략을 가능하게 한다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 로테이션 전략 -->
+            <h3 class="font-bold text-slate-700 mb-3">🔄 오전/오후 세션 분할 운영 전략</h3>
+            <div class="space-y-3 mb-5">
+                <div class="flow-step">
+                    <div class="step-num" style="background:var(--amber);">오전</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">드레싱 유지 구간 — 슬리브 없이 기존대로</p>
+                        <p class="text-sm text-slate-500">출조 초반 드레싱이 살아있는 구간. 슬리브 불필요</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">오후 — 슬리브 A 투입</p>
+                        <p class="text-sm text-slate-500">드레싱이 마모된 오후 세션부터 슬리브 착용</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">슬리브 A 젖으면 → B로 교체, A는 말리기</p>
+                        <p class="text-sm text-slate-500">2개입이라 로테이션 가능. 티타늄 코팅 덕에 건조 빠름</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <p class="font-semibold text-slate-700">립밤 드레싱과 병행 가능</p>
+                        <p class="text-sm text-slate-500">슬리브 교체 타이밍에 라인에 립밤 한 번 더 처리하면 시너지</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 비교표 -->
+            <div class="overflow-x-auto">
+                <table class="comparison-table w-full rounded-xl overflow-hidden text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left rounded-tl-xl">방법</th>
+                            <th class="text-left">오전</th>
+                            <th class="text-left">오후</th>
+                            <th class="text-left rounded-tr-xl">비용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>드레싱만</strong></td>
+                            <td>✅ 효과적</td>
+                            <td>△ 재드레싱 필요</td>
+                            <td>0원~</td>
+                        </tr>
+                        <tr>
+                            <td><strong>슬리브만</strong></td>
+                            <td>△ 불필요</td>
+                            <td>△ 젖음 불쾌</td>
+                            <td>10,000원</td>
+                        </tr>
+                        <tr>
+                            <td><strong>오전 드레싱 + 오후 슬리브 로테이션</strong></td>
+                            <td>✅ 최적</td>
+                            <td>✅ 커버</td>
+                            <td>0원 + 10,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 후기 예고 -->
+    <div class="card" style="background:linear-gradient(135deg,#eaf4fb,#fef9e7); border: 2px dashed #aed6f1;">
+        <div class="flex items-start gap-3">
+            <span class="text-3xl">🧪</span>
+            <div>
+                <p class="font-bold text-slate-700 mb-1">실전 후기 예정</p>
+                <p class="text-slate-600 text-sm">
+                    <strong>1차:</strong> 립밤 현장 테스트 (한터낚시터, 다음 출조)<br>
+                    <strong>2차:</strong> 303 Aerospace 구매 후 라인 전체 관리 + 현장 비교<br>
+                    <strong>3차:</strong> 티타늄 슬리브 오전/오후 분할 운영 후기<br>
+                    <strong>4차 (예정):</strong> Loon Sink Fast 직구 후 전체 4종 최종 비교
+                </p>
+                <p class="text-xs text-slate-400 mt-2">업데이트 예정: 2026년 봄 시즌</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="hero mt-10 py-8 px-6" style="min-height:0;">
+    <div class="relative z-10 max-w-4xl mx-auto text-center text-blue-100">
+        <p class="mb-1 text-sm">🎣 CADDIS-GR — 관리형낚시터 플라이낚시 아카이브</p>
+        <p class="text-xs opacity-60">Last updated: March 2026</p>
+    </div>
+</footer>
+
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Onki - The Ultimate Finesse | 낚시대장 시그니처 v2 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient-emerald {
+            background: linear-gradient(to right, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-amber {
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-image {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hero-section:hover .hero-image {
+            transform: scale(1.02);
+        }
+        .spec-card {
+            transition: all 0.3s ease;
+        }
+        .spec-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
+        }
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Lightbox Styles */
+        .clickable-image {
+            cursor: zoom-in;
+            transition: opacity 0.3s ease;
+        }
+        .clickable-image:hover {
+            opacity: 0.9;
+        }
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="antialiased archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/Vision_Onki_Ultimate_Finesse.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Header Section -->
+    <header class="max-w-7xl mx-auto px-6 py-12 text-center">
+        <div class="inline-block p-4 bg-emerald-500/10 rounded-2xl mb-6 border border-emerald-500/20">
+            <i data-lucide="sparkles" class="text-emerald-400 w-8 h-8"></i>
+        </div>
+        <h1 class="text-6xl md:text-8xl font-black mb-4 tracking-tighter text-white">
+            THE ULTIMATE <span class="text-gradient-emerald">FINESSE</span>
+        </h1>
+        <p class="text-xl md:text-3xl text-slate-400 font-light italic mb-2">
+            "부드럽고 섬세한 피네스피싱의 완성"
+        </p>
+        <p class="text-sm text-emerald-400 uppercase tracking-[0.4em] font-bold">
+            낚시대장 시그니처 컬렉션 Vol. 2
+        </p>
+        <div class="h-2 w-40 bg-gradient-to-r from-emerald-500 to-teal-400 mx-auto mt-10 rounded-full shadow-[0_0_30px_rgba(16,185,129,0.5)]"></div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-24 space-y-20">
+        
+        <!-- Hero Section: Vision Onki -->
+        <section class="hero-section glass-card rounded-[3rem] overflow-hidden shadow-2xl">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                <!-- Image Side -->
+                <div class="relative h-96 lg:h-auto overflow-hidden">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/IMG_4649.jpg" 
+                         alt="Vision Onki and Hardy Marquis" 
+                         class="hero-image clickable-image w-full h-full object-cover" 
+                         onerror="this.src='https://images.unsplash.com/photo-1544211906-814948334d28?auto=format&fit=crop&q=80&w=1200';">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-transparent to-transparent lg:from-transparent lg:via-transparent lg:to-[#0f172a]"></div>
+                    <div class="absolute top-8 left-8 bg-emerald-500/20 backdrop-blur-sm px-6 py-3 rounded-2xl border border-emerald-500/30">
+                        <p class="text-xs font-black uppercase tracking-[0.3em] text-emerald-300">Main Setup</p>
+                    </div>
+                </div>
+
+                <!-- Content Side -->
+                <div class="p-12 lg:p-16 space-y-10">
+                    <div>
+                        <span class="text-xs font-black text-emerald-400 uppercase tracking-[0.3em] mb-3 block">
+                            The Precision Masterpiece
+                        </span>
+                        <h2 class="text-5xl font-black tracking-tight leading-tight mb-6">
+                            Vision Onki<br>
+                            <span class="text-emerald-400">3100-4</span>
+                        </h2>
+                        <p class="text-lg text-slate-300 leading-relaxed font-light mb-8">
+                            소프트 해클 웨트와 마이크로 님핑을 위한 섬세함. 
+                            #3 라인과 10피트 로드의 조화로 부드러운 피네스피싱을 구현합니다.
+                        </p>
+                    </div>
+
+                    <!-- Key Specs Grid -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Length</p>
+                            <p class="text-2xl font-bold text-white">10ft</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Weight</p>
+                            <p class="text-2xl font-bold text-white">#3</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Pieces</p>
+                            <p class="text-2xl font-bold text-white">4-Piece</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Action</p>
+                            <p class="text-2xl font-bold text-white">Medium Fast</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-6 border-t border-white/10">
+                        <span class="px-4 py-2 badge rounded-xl text-xs font-bold text-emerald-300 uppercase tracking-wider">#SoftHackle</span>
+                        <span class="px-4 py-2 badge rounded-xl text-xs font-bold text-emerald-300 uppercase tracking-wider">#Finesse</span>
+                        <span class="px-4 py-2 badge rounded-xl text-xs font-bold text-emerald-300 uppercase tracking-wider">#Precision</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Complete Setup Details -->
+        <section class="space-y-8">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-black mb-4 text-white">
+                    Complete <span class="text-gradient-emerald">Setup</span>
+                </h3>
+                <p class="text-slate-400 text-lg">완벽하게 조화를 이루는 세 가지 요소</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Rod Card -->
+                <div class="spec-card glass-card rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div class="p-4 bg-emerald-500/10 rounded-2xl">
+                            <i data-lucide="zap" class="text-emerald-400 w-8 h-8"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-widest text-emerald-400">01</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase font-black tracking-widest mb-2">Precision Rod</p>
+                        <h4 class="text-2xl font-bold text-white mb-3">Vision Onki 3100-4</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            10피트의 긴 로드로 라인 컨트롤의 자유도를 극대화. 
+                            #3 라인 시스템으로 섬세한 프레젠테이션 구현.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Length</span>
+                            <span class="text-white font-bold">10ft (3.05m)</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Line Weight</span>
+                            <span class="text-white font-bold">#3</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Action</span>
+                            <span class="text-white font-bold">Medium Fast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel Card -->
+                <div class="spec-card glass-card rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div class="p-4 bg-emerald-500/10 rounded-2xl">
+                            <i data-lucide="disc-3" class="text-emerald-400 w-8 h-8"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-widest text-emerald-400">02</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase font-black tracking-widest mb-2">Classic Reel</p>
+                        <h4 class="text-2xl font-bold text-white mb-3">Hardy Marquis LWT #4</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            영국의 전통과 장인정신이 �깃든 클래식 릴. 
+                            경량 설계로 하루종일 편안한 캐스팅.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Model</span>
+                            <span class="text-white font-bold">LWT #4</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Origin</span>
+                            <span class="text-white font-bold">England</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Type</span>
+                            <span class="text-white font-bold">Classic Click</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Card -->
+                <div class="spec-card glass-card rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div class="p-4 bg-emerald-500/10 rounded-2xl">
+                            <i data-lucide="wind" class="text-emerald-400 w-8 h-8"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-widest text-emerald-400">03</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase font-black tracking-widest mb-2">Technical Line</p>
+                        <h4 class="text-2xl font-bold text-white mb-3">Rio Elite Technical Trout</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            WF4F 테크니컬 트라우트 라인. 
+                            정교한 캐스팅과 자연스러운 드리프트를 위한 최적의 선택.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Profile</span>
+                            <span class="text-white font-bold">WF4F</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Type</span>
+                            <span class="text-white font-bold">Floating</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Purpose</span>
+                            <span class="text-white font-bold">Technical</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Philosophy Section -->
+        <section class="glass-card rounded-[3rem] p-12 md:p-20 relative overflow-hidden">
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-emerald-500/5 rounded-full blur-[100px]"></div>
+            <div class="relative z-10 max-w-4xl mx-auto text-center space-y-8">
+                <div class="inline-block p-5 bg-emerald-500/10 rounded-3xl border border-emerald-500/20">
+                    <i data-lucide="target" class="text-emerald-400 w-10 h-10"></i>
+                </div>
+                <h3 class="text-4xl md:text-5xl font-black text-white mb-6">
+                    섬세함의 철학
+                </h3>
+                <blockquote class="text-2xl md:text-3xl italic text-slate-300 leading-relaxed font-light">
+                    "오랜 숙고 끝에 완성된 이 조합은 단순한 장비를 넘어, 
+                    <span class="text-emerald-400 font-bold not-italic">부드럽고 섬세한 피네스피싱을 즐기고자 하는 바램</span>입니다. 
+                    소프트 해클 웨트, 마이크로 님핑으로 작은 플라이를 섬세하게 전달하는 3번 10피트 로드와 
+                    드라이플라이용으로 최적화된 Rio Technical Trout 라인의 조화로운 시스템으로 송어의 시선을 끌어봅니다."
+                </blockquote>
+                <div class="pt-8">
+                    <p class="text-sm text-slate-500 uppercase tracking-[0.4em] font-black">
+                        — 낚시대장의 피네스피싱 철학
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sub Setup: Paradigm + Bouglé -->
+        <section class="space-y-8">
+            <div class="text-center mb-12">
+                <span class="inline-block px-4 py-2 bg-amber-500/10 rounded-full text-xs font-black uppercase tracking-widest text-amber-400 mb-4 border border-amber-500/20">
+                    Alternative Setup
+                </span>
+                <h3 class="text-3xl font-black text-white mb-3">
+                    The <span class="text-gradient-amber">Classic Soul</span>
+                </h3>
+                <p class="text-slate-400">올라운드 상황에 대응하는 클래식 조합</p>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                    <!-- Paradigm -->
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-3 bg-amber-500/10 rounded-xl">
+                                <i data-lucide="zap" class="text-amber-400 w-5 h-5"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Rod</p>
+                        </div>
+                        <h4 class="text-xl font-bold text-white">T&T Paradigm 905-4</h4>
+                        <p class="text-sm text-slate-400">9ft #5 / 4-Piece</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            전통적인 9피트 #5 조합으로 모든 상황에 대응
+                        </p>
+                    </div>
+
+                    <!-- Bouglé -->
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-3 bg-amber-500/10 rounded-xl">
+                                <i data-lucide="disc-3" class="text-amber-400 w-5 h-5"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Reel</p>
+                        </div>
+                        <h4 class="text-xl font-bold text-white">Hardy Bouglé 3 1/4</h4>
+                        <p class="text-sm text-slate-400">Heritage Ratchet</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            전설의 '까르르' 소리, 부활한 헤리티지 라쳇
+                        </p>
+                    </div>
+
+                    <!-- Gold Line -->
+                    <div class="p-8 space-y-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-3 bg-amber-500/10 rounded-xl">
+                                <i data-lucide="wind" class="text-amber-400 w-5 h-5"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 uppercase font-black tracking-widest">Line</p>
+                        </div>
+                        <h4 class="text-xl font-bold text-white">Rio Elite Gold Classic</h4>
+                        <p class="text-sm text-slate-400">WF5F</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            드라이 플라이에 최적화된 골드 클래식 라인
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fly Gallery Section -->
+        <section>
+            <div class="glass-card rounded-[3rem] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+                <div class="absolute -top-20 -right-20 w-80 h-80 bg-emerald-500/5 rounded-full blur-[80px]"></div>
+                
+                <div class="flex items-center gap-4 mb-14 relative z-10">
+                    <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                        <i data-lucide="waves" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-4xl font-black tracking-tight text-white">
+                        The Art of <span class="text-emerald-400">Chironomid Pupa & Soft Hackle Wet Flies</span>
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-14 relative z-10">
+                    <!-- Highlighted Single Fly -->
+                    <div class="lg:col-span-2 space-y-8 text-center">
+                        <div class="rounded-[3rem] overflow-hidden shadow-2xl aspect-square border-4 border-white/5 group relative">
+                            <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_4544.jpg" 
+                                 alt="Oil Slick Masterpiece" 
+                                 class="clickable-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                 onerror="this.src='https://images.unsplash.com/photo-1541963463532-d68292c34b19?auto=format&fit=crop&q=80&w=600';">
+                            <div class="absolute inset-0 border-[1px] border-white/10 rounded-[3rem] pointer-events-none"></div>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-3xl mb-3 italic tracking-tight uppercase text-white">
+                                Oil Slick Masterpiece
+                            </h4>
+                            <p class="text-base text-slate-400 leading-relaxed font-light px-4">
+                                영롱한 오일 슬릭 바디와 정교한 비드의 조화.<br>
+                                수면 아래에서 송어의 시선을 강탈할 낚시대장님의 비장의 무기.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fly Collection -->
+                    <div class="lg:col-span-3 flex flex-col justify-between space-y-10">
+                        <div class="rounded-[2.5rem] overflow-hidden shadow-xl aspect-[16/9] border-2 border-white/5 group">
+                            <img src="https://raw.githubusercontent.com/CADDIS-GR/fly-tying-archive/main/images/IMG_4447.jpg" 
+                                 alt="Soft Hackle Wet Fly Selection" 
+                                 class="clickable-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                                 onerror="this.src='https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=800';">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 p-10 bg-white/5 rounded-[2.5rem] border border-white/5 shadow-inner">
+                            <div class="space-y-4">
+                                <h5 class="text-xs font-black uppercase tracking-[0.3em] text-emerald-400 flex items-center gap-2">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i> Technical Spec
+                                </h5>
+                                <p class="text-sm text-slate-300 leading-relaxed font-light">
+                                    작은 <strong class="text-white font-bold">유리구슬</strong>로 송어의 호기심을 자극하고 유인하며, 
+                                    정교한 비중 조절로 원하는 수심층을 공략합니다.
+                                </p>
+                            </div>
+                            <div class="space-y-4">
+                                <h5 class="text-xs font-black uppercase tracking-[0.3em] text-emerald-400 flex items-center gap-2">
+                                    <i data-lucide="palette" class="w-4 h-4"></i> Motion Strategy
+                                </h5>
+                                <p class="text-sm text-slate-300 leading-relaxed font-light">
+                                    부드럽게 팔랑거리는 <strong class="text-white font-bold">Soft Hackle Wet Fly</strong>. 
+                                    작고 부드러운 움직임으로 수중에서 마치 살아있는 실사를 구현합니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signature Footer -->
+        <footer class="bg-gradient-to-br from-slate-900 via-slate-950 to-black rounded-[3rem] p-16 md:p-24 relative overflow-hidden shadow-2xl border border-white/5">
+            <div class="absolute top-0 right-0 p-12 opacity-5 transform translate-x-1/4 -translate-y-1/4">
+                <i data-lucide="trophy" class="w-96 h-96"></i>
+            </div>
+            <div class="relative z-10 max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8">
+                        <div class="inline-block bg-emerald-400/10 p-6 rounded-full border border-emerald-400/20">
+                            <i data-lucide="heart" class="text-emerald-400 w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-4xl md:text-5xl font-black text-white leading-tight">
+                            낚시대장의<br>
+                            <span class="text-emerald-400">섬세함 이야기</span>
+                        </h3>
+                        <p class="text-lg text-slate-400 leading-relaxed">
+                            "모던과 클래식의 조합으로, Vision Onki와 Hardy Marquis를 조합하여 
+                            최대한의 낚시 감성을 끌어올려 보았습니다. 
+                            예전에 언급한 것처럼 <span class="text-emerald-400 font-semibold">"낚시, 그 태도를 바꾸는 장비!!"</span> 
+                            이지 않을까 싶습니다."
+                        </p>
+                    </div>
+                    <div class="space-y-6 p-10 bg-white/5 rounded-3xl border border-white/5">
+                        <h4 class="text-xl font-bold text-emerald-400 uppercase tracking-wider">
+                            Key Moments
+                        </h4>
+                        <div class="space-y-4 text-slate-300">
+                            <div class="flex items-start gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-emerald-400 flex-shrink-0"></div>
+                                <p class="text-sm leading-relaxed">오랜 숙고와 테스트를 통한 최적 조합 발견</p>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-emerald-400 flex-shrink-0"></div>
+                                <p class="text-sm leading-relaxed">소프트 해클 웨트와 마이크로 님핑 최적화</p>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-emerald-400 flex-shrink-0"></div>
+                                <p class="text-sm leading-relaxed">부드럽고 섬세한 피네스피싱 완성</p>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-emerald-400 flex-shrink-0"></div>
+                                <p class="text-sm leading-relaxed">관리형낚시터 최적화 세팅 구현</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <div class="mt-16 text-center text-slate-600 text-[10px] tracking-[0.4em] uppercase font-black">
+            © 2026 The Ultimate Finesse v2.0 - Vision Onki Special Edition by 낚시대장 & Jeff
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-close" onclick="closeLightbox()">×</div>
+        <img id="lightbox-img" class="lightbox-content" src="" alt="Enlarged view">
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Lightbox functionality
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Add click event to all clickable images
+        document.addEventListener('DOMContentLoaded', function() {
+            const clickableImages = document.querySelectorAll('.clickable-image');
+            clickableImages.forEach(img => {
+                img.addEventListener('click', function() {
+                    openLightbox(this.src);
+                });
+            });
+
+            // Close lightbox when clicking outside the image
+            document.getElementById('lightbox').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+
+            // Close lightbox with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            });
+        });
+    </script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

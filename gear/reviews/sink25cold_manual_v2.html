@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonar Sink 25 Cold - 낚시대장 전용 매뉴얼 v2 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f0f6ff; color: #1e293b; }
+        /* 헤더 대형 타이틀 전용 */
+        .bebas { font-family: 'Bebas Neue', sans-serif; }
+        /* 숫자/영문 스펙 수치 */
+        .serif-display { font-family: 'DM Serif Display', serif; }
+        /* 코드/태그용 모노 */
+        .mono { font-family: 'DM Mono', monospace; }
+
+        @keyframes ripple {
+            0% { transform: scaleX(1); opacity: 0.6; }
+            50% { transform: scaleX(1.03); opacity: 1; }
+            100% { transform: scaleX(1); opacity: 0.6; }
+        }
+        .ripple { animation: ripple 3s ease-in-out infinite; }
+
+        @keyframes sinkLine {
+            0% { stroke-dashoffset: 300; opacity: 0; }
+            30% { opacity: 1; }
+            100% { stroke-dashoffset: 0; opacity: 1; }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(60px) scale(0.3); opacity: 0; }
+        }
+
+        .glow-blue { box-shadow: 0 0 24px rgba(59, 130, 246, 0.15); }
+        .text-glow { text-shadow: 0 2px 12px rgba(37, 99, 235, 0.2); }
+
+        .grid-bg {
+            background-color: #f0f6ff;
+            background-image: linear-gradient(rgba(59,130,246,0.07) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(59,130,246,0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .hover-card {
+            transition: all 0.25s ease;
+            border: 1px solid rgba(59,130,246,0.15);
+        }
+        .hover-card:hover {
+            border-color: rgba(59,130,246,0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(59,130,246,0.12);
+        }
+
+        .tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .phase-line::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, #3b82f6, transparent);
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse-badge { animation: pulse-badge 2s ease-in-out infinite; }
+
+        @keyframes converge {
+            0% { opacity: 0; stroke-dashoffset: 150; }
+            100% { opacity: 1; stroke-dashoffset: 0; }
+        }
+        .converge-line {
+            stroke-dasharray: 150;
+            stroke-dashoffset: 150;
+            animation: converge 1.5s ease-out forwards;
+        }
+        .converge-line-2 { animation-delay: 0.3s; }
+        .converge-line-3 { animation-delay: 0.6s; }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="min-h-screen archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/sink25cold_manual_v2.html" target="_blank" rel="noopener">원본 저장소</a></div>
+<div id="root"></div>
+
+<script type="text/babel">
+
+const Tag = ({ children, color = "blue" }) => {
+    const colors = {
+        blue: "bg-blue-100 text-blue-700 border border-blue-300",
+        red: "bg-red-100 text-red-700 border border-red-300",
+        amber: "bg-amber-100 text-amber-700 border border-amber-300",
+        slate: "bg-slate-100 text-slate-600 border border-slate-300",
+        green: "bg-emerald-100 text-emerald-700 border border-emerald-300",
+    };
+    return <span className={`tag ${colors[color]}`}>{children}</span>;
+};
+
+// 수중 형태 수렴 SVG 다이어그램
+const ConvergeDiagram = () => (
+    <svg viewBox="0 0 520 200" className="w-full max-w-2xl mx-auto" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="170" x2="520" y2="170" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 4"/>
+        <text x="8" y="185" fill="#94a3b8" fontSize="9" fontFamily="DM Mono">BOTTOM 6m</text>
+        <text x="10" y="20" fill="#94a3b8" fontSize="10" fontFamily="DM Mono">CAST (18m)</text>
+        <text x="215" y="20" fill="#94a3b8" fontSize="10" fontFamily="DM Mono">MID</text>
+        <text x="400" y="20" fill="#ef4444" fontSize="10" fontFamily="DM Mono" fontWeight="bold">KILLZONE →</text>
+        <path d="M 20,30 Q 80,160 140,165 Q 240,168 340,155 Q 400,148 460,110" 
+              stroke="#3b82f6" strokeWidth="2" fill="none" strokeDasharray="6 3"
+              className="converge-line"/>
+        <text x="22" y="44" fill="#2563eb" fontSize="9" fontFamily="DM Mono">SINK 25</text>
+        <path d="M 20,30 Q 100,100 180,155 Q 260,170 340,158 Q 400,150 460,112"
+              stroke="#7c3aed" strokeWidth="2" fill="none"
+              className="converge-line converge-line-2"/>
+        <text x="22" y="56" fill="#7c3aed" fontSize="9" fontFamily="DM Mono">TITAN 3D</text>
+        <path d="M 20,30 L 100,90 L 200,148 L 300,162 L 380,164 L 460,114"
+              stroke="#059669" strokeWidth="2" fill="none" strokeDasharray="3 3"
+              className="converge-line converge-line-3"/>
+        <text x="22" y="68" fill="#059669" fontSize="9" fontFamily="DM Mono">DI5</text>
+        <rect x="420" y="90" width="80" height="75" rx="4" fill="rgba(239,68,68,0.06)" stroke="#ef4444" strokeWidth="1" strokeDasharray="3 2"/>
+        <text x="430" y="138" fill="#ef4444" fontSize="8" fontFamily="DM Mono">수렴구간</text>
+        <line x1="420" y1="10" x2="420" y2="175" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3 3"/>
+        <circle cx="440" cy="120" r="4" fill="#ef4444" opacity="0.8"/>
+        <circle cx="455" cy="112" r="4" fill="#ef4444" opacity="0.8"/>
+        <circle cx="448" cy="108" r="4" fill="#ef4444" opacity="0.8"/>
+    </svg>
+);
+
+// 단거리 운용 SVG
+const ShortCastDiagram = () => (
+    <svg viewBox="0 0 420 180" className="w-full max-w-xl mx-auto" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 0,25 Q 105,20 210,25 Q 315,30 420,25" stroke="#93c5fd" strokeWidth="1.5" fill="none" className="ripple"/>
+        <text x="8" y="18" fill="#94a3b8" fontSize="9" fontFamily="DM Mono">SURFACE</text>
+        <line x1="0" y1="155" x2="420" y2="155" stroke="#cbd5e1" strokeWidth="1.5"/>
+        <text x="8" y="168" fill="#94a3b8" fontSize="9" fontFamily="DM Mono">BOTTOM 6m</text>
+        <path d="M 380,30 Q 280,80 180,145 Q 120,152 60,140 Q 30,132 15,100"
+              stroke="#93c5fd" strokeWidth="1.5" fill="none" opacity="0.4" strokeDasharray="5 4"/>
+        <text x="295" y="28" fill="#93c5fd" fontSize="8" fontFamily="DM Mono" opacity="0.6">18m (기존)</text>
+        <path d="M 250,30 Q 210,60 185,140 Q 165,152 120,150 Q 80,148 50,125"
+              stroke="#2563eb" strokeWidth="2.5" fill="none"
+              className="converge-line"/>
+        <text x="212" y="28" fill="#1d4ed8" fontSize="9" fontFamily="DM Mono" fontWeight="bold">10~12m</text>
+        <rect x="155" y="140" width="55" height="14" rx="3" fill="rgba(37,99,235,0.1)" stroke="#3b82f6" strokeWidth="0.8"/>
+        <text x="158" y="150" fill="#2563eb" fontSize="8" fontFamily="DM Mono">+카운트</text>
+        <rect x="10" y="105" width="55" height="50" rx="4" fill="rgba(239,68,68,0.07)" stroke="#ef4444" strokeWidth="1" strokeDasharray="3 2"/>
+        <text x="14" y="128" fill="#ef4444" fontSize="8" fontFamily="DM Mono">KILL</text>
+        <text x="14" y="140" fill="#ef4444" fontSize="8" fontFamily="DM Mono">ZONE</text>
+        <path d="M 38,148 L 38,118" stroke="#d97706" strokeWidth="1.5" markerEnd="url(#arrow)"/>
+        <defs>
+            <marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M 0,0 L 6,3 L 0,6 Z" fill="#d97706"/>
+            </marker>
+        </defs>
+        <text x="42" y="136" fill="#d97706" fontSize="8" fontFamily="DM Mono">수직↑</text>
+        <circle cx="395" cy="22" r="5" fill="#94a3b8"/>
+        <line x1="395" y1="27" x2="395" y2="45" stroke="#94a3b8" strokeWidth="1.5"/>
+        <line x1="385" y1="33" x2="405" y2="33" stroke="#94a3b8" strokeWidth="1.5"/>
+        <line x1="385" y1="45" x2="395" y2="45" stroke="#94a3b8" strokeWidth="1.5"/>
+        <line x1="405" y1="45" x2="395" y2="45" stroke="#94a3b8" strokeWidth="1.5"/>
+    </svg>
+);
+
+const App = () => {
+    const [activePhase, setActivePhase] = React.useState(null);
+
+    const phases = [
+        {
+            id: 0,
+            label: "PHASE 0",
+            time: "투척 직후",
+            title: "패턴 확인 선행",
+            desc: "먼저 기존 방법론(18m + 30카운트 + 8자 리트리브)으로 시작. 발앞 집중 패턴이 확인될 때까지 Titan 3D 메인 운용.",
+            color: "slate",
+            dot: "#64748b"
+        },
+        {
+            id: 1,
+            label: "PHASE 1",
+            time: "투입 결정",
+            title: "발앞 집중 확인 → Sink 25 투입",
+            desc: "입질 70~90%가 발앞 5m 이내로 집중되는 것이 확인되면 Sink 25 Cold로 전환. 10~12m 단거리 캐스팅.",
+            color: "blue",
+            dot: "#3b82f6"
+        },
+        {
+            id: 2,
+            label: "PHASE 2",
+            time: "착수 후",
+            title: "추가 카운트 부여",
+            desc: "헤드(25ft ≈ 7.6m)가 급속 착저. 기존보다 5~10카운트 추가. 10m 거리에서 바닥 접촉이 18m보다 훨씬 빠르게 완료됨.",
+            color: "blue",
+            dot: "#60a5fa"
+        },
+        {
+            id: 3,
+            label: "PHASE 3",
+            time: "리트리브",
+            title: "느린 8자 리트리브",
+            desc: "기존과 동일한 느린 8자. 10m 단거리이므로 리트리브 시작부터 바닥 훑기 상태. 발앞에서 수직 상승각 자연 발생.",
+            color: "amber",
+            dot: "#f59e0b"
+        },
+        {
+            id: 4,
+            label: "RESULT",
+            time: "예상 결과",
+            title: "더 좋거나 / 꼭 같거나",
+            desc: "어느 쪽이든 손해 없음. '더 좋다' → 새로운 무기. '같다' → 기존 방법론의 강력한 검증 데이터 확보.",
+            color: "green",
+            dot: "#10b981"
+        }
+    ];
+
+    return (
+        <div className="min-h-screen grid-bg">
+            {/* 헤더 */}
+            <header className="max-w-5xl mx-auto px-6 pt-16 pb-10">
+                <div className="flex items-start justify-between mb-6">
+                    <div>
+                        <div className="flex items-center gap-3 mb-3">
+                            <Tag color="blue">Scientific Anglers</Tag>
+                            <Tag color="slate">200gr / 6-7wt</Tag>
+                            <span className="tag bg-red-100 text-red-600 border border-red-300 pulse-badge">v2 Updated</span>
+                        </div>
+                        <h1 className="leading-none mb-2">
+                            <span className="bebas text-5xl md:text-6xl text-glow text-slate-900 tracking-wide">SONAR SINK 25</span>
+                            <span className="bebas text-5xl md:text-6xl text-blue-600"> COLD</span>
+                        </h1>
+                        <p className="mono text-slate-500 text-sm tracking-widest uppercase">
+                            Sub-Line Protocol for Han-teo Deep Bottom System
+                        </p>
+                    </div>
+                    <div className="hidden md:block text-right">
+                        <div className="mono text-xs text-slate-400 mb-1">SINK RATE</div>
+                        <div className="serif-display text-6xl text-blue-600 leading-none">4~8</div>
+                        <div className="mono text-xs text-slate-400">ips</div>
+                    </div>
+                </div>
+
+                {/* 핵심 포지션 변경 알림 */}
+                <div className="bg-amber-50 border border-amber-300 rounded-2xl p-5 mt-6">
+                    <div className="flex items-start gap-3">
+                        <div className="mono text-xs text-amber-700 bg-amber-100 border border-amber-300 px-2 py-1 rounded shrink-0 mt-0.5">REVISED</div>
+                        <div>
+                            <p className="text-amber-800 font-bold text-sm mb-1">포지션 재정의 — v1 → v2</p>
+                            <p className="text-amber-700 text-xs leading-relaxed">
+                                <span className="line-through opacity-50">v1: "버티컬 지깅 / 부교 위 Deep Lining" 독립 운용</span><br/>
+                                <span>v2: 바닥권 풀싱킹 체계의 서브 라인 — Titan 3D 메인 운용 중 발앞 집중 패턴 확인 후 단거리 투입</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div className="max-w-5xl mx-auto px-6 space-y-10 pb-20">
+
+                {/* 라인 프로파일 이미지 섹션 */}
+                <section className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+                    <div className="bg-slate-800 px-6 py-4 flex items-center justify-between">
+                        <h2 className="text-white font-bold text-sm flex items-center gap-2">
+                            <span className="mono text-blue-400">◈</span> Line Taper &amp; Sink Profile
+                        </h2>
+                        <div className="flex gap-2">
+                            <span className="mono text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded">COLD</span>
+                            <span className="mono text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded">25ft Head</span>
+                        </div>
+                    </div>
+                    <div className="p-6 md:p-8 flex flex-col items-center">
+                        {/* 키워드 배지 */}
+                        <div className="flex flex-wrap justify-center gap-3 mb-6">
+                            {[
+                                { label: "Condition", value: "COLD", bg: "bg-blue-50", border: "border-blue-200", tc: "text-blue-800", lc: "text-blue-500" },
+                                { label: "Engine", value: "25ft HEAD", bg: "bg-slate-50", border: "border-slate-200", tc: "text-slate-800", lc: "text-slate-500" },
+                                { label: "Target", value: "DIRTY", bg: "bg-amber-50", border: "border-amber-200", tc: "text-amber-800", lc: "text-amber-600" },
+                                { label: "Application", value: "DEEP LINING", bg: "bg-indigo-50", border: "border-indigo-200", tc: "text-indigo-800", lc: "text-indigo-500" },
+                            ].map(b => (
+                                <div key={b.label} className={`flex flex-col items-center px-4 py-2 ${b.bg} border ${b.border} rounded-xl shadow-sm`}>
+                                    <span className={`mono text-xs ${b.lc} font-bold uppercase`}>{b.label}</span>
+                                    <span className={`serif-display text-lg font-bold ${b.tc}`}>{b.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                        {/* 프로파일 이미지 */}
+                        <img
+                            src="https://lh3.googleusercontent.com/pw/AP1GczM0eERiAR_llI6xmcQ2Rx0YmnyrboaFTmyULo_7TQAPEz-pE9hOJ7yfntadR6mv_NEkOT2yw3tkFy2RQWnhMqMSSDnmYL8_GcdvSfq4jQc58LOh6kgRxZKUIxXC5_iJlkPGGSiJPALGG-DNsc1y45baUA=w1000-h375-s-no-gm?authuser=0"
+                            alt="Sonar Sink 25 Cold Line Profile"
+                            className="max-w-full h-auto rounded-lg mb-6 shadow-sm"
+                        />
+                        {/* 범례 */}
+                        <div className="flex flex-wrap justify-center gap-4 text-xs">
+                            {[
+                                { color: "bg-yellow-400", label: "Floating Running Line" },
+                                { color: "bg-orange-400", label: "Large Diameter Handling Section" },
+                                { color: "bg-slate-700", label: "25ft Extra-Fast Sinking Head" },
+                            ].map(l => (
+                                <div key={l.label} className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full">
+                                    <span className={`w-2 h-2 rounded-full ${l.color} shrink-0`}></span>
+                                    <span className="mono text-slate-500">{l.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 라인 스펙 요약 */}
+                <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {[
+                        { label: "Head Length", value: "25ft", sub: "≈ 7.6m" },
+                        { label: "Running Line", value: "Float", sub: "→ 정지수 침하" },
+                        { label: "Sink Rate", value: "4~8", sub: "ips / Super Fast" },
+                        { label: "Grain", value: "200gr", sub: "6-7wt" },
+                    ].map(item => (
+                        <div key={item.label} className="hover-card bg-white rounded-xl p-4 text-center shadow-sm">
+                            <div className="mono text-xs text-slate-400 uppercase mb-1">{item.label}</div>
+                            <div className="serif-display text-3xl text-blue-600">{item.value}</div>
+                            <div className="mono text-xs text-slate-500">{item.sub}</div>
+                        </div>
+                    ))}
+                </section>
+
+                {/* 정지수 수렴 분석 */}
+                <section className="bg-white rounded-3xl p-6 md:p-8 glow-blue border border-blue-200 shadow-sm">
+                    <div className="flex items-center gap-3 mb-2">
+                        <Tag color="blue">Key Insight</Tag>
+                        <h2 className="font-black text-slate-900 text-xl">정지수에서의 수렴 현상</h2>
+                    </div>
+                    <p className="text-slate-500 text-sm mb-6 leading-relaxed">
+                        강계와 달리 <strong className="text-slate-800">물 흐름이 없는 정지수(한터지)</strong>에서는 플로팅 러닝라인도 결국 침하됩니다.
+                        초기 형태는 달라도, <strong className="text-blue-700">발앞 입질 구간에서는 모든 라인이 사선 바닥 끌기로 수렴</strong>합니다.
+                    </p>
+                    <ConvergeDiagram />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 text-xs">
+                        <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-lg p-3">
+                            <div className="w-8 shrink-0" style={{borderTop: '2px dashed #3b82f6'}}></div>
+                            <span className="text-slate-600">Sink 25: 헤드 급강하 → 러닝 사선 침하</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-violet-50 border border-violet-100 rounded-lg p-3">
+                            <div className="w-8 shrink-0" style={{borderTop: '2px solid #7c3aed'}}></div>
+                            <span className="text-slate-600">Titan 3D: i/3/5 단계적 U자</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                            <div className="w-8 shrink-0" style={{borderTop: '2px dashed #059669'}}></div>
+                            <span className="text-slate-600">DI5: 균일 직선 침하</span>
+                        </div>
+                    </div>
+                    <div className="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                        <span className="mono text-red-600 text-xs">→ 발앞 5m 킬존에서 세 라인 모두 동일한 사선 바닥 끌기로 수렴 — 조과 동일</span>
+                    </div>
+                </section>
+
+                {/* 로테이션 인벤토리 */}
+                <section>
+                    <div className="flex items-center gap-3 mb-4">
+                        <Tag color="slate">System</Tag>
+                        <h2 className="font-black text-slate-900 text-xl">풀싱킹 인벤토리 포지셔닝</h2>
+                    </div>
+                    <div className="space-y-3">
+                        {[
+                            { rank: "MAIN", name: "SA Sonar Titan 3D i/3/5 WF6S", role: "기본값 / 항상", color: "blue", note: "메인 운용" },
+                            { rank: "SUB A", name: "SA Sonar Sink 25 Cold 200gr", role: "발앞 집중 패턴 확인 후 단거리 투입", color: "amber", note: "← 이 라인" },
+                            { rank: "SUB B", name: "Airflo Sixth Sense 2 DI5", role: "Titan 3D 대비 균일침하 비교 검증", color: "slate", note: "" },
+                            { rank: "SUB C", name: "SA Sonar Stillwater Parabolic S3/S5/S3 WF5S", role: "중층 활성 전환 타이밍", color: "slate", note: "" },
+                            { rank: "MID", name: "RIO Elite Sub-Surface CamoLux WF5I", role: "중층 전담 / 별도 채비 1~2.5m", color: "green", note: "" },
+                        ].map(item => (
+                            <div key={item.rank} className={`hover-card rounded-xl p-4 flex items-center gap-4 ${item.note ? 'bg-blue-50 border-blue-200' : 'bg-white'} shadow-sm`}>
+                                <div className={`mono text-xs shrink-0 w-14 text-center py-1 rounded ${
+                                    item.color === 'blue' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
+                                    item.color === 'amber' ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                                    item.color === 'green' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                                    'bg-slate-100 text-slate-500 border border-slate-200'
+                                }`}>{item.rank}</div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="text-slate-800 text-sm font-bold truncate">{item.name}</div>
+                                    <div className="text-slate-400 text-xs mt-0.5">{item.role}</div>
+                                </div>
+                                {item.note && <span className="mono text-xs text-amber-700 bg-amber-100 border border-amber-200 px-2 py-1 rounded shrink-0">{item.note}</span>}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 실전 투입 프로토콜 */}
+                <section className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Tag color="red">Protocol</Tag>
+                        <h2 className="font-black text-slate-900 text-xl">한터지 실전 투입 프로토콜</h2>
+                    </div>
+
+                    <div className="mb-8">
+                        <ShortCastDiagram />
+                        <p className="text-center mono text-xs text-slate-400 mt-2">10~12m 단거리 + 추가 카운트 → 발앞 킬존 집중 공략</p>
+                    </div>
+
+                    <div className="relative pl-10 phase-line space-y-6">
+                        {phases.map((phase) => (
+                            <div
+                                key={phase.id}
+                                className={`relative cursor-pointer transition-all duration-200 ${activePhase === phase.id ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`}
+                                onClick={() => setActivePhase(activePhase === phase.id ? null : phase.id)}
+                            >
+                                <div
+                                    className="absolute -left-[29px] top-1 w-4 h-4 rounded-full border-2 border-white shadow z-10"
+                                    style={{ background: phase.dot }}
+                                />
+                                <div className={`rounded-xl p-4 border transition-all ${activePhase === phase.id ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-slate-50'}`}>
+                                    <div className="flex items-center gap-3 mb-1">
+                                        <span className="mono text-xs font-bold" style={{color: phase.dot}}>{phase.label}</span>
+                                        <span className="mono text-xs text-slate-400">{phase.time}</span>
+                                    </div>
+                                    <div className="font-bold text-slate-800 text-sm">{phase.title}</div>
+                                    {activePhase === phase.id && (
+                                        <p className="text-slate-600 text-xs mt-2 leading-relaxed">{phase.desc}</p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="mono text-xs text-slate-400 text-center mt-4">↑ 각 단계 클릭하면 상세 내용 펼쳐집니다</p>
+                </section>
+
+                {/* 기하학적 근거 */}
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="hover-card bg-white rounded-2xl p-6 shadow-sm">
+                        <Tag color="blue">Why it works</Tag>
+                        <h3 className="font-black text-slate-900 mt-3 mb-2">수직 상승각의 기하학</h3>
+                        <div className="mono text-xs text-slate-500 space-y-2 leading-relaxed">
+                            <p>18m 캐스팅 → 발앞 5m 도달 시점</p>
+                            <p>10m 캐스팅 → 발앞 5m 도달 시점</p>
+                            <div className="border-t border-slate-200 pt-2 mt-2">
+                                <p className="text-blue-600">남은 거리 5m, 수심 6m</p>
+                                <p className="text-blue-600">→ 리트리브 각도 ≈ 동일</p>
+                                <p className="text-amber-600 mt-1">→ 수직 상승 효과 동일하게 발생</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="hover-card bg-white rounded-2xl p-6 shadow-sm">
+                        <Tag color="amber">Advantage</Tag>
+                        <h3 className="font-black text-slate-900 mt-3 mb-2">10m 단거리 운용의 이점</h3>
+                        <div className="space-y-2 text-xs">
+                            {[
+                                ["바닥 훑기 구간", "리트리브 시작부터 전 구간"],
+                                ["사이클 속도", "짧아서 회전수 증가"],
+                                ["착저 속도", "헤드 급강하 → 추가 카운트 불필요"],
+                                ["수직 상승각", "18m 방법론과 동일"],
+                            ].map(([k, v]) => (
+                                <div key={k} className="flex justify-between items-center py-1 border-b border-slate-100">
+                                    <span className="text-slate-500">{k}</span>
+                                    <span className="mono text-blue-600 text-xs">{v}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Sink 25 고유 특성 — 유지 */}
+                <section className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                    <div className="flex items-center gap-3 mb-5">
+                        <Tag color="slate">Original Identity</Tag>
+                        <h2 className="font-black text-slate-900 text-xl">Sink 25만의 고유 특성</h2>
+                        <span className="mono text-xs text-slate-400">(v1에서 유지)</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {[
+                            { icon: "⚡", title: "Deep & Quick", desc: "25ft 헤드가 수직에 가깝게 급강하. 폴링 입질 유발 가능성 가장 높은 라인." },
+                            { icon: "🎯", title: "폴링 입질 특화", desc: "헤드 낙하 속도가 빠른 만큼, 착수 직후 폴링 구간에서 쾅 입질이 발생할 수 있음." },
+                            { icon: "📐", title: "사선 수렴 메커니즘", desc: "플로팅 러닝라인이 정지수에서 침하되면, DI5보다 미묘하게 유리한 사선각 형성." },
+                        ].map(item => (
+                            <div key={item.title} className="hover-card bg-slate-50 rounded-xl p-5">
+                                <div className="text-2xl mb-3">{item.icon}</div>
+                                <h4 className="font-bold text-slate-800 text-sm mb-2">{item.title}</h4>
+                                <p className="text-slate-500 text-xs leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 사용 후기 — 비워둠 */}
+                <section className="border-2 border-dashed border-slate-300 rounded-3xl p-8 text-center bg-white/50">
+                    <div className="mono text-slate-400 text-xs uppercase tracking-widest mb-3">Field Report</div>
+                    <h2 className="font-black text-3xl text-slate-300 mb-2">사용 후기</h2>
+                    <p className="mono text-slate-400 text-sm">경험 축적 후 업데이트 예정</p>
+                    <div className="flex justify-center gap-2 mt-4">
+                        {['세션 1', '세션 2', '세션 3'].map(s => (
+                            <div key={s} className="w-16 h-8 rounded bg-slate-100 border border-slate-200 flex items-center justify-center">
+                                <span className="mono text-xs text-slate-400">{s}</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 제조사 vs 낚시대장 에피소드 */}
+                <section className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+                    {/* 배경 워터마크 */}
+                    <div className="absolute right-4 top-4 text-8xl opacity-5 select-none pointer-events-none">🎣</div>
+
+                    <div className="flex items-center gap-3 mb-5">
+                        <Tag color="slate">Side Story</Tag>
+                        <h2 className="font-black text-slate-900 text-lg">제조사 vs 낚시대장</h2>
+                        <span className="text-lg">😄</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* 제조사 의도 */}
+                        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xl">🏭</span>
+                                <span className="font-bold text-slate-700 text-sm">SA가 상정한 유저</span>
+                            </div>
+                            <div className="space-y-2 text-xs text-slate-600 leading-relaxed">
+                                <p>📍 <strong>장소:</strong> 광활한 호수 (Lake)</p>
+                                <p>🚤 <strong>방식:</strong> 보팅으로 이리저리 이동</p>
+                                <p>🏔️ <strong>타겟:</strong> 협곡·브레이크라인 안쪽 급심 구간</p>
+                                <p>⚡ <strong>액션:</strong> 짧고 빠르게 투입 → Hang 위주 지깅</p>
+                            </div>
+                            <div className="mt-3 pt-3 border-t border-slate-100">
+                                <p className="mono text-xs text-slate-400 italic">"SA에 직접 문의해서 확인한 공식 답변"</p>
+                            </div>
+                        </div>
+
+                        {/* 낚시대장의 실제 */}
+                        <div className="bg-blue-600 rounded-2xl p-5 shadow-sm relative overflow-hidden">
+                            <div className="absolute -right-4 -bottom-4 text-6xl opacity-10 select-none">🎯</div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-xl">🎣</span>
+                                <span className="font-bold text-white text-sm">낚시대장의 실제 용도</span>
+                            </div>
+                            <div className="space-y-2 text-xs text-blue-100 leading-relaxed">
+                                <p>📍 <strong className="text-white">장소:</strong> 한터낚시터 관리형 저수지</p>
+                                <p>🦺 <strong className="text-white">방식:</strong> 부교 위 도보 캐스팅</p>
+                                <p>🐟 <strong className="text-white">타겟:</strong> 수심 6m 바닥권 송어</p>
+                                <p>🔄 <strong className="text-white">액션:</strong> 10~12m 단거리 + 느린 8자 리트리브</p>
+                            </div>
+                            <div className="mt-3 pt-3 border-t border-blue-500">
+                                <p className="mono text-xs text-blue-300 italic">"51마리로 검증 완료 ✓"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 결론 */}
+                    <div className="mt-4 bg-white/70 rounded-xl p-4 border border-slate-200 text-center">
+                        <p className="text-slate-600 text-sm leading-relaxed">
+                            구매 동기는 오래도록 떠있는 <span className="line-through text-slate-400">"싱킹팁"</span>은 오해였지만 —
+                        </p>
+                        <p className="font-black text-slate-900 text-sm mt-1">
+                            어쨌든 둘 다 핵심은 <span className="text-blue-600">"짧게, 빠르게, 깊게"</span> 🎯
+                        </p>
+                        <p className="mono text-xs text-slate-400 mt-2">필드에서 직접 개척한 용도 — 스펙시트보다 단단한 근거</p>
+                    </div>
+                </section>
+
+            </div>
+
+            <footer className="max-w-5xl mx-auto px-6 pb-10">
+                <div className="flex items-center justify-between mb-3">
+                    <span className="mono text-xs text-slate-400 uppercase tracking-widest">CADDIS-GR · 낚시대장</span>
+                    <span className="mono text-xs text-slate-300">v2 · 2025.03</span>
+                </div>
+                <div className="border-t border-slate-200 pt-3 flex items-center gap-2">
+                    <span className="mono text-xs text-slate-400 uppercase tracking-widest shrink-0">참고 (v1)</span>
+                    <span className="text-slate-300 text-xs">→</span>
+                    <a
+                        href="../../gear/reviews/260108_sonar_sink_manual.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mono text-xs text-blue-500 hover:text-blue-700 hover:underline transition-colors truncate"
+                    >
+                        caddis-gr.github.io/fishing-gear/reviews/260108_sonar_sink_manual.html
+                    </a>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

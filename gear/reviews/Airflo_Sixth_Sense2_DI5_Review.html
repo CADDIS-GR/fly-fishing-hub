@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airflo Sixth Sense 2 DI5 — 낚시대장 리뷰 · CADDIS-GR LAB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal:#0d9488; --teal-light:#5eead4; --teal-dark:#0f766e;
+            --navy:#212121; --navy-mid:#2a2a2a;
+            --slate:#475569; --muted:#94a3b8; --bg:#f8fafc; --white:#ffffff;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--navy);line-height:1.7;}
+
+        /* 히어로 */
+        .hero{background:var(--navy);position:relative;overflow:hidden;padding:80px 24px 60px;}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(13,148,136,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 20% 80%,rgba(13,148,136,.06) 0%,transparent 60%);}
+        .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(13,148,136,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(13,148,136,.04) 1px,transparent 1px);background-size:48px 48px;}
+        .hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1;}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,.2);border:1px solid rgba(13,148,136,.4);color:var(--teal-light);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:24px;}
+        .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal-light);border-radius:50%;animation:blink 2s ease-in-out infinite;}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+        .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,96px);color:var(--white);line-height:.95;letter-spacing:2px;margin-bottom:8px;}
+        .hero h1 span{color:var(--teal-light);}
+        .hero-sub{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;}
+        .hero-specs{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;}
+        .hero-spec{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;text-align:center;}
+        .hero-spec-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:2px;}
+        .hero-spec-value{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal-light);letter-spacing:1px;}
+
+        /* 공통 */
+        .container{max-width:960px;margin:0 auto;padding:0 24px;}
+        .section{padding:64px 0;}
+        .section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-dark);background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.2);display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:12px;}
+        .section-title{font-weight:900;font-size:clamp(22px,4vw,32px);color:var(--navy);margin-bottom:8px;line-height:1.2;}
+        .section-desc{color:var(--slate);font-size:15px;margin-bottom:40px;max-width:600px;}
+        .divider{height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);}
+
+        /* 첫인상 */
+        .first-impression{background:var(--navy);padding:64px 0;position:relative;overflow:hidden;}
+        .first-impression::before{content:'"';font-family:'DM Serif Display',serif;font-size:400px;color:rgba(13,148,136,.04);position:absolute;top:-80px;left:-20px;line-height:1;pointer-events:none;}
+        .quote-block{border-left:3px solid var(--teal);padding:24px 32px;background:rgba(13,148,136,.08);border-radius:0 12px 12px 0;margin-bottom:24px;}
+        .quote-text{font-weight:700;font-size:clamp(20px,3vw,28px);color:var(--white);line-height:1.4;margin-bottom:8px;}
+        .quote-attr{font-family:'DM Mono',monospace;font-size:11px;color:var(--teal-light);letter-spacing:.1em;}
+        .impression-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px;}
+        .impression-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;transition:all .25s ease;}
+        .impression-card:hover{border-color:rgba(13,148,136,.4);background:rgba(13,148,136,.08);transform:translateY(-3px);}
+        .impression-icon{font-size:28px;margin-bottom:12px;}
+        .impression-title{font-weight:700;color:var(--white);font-size:14px;margin-bottom:6px;}
+        .impression-desc{color:var(--muted);font-size:13px;line-height:1.6;}
+
+        /* 스펙 */
+        .spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:3px;background:rgba(13,148,136,.1);border-radius:16px;overflow:hidden;border:1px solid rgba(13,148,136,.2);}
+        .spec-item{background:var(--white);padding:20px 24px;transition:background .2s;}
+        .spec-item:hover{background:#f0fdfa;}
+        .spec-key{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;}
+        .spec-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal-dark);letter-spacing:.5px;}
+        .spec-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--slate);margin-top:2px;}
+        .taper-section{background:var(--white);border:1px solid #e2e8f0;border-radius:20px;padding:32px;margin-top:32px;}
+        .taper-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:20px;letter-spacing:.1em;}
+        .taper-bar{display:flex;height:36px;border-radius:8px;overflow:hidden;margin-bottom:12px;}
+        .taper-seg{display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:white;transition:opacity .2s;}
+        .taper-seg:hover{opacity:.85;}
+        .seg-front{background:#0f766e;flex:20} .seg-belly{background:#0d9488;flex:16} .seg-rear{background:#14b8a6;flex:10} .seg-run{background:#cbd5e1;flex:59;color:#64748b;}
+        .taper-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;}
+        .legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--slate);}
+        .legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+        /* 기능 */
+        .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:32px;}
+        .feature-card{border:1px solid #e2e8f0;border-radius:16px;padding:24px;background:var(--white);transition:all .25s ease;position:relative;overflow:hidden;}
+        .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-light));transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+        .feature-card:hover::before{transform:scaleX(1);}
+        .feature-card:hover{border-color:rgba(13,148,136,.3);box-shadow:0 8px 24px rgba(13,148,136,.1);transform:translateY(-2px);}
+        .feature-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--teal);line-height:1;margin-bottom:6px;}
+        .feature-title{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:6px;}
+        .feature-desc{font-size:12px;color:var(--slate);line-height:1.6;}
+
+        /* 갤러리 */
+        .gallery{display:grid;grid-template-columns:2fr 1fr;gap:8px;}
+        .gallery-item{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:zoom-in;}
+        .gallery-bottom{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+        .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+        .gallery-item:hover img{transform:scale(1.04);}
+        .gallery-item::after{content:'🔍';position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:0;transition:opacity .25s ease;}
+        .gallery-item:hover::after{opacity:1;}
+        .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+        .lightbox.active{display:flex;}
+        .lightbox img{max-width:92vw;max-height:88vh;border-radius:12px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,.6);animation:lbIn .25s ease;}
+        @keyframes lbIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+        .lightbox-close{position:absolute;top:20px;right:24px;color:white;font-size:32px;cursor:pointer;opacity:.7;transition:opacity .2s;line-height:1;font-family:'DM Mono',monospace;}
+        .lightbox-close:hover{opacity:1;}
+        .lightbox-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.1em;white-space:nowrap;}
+
+        /* 포지셔닝 */
+        .position-table{width:100%;border-collapse:separate;border-spacing:0 4px;}
+        .position-table tr td{padding:14px 20px;font-size:13px;background:var(--white);border:1px solid #e2e8f0;}
+        .position-table tr td:first-child{border-radius:10px 0 0 10px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;width:80px;text-align:center;}
+        .position-table tr td:last-child{border-radius:0 10px 10px 0;color:var(--slate);}
+        .pos-main td:first-child{background:#0d9488;color:white;border-color:#0d9488;}
+        .pos-highlight td{background:#f0fdfa;border-color:rgba(13,148,136,.3);}
+        .pos-highlight td:first-child{background:#0f766e;color:white;border-color:#0f766e;}
+
+        /* 기대 포인트 */
+        .expect-list{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+        .expect-item{display:flex;gap:16px;align-items:flex-start;padding:20px 24px;background:var(--white);border:1px solid #e2e8f0;border-radius:14px;transition:all .2s ease;}
+        .expect-item:hover{border-color:rgba(13,148,136,.3);box-shadow:0 4px 16px rgba(13,148,136,.08);}
+        .expect-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--teal-light);background:var(--teal-dark);width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding-top:3px;}
+        .expect-content h4{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px;}
+        .expect-content p{font-size:13px;color:var(--slate);line-height:1.6;}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-up{animation:fadeUp .6s ease forwards;opacity:0;}
+        .fade-up:nth-child(1){animation-delay:.1s}.fade-up:nth-child(2){animation-delay:.2s}
+        .fade-up:nth-child(3){animation-delay:.3s}.fade-up:nth-child(4){animation-delay:.4s}
+        .fade-up:nth-child(5){animation-delay:.5s}.fade-up:nth-child(6){animation-delay:.6s}
+
+        /* ── Session Cards ── */
+        .session-cards{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+
+        .session-card{
+            display:grid;
+            grid-template-columns:56px 1fr auto;
+            align-items:center;
+            gap:20px;
+            padding:20px 24px;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:16px;
+            text-decoration:none;
+            color:inherit;
+            transition:all .25s ease;
+            position:relative;
+            overflow:hidden;
+        }
+        .session-card::before{
+            content:'';position:absolute;top:0;left:0;bottom:0;width:3px;
+            background:var(--teal);transform:scaleY(0);transform-origin:bottom;transition:transform .3s ease;
+        }
+        .session-card.done{border-color:rgba(13,148,136,.25);}
+        .session-card.done::before{transform:scaleY(1);}
+        .session-card.done:hover{border-color:rgba(13,148,136,.5);background:rgba(13,148,136,.08);transform:translateX(4px);}
+
+        .session-card.pending{opacity:.4;pointer-events:none;}
+        .session-card.pending::before{background:#475569;transform:scaleY(1);}
+
+        .sc-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--teal-light);line-height:1;letter-spacing:1px;text-align:center;}
+        .session-card.pending .sc-num{color:#334155;}
+
+        .sc-body{display:flex;flex-direction:column;gap:7px;}
+        .sc-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+        .sc-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--teal-light);letter-spacing:.08em;}
+        .session-card.pending .sc-date{color:#334155;}
+        .sc-sep{color:rgba(255,255,255,.15);font-size:11px;}
+        .sc-venue{font-family:'DM Mono',monospace;font-size:11px;color:#64748b;}
+        .sc-tag{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:2px 7px;border-radius:3px;}
+        .sc-tag.t-done{background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:#5eead4;}
+        .sc-tag.t-pending{background:rgba(71,85,105,.2);border:1px solid rgba(71,85,105,.3);color:#475569;}
+        .sc-tag.t-warn{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);color:#fb923c;}
+        .sc-tag.t-question{background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);color:#fbbf24;}
+
+        .sc-summary{font-size:13px;color:#94a3b8;line-height:1.55;}
+        .sc-summary em{color:#5eead4;font-style:normal;font-weight:500;}
+        .session-card.pending .sc-summary{color:#1e293b;}
+
+        .sc-btn{
+            display:flex;align-items:center;gap:6px;
+            font-family:'DM Mono',monospace;font-size:11px;
+            color:var(--teal-light);letter-spacing:.08em;white-space:nowrap;
+            background:rgba(13,148,136,.12);border:1px solid rgba(13,148,136,.3);
+            padding:8px 16px;border-radius:8px;transition:all .2s ease;flex-shrink:0;
+        }
+        .session-card.done:hover .sc-btn{background:rgba(13,148,136,.22);border-color:rgba(13,148,136,.5);}
+
+        /* 푸터 */
+        footer{background:var(--navy);padding:32px 24px;text-align:center;}
+        footer p{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+        footer a{color:var(--teal-light);text-decoration:none;}
+        footer a:hover{text-decoration:underline;}
+
+        @media(max-width:640px){
+            .gallery{grid-template-columns:repeat(2,1fr);}
+            .gallery-item:first-child{grid-column:span 2;}
+            .session-card{grid-template-columns:44px 1fr;}
+            .sc-btn{display:none;}
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/Airflo_Sixth_Sense2_DI5_Review.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- 히어로 -->
+<section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+        <div class="hero-badge">Airflo · PVC Free Since 1984</div>
+        <h1>AIRFLO SIXTH SENSE 2<br><span>WF6·7 DI5</span></h1>
+        <p class="hero-sub">Sinking / Stillwater · Full Sinking Line Review · 낚시대장</p>
+        <div class="hero-specs">
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Sink Rate</span><div class="hero-spec-value">5.0 ips</div></div>
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Head Length</span><div class="hero-spec-value">46ft</div></div>
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Total Length</span><div class="hero-spec-value">105ft</div></div>
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Low Stretch</span><div class="hero-spec-value">6%</div></div>
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Line Weight</span><div class="hero-spec-value">WF6/7</div></div>
+            <div class="hero-spec fade-up"><span class="hero-spec-label">Material</span><div class="hero-spec-value">PU</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- 라인 프로파일 -->
+<section style="background:var(--navy-mid);padding:32px 0;border-bottom:1px solid rgba(13,148,136,.15);">
+    <div class="container">
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Line Taper Profile</p>
+        <img src="https://mayflyoutdoors.com/cdn/shop/files/ss2-sink-taper_0f0c8459-1cd2-4f9d-9624-8bb71ae85d9b.jpg?v=1767970361&width=1800" alt="Airflo Sixth Sense 2 Taper Profile" style="width:100%;height:auto;border-radius:12px;display:block;">
+        <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;">제조사 링크</span>
+            <span style="color:rgba(13,148,136,.3);font-size:12px;">→</span>
+            <a href="https://mayflyoutdoors.com/products/airflo-usa-sixth-sense-2-sinking-fly-lines" target="_blank" rel="noopener" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal-light);text-decoration:none;opacity:.8;overflow-wrap:anywhere;" onmouseover="this.style.opacity='1';this.style.textDecoration='underline'" onmouseout="this.style.opacity='.8';this.style.textDecoration='none'">mayflyoutdoors.com · Airflo Sixth Sense 2 Sinking Fly Lines</a>
+        </div>
+    </div>
+</section>
+
+<!-- 갤러리 -->
+<section style="padding:32px 0 0;">
+    <div class="container">
+        <span class="section-label">Gallery</span>
+        <div class="gallery" style="margin-top:12px;">
+            <div class="gallery-item" onclick="openLightbox(this)"><img src="https://caddis-gr.github.io/fishing-gear/images/ss2/0317-ss01.jpg" alt="Airflo SS2 박스 전면"></div>
+            <div class="gallery-item" onclick="openLightbox(this)"><img src="https://caddis-gr.github.io/fishing-gear/images/ss2/0317-ss02.jpg" alt="테이퍼 다이어그램"></div>
+            <div class="gallery-bottom">
+                <div class="gallery-item" onclick="openLightbox(this)"><img src="https://caddis-gr.github.io/fishing-gear/images/ss2/0317-ss03.jpg" alt="박스 후면"></div>
+                <div class="gallery-item" onclick="openLightbox(this)"><img src="https://caddis-gr.github.io/fishing-gear/images/ss2/0317-ss04.jpg" alt="SS2 스풀"></div>
+                <div class="gallery-item" onclick="openLightbox(this)"><img src="https://caddis-gr.github.io/fishing-gear/images/ss2/0317-ss06.jpg" alt="박스+스풀 전체"></div>
+            </div>
+        </div>
+        <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img id="lightbox-img" src="" alt="">
+            <p class="lightbox-caption" id="lightbox-caption"></p>
+        </div>
+    </div>
+</section>
+
+<!-- 첫인상 -->
+<section class="first-impression" style="margin-top:64px;">
+    <div class="container">
+        <span class="section-label" style="background:rgba(13,148,136,.15);color:var(--teal-light);border-color:rgba(13,148,136,.3);">First Impression</span>
+        <div class="quote-block" style="margin-top:16px;">
+            <p class="quote-text">"엇?!! 안 늘어나네."</p>
+            <p class="quote-attr">— 스트레칭 첫 순간, 낚시대장</p>
+        </div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:32px;max-width:620px;">PVC 라인에 익숙한 탓인지 처음 당겼을 땐 엇!! 했습니다. 일반 PVC 라인이 20~25% 늘어나는 것과 달리, 6% 저신장 PU 소재는 <strong style="color:white;">쫀쫀하고, 딴딴한 느낌</strong>이었습니다. 초기 코일링도 미지근한 온수와 여러 번의 스트레칭으로 해결할 수 있었습니다.</p>
+        <div class="impression-cards">
+            <div class="impression-card"><div class="impression-icon">💪</div><div class="impression-title">강하다는 첫 느낌</div><div class="impression-desc">늘어나지 않으니 손에 오는 감각이 "단단하고 강하다". PVC와는 완전히 다른 물성.</div></div>
+            <div class="impression-card"><div class="impression-icon">🌀</div><div class="impression-title">초기 코일링 주의</div><div class="impression-desc">PU 소재 특성상 코일 메모리가 강함. 미지근한 온수 + 지긋이 당기기 3~4회로 해결.</div></div>
+            <div class="impression-card"><div class="impression-icon">🎯</div><div class="impression-title">낮은 연신률의 기대</div><div class="impression-desc">훅셋 에너지 손실 최소화, 빈 입질 판별력 향상 — 18m 거리에서도 어떻게 나타날지 가장 기대되는 지점.</div></div>
+            <div class="impression-card"><div class="impression-icon">🌿</div><div class="impression-title">100% PVC Free</div><div class="impression-desc">Polyurethane 소재. UV·DEET·선크림에 강하고 PVC보다 환경 부담이 낮음.</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- 스펙 상세 -->
+<section class="section">
+    <div class="container">
+        <span class="section-label">Full Specs</span>
+        <h2 class="section-title">라인 스펙 상세</h2>
+        <div class="spec-grid">
+            <div class="spec-item"><div class="spec-key">Product</div><div class="spec-val" style="font-size:16px;font-family:'Noto Sans KR';font-weight:700;">Sixth Sense 2</div><div class="spec-sub">Sinking / Stillwater</div></div>
+            <div class="spec-item"><div class="spec-key">Line Weight</div><div class="spec-val">WF 6/7</div><div class="spec-sub">Weight Forward</div></div>
+            <div class="spec-item"><div class="spec-key">Sink Rate</div><div class="spec-val">5.0 ips</div><div class="spec-sub">Sink 5 · DI5</div></div>
+            <div class="spec-item"><div class="spec-key">Head Length</div><div class="spec-val">46ft</div><div class="spec-sub">≈ 14m</div></div>
+            <div class="spec-item"><div class="spec-key">Total Length</div><div class="spec-val">105ft</div><div class="spec-sub">32m · 35yds</div></div>
+            <div class="spec-item"><div class="spec-key">Low Stretch</div><div class="spec-val">6%</div><div class="spec-sub">vs PVC 20~25%</div></div>
+            <div class="spec-item"><div class="spec-key">AFTM Weight</div><div class="spec-val">202gr</div><div class="spec-sub">13.1gm / 30ft 기준</div></div>
+            <div class="spec-item"><div class="spec-key">Core</div><div class="spec-val" style="font-size:16px;font-family:'DM Mono';">Power Core</div><div class="spec-sub">20LB Braid</div></div>
+            <div class="spec-item"><div class="spec-key">Material</div><div class="spec-val" style="font-size:16px;font-family:'DM Mono';">PU</div><div class="spec-sub">100% PVC Free</div></div>
+            <div class="spec-item"><div class="spec-key">Temperature</div><div class="spec-val" style="font-size:16px;font-family:'DM Mono';">Standard</div><div class="spec-sub">40~86°F (4~30°C)</div></div>
+            <div class="spec-item"><div class="spec-key">Hang Markers</div><div class="spec-val" style="font-size:16px;font-family:'DM Mono';">3개</div><div class="spec-sub">10ft · 20ft · 40ft</div></div>
+            <div class="spec-item"><div class="spec-key">Loop</div><div class="spec-val" style="font-size:16px;font-family:'DM Mono';">Micro</div><div class="spec-sub">공장 장착 루프</div></div>
+            <div class="spec-item"><div class="spec-key">Product Code</div><div class="spec-val" style="font-size:14px;font-family:'DM Mono';">SS2-WF6/7S5</div><div class="spec-sub">DB 컬러웨이</div></div>
+        </div>
+        <div class="taper-section">
+            <p class="taper-label">Taper Breakdown — Head 46ft (WF6/7 구간별 수치)</p>
+            <div class="taper-bar">
+                <div class="taper-seg seg-front">Front 20'</div>
+                <div class="taper-seg seg-belly">Belly 16'</div>
+                <div class="taper-seg seg-rear">Rear 10'</div>
+                <div class="taper-seg seg-run">Running Line 59'</div>
+            </div>
+            <div class="taper-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#0f766e"></div>Front Taper 20ft</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#0d9488"></div>Belly 16ft</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div>Rear Taper 10ft</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#cbd5e1"></div>Running Line 59ft</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 주요 기능 -->
+<section class="section">
+    <div class="container">
+        <span class="section-label">Key Features</span>
+        <h2 class="section-title">Airflo의 핵심 기술</h2>
+        <p class="section-desc">박스 후면에 명시된 기술 사양 — 실전과의 연결</p>
+        <div class="feature-grid">
+            <div class="feature-card"><div class="feature-num">6%</div><div class="feature-title">Low Stretch</div><div class="feature-desc">경쟁사 PVC 라인 대비 1/4 수준의 신장률. 훅셋 에너지 손실 최소화, 어신 감지력 극대화.</div></div>
+            <div class="feature-card"><div class="feature-num">DC</div><div class="feature-title">Density Control</div><div class="feature-desc">라인 전체의 밀도를 구간별로 정밀 제어. 균일한 5ips 침하를 가능하게 하는 핵심 기술.</div></div>
+            <div class="feature-card"><div class="feature-num">3×</div><div class="feature-title">Hang Markers</div><div class="feature-desc">10ft / 20ft / 40ft 3개 지점에 촉각 마커 내장. 리트리브 중 라인 잔여량을 눈 없이 파악.</div></div>
+            <div class="feature-card"><div class="feature-num">PU</div><div class="feature-title">PVC Free 소재</div><div class="feature-desc">1984년부터 PVC 미사용. UV·DEET·선크림에 강하고, 저온에서도 뻣뻣해지지 않음.</div></div>
+            <div class="feature-card"><div class="feature-num">Di8</div><div class="feature-title">최대 싱크레이트</div><div class="feature-desc">이 시리즈는 최대 DI8(8ips)까지 선택 가능. 이번 구매 사양은 Sink 5 (5.0ips).</div></div>
+            <div class="feature-card"><div class="feature-num">20'</div><div class="feature-title">Long Front Taper</div><div class="feature-desc">20ft 롱 프론트 테이퍼. 복수 플라이 운용 시 섬세한 프레젠테이션과 거리 확보를 동시에.</div></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 인벤토리 포지셔닝 -->
+<section class="section">
+    <div class="container">
+        <span class="section-label">System</span>
+        <h2 class="section-title">풀싱킹 인벤토리 내 포지셔닝</h2>
+        <p class="section-desc">한터낚시터 바닥권 풀싱킹 체계에서의 역할</p>
+        <table class="position-table">
+            <tr class="pos-main"><td>MAIN</td><td><strong style="color:#0f766e;">SA Sonar Titan 3D i/3/5 WF6S</strong> — 기본값 / 항상</td></tr>
+            <tr><td style="background:#0f766e;color:white;border-color:#0f766e;">SUB A</td><td><strong>Airflo Sixth Sense 2 DI5 WF6/7</strong> — Titan 3D 대비 균일침하 비교 검증 ← 이 라인</td></tr>
+            <tr class="pos-highlight"><td>SUB B</td><td>SA Sonar Sink 25 Cold 200gr — 발앞 집중 패턴 확인 후 단거리 투입</td></tr>
+            <tr><td style="background:#94a3b8;color:white;border-color:#94a3b8;">SUB C</td><td>SA Sonar Stillwater Parabolic S3/S5/S3 WF5S — 중층 활성 전환 타이밍</td></tr>
+            <tr><td style="background:#10b981;color:white;border-color:#10b981;">MID</td><td>RIO Elite Sub-Surface CamoLux WF5I — 중층 전담 / 별도 채비 1~2.5m</td></tr>
+        </table>
+        <div style="margin-top:20px;padding:20px 24px;background:#f0fdfa;border:1px solid rgba(13,148,136,.2);border-radius:14px;">
+            <p style="font-size:13px;color:var(--teal-dark);line-height:1.7;"><strong>SUB A의 역할:</strong> Titan 3D i/3/5는 러닝라인 쪽(i, 느린 침하)부터 헤드(5ips, 빠른 침하)까지 밀도가 단계적으로 높아지며, <strong>앞이 더 깊고 뒤가 얕은 완만한 사선</strong>을 형성합니다. 반면 SS2 DI5는 <strong>전 구간 균일 5ips</strong> 직선 침하. 초기~중반 리트리브 구간에서 <strong>사선 각도의 차이가 조과로 이어지는지</strong>를 직접 비교 검증하는 것이 첫 번째 미션입니다.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 실전 기대 포인트 -->
+<section class="section">
+    <div class="container">
+        <span class="section-label">Field Expectation</span>
+        <h2 class="section-title">실전에서 기대되는 차이점</h2>
+        <p class="section-desc">6% 저신장 PU 라인이 한터지 바닥권 공략에서 만들어낼 변화들</p>
+        <div class="expect-list">
+            <div class="expect-item"><div class="expect-num">01</div><div class="expect-content"><h4>훅셋 에너지 전달</h4><p>18미터 거리에서 스트라이크 시, 기존 PVC 라인 대비 신장에 소비되는 에너지가 없음. 훅포인트까지 에너지가 거의 그대로 전달 → <strong>"걸리는 느낌이 다르다"</strong>는 체감이 첫 번째 검증 포인트.</p></div></div>
+            <div class="expect-item"><div class="expect-num">02</div><div class="expect-content"><h4>빈 입질 판별력</h4><p>살짝 건드리고 뱉는 어신을 기존 라인으로는 "뭔가 이상했는데"로 넘어갔다면, SS2로는 그 미세한 텐션 변화가 <strong>더 선명하게</strong> 손끝에 올 수 있음.</p></div></div>
+            <div class="expect-item"><div class="expect-num">03</div><div class="expect-content"><h4>균일 침하 vs Titan 3D</h4><p>SS2 DI5는 전 구간 균일 5ips — <strong>수면에서 바닥까지 균일한 사선</strong>. Titan 3D는 i/3/5 밀도 차이로 <strong>앞이 더 깊고 뒤가 얕은 완만한 사선</strong>. 킬존 이전 구간에서의 각도 차이가 관건.</p></div></div>
+            <div class="expect-item"><div class="expect-num">04</div><div class="expect-content"><h4>Hang Marker 실용성</h4><p>10ft / 20ft / 40ft 촉각 마커가 느린 8자 리트리브 중 실제로 유용한지. 발앞 킬존 진입 타이밍을 <strong>눈이 아닌 손으로</strong> — 새벽 어둠 속 공략에 유리.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ FIELD REPORT — 세션 카드 ══ -->
+<section class="section" style="background:var(--navy);">
+    <div class="container">
+        <span class="section-label" style="background:rgba(13,148,136,.15);color:var(--teal-light);border-color:rgba(13,148,136,.3);">Field Report</span>
+        <h2 class="section-title" style="color:#f8fafc;margin-bottom:6px;">사용 후기</h2>
+        <p style="font-family:'DM Mono',monospace;font-size:11px;color:#334155;margin-bottom:28px;letter-spacing:.06em;">세션 카드 클릭 → 상세 리포트</p>
+
+        <div class="session-cards">
+
+            <!-- Session 01 ✓ -->
+            <a class="session-card done" href="../../gear/reviews/Airflo_Sixth_Sense2_DI5_FieldReport_S01.html">
+                <div class="sc-num">01</div>
+                <div class="sc-body">
+                    <div class="sc-meta">
+                        <span class="sc-date">2026.03.29</span>
+                        <span class="sc-sep">·</span>
+                        <span class="sc-venue">한터낚시터</span>
+                        <span class="sc-sep">·</span>
+                        <span class="sc-tag t-done">완료</span>
+                        <span class="sc-tag t-warn">전도기</span>
+                        <span class="sc-tag t-question">미결 의문 有</span>
+                    </div>
+                    <p class="sc-summary">탱글링 잔존 주의 · 훅셋 빠름 체감 · Hang Marker <em>쌍따봉</em> · "충분히 메인 라인이 될 수 있겠다"</p>
+                </div>
+                <div class="sc-btn">
+                    상세 리포트
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 6h8M6 2l4 4-4 4"/>
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Session 02 — 예정 -->
+            <div class="session-card pending">
+                <div class="sc-num">02</div>
+                <div class="sc-body">
+                    <div class="sc-meta">
+                        <span class="sc-date">TBD</span>
+                        <span class="sc-sep">·</span>
+                        <span class="sc-tag t-pending">예정</span>
+                    </div>
+                    <p class="sc-summary">바닥권 정상 컨디션 · Titan 3D 직접 비교 · 티펫 단선 모니터링</p>
+                </div>
+            </div>
+
+            <!-- Session 03 — 예정 -->
+            <div class="session-card pending">
+                <div class="sc-num">03</div>
+                <div class="sc-body">
+                    <div class="sc-meta">
+                        <span class="sc-date">TBD</span>
+                        <span class="sc-sep">·</span>
+                        <span class="sc-tag t-pending">예정</span>
+                    </div>
+                    <p class="sc-summary">데이터 누적 후 업데이트 예정</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom:8px;">CADDIS-GR · 낚시대장 · Airflo Sixth Sense 2 DI5 Review</p>
+        <p style="margin-bottom:4px;"><a href="../index.html">← 리뷰 목록으로</a> &nbsp;·&nbsp; <a href="https://github.com/CADDIS-GR/fishing-gear" target="_blank">GitHub</a></p>
+        <p style="margin-top:12px;opacity:.5;">2026.03 · 관리형낚시터(저수지) 플라이 낚시 기록</p>
+    </div>
+</footer>
+
+<script>
+function openLightbox(el){const img=el.querySelector('img');document.getElementById('lightbox-img').src=img.src;document.getElementById('lightbox-caption').textContent=img.alt;document.getElementById('lightbox').classList.add('active');document.body.style.overflow='hidden';}
+function closeLightbox(e){if(e&&e.target===document.getElementById('lightbox-img'))return;document.getElementById('lightbox').classList.remove('active');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+</script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

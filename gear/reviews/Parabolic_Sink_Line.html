@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Profile Drift Fishing Simulation (Balanced) · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #1a202c; color: white; font-family: 'Noto Sans KR', sans-serif; }
+        canvas { display: block; margin: 0 auto; background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 30%, #006994 100%); }
+        #controls { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.7); padding: 15px; border-radius: 10px; text-align: center; width: 80%; max-width: 600px; }
+        .btn { background: #38b2ac; color: white; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; margin: 5px; }
+        .btn:hover { background: #319795; }
+        .btn:disabled { background: #4a5568; cursor: not-allowed; }
+        #status-box { position: absolute; top: 20px; left: 20px; background: rgba(0, 0, 0, 0.6); padding: 15px; border-radius: 8px; max-width: 300px; }
+        .depth-marker { position: absolute; right: 10px; color: yellow; font-size: 12px; border-bottom: 1px dashed rgba(255,255,255,0.3); width: 50px; text-align: right; }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/Parabolic_Sink_Line.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <div id="status-box">
+        <h2 class="text-xl font-bold text-teal-400 mb-2">단계: <span id="stage-text">준비</span></h2>
+        <p id="desc-text" class="text-sm text-gray-200">시작 버튼을 눌러 시뮬레이션을 시작하세요.</p>
+        <div class="mt-2 text-yellow-300 font-mono">Timer: <span id="timer">0.0</span>s</div>
+        <div class="mt-1 text-blue-300 font-mono">Depth: <span id="fly-depth">0.0</span>m</div>
+    </div>
+
+    <canvas id="simCanvas"></canvas>
+
+    <div id="controls">
+        <button id="btn-start" class="btn" onclick="startSim()">시뮬레이션 시작</button>
+        <button id="btn-reset" class="btn" onclick="resetSim()" disabled>리셋</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let scaleX, scaleY; // Meters to Pixels
+        
+        // Simulation State
+        const STATE = {
+            IDLE: 0,
+            CASTING: 1,
+            SINKING: 2,
+            RETRIEVING: 3,
+            LIFTING: 4,
+            FINISHED: 5
+        };
+        
+        let currentState = STATE.IDLE;
+        let simTime = 0;
+        let animationId;
+        
+        // Configuration
+        const WATER_LEVEL_Y = 150;
+        const BOTTOM_START_DEPTH = 3.5; // at 0m (Feet)
+        const BOTTOM_END_DEPTH = 2.0;   // at 15m (Target)
+        const CAST_DIST = 15;           // meters
+        
+        // Objects
+        let fly = { x: 0, y: 0 };
+        let rodTip = { x: 50, y: 100 }; // Angler position
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Re-calculate scale to emphasize depth
+            // X-axis: 18m width (0 to 18m)
+            // Y-axis: 5m depth (0 to 5m) - Increased scale for visibility
+            scaleX = (width - 100) / 18; 
+            // Make depth look deeper (utilize more screen height)
+            scaleY = (height - 200) / 4.5; 
+            
+            if (currentState === STATE.IDLE) resetSim();
+        }
+        
+        window.addEventListener('resize', resize);
+        
+        function resetSim() {
+            currentState = STATE.IDLE;
+            simTime = 0;
+            fly = { x: rodTip.x, y: rodTip.y };
+            
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-reset').disabled = true;
+            document.getElementById('stage-text').innerText = "준비";
+            document.getElementById('desc-text').innerText = "시작 버튼을 누르면 캐스팅합니다.";
+            document.getElementById('timer').innerText = "0.0";
+            document.getElementById('fly-depth').innerText = "0.0";
+            
+            draw();
+        }
+        
+        function startSim() {
+            currentState = STATE.CASTING;
+            document.getElementById('btn-start').disabled = true;
+            document.getElementById('btn-reset').disabled = false;
+            animate();
+        }
+        
+        function update() {
+            simTime += 0.05; // simulation speed
+            document.getElementById('timer').innerText = simTime.toFixed(1);
+            
+            // Physics / Animation Logic by Stage
+            
+            // 1. CASTING (0s - 2s)
+            if (currentState === STATE.CASTING) {
+                document.getElementById('stage-text').innerText = "캐스팅 (Casting)";
+                document.getElementById('desc-text').innerText = "15m 지점(수심 2m권)으로 라인을 던집니다.";
+                
+                let progress = Math.min(simTime / 1.5, 1); // 1.5s animation
+                let targetX = 50 + (CAST_DIST * scaleX);
+                
+                fly.x = 50 + (targetX - 50) * progress;
+                fly.y = 100 - (Math.sin(progress * Math.PI) * 100) + (WATER_LEVEL_Y - 100) * progress;
+                
+                if (progress >= 1) {
+                    currentState = STATE.SINKING;
+                    simTime = 0;
+                }
+            }
+            
+            // 2. SINKING (Countdown 12s)
+            else if (currentState === STATE.SINKING) {
+                document.getElementById('stage-text').innerText = "카운트다운 (Sinking)";
+                document.getElementById('desc-text').innerText = "12초 동안 플라이는 1m까지, 라인 허리는 더 깊게 가라앉아 U자를 만듭니다.";
+                
+                let sinkProgress = Math.min(simTime / 12, 1);
+                // Fly sinks to 1.0m
+                fly.y = WATER_LEVEL_Y + (1.0 * scaleY * sinkProgress); 
+                
+                if (simTime >= 12) {
+                    currentState = STATE.RETRIEVING;
+                    simTime = 0;
+                }
+            }
+            
+            // 3. RETRIEVING (Digging & Cruising)
+            else if (currentState === STATE.RETRIEVING) {
+                document.getElementById('stage-text').innerText = "리트리브 (Digging)";
+                document.getElementById('desc-text').innerText = "라인 무게로 인해 최대 3m까지 파고들며 바닥권을 탐색합니다.";
+                
+                // Calculate progress
+                let startRetrieveX = 50 + (CAST_DIST * scaleX);
+                let endRetrieveX = 50 + (2 * scaleX); // Start lifting at 2m
+                let totalDistance = startRetrieveX - endRetrieveX;
+                let currentDistance = startRetrieveX - fly.x;
+                let progress = currentDistance / totalDistance; // 0.0 -> 1.0
+
+                // Move horizontally (Slow speed)
+                let retrieveSpeed = (CAST_DIST * scaleX) / 400; 
+                fly.x -= retrieveSpeed;
+
+                // Realistic Depth Logic: Dig down to 3m, then hold
+                let targetDepthM;
+                if (progress < 0.6) { // Dig faster
+                    // Digging phase (First 60%): Sink from 1m to 3m
+                    let digProgress = progress / 0.6;
+                    targetDepthM = 1.0 + (2.0 * digProgress); 
+                } else {
+                    // Cruising phase (Last 40%): Hold at 3m
+                    targetDepthM = 3.0;
+                }
+
+                // Smoothly move towards target depth with easing
+                let targetY = WATER_LEVEL_Y + (targetDepthM * scaleY);
+                fly.y += (targetY - fly.y) * 0.05; 
+
+                // Bed collision check with buffer
+                let bedY = getBedDepth(fly.x);
+                if (fly.y > bedY - 20) fly.y = bedY - 20;
+
+                if (fly.x <= endRetrieveX) {
+                    currentState = STATE.LIFTING;
+                }
+            }
+            
+            // 4. LIFTING (Vertical Rise)
+            else if (currentState === STATE.LIFTING) {
+                document.getElementById('stage-text').innerText = "리프트 (Vertical Rise)";
+                document.getElementById('desc-text').innerText = "깊은 수심(약 3m)에서 수면을 향해 수직으로 상승합니다.";
+                
+                fly.y -= 2; // Rise speed
+                fly.x -= 0.5; // Slight movement in
+                
+                if (fly.y <= WATER_LEVEL_Y + 20) {
+                    currentState = STATE.FINISHED;
+                }
+            }
+            else {
+                document.getElementById('stage-text').innerText = "완료";
+                document.getElementById('desc-text').innerText = "환상적인 드리프트였습니다! 다시 하려면 리셋하세요.";
+            }
+            
+            // Update Depth Display
+            let currentDepthM = (fly.y - WATER_LEVEL_Y) / scaleY;
+            if (currentDepthM < 0) currentDepthM = 0;
+            document.getElementById('fly-depth').innerText = currentDepthM.toFixed(2);
+        }
+        
+        function getBedDepth(x) {
+            let startX = 50;
+            let endX = 50 + (CAST_DIST * scaleX);
+            let startY = WATER_LEVEL_Y + (BOTTOM_START_DEPTH * scaleY);
+            let endY = WATER_LEVEL_Y + (BOTTOM_END_DEPTH * scaleY);
+            if (x < startX) return startY;
+            if (x > endX) return endY;
+            let ratio = (x - startX) / (endX - startX);
+            return startY + (endY - startY) * ratio;
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw Bed & Water (Same as before)
+            ctx.fillStyle = "#2d3748";
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, WATER_LEVEL_Y + (BOTTOM_START_DEPTH * scaleY));
+            ctx.lineTo(50 + (CAST_DIST * scaleX), WATER_LEVEL_Y + (BOTTOM_END_DEPTH * scaleY));
+            ctx.lineTo(width, WATER_LEVEL_Y + (2.0 * scaleY));
+            ctx.lineTo(width, height);
+            ctx.fill();
+            
+            // Depth Markers
+            ctx.fillStyle = "rgba(255,255,255,0.3)";
+            ctx.font = "10px sans-serif";
+            for(let i=1; i<=4; i++) {
+                let y = WATER_LEVEL_Y + (i * scaleY);
+                if (y < height) {
+                    ctx.fillText(i + "m", 5, y);
+                    ctx.fillRect(20, y, width, 1);
+                }
+            }
+
+            ctx.fillStyle = "#a0aec0";
+            ctx.font = "12px sans-serif";
+            ctx.fillText("발밑 3.5m", 60, WATER_LEVEL_Y + (BOTTOM_START_DEPTH * scaleY) - 10);
+            ctx.fillText("15m지점 2.0m", 50 + (CAST_DIST * scaleX) - 50, WATER_LEVEL_Y + (BOTTOM_END_DEPTH * scaleY) - 10);
+
+            ctx.fillStyle = "rgba(66, 153, 225, 0.2)";
+            ctx.fillRect(0, WATER_LEVEL_Y, width, height - WATER_LEVEL_Y);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.beginPath();
+            ctx.moveTo(0, WATER_LEVEL_Y);
+            ctx.lineTo(width, WATER_LEVEL_Y);
+            ctx.stroke();
+            
+            // Draw Angler (Same as before)
+            ctx.fillStyle = "#4a5568"; ctx.fillRect(0, WATER_LEVEL_Y - 50, 50, 200);
+            ctx.fillStyle = "#cbd5e0"; ctx.fillRect(0, WATER_LEVEL_Y - 50, 60, 10);
+            ctx.strokeStyle = "white"; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(30, WATER_LEVEL_Y - 50); ctx.lineTo(30, WATER_LEVEL_Y - 130); ctx.lineTo(rodTip.x, rodTip.y); ctx.stroke();
+            ctx.beginPath(); ctx.arc(30, WATER_LEVEL_Y - 140, 10, 0, Math.PI * 2); ctx.stroke();
+
+            // Draw Line (The Realistic U-Profile)
+            if (currentState !== STATE.IDLE) {
+                ctx.beginPath();
+                ctx.strokeStyle = "#9ae6b4";
+                ctx.lineWidth = 3;
+                ctx.moveTo(rodTip.x, rodTip.y);
+                
+                let tipX = fly.x; let tipY = fly.y;
+                let startX = rodTip.x; let startY = rodTip.y;
+                let bellyX, bellyY;
+                
+                if (currentState === STATE.CASTING) {
+                    bellyX = (startX + tipX) / 2; bellyY = (startY + tipY) / 2 - 50;
+                } else {
+                    // Realistic U-Profile Logic
+                    bellyX = startX + (tipX - startX) * 0.4; 
+                    
+                    // Belly is always deeper than fly to maintain tension and U-shape
+                    let targetBellyY = fly.y + (1.0 * scaleY); // 1m deeper than fly
+                    
+                    if (currentState === STATE.SINKING) {
+                        // Transition smoothly during sinking
+                        let sinkProgress = Math.min(simTime / 12, 1);
+                        bellyY = startY + (targetBellyY - startY) * sinkProgress;
+                    } else {
+                        // Maintain depth difference during retrieve/lift
+                        bellyY = targetBellyY;
+                    }
+
+                    let bedAtBelly = getBedDepth(bellyX);
+                    if (bellyY > bedAtBelly - 10) bellyY = bedAtBelly - 10;
+                }
+                
+                ctx.quadraticCurveTo(bellyX, bellyY, tipX, tipY);
+                ctx.stroke();
+                
+                // Draw Fly
+                ctx.beginPath(); ctx.fillStyle = "#fc8181"; ctx.arc(fly.x, fly.y, 4, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        
+        function animate() {
+            if (currentState !== STATE.IDLE && currentState !== STATE.FINISHED) {
+                update(); draw(); animationId = requestAnimationFrame(animate);
+            } else if (currentState === STATE.FINISHED) { draw(); }
+        }
+        
+        resize(); resetSim();
+    </script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

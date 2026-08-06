@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIO Elite Technical Trout WF4F - Interactive Review · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f9f7f2; /* Warm Neutral Background */
+            color: #4a4a4a;
+        }
+        
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #8c7b75;
+            color: #5d534f;
+            font-weight: 700;
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="antialiased selection:bg-stone-300 archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/RIO_Elite_Technical_Trout_WF4F.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#f9f7f2]/90 backdrop-blur-sm border-b border-stone-200 py-4">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+            <div class="text-xl font-bold serif text-stone-800"><i class="fas fa-water text-stone-500 mr-2"></i>Fly Log: Technical Trout</div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-stone-600">
+                <a href="#performance" class="hover:text-stone-900 transition-colors">퍼포먼스</a>
+                <a href="#gear-match" class="hover:text-stone-900 transition-colors">장비 궁합</a>
+                <a href="#field-guide" class="hover:text-stone-900 transition-colors">실전 운용</a>
+                <a href="#epilogue" class="hover:text-stone-900 transition-colors">에필로그</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-4xl mx-auto px-6 py-16 md:py-24 text-center">
+        <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-stone-500 uppercase bg-stone-200 rounded-full">New Gear Review</div>
+        <h1 class="text-4xl md:text-6xl font-bold text-stone-800 mb-6 leading-tight">
+            RIO Elite <span class="text-[#8c7b75]">Technical Trout</span> WF4F
+        </h1>
+        <p class="text-xl md:text-2xl text-stone-600 font-serif italic mb-8">
+            "가볍지만 멀리 날아가고, 턴오버는 예술이다.<br>내 손에 꼭 맞는 또 한 마리의 골든 리트리버."
+        </p>
+        <div class="flex justify-center gap-4 text-sm text-stone-500">
+            <span class="flex items-center"><i class="fas fa-calendar-alt mr-2"></i> 2026.02.15</span>
+            <span class="flex items-center"><i class="fas fa-user mr-2"></i> 낚시대장</span>
+        </div>
+        <div class="mt-6">
+            <a href="https://farbank.com/products/rio-elite-technical-trout" target="_blank"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-stone-800 text-white text-sm font-medium rounded-full hover:bg-stone-700 transition-colors shadow-sm">
+                <i class="fas fa-external-link-alt text-xs"></i>
+                공식 제품 페이지 (RIO / Far Bank)
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-6xl mx-auto px-6 pb-20 space-y-24">
+
+        <!-- Section 1: Performance Analysis (Radar Chart) -->
+        <section id="performance" class="scroll-mt-24">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h2 class="text-3xl font-bold text-stone-800 mb-4 serif">첫 느낌의 분석</h2>
+                    <p class="text-stone-600 mb-6 leading-relaxed">
+                        이 라인은 힘으로 제압하는 것이 아닙니다. 
+                        가벼운 자중에도 불구하고 적은 힘으로 비거리를 확보하며, 
+                        무엇보다 <strong>독보적인 턴오버 성능</strong>을 보여줍니다. 
+                        섬세함과 컨트롤에 집중된 성능 지표를 확인해 보세요.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center mt-1">
+                                <i class="fas fa-feather-alt text-stone-600 text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-stone-800">경쾌한 비거리</h4>
+                                <p class="text-stone-600 text-sm">큰 힘을 들이지 않아도 매끄럽게 뻗어 나가는 비거리가 인상적입니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center mt-1">
+                                <i class="fas fa-paint-brush text-stone-600 text-sm"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-semibold text-stone-800">예술적인 턴오버</h4>
+                                <p class="text-stone-600 text-sm">리더와 티펫 끝까지 에너지가 정교하게 전달되어 착수음 없는 정숙함을 보장합니다.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="order-1 md:order-2 bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <div class="chart-container">
+                        <canvas id="performanceRadar"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-stone-400 mt-4">* 사용자 체감 기준 성능 지표</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Equipment Matching (Interactive Comparison) -->
+        <section id="gear-match" class="bg-stone-100 rounded-3xl p-8 md:p-12 scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 serif">두 마리의 골든 리트리버</h2>
+                <p class="text-stone-600 max-w-2xl mx-auto">
+                    낚시대장님의 로드 랙에는 이제 두 가지 성격의 든든한 파트너가 자리 잡았습니다.
+                    아래 버튼을 눌러 두 조합의 성격 차이를 비교해 보세요.
+                </p>
+            </div>
+
+            <!-- Toggle Buttons -->
+            <div class="flex justify-center gap-4 mb-8">
+                <button onclick="updateGear('classic')" id="btn-classic" class="px-6 py-3 rounded-full text-sm font-semibold transition-all bg-white text-stone-500 hover:bg-stone-200 border border-stone-200 shadow-sm">
+                    <i class="fas fa-shield-alt mr-2"></i>The Classic Partner
+                </button>
+                <button onclick="updateGear('new')" id="btn-new" class="px-6 py-3 rounded-full text-sm font-semibold transition-all bg-[#8c7b75] text-white shadow-md ring-2 ring-stone-300 ring-offset-2">
+                    <i class="fas fa-star mr-2"></i>The New Partner
+                </button>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                <!-- Rod Card -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-stone-200 flex flex-col items-center text-center card-hover">
+                    <div class="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mb-4 text-2xl text-[#8c7b75]">
+                        <i id="gear-icon-rod" class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-2" id="rod-name">Vision Onki 3100-4</h3>
+                    <p class="text-sm font-medium text-stone-500 mb-4 uppercase tracking-widest" id="rod-spec">10ft #3 | Medium-Fast</p>
+                    <p class="text-stone-600 text-sm leading-relaxed" id="rod-desc">
+                        10ft의 긴 리치와 부드러운 액션이 49ft의 긴 헤드를 완벽하게 지탱합니다. 공중에서 라인을 안정적으로 유지하며 원하는 지점에 부드럽게 안착시킵니다.
+                    </p>
+                </div>
+
+                <!-- Line Card -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-stone-200 flex flex-col items-center text-center card-hover">
+                    <div class="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mb-4 text-2xl text-[#8c7b75]">
+                        <i id="gear-icon-line" class="fas fa-ring"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-2" id="line-name">RIO Elite Technical Trout</h3>
+                    <p class="text-sm font-medium text-stone-500 mb-4 uppercase tracking-widest" id="line-spec">WF4F | 49ft Head</p>
+                    <p class="text-stone-600 text-sm leading-relaxed" id="line-desc">
+                        주인을 세심하게 챙기고 정교한 호흡을 맞추는 영리한 동반자. 마이크로 님핑과 드라이 플라이 프레젠테이션의 정점.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Field Application (Head Spec & Usage) -->
+        <section id="field-guide" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-stone-800 mb-8 serif text-center">실전 운용 가이드</h2>
+            
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Left: Head Length Chart -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">왜 49ft 헤드인가?</h3>
+                    <p class="text-sm text-stone-500 mb-6">긴 헤드는 공중 제어력(Carry)과 멘딩(Mending) 능력을 극대화합니다.</p>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="headLengthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Right: Tabs for Usage -->
+                <div class="lg:col-span-7">
+                    <!-- Tab Headers -->
+                    <div class="flex border-b border-stone-200 mb-6 overflow-x-auto">
+                        <button onclick="switchTab('nymph')" id="tab-nymph" class="px-6 py-3 text-sm font-medium transition-colors active-tab whitespace-nowrap">
+                            마이크로 님핑
+                        </button>
+                        <button onclick="switchTab('dry')" id="tab-dry" class="px-6 py-3 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors whitespace-nowrap">
+                            드라이 플라이
+                        </button>
+                        <button onclick="switchTab('control')" id="tab-control" class="px-6 py-3 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors whitespace-nowrap">
+                            라인 컨트롤
+                        </button>
+                        <button onclick="switchTab('chironomid')" id="tab-chironomid" class="px-6 py-3 text-sm font-medium text-stone-400 hover:text-stone-600 transition-colors whitespace-nowrap">
+                            키로노미드 & 스틸워터
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="content-nymph" class="bg-stone-50 p-6 rounded-2xl border border-stone-100 min-h-[250px]">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-stone-600"><i class="fas fa-bug text-xl"></i></div>
+                            <div>
+                                <h4 class="text-lg font-bold text-stone-800 mb-2">미세 패턴 공략의 정수</h4>
+                                <ul class="space-y-3 text-stone-600 text-sm">
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 작은 Chironomid, Midge Larva, Pupa 사용 시 최적</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 예민한 입질 파악을 위한 직관적 연결</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> Vision Onki의 감도와 결합하여 수중 상황 전달</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="content-dry" class="hidden bg-stone-50 p-6 rounded-2xl border border-stone-100 min-h-[250px]">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-stone-600"><i class="fas fa-wind text-xl"></i></div>
+                            <div>
+                                <h4 class="text-lg font-bold text-stone-800 mb-2">가장 섬세한 착수</h4>
+                                <ul class="space-y-3 text-stone-600 text-sm">
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 수면을 깨뜨리지 않는 부드러운 착수 (Soft Landing)</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 롱 프론트 테이퍼가 만들어내는 정교한 턴오버</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 경계심 많은 송어에게 최고의 접근 방식</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-control" class="hidden bg-stone-50 p-6 rounded-2xl border border-stone-100 min-h-[250px]">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-stone-600"><i class="fas fa-wave-square text-xl"></i></div>
+                            <div>
+                                <h4 class="text-lg font-bold text-stone-800 mb-2">원거리 제어력</h4>
+                                <ul class="space-y-3 text-stone-600 text-sm">
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 49ft 롱 헤드를 이용한 탁월한 멘딩(Mending) 성능</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 먼 거리에서도 즉각적이고 정확한 훅셋 가능</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 복잡한 물살 위에서도 드래그 프리(Drag-free) 유지 용이</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-chironomid" class="hidden bg-stone-50 p-6 rounded-2xl border border-stone-100 min-h-[250px]">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-stone-600"><i class="fas fa-water text-xl"></i></div>
+                            <div>
+                                <h4 class="text-lg font-bold text-stone-800 mb-2">관리형낚시터(저수지) 특화 운용법</h4>
+                                <p class="text-stone-500 text-xs mb-3">잔잔한 수면의 저수지에서 키로노미드 패턴과 함께 RIO Elite Technical Trout의 진가를 발휘하는 운용법입니다.</p>
+                                <ul class="space-y-3 text-stone-600 text-sm">
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 인디케이터 님핑 — 키로노미드 퓨파를 원하는 수심에 정확히 서스펜드</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 슬로우 리트리브 — 49ft 롱 헤드로 라인 처짐 없이 느린 액션 유지</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 겨울·초봄 저활성 송어 공략 — 섬세한 턴오버로 최소한의 수면 교란</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-[#d4a373] mr-2"></i> 잔잔한 저수지 수면에서 라인 시인성 극대화 — SureFire 트라이컬러 시스템 활용</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Epilogue -->
+        <section id="epilogue" class="text-center max-w-2xl mx-auto pt-10 border-t border-stone-200 scroll-mt-24">
+            <i class="fas fa-quote-left text-3xl text-stone-300 mb-6"></i>
+            <p class="text-xl md:text-2xl text-stone-700 font-serif leading-relaxed italic mb-8">
+                "종일 이 라인을 날려보는 것만으로도 충분히 즐겁다.<br>
+                폭발적인 입질이 아니어도, 차분하게 이 정교함을 만끽하다<br>
+                어쩌다 한 마리 잡아내게 된다면...<br>
+                그것이야말로 진정한 <span class="text-[#8c7b75] font-bold">금상첨화(錦上添花)</span>가 아닐까."
+            </p>
+            <div class="text-sm text-stone-400 font-medium tracking-wide uppercase">The Fisherman's Philosophy</div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-400 py-12 text-center text-sm">
+        <p>&copy; 2026 Fly Fishing Log. Based on the review of <strong>RIO Elite Technical Trout WF4F</strong>.</p>
+        <p class="mt-2 text-stone-500">Visualization created for 낚시대장.</p>
+        <p class="mt-4">
+            <a href="https://farbank.com/products/rio-elite-technical-trout" target="_blank"
+               class="inline-flex items-center gap-1.5 text-stone-400 hover:text-white transition-colors underline underline-offset-4">
+                <i class="fas fa-external-link-alt text-xs"></i>
+                공식 제품 페이지 — farbank.com
+            </a>
+        </p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Store
+        const gearData = {
+            classic: {
+                rod: "T&T Paradigm 905-4",
+                rodSpec: "9ft #5 | Medium Action",
+                rodDesc: "전통적인 느낌의 부드러움과 신뢰성. 어떤 상황에서도 편안하게 캐스팅을 받아주는 듬직한 로드.",
+                line: "RIO Elite Gold Classic WF5F",
+                lineSpec: "WF5F | All-Around",
+                lineDesc: "주인을 잘 섬기고 집을 잘 지키는 듬직한 동반자. 범용성과 안정성에 초점을 맞춘 스탠다드 조합.",
+                theme: "bg-white",
+                btnClass: "bg-white text-stone-500 hover:bg-stone-200 border border-stone-200",
+                iconRod: "fas fa-shield-alt",
+                iconLine: "fas fa-anchor"
+            },
+            new: {
+                rod: "Vision Onki 3100-4",
+                rodSpec: "10ft #3 | Medium-Fast Action",
+                rodDesc: "10ft의 긴 리치와 부드러운 액션이 49ft의 긴 헤드를 완벽하게 지탱합니다. 공중에서 라인을 안정적으로 유지하며 원하는 지점에 부드럽게 안착시킵니다.",
+                line: "RIO Elite Technical Trout",
+                lineSpec: "WF4F | 49ft Head",
+                lineDesc: "주인을 세심하게 챙기고 정교한 호흡을 맞추는 영리한 동반자. 마이크로 님핑과 드라이 플라이 프레젠테이션의 정점.",
+                theme: "bg-[#8c7b75] text-white",
+                btnClass: "bg-[#8c7b75] text-white shadow-md ring-2 ring-stone-300 ring-offset-2",
+                iconRod: "fas fa-magic",
+                iconLine: "fas fa-ring"
+            }
+        };
+
+        // --- Visualization: Radar Chart (Performance) ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxRadar = document.getElementById('performanceRadar').getContext('2d');
+            
+            Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+            Chart.defaults.color = '#666';
+
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['비거리 (Distance)', '턴오버 (Turnover)', '섬세함 (Delicacy)', '라인 컨트롤 (Control)', '훅셋 정확도 (Hookset)'],
+                    datasets: [{
+                        label: 'RIO Elite Technical Trout',
+                        data: [85, 98, 95, 92, 90],
+                        fill: true,
+                        backgroundColor: 'rgba(212, 163, 115, 0.2)',
+                        borderColor: 'rgba(140, 123, 117, 1)',
+                        pointBackgroundColor: 'rgba(140, 123, 117, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(140, 123, 117, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: { borderWidth: 2 }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#eee' },
+                            grid: { color: '#eee' },
+                            pointLabels: {
+                                font: { size: 12, weight: 'bold' },
+                                color: '#5d534f'
+                            },
+                            suggestedMin: 50,
+                            suggestedMax: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#333',
+                            bodyColor: '#666',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            padding: 10
+                        }
+                    }
+                }
+            });
+
+            // --- Visualization: Bar Chart (Head Length) ---
+            const ctxBar = document.getElementById('headLengthChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['일반 Trout 라인 (Avg)', 'RIO Technical Trout'],
+                    datasets: [{
+                        label: 'Head Length (ft)',
+                        data: [35, 49],
+                        backgroundColor: ['#e5e5e5', '#8c7b75'],
+                        borderRadius: 5,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            title: { display: true, text: '피트 (ft)' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' ft - ' + (context.raw === 49 ? '롱 캐리 & 멘딩 유리' : '표준');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- Interaction: Gear Switcher ---
+        function updateGear(type) {
+            const data = gearData[type];
+            
+            const btnClassic = document.getElementById('btn-classic');
+            const btnNew = document.getElementById('btn-new');
+            
+            if (type === 'new') {
+                btnNew.className = "px-6 py-3 rounded-full text-sm font-semibold transition-all bg-[#8c7b75] text-white shadow-md ring-2 ring-stone-300 ring-offset-2";
+                btnClassic.className = "px-6 py-3 rounded-full text-sm font-semibold transition-all bg-white text-stone-500 hover:bg-stone-200 border border-stone-200";
+            } else {
+                btnClassic.className = "px-6 py-3 rounded-full text-sm font-semibold transition-all bg-[#8c7b75] text-white shadow-md ring-2 ring-stone-300 ring-offset-2";
+                btnNew.className = "px-6 py-3 rounded-full text-sm font-semibold transition-all bg-white text-stone-500 hover:bg-stone-200 border border-stone-200";
+            }
+
+            animateValue('rod-name', data.rod);
+            animateValue('rod-spec', data.rodSpec);
+            animateValue('rod-desc', data.rodDesc);
+            animateValue('line-name', data.line);
+            animateValue('line-spec', data.lineSpec);
+            animateValue('line-desc', data.lineDesc);
+            
+            document.getElementById('gear-icon-rod').className = data.iconRod;
+            document.getElementById('gear-icon-line').className = data.iconLine;
+        }
+
+        function animateValue(id, newValue) {
+            const el = document.getElementById(id);
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = newValue;
+                el.style.opacity = 1;
+            }, 200);
+        }
+        
+        ['rod-name', 'rod-spec', 'rod-desc', 'line-name', 'line-spec', 'line-desc'].forEach(id => {
+            document.getElementById(id).style.transition = "opacity 0.2s ease-in-out";
+        });
+
+        // --- Interaction: Tab Switcher ---
+        function switchTab(tabId) {
+            ['nymph', 'dry', 'control', 'chironomid'].forEach(id => {
+                document.getElementById(`content-${id}`).classList.add('hidden');
+                document.getElementById(`tab-${id}`).classList.remove('active-tab', 'text-stone-800');
+                document.getElementById(`tab-${id}`).classList.add('text-stone-400');
+            });
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.remove('text-stone-400');
+            activeBtn.classList.add('active-tab', 'text-stone-800');
+        }
+
+    </script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수중의 변주곡: 컬러 로테이션과 리액션 바이트 - 출조 로그 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+        .pattern-bg {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* 라이트박스 트리거 */
+        .lightbox-trigger {
+            cursor: zoom-in;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .lightbox-trigger:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+
+        /* 라이트박스 오버레이 */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            backdrop-filter: blur(4px);
+        }
+        #lightbox.active {
+            display: flex;
+        }
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+            cursor: default;
+        }
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 28px;
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 300;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0.75;
+            transition: opacity 0.2s;
+            user-select: none;
+        }
+        #lightbox-close:hover {
+            opacity: 1;
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="text-slate-800 antialiased archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html" aria-current="page">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>FIELD LOG · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-log/blob/main/logs/2026-02-21_daedae.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- 라이트박스 오버레이 -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+        <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Navigation / Header -->
+    <nav class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-wider flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                FLY FISHING ARCHIVE
+            </div>
+            <div class="text-sm font-light text-slate-300">Captain's Log</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8 sm:py-12 relative">
+        
+        <!-- Header Section -->
+        <header class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-10 mb-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+            
+            <div class="mb-4">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-sm font-semibold rounded-full mb-3">
+                    2026 Season
+                </span>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight mb-6">
+                    [2026-02-21 출조 로그] <br>
+                    <span class="text-emerald-600">수중의 변주곡:</span> 컬러 로테이션과 리액션 바이트
+                </h1>
+            </div>
+
+            <!-- Meta Data Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6">
+                <div>
+                    <span class="block text-slate-500 font-medium mb-1">🗓️ 출조 일자</span>
+                    <span class="font-semibold">2026년 2월 21일 (토)</span>
+                </div>
+                <div>
+                    <span class="block text-slate-500 font-medium mb-1">📍 장소</span>
+                    <span class="font-semibold">한터낚시터</span>
+                </div>
+                <div>
+                    <span class="block text-slate-500 font-medium mb-1">⛅ 기상 조건</span>
+                    <span class="font-semibold">맑음 / 1~17°C / 남서풍 9mph</span>
+                </div>
+                <div>
+                    <span class="block text-slate-500 font-medium mb-1">🐟 최종 조과</span>
+                    <span class="font-semibold text-emerald-600">약 20수</span>
+                </div>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 bg-slate-100 mb-4 lightbox-trigger"
+                 onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-01.jpg')">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-01.jpg"
+                     alt="2026-02-21 출조 풍경 및 조과" class="w-full h-auto object-cover max-h-[400px]">
+            </div>
+
+            <!-- Field Photos Gallery -->
+            <div>
+                <span class="block text-xs font-bold text-slate-400 mb-3">📷 현장 풍경</span>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm lightbox-trigger"
+                         onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Field-01.JPEG')">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Field-01.JPEG"
+                             alt="현장 풍경 1" class="w-full h-48 object-cover bg-slate-100">
+                    </div>
+                    <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm lightbox-trigger"
+                         onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Field-02.JPEG')">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Field-02.JPEG"
+                             alt="현장 풍경 2" class="w-full h-48 object-cover bg-slate-100">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Sections -->
+        <article class="space-y-8">
+
+            <!-- Section 1 -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">1</span>
+                    낚시터 환경 및 수중 상황 추론
+                </h2>
+                <ul class="space-y-3 text-slate-700 ml-2">
+                    <li class="flex items-start">
+                        <span class="text-emerald-500 mr-2 mt-0.5">•</span>
+                        <div><strong>결빙 및 수온 변화:</strong> 저수지 외곽 쪽으로 얇게 남은 얼음이 녹아내리는 해빙기 초입 양상을 보였습니다. 해빙수(0°C 근처)는 밀도가 최대가 되는 4°C보다 가벼워 바닥으로 가라앉지 않고 <strong>표층~중층에 머무는</strong> 특성이 있습니다. 따라서 녹은 얼음물이 유입되면 표층·중층의 수온 성층이 교란되고, 수온이 상대적으로 안정된 <strong>바닥층(4°C대)으로 송어 무리가 집결했을 가능성</strong>이 높습니다. 이날 풀싱킹으로 6m 바닥을 공략했을 때 조과가 집중된 것과도 일치합니다.</div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-emerald-500 mr-2 mt-0.5">•</span>
+                        <div><strong>시간대별 활성도:</strong>
+                            <div class="mt-2 space-y-1.5">
+                                <div class="flex items-center gap-2 text-sm">
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-xs whitespace-nowrap">🌅 아침~오전</span>
+                                    <span class="text-slate-700">가장 높은 활성도 — 입질 집중 구간</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <span class="px-2 py-0.5 rounded-md bg-red-100 text-red-800 font-bold text-xs whitespace-nowrap">☀️ 12시 이후</span>
+                                    <span class="text-slate-700">몰황 — 낮 햇볕에 의한 표층 수온 상승, 송어 바닥 은거 심화로 추정</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-xs whitespace-nowrap">🌇 4시 이후</span>
+                                    <span class="text-slate-700">피딩 타임 — 활성도 다소 회복</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-emerald-500 mr-2 mt-0.5">•</span>
+                        <div>낚시터 전체적으로 호황은 아니었으며, 송어들이 넓게 유영하기보다는 좁은 구역에 스쿨링(Schooling)된 상태였던 것으로 추측됩니다. 다만 완전 비활성은 아니었으며, 능동적 포식(Feeding)보다는 <strong>강한 시각 자극에 반사적으로 반응하는 조건부 활성(Conditional Active) 상태</strong>였던 것으로 보입니다. 컬러 로테이션으로 리액션 바이트를 지속적으로 유발할 수 있었던 것이 그 근거입니다.</div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Section 2 & 3 Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Section 2 -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">2</span>
+                        당일 주력 채비 세팅
+                    </h2>
+                    <p class="text-sm text-slate-500 mb-4">바람이 다소 부는 상황을 고려해 준비한 세 가지 채비 중, 악조건을 뚫고 바닥층을 공략할 수 있는 <strong>2번 풀싱킹 채비</strong>가 주력으로 활약했습니다.</p>
+                    <ul class="space-y-3 text-sm text-slate-700">
+                        <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400 mb-1">플로팅/인디케이터</span>
+                            Rio elite gold classic wf6f / Sage DS2 690-2
+                        </li>
+                        <li class="p-3 bg-emerald-50 rounded-lg border border-emerald-200 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500"></div>
+                            <span class="block text-xs font-bold text-emerald-600 mb-1">풀싱킹/딥수심 (주력 맹활약)</span>
+                            SA Sonar Titan 3D i/3/5 WF6S / SCOTT CENTRIC 690-4
+                        </li>
+                        <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400 mb-1">마이크로 님핑/표층~중층</span>
+                            Rio Elite Technical Trout WF4F / Vision Onki 3100-4
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Section 3 -->
+                <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">3</span>
+                        공략 액션과 히트 패턴
+                    </h2>
+                    <div class="mb-3">
+                        <span class="text-sm font-bold text-slate-500">히트 훅:</span>
+                        <div class="mt-1 font-semibold text-slate-800">존커테일 미니 리치 (Zonker tail mini leech) <span class="text-emerald-600 font-bold">#16</span></div>
+                    </div>
+
+                    <!-- 히트 훅 이미지 -->
+                    <div class="mb-4 rounded-xl overflow-hidden border border-emerald-200 shadow-sm lightbox-trigger"
+                         onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-OliveHook.jpg')">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-OliveHook.jpg"
+                             alt="올리브 존커테일 미니 리치" class="w-full h-44 object-cover bg-slate-100">
+                        <div class="px-3 py-2 bg-emerald-50 border-t border-emerald-100 flex items-center gap-1.5">
+                            <span class="text-xs text-emerald-700 font-medium">🪝 Olive Zonker Tail Mini Leech</span>
+                            <span class="ml-auto text-xs text-emerald-500 opacity-70">클릭하여 확대</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-sm font-bold text-slate-500 block mb-2">채비 운용 (99% 일관된 액션 유지):</span>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-3 text-sm bg-slate-50 p-2 rounded-lg">
+                                <span class="bg-white border border-slate-200 w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">1</span>
+                                18m 이상 롱캐스팅
+                            </div>
+                            <div class="flex items-center gap-3 text-sm bg-slate-50 p-2 rounded-lg">
+                                <span class="bg-white border border-slate-200 w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">2</span>
+                                30초 카운트다운 (약 6m 바닥층 안착)
+                            </div>
+                            <div class="flex items-center gap-3 text-sm bg-slate-50 p-2 rounded-lg">
+                                <span class="bg-white border border-slate-200 w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">3</span>
+                                8자 느린 리트리브 (Figure-8)
+                            </div>
+                            <div class="flex items-center gap-3 text-sm bg-emerald-50 p-2 rounded-lg border border-emerald-100 font-medium text-emerald-800">
+                                <span class="bg-emerald-500 text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold">4</span>
+                                발앞 부근 수직 리프트 (Hang)
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Section 4 -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">4</span>
+                    주변 상황 분석 및 대조
+                </h2>
+                <p class="text-sm text-slate-600 mb-6">수중의 변수가 많은 상황 속에서 주변 앵글러들의 패턴을 통해 당일 송어의 반응성을 유추해 볼 수 있었습니다.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                        <h3 class="font-bold text-blue-800 mb-2">🎣 우측 앵글러 (꾸준한 조과)</h3>
+                        <p class="text-sm text-blue-900 leading-relaxed">깊은 수심에서 사료 패턴 훅과 마커 채비로 종일 꾸준한 조과를 올렸습니다. 오후에는 중층부로 마커 수심을 조절했으며, 송어 무리의 먹이 본능(Feeding)과 스쿨링 층을 지속적으로 쫓은 것으로 보입니다.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-red-50 border border-red-100">
+                        <h3 class="font-bold text-red-800 mb-2">🎣 좌측 앵글러 (몰황)</h3>
+                        <p class="text-sm text-red-900 leading-relaxed">붉은색 바늘 단일 패턴으로 바닥층을 노렸으나 1~2수에 그쳤습니다. 활성도가 떨어진 상황에서 단조로운 자극으로는 반응을 이끌어내기 어려웠음을 시사합니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">5</span>
+                    핵심 관찰: 컬러 로테이션과 훅킹의 상관관계
+                </h2>
+                <p class="text-slate-700 mb-6">오직 존커테일 미니 리치 하나로 20수를 낚아내는 과정에서, 입질이 뜸해질 때마다 훅의 색상을 교체하는 전략이 유효하게 작용했습니다.</p>
+                
+                <div class="mb-8">
+                    <span class="block text-sm font-bold text-slate-500 mb-3">🎨 로테이션 순서</span>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-4">
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-purple-600 text-white shadow-sm">퍼플</span>
+                        <span class="text-slate-400 font-bold">→</span>
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-white text-slate-800 border border-slate-300 shadow-sm">화이트</span>
+                        <span class="text-slate-400 font-bold">→</span>
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-lime-600 text-white shadow-sm">올리브</span>
+                        <span class="text-slate-400 font-bold">→</span>
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-slate-900 text-white shadow-sm">블랙</span>
+                        <span class="text-slate-400 font-bold">→</span>
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-white text-slate-800 border border-slate-300 shadow-sm">화이트</span>
+                        <span class="text-slate-400 font-bold">→</span>
+                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-purple-600 text-white shadow-sm">퍼플</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                    <div class="p-4 bg-slate-50 rounded-xl">
+                        <h4 class="font-bold text-slate-800 mb-1">관찰 내용</h4>
+                        <p class="text-sm text-slate-600">특정 색상이 월등히 좋았다기보다는, 입질이 끊긴 시점에 <strong>색상을 변경하면 다시 반응이 살아나는 현상</strong>이 반복되었습니다.</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl">
+                        <h4 class="font-bold text-slate-800 mb-3">현상 추론</h4>
+                        <ul class="space-y-3 text-sm text-slate-600 list-decimal pl-5">
+                            <li class="pl-1">6m 깊은 수심과 탁도 속에서 색상의 교체는 명도와 실루엣의 대비(Contrast)를 만들어내어, 경계심을 갖거나 무관심하던 송어에게 '새로운 자극(Visual Reset)'으로 다가갔을 가능성이 있습니다.</li>
+                            <li class="pl-1">일관된 8자 리트리브 액션 중 들어온 입질 대다수가 <strong>주둥이 측면(가위턱 부근)에 정확히 훅킹</strong>되었습니다. 이는 저활성도 상태에서의 소극적인 숏바이트가 아니라, 훅을 덮치고 몸을 돌리는(Turn) 공격적인 <strong>'리액션 바이트(Reaction Bite)'</strong>였음을 강하게 뒷받침합니다.</li>
+                            <li class="pl-1">무리가 빠져나갔다 다시 진입하는 회유 타이밍이 입질 재개와 겹쳤을 가능성도 배제할 수 없습니다. 다만 이는 색상 교체 직후 반복적으로 입질이 재개된 패턴을 온전히 설명하기엔 부족하므로, <strong>보조적 변수</strong>로 참고하는 것이 타당합니다.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 훅킹 갤러리 영역 -->
+                <div class="mt-8 border-t border-slate-100 pt-6">
+                    <span class="block text-sm font-bold text-slate-500 mb-4">📸 리액션 바이트의 명백한 증거 (측면 훅셋)</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="rounded-lg overflow-hidden border border-slate-200 shadow-sm lightbox-trigger"
+                             onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-02.JPEG')">
+                            <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-02.JPEG"
+                                 alt="송어 훅킹 장면 1" class="w-full h-48 sm:h-40 object-cover object-center bg-slate-100">
+                        </div>
+                        <div class="rounded-lg overflow-hidden border border-slate-200 shadow-sm lightbox-trigger"
+                             onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-03.JPEG')">
+                            <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-03.JPEG"
+                                 alt="송어 훅킹 장면 2" class="w-full h-48 sm:h-40 object-cover object-center bg-slate-100">
+                        </div>
+                        <div class="rounded-lg overflow-hidden border border-slate-200 shadow-sm lightbox-trigger"
+                             onclick="openLightbox('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-04.JPEG')">
+                            <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0221-Trout-04.JPEG"
+                                 alt="송어 훅킹 장면 3" class="w-full h-48 sm:h-40 object-cover object-center bg-slate-100">
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-3 text-center">정확히 주둥이 측면(가위턱)에 훅이 걸린 송어들. 강력한 반전(Turn)의 증거.</p>
+                </div>
+            </section>
+
+            <!-- Color Rotation Guide Link Banner -->
+            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border-2 border-emerald-200 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🎨</div>
+                    <div>
+                        <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-0.5">Technique Reference</p>
+                        <h3 class="font-extrabold text-slate-800 text-base leading-tight">컬러 로테이션 전략 가이드</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">이날 조행에서 도출된 Habituation · Visual Reset · Reaction Bite 원리와 5색 로테이션 세트를 체계적으로 정리한 레퍼런스 문서입니다.</p>
+                    </div>
+                </div>
+                <a href="https://caddis-gr.github.io/fishing-technique/techniques/Color_Rotation_Strategy_Guide.html"
+                   class="flex-shrink-0 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors whitespace-nowrap shadow-sm">
+                    가이드 보기 →
+                </a>
+            </div>
+
+            <!-- Section 6 (Callout) -->
+            <section class="bg-slate-700 rounded-2xl shadow-xl border border-slate-600 p-6 sm:p-10 relative overflow-hidden text-white">
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-extrabold text-emerald-400 mb-6 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        타잉 데스크를 위한 절대 원칙 (Next Step)
+                    </h2>
+                    <div class="space-y-5">
+                        <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700 backdrop-blur-sm">
+                            <h3 class="font-bold text-lg mb-2 text-slate-200">💧 젖은 훅의 본질적 뉘앙스</h3>
+                            <p class="text-slate-300 leading-relaxed">낚시 직전 수면 위로 건져 올린 '올리브 컬러' 존커테일 리치는 타잉 데스크 위 마른 상태와는 완전히 다른 생명력과 압도적인 매력을 뿜어냈습니다.</p>
+                        </div>
+                        <div class="bg-emerald-900/40 p-5 rounded-xl border border-emerald-500/50 backdrop-blur-sm">
+                            <h3 class="font-bold text-lg mb-2 text-emerald-300">🔥 확정적 결론</h3>
+                            <p class="text-emerald-100 leading-relaxed text-lg">
+                                플라이 훅의 진짜 색상은 마른 털의 색이 아닙니다. 향후 모든 훅 타잉 시, 재질 고유의 마른 색상은 철저히 배제합니다. 오직 <strong class="text-white bg-emerald-600/50 px-2 py-0.5 rounded">'물에 젖었을 때 부피가 축소되며 변하는 실루엣'</strong>과 <strong class="text-white bg-emerald-600/50 px-2 py-0.5 rounded">'물을 머금고 빛을 투과할 때의 짙어지는 질감 및 발색'</strong>만을 훅 설계의 유일하고 절대적인 기준으로 삼습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </article>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-slate-400 text-sm pb-8 border-t border-slate-200 pt-8">
+            <p>Generated for Captain's Fly Fishing Archive</p>
+            <p class="mt-1">© 2026 Captain's Log. All records preserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ESC 키로 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+<footer class="lab-archive-footer"><a href="../../field-log/index.html">← FIELD LOG 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

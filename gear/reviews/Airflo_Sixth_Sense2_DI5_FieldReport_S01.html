@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SS2 DI5 · Field Report Session 01 — 낚시대장 · CADDIS-GR LAB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --teal:#0d9488; --teal-light:#5eead4; --teal-dark:#0f766e;
+            --navy:#212121; --navy-mid:#2a2a2a;
+            --slate:#475569; --muted:#94a3b8; --bg:#f8fafc; --white:#ffffff;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Noto Sans KR',sans-serif;background:var(--navy);color:#f8fafc;line-height:1.7;}
+
+        /* 헤더 */
+        .page-header{
+            background:var(--navy-mid);
+            border-bottom:1px solid rgba(13,148,136,.2);
+            padding:20px 24px;
+            position:sticky;top:0;z-index:100;
+        }
+        .page-header-inner{
+            max-width:860px;margin:0 auto;
+            display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+        }
+        .back-link{
+            display:flex;align-items:center;gap:6px;
+            font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);
+            text-decoration:none;letter-spacing:.08em;transition:color .2s;
+        }
+        .back-link:hover{color:var(--teal-light);}
+        .back-link svg{width:14px;height:14px;flex-shrink:0;}
+        .header-title{
+            font-family:'DM Mono',monospace;font-size:11px;color:#334155;
+            letter-spacing:.1em;text-transform:uppercase;
+        }
+
+        /* 세션 히어로 */
+        .session-hero{
+            background:var(--navy);
+            padding:56px 24px 48px;
+            border-bottom:1px solid rgba(13,148,136,.15);
+            position:relative;overflow:hidden;
+        }
+        .session-hero::before{
+            content:'01';
+            font-family:'Bebas Neue',sans-serif;
+            font-size:280px;
+            color:rgba(13,148,136,.05);
+            position:absolute;
+            right:-20px;top:-20px;
+            line-height:1;letter-spacing:2px;
+            pointer-events:none;
+        }
+        .session-hero-inner{max-width:860px;margin:0 auto;position:relative;z-index:1;}
+        .sh-eyebrow{
+            font-family:'DM Mono',monospace;font-size:10px;
+            text-transform:uppercase;letter-spacing:.15em;color:var(--teal-light);
+            margin-bottom:12px;
+            display:flex;align-items:center;gap:8px;
+        }
+        .sh-eyebrow::before{content:'';width:24px;height:1px;background:var(--teal-light);}
+        .sh-title{
+            font-family:'Bebas Neue',sans-serif;
+            font-size:clamp(36px,6vw,72px);
+            color:var(--white);line-height:.95;letter-spacing:2px;
+            margin-bottom:24px;
+        }
+        .sh-title span{color:var(--teal-light);}
+
+        /* 메타 배지 */
+        .meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+        .meta-pill{
+            border-radius:8px;padding:10px 16px;
+            display:flex;flex-direction:column;gap:2px;
+        }
+        .meta-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;}
+        .meta-value{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;}
+
+        /* 컨텍스트 박스 */
+        .ctx-box{
+            border-left:3px solid rgba(249,115,22,.6);
+            background:rgba(249,115,22,.06);
+            border-radius:0 12px 12px 0;
+            padding:18px 22px;
+        }
+        .ctx-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#fb923c;margin-bottom:8px;}
+        .ctx-box p{color:#d1d5db;font-size:14px;line-height:1.75;}
+
+        /* 공통 컨테이너 */
+        .container{max-width:860px;margin:0 auto;padding:0 24px;}
+        .section{padding:52px 0;}
+        .sec-label{
+            font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;
+            letter-spacing:.15em;color:var(--teal-dark);
+            background:rgba(13,148,136,.12);border:1px solid rgba(13,148,136,.25);
+            display:inline-block;padding:3px 9px;border-radius:4px;margin-bottom:14px;
+        }
+        .sec-title{font-weight:900;font-size:clamp(20px,3.5vw,28px);color:#f8fafc;margin-bottom:6px;line-height:1.2;}
+        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(13,148,136,.2),transparent);}
+
+        /* 인용 */
+        .quote-wrap{
+            border-left:3px solid rgba(13,148,136,.7);
+            background:rgba(13,148,136,.07);
+            border-radius:0 14px 14px 0;
+            padding:22px 28px;
+        }
+        .quote-text{font-weight:700;font-size:clamp(16px,2.3vw,20px);color:#f1f5f9;line-height:1.65;margin-bottom:6px;}
+        .quote-attr{font-family:'DM Mono',monospace;font-size:10px;color:var(--teal-light);letter-spacing:.1em;}
+
+        /* 체감 카드 */
+        .verified-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+        .verified-card{
+            background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.25);
+            border-radius:16px;padding:22px;position:relative;overflow:hidden;
+            transition:all .25s ease;
+        }
+        .verified-card:hover{border-color:rgba(13,148,136,.5);background:rgba(13,148,136,.12);transform:translateY(-2px);}
+        .vc-num{position:absolute;top:14px;right:16px;font-family:'Bebas Neue',sans-serif;font-size:52px;color:rgba(13,148,136,.12);line-height:1;letter-spacing:1px;}
+        .vc-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border-radius:4px;margin-bottom:12px;}
+        .vc-badge.ok{background:rgba(13,148,136,.2);border:1px solid rgba(13,148,136,.4);color:#5eead4;}
+        .vc-badge.warn{background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.35);color:#fb923c;}
+        .vc-badge.star{background:rgba(13,148,136,.2);border:1px solid rgba(13,148,136,.4);color:#5eead4;}
+        .vc-title{font-weight:700;font-size:14px;color:#f8fafc;margin-bottom:8px;}
+        .vc-desc{font-size:12px;color:#94a3b8;line-height:1.7;}
+        .vc-desc strong{color:#5eead4;}
+
+        /* Hang Marker 바 */
+        .hm-bar-wrap{margin-top:14px;padding:14px 0 4px;border-top:1px solid rgba(13,148,136,.15);}
+        .hm-bar{position:relative;height:10px;background:rgba(255,255,255,.06);border-radius:6px;overflow:visible;margin-bottom:8px;}
+        .hm-fill{height:100%;width:100%;background:linear-gradient(90deg,#5eead4 0%,#5eead4 9.5%,rgba(255,255,255,.12) 9.5%,rgba(255,255,255,.12) 19%,#5eead4 19%,#5eead4 28.5%,rgba(255,255,255,.12) 28.5%,rgba(255,255,255,.12) 38%,#0d9488 38%,#0d9488 100%);border-radius:6px;}
+        .hm-marker{position:absolute;top:-4px;width:2px;height:18px;background:#f97316;border-radius:1px;}
+        .hm-marker-label{position:absolute;top:20px;font-family:'DM Mono',monospace;font-size:9px;color:#f97316;transform:translateX(-50%);white-space:nowrap;}
+        .hm-bar-labels{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:#475569;margin-top:28px;}
+
+        /* 비교 패널 */
+        .compare-wrap{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;}
+        .compare-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;margin-bottom:16px;}
+        .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+        .compare-card{border-radius:12px;padding:16px 18px;}
+        .compare-card-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+        .compare-card p{font-size:12px;color:#94a3b8;line-height:1.7;}
+        .compare-card p strong{color:#e2e8f0;}
+        .compare-note{padding:14px 18px;border-radius:10px;font-size:12px;color:#94a3b8;line-height:1.7;}
+        .compare-note strong{color:#fb923c;}
+
+        /* 버딕트 */
+        .verdict{
+            border-radius:16px;padding:28px 32px;
+            position:relative;overflow:hidden;
+            background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.35);
+        }
+        .verdict::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-light),var(--teal));}
+        .verdict-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#5eead4;margin-bottom:14px;}
+        .verdict-text{font-weight:700;font-size:clamp(18px,2.8vw,24px);color:#f8fafc;line-height:1.45;}
+        .verdict-sub{margin-top:10px;font-size:13px;color:#94a3b8;line-height:1.7;}
+
+        /* Open Question */
+        .oq-wrap{border-radius:16px;border:1px solid rgba(250,204,21,.25);background:rgba(250,204,21,.04);overflow:hidden;}
+        .oq-header{padding:14px 22px;border-bottom:1px solid rgba(250,204,21,.12);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .oq-badge{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#fbbf24;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.25);padding:3px 10px;border-radius:4px;}
+        .oq-status{font-family:'DM Mono',monospace;font-size:10px;color:#475569;letter-spacing:.06em;}
+        .oq-body{padding:20px 22px 16px;}
+        .oq-question{font-weight:700;font-size:clamp(15px,2.2vw,19px);color:#fef9c3;line-height:1.5;margin-bottom:6px;}
+        .oq-attr{font-family:'DM Mono',monospace;font-size:10px;color:#475569;letter-spacing:.08em;}
+        .oq-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-top:1px solid rgba(250,204,21,.1);}
+        .oq-case{padding:20px 22px;position:relative;border-right:1px solid rgba(250,204,21,.1);}
+        .oq-case:last-child{border-right:none;}
+        .oq-case-bg{font-family:'Bebas Neue',sans-serif;font-size:52px;color:rgba(250,204,21,.07);position:absolute;top:12px;right:16px;line-height:1;letter-spacing:1px;pointer-events:none;}
+        .oq-case-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#b45309;margin-bottom:10px;}
+        .oq-case-title{font-weight:700;font-size:14px;color:#fef3c7;margin-bottom:8px;line-height:1.4;}
+        .oq-case-desc{font-size:12px;color:#94a3b8;line-height:1.75;}
+        .oq-hint{margin-top:14px;padding:10px 14px;background:rgba(180,83,9,.1);border-radius:8px;font-family:'DM Mono',monospace;font-size:11px;color:#fbbf24;}
+        .oq-footer{padding:14px 22px;border-top:1px solid rgba(250,204,21,.1);display:flex;align-items:flex-start;gap:10px;}
+        .oq-footer-mark{font-family:'DM Mono',monospace;font-size:18px;color:rgba(250,204,21,.3);flex-shrink:0;line-height:1.4;}
+        .oq-footer-text{font-family:'DM Mono',monospace;font-size:11px;color:#475569;line-height:1.7;letter-spacing:.04em;}
+        .oq-footer-text span{color:#fbbf24;}
+
+        /* Next */
+        .next-box{border-left:3px solid rgba(13,148,136,.5);background:rgba(13,148,136,.05);border-radius:0 12px 12px 0;padding:18px 22px;}
+        .next-label{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#5eead4;margin-bottom:10px;}
+        .next-box ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;}
+        .next-box li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#94a3b8;line-height:1.6;}
+        .next-box li::before{content:'→';color:#5eead4;flex-shrink:0;margin-top:2px;}
+
+        /* 푸터 */
+        footer{background:var(--navy-mid);border-top:1px solid rgba(13,148,136,.15);padding:28px 24px;text-align:center;}
+        footer p{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+        footer a{color:var(--teal-light);text-decoration:none;}
+        footer a:hover{text-decoration:underline;}
+
+        @media(max-width:640px){
+            .compare-grid{grid-template-columns:1fr;}
+            .oq-case{border-right:none;border-bottom:1px solid rgba(250,204,21,.1);}
+            .oq-case:last-child{border-bottom:none;}
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">\n</head>
+<body class="archive-page"><div class="lab-archive-bar"><a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="../../research/index.html">Research</a><a href="../../gear/index.html" aria-current="page">Gear</a><a href="../../fly-patterns/index.html">Fly Patterns</a><a href="../../field-log/index.html">Field Log</a><a href="../../library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/Airflo_Sixth_Sense2_DI5_FieldReport_S01.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- 스티키 헤더 -->
+<header class="page-header">
+    <div class="page-header-inner">
+        <a class="back-link" href="Airflo_Sixth_Sense2_DI5_Review.html">
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 2L4 7l5 5"/>
+            </svg>
+            SS2 DI5 리뷰로
+        </a>
+        <span class="header-title">Field Report · Session 01</span>
+    </div>
+</header>
+
+<!-- 세션 히어로 -->
+<section class="session-hero">
+    <div class="session-hero-inner">
+        <p class="sh-eyebrow">Airflo Sixth Sense 2 DI5 · Field Report</p>
+        <h1 class="sh-title">SESSION <span>01</span></h1>
+
+        <div class="meta-row">
+            <div class="meta-pill" style="background:rgba(13,148,136,.12);border:1px solid rgba(13,148,136,.3);">
+                <span class="meta-label">Date</span>
+                <span class="meta-value" style="color:#5eead4;">2026.03.29</span>
+            </div>
+            <div class="meta-pill" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);">
+                <span class="meta-label">Venue</span>
+                <span class="meta-value" style="color:#e2e8f0;">한터낚시터</span>
+            </div>
+            <div class="meta-pill" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);">
+                <span class="meta-label">Rod</span>
+                <span class="meta-value" style="color:#e2e8f0;font-size:17px;">Foundation 690-4</span>
+            </div>
+            <div class="meta-pill" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);">
+                <span class="meta-label">Usage</span>
+                <span class="meta-value" style="color:#e2e8f0;font-size:17px;">간헐적</span>
+            </div>
+            <div class="meta-pill" style="background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.3);">
+                <span class="meta-label">Bottom Rig</span>
+                <span class="meta-value" style="color:#fdba74;font-size:18px;">턴오버</span>
+            </div>
+        </div>
+
+        <div class="ctx-box">
+            <p class="ctx-label">Session Context</p>
+            <p>수온 전도기(전도기) 영향으로 송어가 거의 떠오른 날. 기존과 다르게 바텀에서의 반응의 거의 없는, 첫 필드 테스트. SS2 DI5로 바텀 공략을 시도했으나 낱마리에 그침. <strong style="color:#fdba74;">라인 자체의 물성·조작감 중심으로 기록.</strong></p>
+        </div>
+    </div>
+</section>
+
+<!-- 리뷰 인용 -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Review Quote</span>
+        <div class="quote-wrap">
+            <p class="quote-text">
+                "사전 스트레치 후에도 약간의 탱글링이 느껴졌다.<br>
+                6% 연신율 덕분에 라인이 거의 늘어나지 않아 다소 딱딱한 첫 느낌.<br>
+                그만큼 훅셋은 쪼금 더 빠르게 들어가는 듯했다.<br>
+                40·20·10ft Hang Marker는 수심층 가늠에 쌍따봉 👍🏻👍🏻<br>
+                <span style="color:#5eead4;">충분히 메인 라인이 될 수 있겠다는 좋은 느낌."</span>
+            </p>
+            <p class="quote-attr">— 낚시대장 · 2026.03.29 한터낚시터</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 체감 확인 -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Verified in Field</span>
+        <h2 class="sec-title" style="margin-bottom:24px;">현장 체감 확인</h2>
+        <div class="verified-grid">
+
+            <div class="verified-card">
+                <div class="vc-num">01</div>
+                <div class="vc-badge warn">⚠ 주의 확인</div>
+                <h4 class="vc-title">사전 스트레치 후 탱글링</h4>
+                <p class="vc-desc">미리 충분히 스트레칭을 했음에도 <strong>라인 메모리</strong>가 잔존. PU 소재의 코일 메모리가 PVC 대비 강하다는 점을 실전에서 재확인. 앞으로 상당기간 길들이기가 필요하다고 판단됨.</p>
+            </div>
+
+            <div class="verified-card">
+                <div class="vc-num">02</div>
+                <div class="vc-badge ok">✓ 체감 확인</div>
+                <h4 class="vc-title">딱딱한 물성 → 빠른 훅셋</h4>
+                <p class="vc-desc">6% 연신율 덕분에 <strong>라인이 거의 늘어나지 않아</strong> 다소 딱딱한 첫 느낌. 그만큼 훅셋은 <strong>쪼금 더 빠르게</strong> 들어가는 듯한 체감. PVC 라인과의 물성 차이가 손끝에서 실감됨.</p>
+            </div>
+
+            <div class="verified-card">
+                <div class="vc-num">03</div>
+                <div class="vc-badge star">✓ 쌍따봉</div>
+                <h4 class="vc-title">Hang Marker — 실전 유효</h4>
+                <p class="vc-desc"><strong>40 · 20 · 10ft</strong> 촉각 마커가 리트리브 중 수심층 가늠에 실제로 유용. 눈이 아닌 손끝으로 잔여 라인량을 인식, <strong>새벽 어둠 속</strong> 킬존 진입 타이밍에 특히 효과적.</p>
+                <div class="hm-bar-wrap">
+                    <div class="hm-bar">
+                        <div class="hm-fill"></div>
+                        <div class="hm-marker" style="left:9.5%;"><span class="hm-marker-label">10ft</span></div>
+                        <div class="hm-marker" style="left:19%;"><span class="hm-marker-label">20ft</span></div>
+                        <div class="hm-marker" style="left:38%;"><span class="hm-marker-label">40ft</span></div>
+                    </div>
+                    <div class="hm-bar-labels">
+                        <span>Tip</span><span style="color:#5eead4;">← Head 46ft →</span><span>Running Line</span><span>105ft</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Titan 3D vs SS2 비교 -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Line Comparison</span>
+        <h2 class="sec-title" style="margin-bottom:20px;">Titan 3D vs SS2 DI5 — 1차 비교</h2>
+        <div class="compare-wrap">
+            <div class="compare-grid">
+                <div class="compare-card" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);">
+                    <p class="compare-card-label" style="color:#64748b;">SA Sonar Titan 3D</p>
+                    <p>i/3/5 밀도 단계 구성으로 앞이 더 깊고 뒤가 얕은 완만한 사선 형성. 발앞 킬존에서의 결과물이 검증된 <strong>기준선(baseline)</strong>.</p>
+                </div>
+                <div class="compare-card" style="background:rgba(13,148,136,.06);border:1px solid rgba(13,148,136,.25);">
+                    <p class="compare-card-label" style="color:#0d9488;">Airflo SS2 DI5 ← 이 라인</p>
+                    <p>전 구간 균일 5ips 직선 침하. 이날은 턴오버 상황으로 <strong>바텀 반응이 미미함</strong>. 여러번의 경험이 더 필요하다고 판단됨.</p>
+                </div>
+            </div>
+            <div class="compare-note" style="background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);">
+                <strong>결론 (1차):</strong> 전도기라는 특수 조건 탓에 침하 패턴 비교는 유의미한 데이터 미확보. <strong>라인 물성(저신장·Hang Marker)만 부분 확인. 바닥권 정상 조건 세션에서 재검증 필요.</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Session Verdict -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Session 01 Verdict</span>
+        <div class="verdict" style="margin-top:8px;">
+            <p class="verdict-label">Session 01 Verdict</p>
+            <p class="verdict-text">"충분히 메인 라인이 될 수 있겠다."</p>
+            <p class="verdict-sub">턴오버라는 특별한 상황에 짧은 투입이었지만, PU 소재의 물성과 Hang Marker 실용성은 기대 이상. 바닥권 정상 컨디션에서의 Titan 3D 직접 비교가 기대됨. 단, <strong style="color:#fcd34d;">출조 전 충분한 스트레칭 루틴은 필수</strong>로 확인.</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Open Question -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Open Question</span>
+        <h2 class="sec-title" style="margin-bottom:16px;">첫 투입 후 드는 의문</h2>
+        <div class="oq-wrap">
+            <div class="oq-header">
+                <span class="oq-badge">Open Question</span>
+                <span class="oq-status">Session 01 · 검증 전 의문 · 미결</span>
+            </div>
+            <div class="oq-body">
+                <p class="oq-question">"6% 저신축 연신율 —<br>안 늘어나는 게 과연 좋은 것일까?"</p>
+                <p class="oq-attr">— 낚시대장 · 첫 실전 투입 후 드는 의문</p>
+            </div>
+            <div class="oq-cases">
+                <div class="oq-case">
+                    <div class="oq-case-bg">01</div>
+                    <p class="oq-case-label">파이팅 중 완충재 부재</p>
+                    <p class="oq-case-title">로드+라인의 탄성으로 제압해야 하는데,<br>라인이 너무 딱딱하다?</p>
+                    <p class="oq-case-desc">훅셋 후 화이팅 시 로드와 라인의 탄성으로 송어를 밀었다 당겼다 제압해야 하는데, 6% 저신축이라면 라인이 완충재 역할을 거의 못 함. 로드 단독으로 모든 충격을 흡수해야 하는 부담이 가중될 수 있음.</p>
+                    <div class="oq-hint">→ 검증 필요: 로드 액션(Fast vs Mid)과의 조합이 관건?</div>
+                </div>
+                <div class="oq-case">
+                    <div class="oq-case-bg">02</div>
+                    <p class="oq-case-label">강한 입질 = 티펫 단선 위험?</p>
+                    <p class="oq-case-title">작은 어신까지 전달은 아주 좋은데,<br>쾅 하고 강하게 물면 티펫이 터진다?</p>
+                    <p class="oq-case-desc">미세 어신은 손끝에 그대로 전달되는 장점이 있지만, 강하게 물고 돌아서는 입질에는 라인의 신장 여유가 없으니 충격이 고스란히 티펫으로 몰려 단선 위험이 높아질 수 있음.</p>
+                    <div class="oq-hint">→ 검증 필요: 티펫 굵기 업사이징이 해법인가?</div>
+                </div>
+            </div>
+            <div class="oq-footer">
+                <span class="oq-footer-mark">※</span>
+                <p class="oq-footer-text">이 섹션은 검증된 사실이 아닌 <span>현장에서 생긴 미결 의문</span>입니다. 세션이 쌓이면서 데이터로 답을 찾을 예정. PU 라인 저신축의 트레이드오프는 업계에서도 논쟁 중인 주제.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Next Session -->
+<section class="section">
+    <div class="container">
+        <span class="sec-label">Next Session Target</span>
+        <div class="next-box" style="margin-top:8px;">
+            <p class="next-label">Session 02 검증 포인트</p>
+            <ul>
+                <li>바닥권 정상 컨디션에서 Titan 3D와 직접 교체 비교 (동일 포인트, 동일 채비)</li>
+                <li>중반 리트리브 구간 사선 각도 차이가 조과로 이어지는지 세션 단위 데이터 누적</li>
+                <li>빈 입질 판별력: 미세 텐션 변화가 실제로 선명하게 감지되는지 확인</li>
+                <li>강한 입질 시 티펫 단선 빈도 모니터링 — 업사이징 필요 여부 판단</li>
+                <li>스트레칭 루틴 최적화 — 탱글링 완전 해소를 위한 온수 스트레치 횟수 테스트</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+    <div class="container">
+        <p style="margin-bottom:6px;">
+            <a href="Airflo_Sixth_Sense2_DI5_Review.html">← SS2 DI5 리뷰 메인으로</a>
+            &nbsp;·&nbsp;
+            <a href="../index.html">리뷰 목록</a>
+            &nbsp;·&nbsp;
+            <a href="https://github.com/CADDIS-GR/fishing-gear" target="_blank">GitHub</a>
+        </p>
+        <p style="margin-top:8px;opacity:.4;">CADDIS-GR · 낚시대장 · 2026.03 · 관리형낚시터(저수지) 플라이 낚시 기록</p>
+    </div>
+</footer>
+
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer></body>
+</html>

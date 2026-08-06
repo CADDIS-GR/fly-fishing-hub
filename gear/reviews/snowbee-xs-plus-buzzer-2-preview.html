@@ -23,10 +23,13 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
 .hypothesis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:28px 0}.hyp-card{padding:22px;border-radius:13px;background:#172825;color:#fff}.hyp-num{font:11px 'DM Mono',monospace;color:#9ed3dc}.hyp-card h3{margin:10px 0 8px;font-size:18px}.hyp-card p{margin:0;color:rgba(255,255,255,.67);font-size:14px}
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}.gallery button{border:0;padding:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden}.gallery img{width:100%;aspect-ratio:3/2;object-fit:cover;transition:.25s}.gallery button:hover img{transform:scale(1.025)}
 .test-plan{counter-reset:test;display:grid;gap:11px;margin-top:24px}.test-row{display:grid;grid-template-columns:42px 1fr;gap:15px;padding:18px;background:#fff;border:1px solid var(--line);border-radius:12px}.test-row:before{counter-increment:test;content:counter(test,decimal-leading-zero);font:18px 'DM Mono',monospace;color:var(--blue2)}.test-row h3{margin:0 0 5px;font-size:16px}.test-row p{margin:0;font-size:14px}
+.season-path{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}.season-path article{padding:20px;border:1px solid var(--line);border-radius:12px;background:#fff}.season-path article.selected{background:#eaf3f4;border-color:#8fbec8}.season-path span{font:10px 'DM Mono',monospace;letter-spacing:.12em;color:var(--muted)}.season-path strong{display:block;margin:8px 0;font-size:17px}.season-path p{margin:0;font-size:13px}
+.pairing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0}.rod-card,.pair-note{padding:24px;border-radius:14px}.rod-card{background:#132723;color:#fff}.rod-card p{color:rgba(255,255,255,.7)}.pair-note{background:#fff;border:1px solid var(--line)}.pairing-grid h3{margin:8px 0 14px;font-size:22px}.rod-specs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}.rod-specs span{padding:4px 8px;border:1px solid rgba(255,255,255,.22);border-radius:999px;font:10px 'DM Mono',monospace;color:#acdce4}
+.mail-box{margin:30px 0;padding:26px;border:1px solid #b8d4d9;border-radius:14px;background:#f2f8f9}.mail-head{display:flex;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid #c9dfe3}.mail-head span,.mail-source{font:10px 'DM Mono',monospace;letter-spacing:.1em;color:var(--muted)}.mail-quote{margin:22px 0!important;font:italic 26px/1.5 'DM Serif Display',serif;color:var(--blue2)!important}.mail-points{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.mail-points div{padding:15px;background:#fff;border-radius:10px}.mail-points strong{display:block;font:22px 'DM Mono',monospace;color:var(--blue2)}.mail-points span{display:block;margin-top:6px;font-size:12px;color:var(--muted)}.brand-note{margin-top:20px;padding:16px 18px;border-left:3px solid var(--pending);background:#fff7eb;color:#76511f;font-size:14px}.mail-source{margin-top:16px}
 .source-list{display:grid;gap:10px;margin-top:24px}.source-list a{display:flex;justify-content:space-between;gap:20px;padding:16px 18px;background:#fff;border:1px solid var(--line);border-radius:10px}.source-list a:hover{border-color:var(--blue2)}.source-list span:first-child{font-weight:700}.source-list span:last-child{font:10px 'DM Mono',monospace;color:var(--muted);white-space:nowrap}
 .closing{margin-top:36px;padding:30px;border-radius:14px;background:var(--blue2);color:#fff}.closing h3{margin:0 0 10px;font-size:22px}.closing p{margin:0;color:rgba(255,255,255,.77)}
 #lightbox{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:28px;background:rgba(5,12,14,.94)}#lightbox.open{display:flex}#lightbox img{max-width:min(1200px,94vw);max-height:88vh;object-fit:contain}#lightbox button{position:absolute;top:18px;right:22px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:transparent;color:#fff;width:42px;height:42px;font-size:20px;cursor:pointer}
-@media(max-width:760px){.hero{min-height:72vh}.hero-content{width:min(100% - 28px,1100px);padding-bottom:54px}.hero-copy{font-size:15px}.summary-grid{grid-template-columns:1fr 1fr}.summary-item:nth-child(2){border:0}.compare,.hypothesis,.gallery{grid-template-columns:1fr}.line-diagram{grid-template-columns:1fr}.summary{padding:22px}.source-list a{display:block}.source-list span{display:block}.source-list span:last-child{margin-top:6px}}
+@media(max-width:760px){.season-path,.pairing-grid,.mail-points{grid-template-columns:1fr}.mail-head{display:block}.mail-head strong{display:block;margin-top:6px}.hero{min-height:72vh}.hero-content{width:min(100% - 28px,1100px);padding-bottom:54px}.hero-copy{font-size:15px}.summary-grid{grid-template-columns:1fr 1fr}.summary-item:nth-child(2){border:0}.compare,.hypothesis,.gallery{grid-template-columns:1fr}.line-diagram{grid-template-columns:1fr}.summary{padding:22px}.source-list a{display:block}.source-list span{display:block}.source-list span:last-child{margin-top:6px}}
 </style>
 <link rel="stylesheet" href="../../assets/css/archive.css?v=20260806-layout">
 </head>
@@ -39,7 +42,7 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
     <div class="status">PURCHASED · FIELD TEST PENDING</div>
     <div class="eyebrow">Snowbee · XS-Plus · Stillwater Fly Line</div>
     <h1>XS-Plus <em>Buzzer 2</em></h1>
-    <p class="hero-copy">10ft 슬로우 싱킹 팁으로 수면 아래의 직선 접촉을 만드는 버저 전용 라인. 아직 물에 넣기 전, 공식 사양과 해외 운용 경험을 바탕으로 정리한 구매 프리뷰다.</p>
+    <p class="hero-copy">지난 시즌 막바지, 표층과 중층을 오가는 송어를 CHIRONOMID LARVA·PUPA로 더 적극적이고 섬세하게 공략하기 위해 선택한 10ft 싱크팁 라인. 아직 물에 넣기 전, 구매 배경과 운용 계획을 정리한 프리뷰다.</p>
     <div class="hero-specs"><span>10FT SINK TIP</span><span>1.7 IPS</span><span>FLOATING BODY</span><span>LIGHT BLUE / IVORY</span><span>WF 5–8</span></div>
   </div>
 </header>
@@ -54,11 +57,16 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
 </section>
 <main class="article wrap">
   <section class="section">
-    <div class="sec-label">01 · Purchase Note</div>
-    <h2>왜 Buzzer 2였나</h2>
-    <p class="lead">플로팅 라인과 롱리더는 가장 섬세한 선택이지만, 바람과 파도가 커지면 수면 위 라인이 움직이며 리더와 플라이의 속도까지 바꾼다. Buzzer 2는 이 문제를 더 무거운 전체 라인으로 해결하지 않고, 앞쪽 10ft만 천천히 잠기게 하는 접근이다.</p>
-    <p>구매 목적은 빠른 침강이 아니다. <strong>수면 아래에 긴 앵커 구간을 만들고, 라인–리더–플라이 사이의 불필요한 처짐을 줄이는 것</strong>이다. Snowbee 역시 긴 팁이 더 오래 수면 아래에 머물러 플라이와 직선 접촉을 유지하고, 리트리브 속도로 수심을 조절하도록 설명한다.</p>
-    <div class="fact"><strong>현재 판단:</strong> Buzzer 2는 플로팅 롱리더와 풀 인터미디어트 사이의 빈칸을 채우는 라인이다. 얕은 표층 전용 Buzzer 1보다 바람 대응과 중층 접근 범위를 넓히되, 플로팅 바디의 시인성과 멘딩 여지는 남긴다.</div>
+    <div class="sec-label">01 · Purchase Background</div>
+    <h2>지난 시즌 막바지가 만든 선택</h2>
+    <p class="lead">지난 시즌 막바지에는 송어가 수면 가까이 떠오르면서도 한 수심에 고정되지 않고, 표층과 중층권을 오가는 장면이 반복됐다. 이때 CHIRONOMID LARVA와 PUPA를 이용한 섬세한 마이크로 님핑이 주효했다. 다음 단계는 같은 섬세함을 유지하면서도 변화하는 수심을 더 적극적으로 따라가는 것이었다.</p>
+    <div class="season-path">
+      <article><span>FLOATING</span><strong>바람에 취약</strong><p>긴 리더와 자연스러운 침강에는 유리하지만, 바람과 파도가 라인 벨리를 만들면 플라이의 속도와 입질 전달이 흐트러진다.</p></article>
+      <article><span>HOVER / INTERMEDIATE</span><strong>전체 라인이 침강</strong><p>바람 대응은 좋아지지만 극저속 리트리브에서는 라인 시스템 전체가 계속 내려가, 표층–중층 경계를 오래 유지하기 어렵다.</p></article>
+      <article class="selected"><span>BUZZER 2</span><strong>10ft만 천천히</strong><p>플로팅 바디의 관리성을 남기고, 긴 팁만 수면 아래에 넣어 CHIRONOMID 마이크로 님핑의 접촉과 수심 제어를 보완한다.</p></article>
+    </div>
+    <p>따라서 구매 목적은 빠른 침강이 아니다. <strong>수면 아래에 10ft의 느린 앵커 구간을 만들고, 라인–리더–플라이 사이의 처짐을 줄여 LARVA와 PUPA를 더 오래, 더 정확한 수심에서 보여주는 것</strong>이다.</p>
+    <div class="fact"><strong>현재 판단:</strong> Buzzer 2는 플로팅 롱리더와 풀 호버·인터미디어트 사이의 빈칸을 채운다. 표층과 중층을 오가는 송어를 대상으로, 마이크로 님핑의 섬세함과 적극적인 수심 추적을 함께 노리는 선택이다.</div>
   </section>
 
   <section class="section">
@@ -92,7 +100,39 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
   </section>
 
   <section class="section">
-    <div class="sec-label">04 · Working Hypothesis</div>
+    <div class="sec-label">04 · Rod & Line Pairing</div>
+    <h2>Hardy Zenith Sintrix 590-4와의 조합</h2>
+    <div class="pairing-grid">
+      <article class="rod-card">
+        <div class="label">PLANNED ROD</div>
+        <h3>Hardy Zenith Sintrix 590-4</h3>
+        <div class="rod-specs"><span>9FT</span><span>#5</span><span>4-PIECE</span></div>
+        <p>보유한 #5 로드 가운데 빠른 복원력과 선명한 라인 회수 감각을 기대하는 로드다. 10ft 싱크팁과 다중 CHIRONOMID 채비를 들어 올리고 다시 전개할 때, 이 복원력이 Buzzer 2의 긴 헤드를 얼마나 안정적으로 제어하는지가 핵심 관찰점이다.</p>
+      </article>
+      <article class="pair-note">
+        <div class="label">PAIRING EXPECTATION</div>
+        <h3>섬세함보다 “회복과 재전개”</h3>
+        <p>이 조합에서 기대하는 것은 단순한 원거리 캐스팅이 아니다. 긴 팁과 2–3개의 작은 플라이가 만든 부하를 로드가 빠르게 회복하고, 좁은 루프로 다시 정렬해 주는지 확인한다. 동일 #5 라인 매칭을 전제로 하되 평가는 현장 사용 뒤 확정한다.</p>
+      </article>
+    </div>
+
+    <div class="mail-box">
+      <div class="mail-head"><span>DIRECT CORRESPONDENCE</span><strong>Snowbee UK 본사 회신 · Simon</strong></div>
+      <p class="mail-quote">“The new line you have is ideal for Chironomid fishing.”</p>
+      <p>Snowbee는 Buzzer 2가 여러 개의 CHIRONOMID 이미테이션을 운용하는 데 적합하고, 일반 님프·Damsel 피싱과 부력 있는 포인트 플라이를 쓰는 Washing Line에도 활용할 수 있다고 답했다.</p>
+      <div class="mail-points">
+        <div><strong>42.5ft</strong><span>Buzzer 2 웨이트 포워드 헤드 길이</span></div>
+        <div><strong>Line = Rod</strong><span>로드 번호와 라인 번호를 맞추는 것이 우선</span></div>
+        <div><strong>Head at Tip</strong><span>헤드 뒤쪽이 로드 팁에 올 때 최적 캐스팅 성능 기대</span></div>
+      </div>
+      <p>답변의 기술적 핵심은 특정 자사 로드가 아니어도 <em>같은 라인 웨이트로 균형이 맞는 로드라면 Snowbee XS-Plus 라인을 정상적으로 운용할 수 있다</em>는 점이다.</p>
+      <div class="brand-note"><strong>그리고 예상대로…</strong> 로드는 자사 Spectre Pro와 상위 Prestige G-XS를 추천했다. 본사에 물었으니 자사 로드가 나온 것은 자연스러운 결말이다. 이번 리뷰에서는 그 추천보다 실제 보유 로드인 Hardy Zenith와의 매칭을 직접 검증한다.</div>
+      <div class="mail-source">사용자 제공 이메일 회신을 요약·번역. 개인 식별 정보는 제외했다.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sec-label">05 · Working Hypothesis</div>
     <h2>실전 투입 전 운용 가설</h2>
     <div class="hypothesis">
       <article class="hyp-card"><div class="hyp-num">HYPOTHESIS 01</div><h3>바람 속 앵커 효과</h3><p>10ft 팁이 수면 아래에 자리 잡으면 플로팅 라인 전체가 파도에 밀리는 현상을 줄일 가능성이 있다.</p></article>
@@ -104,7 +144,7 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
   </section>
 
   <section class="section">
-    <div class="sec-label">05 · Owner Gallery</div>
+    <div class="sec-label">06 · Owner Gallery</div>
     <h2>구매 제품 사진</h2>
     <p>실제 구매한 Snowbee XS-Plus Buzzer 2의 패키지와 라인 상태를 기록했다. 사진을 누르면 크게 볼 수 있다.</p>
     <div class="gallery">
@@ -113,10 +153,10 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
   </section>
 
   <section class="section">
-    <div class="sec-label">06 · Field Test Protocol</div>
+    <div class="sec-label">07 · Field Test Protocol</div>
     <h2>첫 사용 때 확인할 것</h2>
     <div class="test-plan">
-      <article class="test-row"><div><h3>캐스팅과 턴오버</h3><p>플로팅 라인 대비 10ft 팁의 힌지감, 2–3 플라이 채비의 루프 안정성, 실사용 가능 거리를 기록한다.</p></div></article>
+      <article class="test-row"><div><h3>Hardy Zenith 매칭과 턴오버</h3><p>Zenith Sintrix 590-4에 장착해 42.5ft 헤드의 로딩 지점, 10ft 팁의 힌지감, 2–3 플라이 채비의 루프 안정성과 재전개 속도를 기록한다.</p></div></article>
       <article class="test-row"><div><h3>실제 침강 카운트</h3><p>정지 상태와 느린 리트리브에서 5·10·15초 카운트별 플라이 수심을 비교한다.</p></div></article>
       <article class="test-row"><div><h3>바람과 파도 대응</h3><p>플로팅 롱리더 대비 라인 밀림, 벨리 발생, 멘딩 빈도와 채비 속도 변화를 확인한다.</p></div></article>
       <article class="test-row"><div><h3>입질 전달</h3><p>라인 끝의 정지·당김·잠김이 손과 시야에 어떻게 전달되는지, 미스 챔질 비율과 함께 기록한다.</p></div></article>
@@ -125,7 +165,7 @@ h1{max-width:850px;margin:0;font:400 clamp(44px,7vw,86px)/.98 'DM Serif Display'
   </section>
 
   <section class="section">
-    <div class="sec-label">07 · Sources</div>
+    <div class="sec-label">08 · Sources</div>
     <h2>근거와 참고 자료</h2>
     <div class="source-list">
       <a href="https://www.snowbee.co.uk/snowbee-xs-plus-buzzer-2-sink-tip-fly-lines-light-blue-ivory.html" target="_blank" rel="noopener"><span>Snowbee · Buzzer 2 공식 제품 페이지</span><span>OFFICIAL ↗</span></a>

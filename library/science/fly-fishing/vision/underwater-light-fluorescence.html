@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>형광(Fluorescence)과 수중 빛의 과학 — CADDIS-GR Archive · CADDIS-GR LAB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #f4f7fb;
+      --bg2:       #eef2f8;
+      --surface:   #ffffff;
+      --surface2:  #f0f4fa;
+      --border:    #dde4f0;
+      --border2:   #c4cfdf;
+      --text:      #2c3a52;
+      --muted:     #7a8fa8;
+      --accent-uv: #5b3fd4;
+      --accent-fl: #e85d0a;
+      --accent-fl2:#d42a84;
+      --accent-blue:#1a78c2;
+      --white:     #ffffff;
+      --shadow-sm: 0 1px 4px rgba(44,58,82,.07);
+      --shadow-md: 0 4px 16px rgba(44,58,82,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 레이아웃 ── */
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .nav-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent-blue);
+      letter-spacing: .07em;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .nav-links {
+      display: flex; gap: 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--accent-blue); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 56px 0 40px;
+      position: relative;
+    }
+    .hero-glow {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 55% 50% at 15% 60%, rgba(91,63,212,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 80% 30%, rgba(232,93,10,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .breadcrumb {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 16px;
+      opacity: .85;
+    }
+    .hero h1 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.7rem, 4.5vw, 2.7rem);
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 10px;
+      letter-spacing: -.02em;
+    }
+    .hero h1 .hl-uv { color: var(--accent-uv); }
+    .hero h1 .hl-fl {
+      background: linear-gradient(90deg, var(--accent-fl), var(--accent-fl2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+    .hero-sub span { color: var(--accent-blue); }
+
+    /* 원본 링크 배지 */
+    .source-links {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .src-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .2s;
+      border: 1.5px solid;
+    }
+    .src-btn.yt {
+      background: #fff5f0;
+      border-color: #ffc4a0;
+      color: #c0390a;
+    }
+    .src-btn.yt:hover { background: #ffe8dc; border-color: var(--accent-fl); }
+    .src-btn.pdf {
+      background: #f0f4ff;
+      border-color: #b8c8e8;
+      color: var(--accent-blue);
+    }
+    .src-btn.pdf:hover { background: #e0eaff; border-color: var(--accent-blue); }
+    .src-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── 구분선 ── */
+    .rule {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      margin: 6px 0 40px;
+    }
+
+    /* ── TL;DR 카드 ── */
+    .tldr {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .tldr::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--accent-uv), var(--accent-fl), var(--accent-fl2));
+    }
+    .tldr-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--accent-fl);
+      margin-bottom: 14px;
+    }
+    .tldr h2 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -.01em;
+    }
+    .tldr-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .tldr-list li { display: flex; gap: 13px; align-items: flex-start; }
+    .tldr-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px; font-size: 14px;
+    }
+    .tldr-icon.blue { background: #e8f2ff; }
+    .tldr-icon.uv   { background: #ede8ff; }
+    .tldr-icon.fl   { background: #fff0e8; }
+    .tldr-list strong { color: var(--text); }
+    .tag-fl  { color: var(--accent-fl);   font-weight: 700; }
+    .tag-fl2 { color: var(--accent-fl2);  font-weight: 700; }
+    .tag-uv  { color: var(--accent-uv);   font-weight: 700; }
+    .tag-blue{ color: var(--accent-blue); font-weight: 700; }
+
+    /* ── 섹션 헤딩 ── */
+    .section-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px;
+      letter-spacing: -.01em;
+    }
+    .section-title .num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: .05em;
+    }
+
+    /* ── 그리드 카드 ── */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow-md);
+    }
+    .card-head {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .card ul li {
+      padding-left: 14px;
+      position: relative;
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .card ul li::before {
+      content: '—';
+      position: absolute; left: 0;
+      color: var(--border2);
+      font-size: 12px;
+    }
+    .card ul li strong { color: var(--text); font-weight: 700; }
+    .card p { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+
+    /* 스펙트럼 */
+    .spectrum-bar {
+      height: 9px; border-radius: 5px;
+      background: linear-gradient(90deg,
+        #ff2020 0%, #ff6b00 12%, #ffe000 25%,
+        #00dd66 40%, #0099ff 60%, #5b3fd4 78%, #bb00ee 90%, #ccc 100%
+      );
+      margin: 14px 0 6px;
+    }
+    .spectrum-labels {
+      display: flex; justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .spectrum-arrow {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted); margin-bottom: 4px;
+    }
+    .fade-label {
+      font-size: 11px; color: #b04000;
+      padding: 5px 10px; border-radius: 6px;
+      background: #fff0e8;
+      border: 1px solid #ffc8a0;
+      display: inline-block; margin-top: 6px;
+    }
+    .survive-label {
+      font-size: 11px; color: var(--accent-uv);
+      padding: 5px 10px; border-radius: 6px;
+      background: #ede8ff;
+      border: 1px solid #c4b8f0;
+      display: inline-block; margin-top: 6px;
+    }
+    .spectrum-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    /* 형광 플로우 */
+    .fluor-flow {
+      display: flex; align-items: center;
+      margin: 14px 0; flex-wrap: wrap; gap: 6px;
+    }
+    .fluor-box {
+      padding: 8px 13px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      text-align: center; line-height: 1.4;
+    }
+    .fluor-box.uv   { background: #ede8ff; border: 1px solid #c4b8f0; color: var(--accent-uv); }
+    .fluor-box.atom { background: #e8f2ff; border: 1px solid #b0cff0; color: var(--accent-blue); }
+    .fluor-box.emit { background: #fff0e8; border: 1px solid #ffc4a0; color: var(--accent-fl); }
+    .fluor-arrow { color: var(--muted); font-size: 18px; }
+    .fluor-note {
+      font-size: 13px; color: var(--muted);
+      padding: 10px 14px;
+      background: var(--surface2);
+      border-left: 3px solid var(--accent-fl);
+      border-radius: 0 8px 8px 0;
+      margin-top: 10px; line-height: 1.6;
+    }
+    .fluor-note strong { color: var(--accent-fl); }
+
+    /* ── 수심 시각화 ── */
+    .depth-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 28px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+    .depth-visual { display: flex; gap: 18px; margin-top: 18px; align-items: flex-start; }
+    .depth-bar { width: 28px; display: flex; flex-direction: column; }
+    .depth-seg {
+      width: 100%; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,.5);
+      border-right: 2px solid rgba(255,255,255,.12);
+    }
+    .depth-seg:first-child { border-radius: 6px 6px 0 0; }
+    .depth-seg:last-child  { border-radius: 0 0 6px 6px; }
+    .depth-labels { display: flex; flex-direction: column; flex: 1; }
+    .depth-label-row {
+      height: 44px; display: flex; align-items: center;
+      font-size: 13px; color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding: 4px 0;
+    }
+    .depth-label-row:last-child { border-bottom: none; }
+    .depth-label-row .meter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--muted);
+      width: 44px; flex-shrink: 0;
+    }
+
+    /* 배지 */
+    .badge {
+      display: inline-block; padding: 1px 7px;
+      border-radius: 4px; font-size: 11.5px;
+      font-weight: 700; margin-right: 3px;
+    }
+    .badge.red    { background: #ffe8e8; color: #c02020; border: 1px solid #ffc0c0; }
+    .badge.orange { background: #fff0e0; color: #b05000; border: 1px solid #ffd090; }
+    .badge.green  { background: #e0f8ec; color: #1a7a40; border: 1px solid #90ddb0; }
+    .badge.uv     { background: #ede8ff; color: var(--accent-uv); border: 1px solid #c4b8f0; }
+    .badge.fl     { background: #fff0e8; color: var(--accent-fl); border: 1px solid #ffc4a0; }
+
+    /* ── 경고 박스 ── */
+    .warn-box {
+      background: #fffbea;
+      border: 1px solid #f0d060;
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin-bottom: 40px;
+      display: flex; gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .warn-icon { font-size: 26px; flex-shrink: 0; }
+    .warn-box h3 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      color: #8a6000;
+      font-size: 1rem;
+      margin-bottom: 7px;
+    }
+    .warn-box p { font-size: 13.5px; line-height: 1.7; color: #5a4000; }
+    .warn-box strong { color: #8a6000; }
+    .compare { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .compare-item {
+      padding: 7px 13px; border-radius: 7px;
+      font-size: 13px; font-weight: 600;
+    }
+    .compare-item.bad {
+      background: #f0f0f0; border: 1px solid #ccc;
+      color: #999; text-decoration: line-through;
+    }
+    .compare-item.good {
+      background: #fff0e8; border: 1px solid #ffc4a0;
+      color: var(--accent-fl);
+    }
+
+    /* ── 낚시대장 노트 ── */
+    .note-box {
+      background: #f0f6ff;
+      border: 1px solid #b8d0f0;
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .note-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-uv));
+    }
+    .note-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      background: #dbeeff;
+      border: 1px solid #a0c8f0;
+      color: var(--accent-blue);
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .note-box h3 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -.01em;
+    }
+    .note-box p { font-size: 13.5px; line-height: 1.85; color: #3a5070; }
+    .note-box p + p { margin-top: 10px; }
+    .note-tips { margin-top: 16px; display: flex; flex-direction: column; gap: 9px; }
+    .tip-row {
+      display: flex; align-items: flex-start; gap: 11px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid #c8dcf0;
+      border-radius: 9px;
+      font-size: 13.5px; color: var(--text);
+    }
+    .tip-row .tip-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── 출처 푸터 ── */
+    .source-footer {
+      margin-top: 52px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .source-footer .brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: .08em;
+    }
+    .source-footer .refs { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* 애니메이션 */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero          { animation: fadeUp .5s ease both; }
+    .tldr          { animation: fadeUp .5s .06s ease both; }
+    .grid2         { animation: fadeUp .5s .12s ease both; }
+    .depth-section { animation: fadeUp .5s .16s ease both; }
+    .warn-box      { animation: fadeUp .5s .20s ease both; }
+    .note-box      { animation: fadeUp .5s .24s ease both; }
+  </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html" aria-current="page">Library</a></nav></div><div class="lab-archive-source"><span>SCIENCE · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-fishing-science/blob/main/vision/underwater-light-fluorescence.html" target="_blank" rel="noopener">원본 저장소</a></div>
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="/fly-fishing-hub/library/index.html">← Fly Fishing Science</a>
+    <div class="nav-links">
+      <a href="https://caddis-gr.github.io/fly-fishing-hub/">Hub</a>
+      <a href="https://github.com/CADDIS-GR/fly-fishing-science">GitHub</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <div class="breadcrumb">CADDIS-GR · Fly Fishing Science · Vision</div>
+    <h1>
+      수중 <span class="hl-uv">빛의 감쇄</span>와<br>
+      <span class="hl-fl">형광(Fluorescence)</span> 플라이의 효과
+    </h1>
+    <p class="hero-sub">
+      <span>출처: Tactical Fly Fisher (YouTube)</span> &nbsp;·&nbsp;
+      Colin Kageyama — <em>What Fish See</em> &nbsp;·&nbsp;
+      Jason Randall — <em>Trout Sense</em>
+    </p>
+
+    <!-- 원본 링크 -->
+    <div class="source-links">
+      <a class="src-btn yt"
+         href="https://youtu.be/gJ-w5PWnLjY?si=9iqQ0VjxUv4xA9yH"
+         target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+        </svg>
+        원본 영상 보기
+      </a>
+      <a class="src-btn pdf"
+         href="https://github.com/CADDIS-GR/fly-fishing-science/blob/main/vision/underwater_light_fluorescence_fly_fishing.pdf"
+         target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+        원문 PDF 다운로드
+      </a>
+    </div>
+
+    <!-- 유튜브 썸네일 링크 -->
+    <a href="https://youtu.be/gJ-w5PWnLjY?si=9iqQ0VjxUv4xA9yH"
+       target="_blank" rel="noopener"
+       style="
+         display: block;
+         margin-top: 24px;
+         border-radius: 12px;
+         overflow: hidden;
+         box-shadow: var(--shadow-md);
+         border: 1px solid var(--border);
+         aspect-ratio: 16/9;
+         width: 100%;
+         position: relative;
+         background: #000;
+         text-decoration: none;
+       ">
+      <img
+        src="https://img.youtube.com/vi/gJ-w5PWnLjY/maxresdefault.jpg"
+        alt="수중 빛의 감쇄와 형광 플라이의 효과 — Tactical Fly Fisher"
+        style="width:100%; height:100%; object-fit:cover; display:block; opacity:.92; transition: opacity .2s;"
+        onmouseover="this.style.opacity='.75'"
+        onmouseout="this.style.opacity='.92'"
+      >
+      <!-- 재생 버튼 오버레이 -->
+      <div style="
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        pointer-events: none;
+      ">
+        <div style="
+          width: 64px; height: 64px;
+          background: rgba(200,40,10,.88);
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,.4);
+        ">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+      </div>
+      <!-- 채널명 라벨 -->
+      <div style="
+        position: absolute; bottom: 12px; left: 14px;
+        background: rgba(0,0,0,.6);
+        color: #fff;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: .04em;
+      ">▶ Tactical Fly Fisher — YouTube에서 보기</div>
+    </a>
+  </header>
+
+  <div class="rule"></div>
+
+  <!-- TL;DR -->
+  <section class="tldr">
+    <div class="tldr-label">// TL;DR — 핵심 3줄 요약</div>
+    <h2>깊을수록 색은 사라지지만, 형광은 다르다</h2>
+    <ul class="tldr-list">
+      <li>
+        <div class="tldr-icon blue">🌊</div>
+        <div><strong>빛의 감쇄 &amp; 색상 변화 :</strong> 수심이 깊어질수록 빨강·주황·노랑 등 긴 파장의 색은 빠르게 흡수되어 칙칙한 갈색으로 변합니다. 수심 1~2m에서도 이미 상당한 색상 변화가 일어납니다.</div>
+      </li>
+      <li>
+        <div class="tldr-icon uv">⚡</div>
+        <div><strong>형광(Fluorescence)의 예외 :</strong> 형광 소재는 깊은 곳까지 침투하는 <span class="tag-uv">UV(자외선)</span>를 흡수해 고유의 가시광선 색상으로 재방출합니다. 깊은 물속에서도 밝기와 색을 잃지 않습니다.</div>
+      </li>
+      <li>
+        <div class="tldr-icon fl">🎯</div>
+        <div><strong>핫스팟(Hot Spot)의 유인력 :</strong> 자연계에 없는 형광 핫스팟은 수많은 부유물 속에서 플라이를 돋보이게 하여 <span class="tag-fl">강력한 유인력(Pulling Power)</span>을 발휘합니다.</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 2열 카드 -->
+  <div class="grid2">
+    <!-- 빛과 색의 과학 -->
+    <div class="card">
+      <div class="card-head">🔬 빛과 색상의 과학</div>
+      <div class="spectrum-bar"></div>
+      <div class="spectrum-labels">
+        <span>RED</span><span>ORANGE</span><span>YELLOW</span>
+        <span>GREEN</span><span>BLUE</span><span class="tag-uv">UV</span>
+      </div>
+      <div class="spectrum-arrow">
+        <span>← 긴 파장 (저에너지)</span>
+        <span>짧은 파장 (고에너지) →</span>
+      </div>
+      <div class="spectrum-wrap">
+        <span class="fade-label">먼저 사라짐 — 빨강·주황·노랑</span>
+        <span class="survive-label">깊이 침투 — 파랑·UV</span>
+      </div>
+    </div>
+
+    <!-- 형광의 원리 -->
+    <div class="card">
+      <div class="card-head">✨ 형광(Fluorescence)의 원리</div>
+      <div class="fluor-flow">
+        <div class="fluor-box uv">UV 흡수<br><small>고에너지</small></div>
+        <span class="fluor-arrow">→</span>
+        <div class="fluor-box atom">전자 들뜸<br><small>높은 에너지 상태</small></div>
+        <span class="fluor-arrow">→</span>
+        <div class="fluor-box emit">가시광선 방출<br><small>본래 색 유지</small></div>
+      </div>
+      <div class="fluor-note">
+        <strong>형광 빨간색</strong>은 수중에서도 빨간색을 유지합니다.<br>
+        UV를 흡수 → 다시 빨간 가시광선으로 재방출하기 때문입니다.
+      </div>
+    </div>
+
+    <!-- 패턴 적용 -->
+    <div class="card">
+      <div class="card-head">🪝 패턴 적용: 핫스팟</div>
+      <ul>
+        <li><strong>이미테이션의 한계:</strong> 탁한 물에서는 정밀한 곤충 이미테이션도 수심 2~3m에서 그저 검고 칙칙한 실루엣이 됩니다.</li>
+        <li><strong>핫스팟 추가:</strong> 님프의 헤드·버트에 형광색을 더하면 이미테이션 기능을 유지하면서 조과가 상승합니다.</li>
+        <li><strong>블라인드 낚시:</strong> 넓은 범위에서 물고기를 탐색할 때 형광 핫스팟이 탐색 반경을 넓혀줍니다.</li>
+      </ul>
+    </div>
+
+    <!-- 취이 습성 -->
+    <div class="card">
+      <div class="card-head">🐟 물고기의 취이 습성</div>
+      <ul>
+        <li><strong>시식(Sampling) 습성:</strong> 물고기는 떠내려오는 것을 일단 입에 넣어 맛을 확인합니다. 나뭇가지, 이끼, 심지어 담배꽁초까지 물어봅니다.</li>
+        <li><strong>해치가 없을 때:</strong> 지배적인 먹이가 없는 상황일수록 플라이의 차별성이 더 중요해집니다.</li>
+        <li><strong>차별화:</strong> 형광색은 수많은 부유물 속에서 플라이를 돋보이게 하여 물고기가 다가와 입질하도록 유도합니다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 수심 시각화 -->
+  <section class="depth-section">
+    <div class="section-title">
+      <span class="num">§ 03</span>
+      수심별 색상 생존 현황
+    </div>
+    <p style="font-size:13.5px; color:var(--muted); margin-bottom:4px;">한터낚시터(최대 약 6m) 기준 — 탁도에 따라 편차 있음</p>
+    <div class="depth-visual">
+      <div class="depth-bar">
+        <div class="depth-seg" style="background:linear-gradient(180deg,#2a80a8,#1e5080);">0</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#1e5080,#163a60);">1</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#163a60,#102848);">2</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#102848,#0a1c34);">3</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#0a1c34,#061224);">4</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#061224,#030a18);">5</div>
+        <div class="depth-seg" style="background:linear-gradient(180deg,#030a18,#010510);">6</div>
+      </div>
+      <div class="depth-labels">
+        <div class="depth-label-row"><span class="meter">0 m</span><span>수면 — 모든 색상 정상</span></div>
+        <div class="depth-label-row"><span class="meter">1 m</span><span><span class="badge red">빨강</span> 흡수 시작 → 갈색화</span></div>
+        <div class="depth-label-row"><span class="meter">2 m</span><span><span class="badge orange">주황</span><span class="badge red">빨강</span> 거의 소멸 / <span class="badge fl">형광</span> 여전히 유효</span></div>
+        <div class="depth-label-row"><span class="meter">3 m</span><span><span class="badge orange">노랑</span>까지 소멸 / <span class="badge green">녹색</span> 약화 / <span class="badge fl">형광</span> 유지</span></div>
+        <div class="depth-label-row"><span class="meter">4 m</span><span>파랑·보라·UV만 잔존 / <span class="badge fl">형광</span> 주변보다 밝게 발광</span></div>
+        <div class="depth-label-row"><span class="meter">5 m</span><span>극도로 어두움 / 실루엣 &amp; <span class="badge fl">형광</span>이 핵심 무기</span></div>
+        <div class="depth-label-row"><span class="meter">6 m</span><span>일반 색 소용 없음 / <span class="badge uv">UV</span> + <span class="badge fl">형광</span>이 유일한 색상 표현 수단</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 경고 -->
+  <div class="warn-box">
+    <div class="warn-icon">⚠️</div>
+    <div>
+      <h3>타잉 시 주의: 진짜 형광 소재인지 확인할 것</h3>
+      <p>단순히 밝은 색(<strong>Bright</strong>)과 형광색(<strong>Fluorescent</strong>)은 완전히 다릅니다.<br>
+      라벨에 반드시 <strong>Fluorescent (FL)</strong> 표기를 확인해야 수중에서 핫스팟 효과가 작동합니다.</p>
+      <div class="compare">
+        <div class="compare-item bad">Bright Orange — 수중에서 갈색</div>
+        <div class="compare-item good">Fluorescent Orange ✓ — 수중에서도 주황</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 낚시대장 노트 -->
+  <div class="note-box">
+    <div class="note-badge">🎣 낚시대장 NOTE — 관리형 낚시터 적용</div>
+    <h3>6m 깊수심에서의 실전 적용 전략</h3>
+    <p>관리형 낚시터(저수지)는 계류에 비해 수심이 깊고, 물색이 탁하거나 녹조가 끼어 빛의 감쇄가 훨씬 빠르게 일어나는 환경입니다. 일반 색상의 패턴은 수심 2~3m 이하로 내려가면 그저 검고 칙칙한 실루엣으로만 보일 확률이 높습니다.</p>
+    <p>풀싱킹 라인으로 바닥권(5~6m)을 공략하는 침잠(沈潛) 전략에서는, <span class="tag-blue">색상 표현 수단이 사실상 형광과 UV반응 소재뿐</span>임을 의미합니다. 기존의 보라·파랑 선호도 여전히 유효하지만, 형광 핫스팟을 결합하면 시너지가 발생합니다.</p>
+
+    <!-- 패턴 이미지 -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0;">
+      <div style="border-radius:10px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+        <img
+          src="https://raw.githubusercontent.com/CADDIS-GR/fly-fishing-science/main/vision/0320-TanLeech.jpg"
+          alt="Tan Mini Leech — FL 핫스팟 적용 패턴"
+          style="width:100%; display:block; aspect-ratio:4/3; object-fit:cover;"
+        >
+        <div style="padding:8px 12px; font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--surface2);">
+          Tan Mini Leech — FL Pink 테일 + FL Red 칼라
+        </div>
+      </div>
+      <div style="border-radius:10px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+        <img
+          src="https://raw.githubusercontent.com/CADDIS-GR/fly-fishing-science/main/vision/0320-Trout.JPEG"
+          alt="한터낚시터 송어"
+          style="width:100%; display:block; aspect-ratio:4/3; object-fit:cover;"
+        >
+        <div style="padding:8px 12px; font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; background:var(--surface2);">
+          한터낚시터 — 6m 바닥권 공략 결과
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px; font-weight:700; color:#2c3a52;">💡 색상 전략의 핵심 원칙</p>
+    <p>기존 컬러 로테이션에서 <strong>실루엣 톤 변화를 노린 접근은 어느 정도 맞는 전략</strong>이었습니다. 그러나 색으로 어필할 의도였다면 반드시 FL 소재여야 의미가 있습니다. 6m 수심에서 일반 색소는 색 자체가 소멸하기 때문입니다.</p>
+    <p>한 줄로 정리하면: <strong style="color:var(--accent-fl)">"색으로 어필할 거면 FL, 아니면 실루엣 — 중간은 없다"</strong></p>
+
+    <p style="margin-top:14px; font-weight:700; color:#2c3a52;">🔦 UV 소재 확인법</p>
+    <p>UV 레진 경화용 램프를 플라이 전체에 비춰보면 FL 소재 여부를 즉시 확인할 수 있습니다. 발광하면 FL 또는 UV 소재, 반응 없으면 일반 색소입니다. 타잉 전 소재 분류에 활용하세요.</p>
+
+    <div class="note-tips">
+      <div class="tip-row">
+        <span class="tip-icon">🟠</span>
+        <span>헤드(비드 바로 뒤) 또는 버트(꼬리)에 <strong style="color:var(--accent-fl)">FL Red / FL Orange</strong> 실 1~2바퀴 감기 — 실루엣 바디에 핫스팟 포인트 추가</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">🩷</span>
+        <span>머드&amp;탁수 조건에서는 <strong style="color:var(--accent-fl2)">FL 핑크</strong> 태그 유효 — 저조도에서 UV 반응 우수. <strong>FL Shocking Pink</strong> 마라부 언더 테일이 효과적</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">⚡</span>
+        <span><strong style="color:var(--accent-uv)">U.V White</strong> 존커 바디 — 일반 White와 달리 수중에서 UV를 받아 반짝임. 바디 소재 교체만으로 존재감이 달라짐</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">✨</span>
+        <span><strong>FL Glow Chartreuse</strong> — 형광(FL) + 축광(Glow) 이중 작동. UV마저 없는 극한 새벽 바닥권에서도 자체 발광. 새벽 첫 캐스팅에 특히 유효</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">📦</span>
+        <span>재료 구매 시 <strong>Fluorescent (FL / FLO / FLUO)</strong> 표기 여부 반드시 확인 — Bright와 Fluorescent는 수중에서 완전히 다른 소재</span>
+      </div>
+      <div class="tip-row">
+        <span class="tip-icon">🎨</span>
+        <span>컬러 로테이션 업데이트: <strong>Dark Silhouette</strong>(블랙/다크브라운) → <strong style="color:var(--accent-fl)">FL Chartreuse</strong>(크로마틱) → <strong style="color:var(--accent-uv)">U.V White + FL 핫스팟</strong>(브라이트)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 출처 -->
+  <footer class="source-footer">
+    <div class="brand">CADDIS-GR · FLY FISHING SCIENCE</div>
+    <div class="refs">
+      Colin Kageyama — <em>What Fish See</em> (c.2000) &nbsp;·&nbsp;
+      Jason Randall — <em>Trout Sense</em> &nbsp;·&nbsp;
+      Tactical Fly Fisher (YouTube)
+    </div>
+  </footer>
+
+</div>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/library/index.html">← Library 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

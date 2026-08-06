@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이크로 님핑 (Micro Nymphing) 인터랙티브 가이드 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #d8b4fe; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+
+        .fly-img {
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+        .fly-img:hover {
+            transform: scale(1.06);
+        }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #lightbox.open {
+            display: flex;
+        }
+        #lightbox-inner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            animation: lbIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes lbIn {
+            from { opacity: 0; transform: scale(0.88); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        #lightbox-img {
+            max-width: min(88vw, 640px);
+            max-height: 75vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+        }
+        #lightbox-caption {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 20px;
+            border-radius: 999px;
+        }
+        #lightbox-close {
+            position: absolute;
+            top: -44px;
+            right: 0;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.75;
+            transition: opacity 0.2s, transform 0.2s;
+            line-height: 1;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+        #lightbox-close:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* 장비 탭 태그 */
+        .rod-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            letter-spacing: 0.06em;
+        }
+        .tag-main  { background: #1e293b; color: #fff; }
+        .tag-finesse { background: #7c3aed; color: #fff; }
+        .tag-wind  { background: #0369a1; color: #fff; }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-slate-50 text-slate-800 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Micro_Nymphing_Guide.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-purple-100">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <span class="text-xl font-bold text-purple-700 tracking-tight">🎣 Micro Nymphing</span>
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+                    <button onclick="scrollToSection('intro')" class="hover:text-purple-600 transition-colors">개요</button>
+                    <button onclick="scrollToSection('when')" class="hover:text-purple-600 transition-colors">언제?</button>
+                    <button onclick="scrollToSection('analysis')" class="hover:text-purple-600 transition-colors">분석</button>
+                    <button onclick="scrollToSection('gear')" class="hover:text-purple-600 transition-colors">장비</button>
+                    <button onclick="scrollToSection('flies')" class="hover:text-purple-600 transition-colors">플라이</button>
+                    <button onclick="scrollToSection('technique')" class="hover:text-purple-600 transition-colors">운영술</button>
+                    <button onclick="scrollToSection('related')" class="hover:text-purple-700 transition-colors font-bold">추천 테크닉</button>
+                </div>
+                <button class="md:hidden text-2xl text-purple-700" onclick="toggleMobileMenu()">☰</button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-purple-50">
+            <div class="flex flex-col p-4 space-y-3">
+                <button onclick="scrollToSection('intro')" class="text-left py-2 hover:text-purple-600">개요</button>
+                <button onclick="scrollToSection('analysis')" class="text-left py-2 hover:text-purple-600">분석</button>
+                <button onclick="scrollToSection('gear')" class="text-left py-2 hover:text-purple-600">장비</button>
+                <button onclick="scrollToSection('flies')" class="text-left py-2 hover:text-purple-600">플라이</button>
+                <button onclick="scrollToSection('technique')" class="text-left py-2 hover:text-purple-600">운영술</button>
+                <button onclick="scrollToSection('related')" class="text-left py-2 font-bold text-purple-700">추천 테크닉</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="intro" class="relative bg-gradient-to-b from-purple-100 to-white py-20 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-purple-800 uppercase bg-purple-200 rounded-full">
+                Stillwater Finesse Fishing
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
+                마이크로 님핑<br><span class="text-purple-600 text-3xl md:text-4xl">(Micro Nymphing)</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                "작게 써라, 길고 가늘게 써라, 천천히 느리게 움직여라!!"<br>
+                극도로 예민해진 송어를 표층~중층에서 유혹하는 섬세한 기술의 정점.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-24">
+
+        <!-- Section 0: When to Use -->
+        <section id="when" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-purple-500 pl-4">언제 사용하면 좋을까?</h2>
+                <p class="text-slate-600 leading-relaxed max-w-3xl">
+                    마이크로 님핑은 특정 상황에서 다른 어떤 채비보다 압도적인 효과를 발휘합니다.
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- 혹한기 -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-700 to-slate-900 px-6 py-4 flex items-center gap-3">
+                        <span class="text-2xl">🥶</span>
+                        <div>
+                            <div class="text-white font-bold text-lg">혹한기 · 한겨울</div>
+                            <div class="text-slate-400 text-xs tracking-wider uppercase">Coldest Season</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            한겨울 혹한기가 되면 수온이 극도로 낮아지면서 송어는 <strong>대사율이 떨어지고 먹이활동도 현저히 둔해집니다.</strong>
+                            에너지 소비를 최소화하려는 본능에 따라 큰 플라이는 거들떠보지 않습니다.
+                            이 때 작고 느리게 움직이는 마이크로 님프로 입질을 이끌어낼 수 있습니다.
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full">극도로 예민한 입질</span>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full">느린 먹이활동</span>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full">소형 패턴 필수</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 봄철 표층 -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-purple-600 to-indigo-700 px-6 py-4 flex items-center gap-3">
+                        <span class="text-2xl">🌸</span>
+                        <div>
+                            <div class="text-white font-bold text-lg">봄철 · 전도기 이후</div>
+                            <div class="text-purple-200 text-xs tracking-wider uppercase">Spring Turnover</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            본격적인 봄이 시작되면 연일 따뜻한 기온으로 인해 저수지 전도(Turnover)가 완료되고
+                            <strong>송어가 표층으로 떠오릅니다.</strong>
+                            눈에는 선명하게 보이지만 플라이엔 관심이 없는 상태 —
+                            이 예민한 표층 송어를 공략할 수 있는 재미있는 님핑 채비가 바로 "마이크로 님핑"입니다.
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span class="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">표층 유영 송어</span>
+                            <span class="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">눈에 보이나 안 문다</span>
+                            <span class="text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">Chironomid 퓨파 매칭</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 공통 포인트 -->
+            <div class="mt-6 bg-purple-700 text-white rounded-2xl p-6 flex items-start gap-4">
+                <span class="text-3xl flex-shrink-0">💡</span>
+                <div>
+                    <div class="font-bold mb-2">공통점 — 극도로 예민한 송어</div>
+                    <p class="text-purple-100 text-sm leading-relaxed">
+                        혹한기든 봄철이든 공통 키워드는 <strong class="text-white">"예민함"</strong>입니다.
+                        일반 채비로는 입질을 받지 못하는 상황에서, 작고 느리고 가는 마이크로 님핑이 돌파구가 됩니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Analysis -->
+        <section id="analysis" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-purple-500 pl-4">테크닉 특성 분석</h2>
+                <p class="text-slate-600 leading-relaxed max-w-3xl">
+                    마이크로 님핑은 일반적인 기법보다 속도는 늦추고 섬세함은 극대화한 기법입니다. 시각적으로 그 차이를 확인해보세요.
+                </p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-purple-50">
+                <div class="flex flex-col lg:flex-row items-center gap-8">
+                    <div class="w-full lg:w-1/2">
+                        <div class="chart-container">
+                            <canvas id="techniqueChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2 space-y-6">
+                        <h3 class="text-xl font-bold text-slate-800">핵심 3대 원칙</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-purple-100 text-purple-600 rounded-full font-bold mr-3">1</span>
+                                <div><h4 class="font-bold text-slate-900">Small (작게)</h4><p class="text-sm text-slate-600">#16 이하의 작은 훅을 사용하여 송어의 이물감을 최소화합니다.</p></div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-purple-100 text-purple-600 rounded-full font-bold mr-3">2</span>
+                                <div><h4 class="font-bold text-slate-900">Long & Thin (길고 가늘게)</h4><p class="text-sm text-slate-600">3m 이상의 긴 6x~7x 플루오로카본 티펫으로 자연스러운 움직임을 유도합니다.</p></div>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-purple-100 text-purple-600 rounded-full font-bold mr-3">3</span>
+                                <div><h4 class="font-bold text-slate-900">Slow (느리게)</h4><p class="text-sm text-slate-600">최대한 느리고 지속적인 스위밍을 연출하여 입질을 유인합니다.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Gear Setup -->
+        <section id="gear" class="scroll-mt-24 bg-purple-50 -mx-4 px-4 py-16">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-10 text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">추천 장비 시스템</h2>
+                    <p class="text-slate-600 max-w-2xl mx-auto">예민한 송어를 표층~중층에서 공략하기 위한 최적의 조합입니다.</p>
+                </div>
+                <div class="grid md:grid-cols-12 gap-6 bg-white rounded-xl shadow-lg overflow-hidden border border-purple-100">
+                    <div class="md:col-span-4 bg-slate-50 border-r border-purple-100 p-4 space-y-2">
+                        <button onclick="showGearDetail('rod')" id="btn-rod" class="gear-tab w-full text-left px-4 py-4 rounded-lg font-medium bg-white shadow-sm ring-1 ring-purple-200 text-purple-700">🎣 로드 (Rod)</button>
+                        <button onclick="showGearDetail('line')" id="btn-line" class="gear-tab w-full text-left px-4 py-4 rounded-lg font-medium text-slate-600 hover:bg-purple-100">🧵 라인 (Line)</button>
+                        <button onclick="showGearDetail('leader')" id="btn-leader" class="gear-tab w-full text-left px-4 py-4 rounded-lg font-medium text-slate-600 hover:bg-purple-100">📏 리더 & 티펫</button>
+                        <button onclick="showGearDetail('indicator')" id="btn-indicator" class="gear-tab w-full text-left px-4 py-4 rounded-lg font-medium text-slate-600 hover:bg-purple-100">👀 인디케이터</button>
+                    </div>
+                    <div class="md:col-span-8 p-8 flex items-center bg-white min-h-[300px]">
+                        <div id="gear-content" class="w-full"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Fly Patterns -->
+        <section id="flies" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-indigo-500 pl-4">타겟 플라이 패턴</h2>
+                <p class="text-slate-600 mb-2">
+                    마이크로 님핑의 핵심은 <strong>Chironomid / Midge 계열의 Larva·Pupa 패턴</strong>입니다.<br>
+                    훅 사이즈는 <strong>#16 이하</strong>의 소형을 기준으로 합니다.
+                </p>
+                <p class="text-slate-500 text-sm">
+                    <span class="inline-flex items-center gap-1 text-purple-600 font-semibold">
+                        🔍 이미지를 클릭하면 확대해서 볼 수 있습니다.
+                    </span>
+                </p>
+            </div>
+
+            <!-- 패턴 분류 안내 -->
+            <div class="grid md:grid-cols-2 gap-4 mb-8">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-5">
+                    <div class="font-bold text-purple-700 mb-2">🐛 Larva (라바) 패턴</div>
+                    <p class="text-sm text-slate-600">바닥 진흙 속에 서식하는 유충 단계. 가늘고 긴 바디가 특징. 수중에서 미세하게 꿈틀거리는 액션이 핵심입니다.</p>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
+                    <div class="font-bold text-indigo-700 mb-2">🫧 Pupa (퓨파) 패턴</div>
+                    <p class="text-sm text-slate-600">수면을 향해 상승하는 번데기 단계. 에어 버블과 투명감이 포인트. 표층 마이크로 님핑에서 특히 강력합니다.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="group overflow-hidden rounded-xl shadow-md bg-white border border-slate-100 hover:border-purple-300 transition-colors">
+                    <div class="aspect-square bg-slate-100 overflow-hidden">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/GreenPupa.jpg"
+                             alt="그린 퓨파 (Green Pupa) #20"
+                             class="fly-img w-full h-full object-cover"
+                             onclick="openLightbox(this)">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Pupa</span>
+                        <h3 class="font-bold text-lg text-slate-800 mt-2">그린 퓨파 #20</h3>
+                        <p class="text-xs text-slate-500 mt-1">투명 바디 + 그린 더빙. 수면 상승 중인 퓨파 모방.</p>
+                    </div>
+                </div>
+
+                <div class="group overflow-hidden rounded-xl shadow-md bg-white border border-slate-100 hover:border-purple-300 transition-colors">
+                    <div class="aspect-square bg-slate-100 overflow-hidden">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/OilPupa.jpg"
+                             alt="오일 퓨파 (Oil Pupa) #16"
+                             class="fly-img w-full h-full object-cover"
+                             onclick="openLightbox(this)">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Pupa</span>
+                        <h3 class="font-bold text-lg text-slate-800 mt-2">오일 퓨파 #16</h3>
+                        <p class="text-xs text-slate-500 mt-1">오일리한 광택 바디. 에어 버블 효과로 실루엣 강조.</p>
+                    </div>
+                </div>
+
+                <div class="group overflow-hidden rounded-xl shadow-md bg-white border border-slate-100 hover:border-purple-300 transition-colors">
+                    <div class="aspect-square bg-slate-100 overflow-hidden">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/PinkLarva.jpg"
+                             alt="핑크 라바 (Pink Larva) #14"
+                             class="fly-img w-full h-full object-cover"
+                             onclick="openLightbox(this)">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Larva</span>
+                        <h3 class="font-bold text-lg text-slate-800 mt-2">핑크 라바 #14</h3>
+                        <p class="text-xs text-slate-500 mt-1">밝은 핑크 계열. 시인성 높아 탁수 조건에서 유효.</p>
+                    </div>
+                </div>
+
+                <div class="group overflow-hidden rounded-xl shadow-md bg-white border border-slate-100 hover:border-purple-300 transition-colors">
+                    <div class="aspect-square bg-slate-100 overflow-hidden">
+                        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/PupleMay.jpg"
+                             alt="퍼플 메이 (Purple May) #16"
+                             class="fly-img w-full h-full object-cover"
+                             onclick="openLightbox(this)">
+                    </div>
+                    <div class="p-4">
+                        <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Nymph</span>
+                        <h3 class="font-bold text-lg text-slate-800 mt-2">퍼플 메이 #16</h3>
+                        <p class="text-xs text-slate-500 mt-1">퍼플 계열 님프. 중층 유영 시 강한 어필.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 추가 패턴 안내 -->
+            <div class="mt-6 bg-slate-800 text-white rounded-xl p-5">
+                <div class="font-bold text-purple-300 mb-2 text-sm tracking-wider uppercase">Field Proven — 실전 유효 패턴</div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-slate-700 text-slate-200 text-sm px-3 py-1 rounded-full">Zebra Midge #16~18 (레드바디/블랙립)</span>
+                    <span class="bg-slate-700 text-slate-200 text-sm px-3 py-1 rounded-full">White Chironomid Pupa #16~18</span>
+                    <span class="bg-slate-700 text-slate-200 text-sm px-3 py-1 rounded-full">Red Dot Larva #16</span>
+                    <span class="bg-slate-700 text-slate-200 text-sm px-3 py-1 rounded-full">Black Midge #18~20</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Operation Strategy -->
+        <section id="technique" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-purple-600 pl-4">운영 테크닉 프로세스</h2>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 relative">
+                <div class="absolute top-1/2 left-0 w-full h-1 bg-purple-100 -z-10 hidden md:block"></div>
+                <button onclick="setStep(1)" id="step-btn-1" class="step-btn relative flex flex-col items-center group mb-4 md:mb-0">
+                    <div class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-lg ring-4 ring-white">1</div>
+                    <span class="mt-3 font-medium text-slate-700 bg-white px-2">캐스팅 & 카운트다운</span>
+                </button>
+                <button onclick="setStep(2)" id="step-btn-2" class="step-btn relative flex flex-col items-center group mb-4 md:mb-0">
+                    <div class="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-lg shadow-md ring-4 ring-white">2</div>
+                    <span class="mt-3 font-medium text-slate-500 bg-white px-2">슬로우 스위밍</span>
+                </button>
+                <button onclick="setStep(3)" id="step-btn-3" class="step-btn relative flex flex-col items-center group">
+                    <div class="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-lg shadow-md ring-4 ring-white">3</div>
+                    <span class="mt-3 font-medium text-slate-500 bg-white px-2">입질 & 훅셋</span>
+                </button>
+            </div>
+            <div class="bg-white rounded-2xl shadow-xl border border-purple-50 p-8 min-h-[280px]">
+
+                <div id="step-content-1" class="step-content">
+                    <h3 class="text-2xl font-bold text-purple-700 mb-4">Step 1: 캐스팅 및 카운트다운</h3>
+                    <p class="text-lg text-slate-700 mb-4">캐스팅 후 플라이는 자연스럽게 하강합니다. <strong>완전히 가라앉을 때까지 기다릴 필요는 없습니다.</strong></p>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span>상층·중층 등 <strong>목표 수심층에 도달하면(카운트다운)</strong> 리트리브를 시작합니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span>채비가 가볍기 때문에 침강 속도가 느립니다 — 인내심을 갖고 기다려주세요.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span>송어의 유영층 파악이 최우선입니다. 입질 깊이를 기억해 다음 캐스트에 반영하세요.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="step-content-2" class="step-content hidden">
+                    <h3 class="text-2xl font-bold text-purple-700 mb-4">Step 2: 슬로우 스위밍 (Slow Swimming)</h3>
+                    <p class="text-lg text-slate-700 mb-4"><strong>"한 꼬집씩"</strong> — 아주 천천히, 지속적으로, 일정하게.</p>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span>라인을 <strong>한 꼬집씩 아주 느리게</strong> 당겨 플라이가 수중에서 스위밍하는 액션을 연출합니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span><strong>살짝 멈추기도 하고, 다시 움직이기도</strong> 하면서 유충이 부드럽게 헤엄치는 모습을 표현합니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-500 font-bold mt-0.5">▸</span>
+                            <span>속도가 핵심입니다 — 생각보다 훨씬 <strong>더 느리게</strong> 운영하는 것이 성공의 열쇠입니다.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="step-content-3" class="step-content hidden">
+                    <h3 class="text-2xl font-bold text-purple-700 mb-4">Step 3: 입질 유도 및 훅셋</h3>
+                    <p class="text-lg text-slate-700 mb-5">거부감 없이 흡입하고 돌아서기 때문에 — <strong>입질이 아주 강하게 들어옵니다.</strong></p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                            <div class="font-bold text-purple-700 mb-2">📍 인디케이터 사용 시</div>
+                            <p class="text-sm text-slate-600">
+                                <strong>Loon Biostrike Putty 3개</strong>를 리더에 분산 배치.<br>
+                                입질 시 인디케이터가 <strong>사선으로 쭉~ 빨려 들어가는</strong> 시각적으로 매우 다이나믹한 반응이 연출됩니다.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                            <div class="font-bold text-slate-700 mb-2">🎣 훅셋</div>
+                            <p class="text-sm text-slate-600">
+                                송어가 완전히 흡입하고 돌아서는 순간을 포착.<br>
+                                <strong>로드를 드는 동작만으로도 훅셋!</strong><br>
+                                강하게 챔질하지 않아도 됩니다 — 오히려 과도한 챔질은 티펫 단선의 원인이 됩니다.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                        <div class="font-bold text-amber-700 mb-1">⚠️ 티펫 주의</div>
+                        <p class="text-sm text-slate-600">6x~7x 극세 티펫 사용 시 강한 챔질은 즉각 단선으로 이어집니다. 로드의 탄성을 믿고 부드럽게 대응하세요.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 5: Field Gallery -->
+        <section class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-2 border-l-4 border-purple-500 pl-4">실전 현장 — 한터낚시터</h2>
+                <p class="text-slate-500 text-sm pl-5">2026 · 03 · 29 · 마이크로 님핑 게임체인저의 날</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="group overflow-hidden rounded-xl shadow-md bg-slate-900 aspect-square cursor-zoom-in"
+                     onclick="openLightboxUrl('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Trout-02.JPEG', '마이크로 님핑 랜딩 · 3/29 한터낚시터')">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Trout-02.JPEG"
+                         alt="마이크로 님핑 랜딩"
+                         class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-400">
+                </div>
+                <div class="group overflow-hidden rounded-xl shadow-md bg-slate-900 aspect-square cursor-zoom-in"
+                     onclick="openLightboxUrl('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Trout-05.JPEG', '짜릿한 손맛 · 3/29 한터낚시터')">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/0329-Trout-05.JPEG"
+                         alt="짜릿한 손맛"
+                         class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-400">
+                </div>
+                <div class="group overflow-hidden rounded-xl shadow-md bg-slate-900 aspect-square cursor-zoom-in"
+                     onclick="openLightboxUrl('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/IMG_7745.JPEG', '3월 29일 · 한터낚시터')">
+                    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0329/IMG_7745.JPEG"
+                         alt="한터낚시터 현장"
+                         class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-400">
+                </div>
+            </div>
+            <div class="mt-4 text-center">
+                <a href="/fly-fishing-hub/field-log/logs/2026-03-29-hanter.html"
+                   target="_blank"
+                   class="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-800 font-medium transition-colors">
+                    ↗ 3·29 조행기 전문 보기
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 6: Related Techniques -->
+        <section id="related" class="scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4 border-l-4 border-amber-500 pl-4">함께 보면 좋은 테크닉</h2>
+                <p class="text-slate-600">마이크로 님핑 실력을 한 단계 더 높여줄 추천 기법입니다.</p>
+            </div>
+            <a href="/fly-fishing-hub/research/archive/techniques/Multi-Split_Indicator_Nymphing.html" 
+               target="_blank" 
+               class="group block bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-purple-400 transition-all">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 group-hover:text-purple-700 transition-colors">다분할 인디케이터 마이크로 님핑</h3>
+                        <p class="text-slate-500 mt-2">작고 가벼운 여러 개의 인디케이터를 이용한 정밀 마이크로 님핑 기법</p>
+                    </div>
+                    <div class="text-2xl text-slate-300 group-hover:text-purple-600 group-hover:translate-x-1 transition-all">➜</div>
+                </div>
+            </a>
+        </section>
+
+        <!-- Final Summary Cards -->
+        <section class="grid md:grid-cols-3 gap-6">
+            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-lg border-b-4 border-purple-500">
+                <div class="text-3xl mb-3">🧘 집중력</div>
+                <p class="text-slate-300">손끝에 전달되는 미세한 무게 변화와 라인의 떨림에 집중하세요.</p>
+            </div>
+            <div class="bg-indigo-700 text-white p-6 rounded-xl shadow-lg border-b-4 border-purple-300">
+                <div class="text-3xl mb-3">⏳ 인내심</div>
+                <p class="text-indigo-100">송어가 플라이를 완전히 물고 돌아설 때까지 서두르지 마세요.</p>
+            </div>
+            <div class="bg-slate-800 text-white p-6 rounded-xl shadow-lg border-b-4 border-purple-500">
+                <div class="text-3xl mb-3">🕸️ 피네스</div>
+                <p class="text-slate-300">채비를 극도로 가늘고 가볍게 유지하여 이물감을 없애는 것이 성공의 열쇠입니다.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-purple-100 py-10 text-center text-slate-500 text-sm">
+        <p class="mb-2">Stillwater Trout Micro Nymphing Guide</p>
+        <p>CADDIS-GR · 낚시대장</p>
+    </footer>
+
+    <!-- 라이트박스 -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <div id="lightbox-inner">
+            <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+            <img id="lightbox-img" src="" alt="">
+            <span id="lightbox-caption"></span>
+        </div>
+    </div>
+
+    <script>
+        /* ── 라이트박스 ── */
+        function openLightbox(imgEl) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = imgEl.src;
+            document.getElementById('lightbox-caption').textContent = imgEl.alt;
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function openLightboxurl(url, caption) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-caption').textContent = caption;
+            document.getElementById('lightbox').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('lightbox-img').addEventListener('click', e => e.stopPropagation());
+            document.getElementById('lightbox-inner').addEventListener('click', e => e.stopPropagation());
+        });
+
+        /* ── 장비 데이터 ── */
+        const gearData = {
+            rod: {
+                title: "로드 (Rod) — 미디엄 ~ 모더레이트 액션",
+                desc: `마이크로 님핑에서 로드의 역할은 두 가지입니다.<br>
+                       <strong>① 극세 티펫 보호</strong> — 미디엄/모더레이트 액션의 유연한 팁이 쿠션 역할을 해 6x~7x 티펫 단선을 방지합니다.<br>
+                       <strong>② 섬세한 감도</strong> — 부드럽게 휘면서 미세한 입질을 손끝으로 전달합니다.<br><br>
+                       패스트 액션 로드는 이 용도에 적합하지 않습니다.`,
+                specs: [
+                    '<span class="rod-tag tag-main">MAIN</span> T&T Paradigm 905-4 — #5 / 9ft / Moderate · 올라운드 마이크로 님핑',
+                    '<span class="rod-tag tag-finesse">FINESSE</span> T&T Helix 863-4 — #3 / 8\'6" / Medium · 피네스 특화, 6x~7x 티펫 운용',
+                    '<span class="rod-tag tag-wind">WIND</span> Sage R8 Core 4100-4 — #4 / 10ft · SA Hover 라인 조합, 바람 대응'
+                ]
+            },
+            line: {
+                title: "라인 (Line) — 프리젠테이션 특화 플로팅 계열",
+                desc: `마이크로 님핑 라인의 핵심은 <strong>섬세한 프론트 테이퍼</strong>입니다.<br>
+                       플라이가 조용하게 수면에 안착하고, 긴 리더를 정확하게 전달할 수 있어야 합니다.<br><br>
+                       바람이 심한 날에는 <strong>호버 라인</strong>으로 전환하여 라인이 수면에 앵커링되도록 합니다.`,
+                specs: [
+                    '<span class="rod-tag tag-main">MAIN</span> RIO Elite Gold Classic WF5F — 올라운드 프리젠테이션, Paradigm 매칭',
+                    '<span class="rod-tag tag-finesse">FINESSE</span> RIO Elite Technical Trout WF4F — 롱 파인 프론트 테이퍼, Helix 매칭',
+                    '<span class="rod-tag tag-wind">WIND</span> SA Sonar Stillwater Hover WF5H — 1.0ips 호버, 바람 대응 앵커링 효과'
+                ]
+            },
+            leader: {
+                title: "리더 & 티펫 — 가늘게, 더 가늘게",
+                desc: `마이크로 님핑에서 티펫은 단순한 연결선이 아닙니다.<br>
+                       <strong>가늘수록 플라이의 움직임이 자유로워지고, 송어의 이물감이 줄어듭니다.</strong><br><br>
+                       재질은 반드시 <strong>플루오로카본(Fluorocarbon)</strong>을 사용하세요.<br>
+                       나일론 대비 굴절률이 물과 유사해 수중 가시성이 낮고, 내마모성이 우수합니다.`,
+                specs: [
+                    '리더: 9ft 4x 테이퍼드 리더 (기본)',
+                    '티펫: 6x Fluorocarbon — 기본 세팅',
+                    '티펫: 7x Fluorocarbon — 피네스 피싱, 극도로 스푸키한 상황',
+                    '티펫 길이: 최소 1.5m 이상, 이상적으로는 2~3m'
+                ]
+            },
+            indicator: {
+                title: "인디케이터 — 없어도 되고, 있다면 작게",
+                desc: `마이크로 님핑은 <strong>인디케이터 없이도 운영 가능합니다.</strong><br>
+                       숙련될수록 라인의 움직임과 로드 팁의 떨림으로 입질을 감지하게 됩니다.<br><br>
+                       인디케이터를 사용할 경우, <strong>가능한 한 작은 사이즈</strong>를 선택하세요.<br>
+                       너무 크면 플라이의 자연스러운 움직임을 방해하고 송어에게 이물감을 줍니다.`,
+                specs: [
+                    '미사용 — 감각 피싱 (Sense Fishing): 라인 움직임으로 입질 감지',
+                    'Loon Biostrike Putty (소량) — 리더에 2~3개 분산 배치',
+                    '입질 시 인디케이터가 사선으로 쭉~ 빨려 들어가는 다이나믹한 시각적 반응',
+                    '크기는 최소화 — 6mm 이하 권장'
+                ]
+            }
+        };
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            if (window.innerWidth < 768) {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function showGearDetail(key) {
+            const data = gearData[key];
+            document.querySelectorAll('.gear-tab').forEach(btn => {
+                btn.className = "gear-tab w-full text-left px-4 py-4 rounded-lg font-medium text-slate-600 hover:bg-purple-100";
+            });
+            const activeBtn = document.getElementById(`btn-${key}`);
+            activeBtn.className = "gear-tab w-full text-left px-4 py-4 rounded-lg font-medium bg-white shadow-sm ring-1 ring-purple-200 text-purple-700";
+            
+            const contentDiv = document.getElementById('gear-content');
+            contentDiv.classList.remove('animate-fade-in');
+            void contentDiv.offsetWidth;
+            contentDiv.innerHTML = `
+                <h3 class="text-xl font-bold text-slate-800 mb-3">${data.title}</h3>
+                <p class="text-slate-600 mb-5 leading-relaxed text-sm">${data.desc}</p>
+                <div class="bg-purple-50 rounded-lg p-4 border border-purple-100">
+                    <ul class="space-y-3">${data.specs.map(s => `
+                        <li class="flex items-start text-slate-700 text-sm">
+                            <span class="mr-2 text-purple-500 mt-0.5 flex-shrink-0">✔</span>
+                            <span>${s}</span>
+                        </li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            contentDiv.classList.add('animate-fade-in');
+        }
+
+        function setStep(step) {
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                const content = document.getElementById(`step-content-${i}`);
+                if (i === step) {
+                    btn.querySelector('div').className = "w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-lg shadow-lg ring-4 ring-white";
+                    btn.querySelector('span').className = "mt-3 font-medium text-slate-700 bg-white px-2";
+                    content.classList.remove('hidden');
+                    content.classList.add('animate-fade-in');
+                } else {
+                    btn.querySelector('div').className = "w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-lg shadow-md ring-4 ring-white";
+                    btn.querySelector('span').className = "mt-3 font-medium text-slate-500 bg-white px-2";
+                    content.classList.add('hidden');
+                }
+            }
+        }
+
+        window.onload = () => {
+            showGearDetail('rod');
+            const ctx = document.getElementById('techniqueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['섬세함', '인내심', '운영 난이도', '루어 크기', '운영 속도'],
+                    datasets: [{
+                        label: 'Micro Nymphing',
+                        data: [9.5, 9, 8, 2, 2],
+                        backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                        borderColor: 'rgb(168, 85, 247)',
+                        pointBackgroundColor: 'rgb(168, 85, 247)',
+                    }, {
+                        label: 'Standard Lure',
+                        data: [5, 5, 4, 7, 7],
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                        borderColor: 'rgb(148, 163, 184)',
+                        pointBackgroundColor: 'rgb(148, 163, 184)',
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    scales: { 
+                        r: { 
+                            suggestedMin: 0, 
+                            suggestedMax: 10, 
+                            ticks: { display: false },
+                            grid: { color: 'rgba(216, 180, 254, 0.5)' }
+                        } 
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR' } } }
+                    }
+                }
+            });
+        };
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

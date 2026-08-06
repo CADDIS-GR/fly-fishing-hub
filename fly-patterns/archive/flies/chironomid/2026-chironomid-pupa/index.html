@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Chironomid Pupa Archive · CADDIS-GR LAB</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;700;900&family=Noto+Serif+KR:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .serif-italic {
+            font-family: 'Noto Serif KR', serif;
+            font-style: italic;
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.7s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom Scrollbar for the content area */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        
+        /* Image Modal Styles */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            animation: zoomIn 0.3s ease-out;
+        }
+        
+        .image-modal img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -1rem;
+            right: -1rem;
+            width: 3rem;
+            height: 3rem;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+        }
+        
+        .modal-close:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: #f1f5f9;
+        }
+        
+        .clickable-image {
+            cursor: zoom-in;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .clickable-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: inherit;
+        }
+        
+        .clickable-image:hover::after {
+            opacity: 1;
+        }
+        
+        .clickable-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .modal-caption {
+            position: absolute;
+            bottom: -3rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex items-center justify-center p-6 md:p-12 overflow-x-hidden selection:bg-purple-100 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/chironomid/2026-chironomid-pupa/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-close" id="modalClose">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </div>
+            <img id="modalImage" src="" alt="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="/fly-fishing-hub/fly-patterns/index.html" class="fixed top-4 left-4 z-50 bg-white px-4 py-2 rounded-full shadow-lg text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all hover:shadow-xl flex items-center gap-2">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back to Archive
+    </a>
+
+    <!-- Background Decor -->
+    <div id="bg-glow-1" class="fixed -top-1/4 -left-1/4 w-full h-full opacity-5 blur-[150px] transition-all duration-1000 rounded-full pointer-events-none"></div>
+    <div id="bg-glow-2" class="fixed -bottom-1/4 -right-1/4 w-full h-full opacity-5 blur-[150px] transition-all duration-1000 rounded-full pointer-events-none"></div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-6xl relative z-10 opacity-0 translate-y-8 transition-all duration-700" id="main-app">
+        <div class="bg-white/70 backdrop-blur-3xl border border-slate-200 rounded-[3rem] md:rounded-[4rem] shadow-2xl shadow-slate-200 overflow-hidden flex flex-col min-h-[750px]">
+            
+            <!-- Top Progress Bar -->
+            <div class="flex items-center justify-between px-8 md:px-16 pt-12 pb-6">
+                <div class="flex gap-2" id="progress-dots">
+                    <!-- Dots generated by JS -->
+                </div>
+                <div class="text-[10px] font-black text-slate-400 tracking-[0.3em] uppercase" id="step-indicator">
+                    Step 1 / 6
+                </div>
+            </div>
+
+            <!-- Header Section -->
+            <div class="px-8 md:px-16 pt-4 pb-8 md:pb-12 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+                <div class="space-y-2">
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 leading-tight" id="main-title">
+                        Loading...
+                    </h1>
+                    <p class="text-slate-400 font-bold text-sm uppercase tracking-[0.2em] flex items-center gap-3" id="main-subtitle">
+                        <span id="accent-dot" class="w-3 h-3 rounded-full bg-slate-300"></span>
+                        <span id="subtitle-text">Please wait</span>
+                    </p>
+                </div>
+                <div id="icon-wrapper" class="p-6 md:p-8 rounded-[2.5rem] border border-slate-100 transition-all duration-500">
+                    <i id="main-icon" data-lucide="fish" class="w-10 h-10"></i>
+                </div>
+            </div>
+
+            <!-- Body Content Area -->
+            <div class="flex-1 px-8 md:px-16 overflow-y-auto custom-scroll" id="content-area">
+                <!-- Content generated by JS -->
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="px-8 md:px-16 pb-12 md:pb-16 pt-8 flex items-center gap-6 md:gap-8">
+                <button id="prev-btn" class="group p-6 md:p-8 bg-slate-100 hover:bg-slate-200 rounded-[2.5rem] transition-all active:scale-90 border border-slate-200">
+                    <i data-lucide="chevron-left" class="w-8 h-8 text-slate-400 group-hover:text-slate-900"></i>
+                </button>
+                
+                <button id="next-btn" class="flex-1 py-6 md:py-8 px-8 md:px-12 rounded-[2.5rem] shadow-xl shadow-slate-200 transition-all active:scale-[0.98] flex items-center justify-between group border border-white/20 text-white">
+                    <div class="flex items-center gap-4">
+                        <span class="font-black text-base md:text-lg tracking-tighter uppercase" id="next-label">
+                            Continue Research
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 group-hover:translate-x-2 transition-transform">
+                        <span class="text-sm font-bold opacity-80 hidden md:inline" id="next-sublabel">Next Section</span>
+                        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Global Footer -->
+        <div class="mt-8 md:mt-12 flex flex-col md:flex-row items-center justify-between px-8 opacity-40 gap-4">
+            <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-slate-900">
+                <div class="h-px w-12 bg-slate-300"></div>
+                Naksi-Daejang Archive 2026
+            </div>
+            <p class="text-[10px] font-medium tracking-widest uppercase text-slate-600">
+                STAY DEEP • TYING RECIPE • V2.7.0 HTML
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const images = {
+            olive: "olive-chironomid.jpg",
+            wine: "wine-chironomid.jpg",
+            bq5: "veevus-bq5.jpg"
+        };
+
+        const cards = [
+            {
+                title: "2026 Chironomid Pupa",
+                subtitle: "The Art of 'Deep' Color",
+                theme: "bg-purple-600",
+                gradient: "from-purple-500 to-indigo-600",
+                bgAccent: "bg-purple-50",
+                icon: "fish",
+                render: () => `
+                    <div class="flex flex-col md:flex-row gap-12 items-center fade-in-up">
+                        <div class="flex-1 space-y-6">
+                            <div class="bg-white/80 p-8 rounded-[2rem] border border-slate-200 shadow-sm">
+                                <h3 class="text-xl font-bold text-slate-900 mb-4">Deepness Architecture</h3>
+                                <p class="text-slate-600 leading-relaxed text-lg font-light">
+                                    단순한 어두움을 넘어 물속에서 살아 움직이는 <span class="text-purple-600 font-bold">'짙음(Deepness)'</span>을 구현하는 낚시대장만의 2026 타잉 레시피입니다. 굴절과 투과를 동시에 잡는 밸런스가 핵심입니다.
+                                </p>
+                            </div>
+                            <div class="inline-flex items-center gap-3 px-6 py-3 bg-slate-100 rounded-full border border-slate-200 text-purple-600 font-black tracking-widest text-xs uppercase">
+                                <span class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                                </span>
+                                Premium Pro Standard
+                            </div>
+                        </div>
+                        <div class="flex-1 w-full">
+                            <div class="relative group">
+                                <div class="absolute inset-0 bg-purple-200 rounded-[3rem] blur-3xl opacity-30"></div>
+                                <div class="relative w-full aspect-[4/3] rounded-[3rem] overflow-hidden border border-slate-200 shadow-xl">
+                                    <img src="${images.olive}" alt="Olive Chironomid" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "1. The Foundation",
+                subtitle: "Hook Strategy: DAIICHI 1760",
+                theme: "bg-blue-600",
+                gradient: "from-blue-500 to-cyan-600",
+                bgAccent: "bg-blue-50",
+                icon: "anchor",
+                render: () => `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 fade-in-up">
+                        ${[
+                            { label: "Shank", title: "2X Long Curved", desc: "자연스러운 퓨파 곡선을 위한 베이스", icon: "layers" },
+                            { label: "Wire", title: "2X Heavy", desc: "추가 웨이트 없이도 안정적인 수직 하강 속도", icon: "anchor" },
+                            { label: "Gap", title: "Wide Gap", desc: "송어의 입 구조를 고려한 확실한 훅셋 확률 확보", icon: "target" },
+                            { label: "Size", title: "#12 Standard", desc: "저수지 관리형 낚시에서 가장 범용적인 사이즈", icon: "sparkles" }
+                        ].map(item => `
+                            <div class="flex items-center gap-6 p-6 bg-white border border-slate-100 rounded-[2rem] shadow-sm hover:shadow-md transition-all">
+                                <div class="p-4 bg-blue-50 rounded-2xl text-blue-500">
+                                    <i data-lucide="${item.icon}" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-blue-600 font-black uppercase tracking-wider mb-1">${item.label}</p>
+                                    <h4 class="text-lg font-bold text-slate-800 mb-1">${item.title}</h4>
+                                    <p class="text-sm text-slate-500 font-light">${item.desc}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+            },
+            {
+                title: "2. Tying Recipe",
+                subtitle: "The 4-Step Mastery",
+                theme: "bg-slate-700",
+                gradient: "from-slate-600 to-slate-800",
+                bgAccent: "bg-slate-100",
+                icon: "scissors",
+                render: () => `
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 h-full fade-in-up">
+                        ${[
+                            { step: "01", title: "Under-Layer", desc: "밑실로 베이스 형성. 이 색상이 전체의 톤을 지배합니다.", icon: "layers" },
+                            { step: "02", title: "BQ5 Layer", desc: "Body Quills를 감아 밑실이 비치도록 질감을 표현합니다.", icon: "droplets" },
+                            { step: "03", title: "Wire Ribbing", desc: "일정한 간격으로 와이어를 감아 분절 효과 부여.", icon: "target" },
+                            { step: "04", title: "Final Finish", desc: "Thin UV Resin 후 바니시로 투명 유리막 완성.", icon: "wand-2" }
+                        ].map(item => `
+                            <div class="group bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between border-b-4 border-b-slate-200">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-start">
+                                        <div class="text-3xl font-black text-slate-200 tracking-tighter">${item.step}</div>
+                                        <div class="p-3 bg-slate-50 rounded-2xl">
+                                            <i data-lucide="${item.icon}" class="w-6 h-6 text-slate-400"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-black text-slate-900 text-lg mb-2">${item.title}</h4>
+                                        <p class="text-xs text-slate-500 font-light leading-relaxed">${item.desc}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+            },
+            {
+                title: "3. Under-Layer Logic",
+                subtitle: "Backlighting Technique",
+                theme: "bg-amber-500",
+                gradient: "from-amber-500 to-orange-600",
+                bgAccent: "bg-amber-50",
+                icon: "zap",
+                render: () => `
+                    <div class="flex flex-col md:flex-row gap-12 items-stretch h-full fade-in-up">
+                        <div class="flex-1 flex flex-col justify-between space-y-6">
+                            <div class="p-8 bg-white rounded-[2.5rem] border-l-8 border-amber-500 shadow-sm">
+                                <h4 class="text-sm font-black text-amber-600 mb-4 tracking-[0.2em] uppercase">The Principle</h4>
+                                <p class="text-lg text-slate-700 leading-relaxed font-light">
+                                    밑실의 색상은 단순한 '바닥'이 아니라, 물속에서 빛을 투과시킬 때 올라오는 <span class="text-amber-600 font-bold">'속광'</span>을 결정합니다. 
+                                </p>
+                            </div>
+                            <div class="p-8 bg-white rounded-[2.5rem] border-l-8 border-purple-500 shadow-sm">
+                                <h4 class="text-sm font-black text-purple-600 mb-4 tracking-[0.2em] uppercase">Nuance of BQ5</h4>
+                                <p class="text-lg text-slate-700 leading-relaxed font-light">
+                                    <span class="text-purple-600 font-bold">VEEVUS BQ5</span>는 반투명합니다. 밑실이 밝을수록 생동감이 넘치고, 어두울수록 깊고 중후해집니다.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-[40%] rounded-[2.5rem] overflow-hidden border border-slate-200 relative group shadow-lg min-h-[300px]">
+                            <img src="${images.bq5}" alt="BQ5 Material" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent flex flex-col justify-end p-8">
+                                <span class="text-white font-bold text-lg">VEEVUS BQ5</span>
+                                <span class="text-white/70 text-sm italic tracking-widest">Core Material</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "4. Nuance Spectrum",
+                subtitle: "Under-Layer Variations",
+                theme: "bg-indigo-600",
+                gradient: "from-rose-500 to-indigo-700",
+                bgAccent: "bg-indigo-50",
+                icon: "palette",
+                render: () => `
+                    <div class="space-y-8 fade-in-up">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            ${[
+                                { img: images.olive, base: "Tan/Cream Base", result: "Natural Clarity", desc: "맑은 물에서 가장 자연스러운 수중 발색. 높은 경계심 타파.", color: "bg-yellow-100" },
+                                { img: images.wine, base: "Red/Wine Base", result: "Aggressive Vividness", desc: "피딩 타임이나 흐린 물에서 강력한 존재감과 공격성 자극.", color: "bg-red-100" },
+                                { img: images.olive, base: "Chartreuse Base", result: "Electric Olive", desc: "배어 나오는 형광기가 활성도 좋은 개체를 빠르게 유혹.", color: "bg-lime-100" }
+                            ].map((item, idx) => `
+                                <div class="group bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all">
+                                    <div class="h-40 overflow-hidden relative clickable-image" data-img="${item.img}" data-caption="${item.result}">
+                                        <img src="${item.img}" alt="${item.result}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="p-6 space-y-3">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-3 h-3 rounded-full ${item.color} border border-slate-200"></div>
+                                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">${item.base}</span>
+                                        </div>
+                                        <h4 class="text-lg font-black text-slate-900 leading-tight">${item.result}</h4>
+                                        <p class="text-[11px] text-slate-500 font-light leading-relaxed">${item.desc}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 border-dashed text-center">
+                            <p class="text-sm text-slate-500 font-medium italic">
+                                "밑실의 톤을 반 단계만 조절해도, 물속에서는 완전히 다른 생명체로 변합니다."
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "5. Jeff's Insight",
+                subtitle: "The Philosophy",
+                theme: "bg-emerald-600",
+                gradient: "from-emerald-500 to-teal-600",
+                bgAccent: "bg-emerald-50",
+                icon: "info",
+                render: () => `
+                    <div class="flex flex-col items-center justify-center text-center py-12 max-w-3xl mx-auto h-full fade-in-up">
+                        <div class="relative p-12 md:p-20 bg-white rounded-[4rem] border border-slate-200 shadow-xl overflow-hidden w-full">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30"></div>
+                            <p class="text-2xl md:text-4xl text-slate-800 serif-italic leading-relaxed px-4">
+                                "어두운(Dark) 것은 빛을 죽이지만,<br/>
+                                <span class="text-emerald-600 font-black not-italic block mt-6 text-4xl md:text-6xl tracking-tight">짙은(Deep) 것은 빛을 머금는다."</span>
+                            </p>
+                        </div>
+                        <div class="mt-12 space-y-2">
+                            <p class="text-xs text-emerald-600 font-black uppercase tracking-[0.5em]">Naksi-daejang's Philosophy</p>
+                            <div class="w-20 h-1 bg-emerald-500/20 mx-auto rounded-full"></div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let activeTab = 0;
+
+        const mainApp = document.getElementById('main-app');
+        const contentArea = document.getElementById('content-area');
+        const progressDots = document.getElementById('progress-dots');
+        const stepIndicator = document.getElementById('step-indicator');
+        const mainTitle = document.getElementById('main-title');
+        const subtitleText = document.getElementById('subtitle-text');
+        const accentDot = document.getElementById('accent-dot');
+        const iconWrapper = document.getElementById('icon-wrapper');
+        const mainIcon = document.getElementById('main-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const nextLabel = document.getElementById('next-label');
+        const prevBtn = document.getElementById('prev-btn');
+        const bgGlow1 = document.getElementById('bg-glow-1');
+        const bgGlow2 = document.getElementById('bg-glow-2');
+        
+        // Modal elements
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+        const modalClose = document.getElementById('modalClose');
+
+        function updateUI() {
+            const card = cards[activeTab];
+
+            // Update Progress
+            progressDots.innerHTML = cards.map((_, idx) => `
+                <div class="h-1.5 rounded-full transition-all duration-500 ${activeTab === idx ? 'w-12 bg-slate-900' : 'w-2 bg-slate-200'}"></div>
+            `).join('');
+            stepIndicator.textContent = `Phase ${activeTab + 1} / ${cards.length}`;
+
+            // Update Header
+            mainTitle.textContent = card.title;
+            subtitleText.textContent = card.subtitle;
+            accentDot.className = `w-3 h-3 rounded-full bg-gradient-to-r ${card.gradient}`;
+            iconWrapper.className = `p-6 md:p-8 rounded-[2.5rem] border border-slate-100 transition-all duration-500 ${card.bgAccent}`;
+            
+            // Update Icon
+            mainIcon.setAttribute('data-lucide', card.icon);
+            mainIcon.style.color = card.theme.replace('bg-', ''); // Simple mapping
+            
+            // Update Content
+            contentArea.innerHTML = card.render();
+            
+            // Update Button
+            nextBtn.className = `flex-1 py-6 md:py-8 px-8 md:px-12 rounded-[2.5rem] shadow-xl shadow-slate-200 transition-all active:scale-[0.98] flex items-center justify-between bg-gradient-to-r ${card.gradient} group border border-white/20 text-white`;
+            nextLabel.textContent = activeTab === cards.length - 1 ? "Revisit Journey" : "Next Stage";
+
+            // Update Background Glows
+            bgGlow1.className = `fixed -top-1/4 -left-1/4 w-full h-full bg-gradient-to-br ${card.gradient} opacity-5 blur-[150px] transition-all duration-1000 rounded-full pointer-events-none`;
+            bgGlow2.className = `fixed -bottom-1/4 -right-1/4 w-full h-full bg-gradient-to-tl ${card.gradient} opacity-5 blur-[150px] transition-all duration-1000 rounded-full pointer-events-none`;
+
+            // Refresh Icons
+            lucide.createIcons();
+            
+            // Attach click handlers to images
+            attachImageClickHandlers();
+        }
+
+        function attachImageClickHandlers() {
+            const clickableImages = document.querySelectorAll('.clickable-image');
+            clickableImages.forEach(img => {
+                img.addEventListener('click', function() {
+                    const imgSrc = this.getAttribute('data-img');
+                    const caption = this.getAttribute('data-caption');
+                    openModal(imgSrc, caption);
+                });
+            });
+        }
+
+        function openModal(imgSrc, caption) {
+            modalImage.src = imgSrc;
+            modalCaption.textContent = caption;
+            imageModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Modal close handlers
+        modalClose.addEventListener('click', closeModal);
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === imageModal) {
+                closeModal();
+            }
+        });
+
+        // ESC key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            activeTab = (activeTab + 1) % cards.length;
+            updateUI();
+            contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            activeTab = (activeTab - 1 + cards.length) % cards.length;
+            updateUI();
+            contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.onload = () => {
+            mainApp.classList.remove('opacity-0', 'translate-y-8');
+            updateUI();
+        };
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

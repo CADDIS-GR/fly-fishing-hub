@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicator Chironomid Strategy | CADDIS-GR Technique Archive · CADDIS-GR LAB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal:    #0d9488;
+            --teal-lt: #ccfbf1;
+            --teal-dk: #0f766e;
+            --amber:   #d97706;
+            --amber-lt:#fef3c7;
+            --blue:    #2563eb;
+            --blue-lt: #dbeafe;
+            --ink:     #1e293b;
+            --muted:   #64748b;
+            --surface: #f8fafc;
+            --card:    #ffffff;
+            --border:  #e2e8f0;
+            --t1:      #0d9488; /* Cast & Sit */
+            --t2:      #7c3aed; /* Slow Hand-Twist */
+            --t3:      #0369a1; /* Wind Drift */
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--surface);
+            color: var(--ink);
+            line-height: 1.7;
+        }
+
+        /* ── HERO ─────────────────────────────────── */
+        .hero {
+            background: linear-gradient(135deg, #0f4c3a 0%, #0d6e5a 40%, #0a7c6d 100%);
+            color: #fff;
+            padding: 64px 24px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        }
+        .hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #d1fae5;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .hero-sub {
+            font-size: 15px;
+            color: #a7f3d0;
+            font-weight: 400;
+            margin-bottom: 28px;
+        }
+        .hero-tagline {
+            background: rgba(0,0,0,0.25);
+            border-left: 3px solid #34d399;
+            padding: 14px 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #ecfdf5;
+            line-height: 1.6;
+            max-width: 620px;
+        }
+        .hero-tagline strong { color: #6ee7b7; }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+        .hero-chip {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #d1fae5;
+        }
+
+        /* ── LAYOUT ───────────────────────────────── */
+        .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+        /* ── VS COMPARISON ───────────────────────── */
+        .vs-section {
+            padding: 48px 0 40px;
+        }
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--ink);
+            margin-bottom: 24px;
+        }
+        .vs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media(max-width: 600px){ .vs-grid { grid-template-columns: 1fr; } }
+        .vs-card {
+            border-radius: 16px;
+            padding: 24px;
+            border: 2px solid transparent;
+        }
+        .vs-card.naked {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+        .vs-card.indicator {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+        .vs-card h3 {
+            font-size: 16px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        .vs-card.naked h3 { color: #166534; }
+        .vs-card.indicator h3 { color: #1e40af; }
+        .vs-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .vs-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--ink);
+        }
+        .vs-item .key {
+            font-weight: 700;
+            min-width: 70px;
+            color: var(--muted);
+            font-size: 11px;
+            padding-top: 2px;
+        }
+        .tag-pill {
+            display: inline-block;
+            background: #1a3c2e;
+            color: #6ee7b7;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-top: 12px;
+        }
+        .vs-card.indicator .tag-pill {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        /* ── DIVIDER ──────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8px 0;
+        }
+
+        /* ── GEAR SECTION ─────────────────────────── */
+        .gear-section {
+            padding: 40px 0;
+        }
+        .gear-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .gear-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .gear-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .gear-card h4 {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--ink);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .gear-card p {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .gear-highlight {
+            display: inline-block;
+            background: var(--teal-lt);
+            color: var(--teal-dk);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        /* ── DEPTH SECTION ────────────────────────── */
+        .depth-section {
+            padding: 40px 0;
+        }
+        .depth-visual {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .depth-diagram {
+            display: flex;
+            align-items: stretch;
+            gap: 24px;
+        }
+        .depth-bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            min-width: 80px;
+        }
+        .depth-bar {
+            width: 48px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .depth-layer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+        .layer-surface   { height: 28px; background: #7dd3fc; }
+        .layer-upper     { height: 48px; background: #38bdf8; }
+        .layer-mid       { height: 48px; background: #0ea5e9; }
+        .layer-lower     { height: 48px; background: #0369a1; }
+        .layer-target    { height: 40px; background: #0d9488; position: relative; }
+        .layer-target::after {
+            content: '← FLY';
+            position: absolute;
+            right: -36px;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--teal);
+            white-space: nowrap;
+        }
+        .layer-bottom    { height: 20px; background: #78350f; }
+        .depth-labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+            padding: 4px 0;
+        }
+        .depth-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .depth-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        .depth-row.active {
+            background: var(--teal-lt);
+            border: 1px solid #99f6e4;
+        }
+        .depth-row .dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── 3 TECHNIQUES TABS ────────────────────── */
+        .tech-section {
+            padding: 40px 0 56px;
+        }
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 2px solid transparent;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--card);
+            color: var(--muted);
+            border-color: var(--border);
+        }
+        .tab-btn[data-t="1"].active, .tab-btn[data-t="1"]:hover { background: #ccfbf1; color: #0f766e; border-color: #5eead4; }
+        .tab-btn[data-t="2"].active, .tab-btn[data-t="2"]:hover { background: #ede9fe; color: #6d28d9; border-color: #c4b5fd; }
+        .tab-btn[data-t="3"].active, .tab-btn[data-t="3"]:hover { background: #e0f2fe; color: #0369a1; border-color: #7dd3fc; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .tech-card {
+            background: var(--card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            animation: fadeUp .3s ease;
+        }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .tech-header {
+            padding: 28px 28px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .tech-number {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .t1 .tech-number { color: var(--t1); }
+        .t2 .tech-number { color: var(--t2); }
+        .t3 .tech-number { color: var(--t3); }
+        .tech-header h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+        .tech-header p { font-size: 14px; color: var(--muted); }
+        .tech-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        @media(max-width: 600px){ .tech-body { grid-template-columns: 1fr; } }
+        .tech-col {
+            padding: 24px 28px;
+        }
+        .tech-col + .tech-col {
+            border-left: 1px solid var(--border);
+        }
+        @media(max-width:600px){ .tech-col + .tech-col { border-left: none; border-top: 1px solid var(--border); } }
+        .tech-col h4 {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+        .step-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .step-num {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .t1 .step-num { background: #ccfbf1; color: #0f766e; }
+        .t2 .step-num { background: #ede9fe; color: #6d28d9; }
+        .t3 .step-num { background: #e0f2fe; color: #0369a1; }
+        .pro-con-grid { display: flex; flex-direction: column; gap: 6px; }
+        .pro-item, .con-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 12px; line-height: 1.5;
+        }
+        .pro-item::before { content: '✓'; color: #10b981; font-weight: 900; flex-shrink: 0; }
+        .con-item::before { content: '✗'; color: #f87171; font-weight: 900; flex-shrink: 0; }
+        .tech-footer {
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            padding: 20px 28px;
+        }
+        .tech-footer h4 {
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .08em;
+            color: var(--muted); margin-bottom: 10px;
+        }
+        .hanter-box {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            line-height: 1.7;
+        }
+        .quote-tip {
+            background: #f0fdf4;
+            border-left: 3px solid #10b981;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            color: #166534;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .t2 .quote-tip { background: #faf5ff; border-color: #a78bfa; color: #5b21b6; }
+        .t3 .quote-tip { background: #f0f9ff; border-color: #38bdf8; color: #075985; }
+
+        /* ── WIND TABLE ───────────────────────────── */
+        .wind-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 13px; margin-top: 8px;
+        }
+        .wind-table th {
+            background: #e0f2fe; color: #0369a1;
+            padding: 8px 12px; text-align: left;
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .wind-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .wind-table tr:last-child td { border-bottom: none; }
+
+        /* ── DECISION FLOW ────────────────────────── */
+        .decision-section { padding: 40px 0; }
+        .flow-wrap {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .flow-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .flow-node {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        .flow-node.question {
+            background: #fef9c3;
+            border: 1px solid #fde047;
+        }
+        .flow-node.answer {
+            background: var(--teal-lt);
+            border: 1px solid #5eead4;
+            margin-left: 28px;
+        }
+        .flow-node.answer.purple {
+            background: #ede9fe; border-color: #c4b5fd;
+        }
+        .flow-node.answer.blue {
+            background: #e0f2fe; border-color: #7dd3fc;
+        }
+        .flow-node.answer.gray {
+            background: #f1f5f9; border-color: #cbd5e1;
+        }
+        .flow-arrow {
+            margin-left: 20px;
+            color: var(--muted);
+            font-size: 18px;
+        }
+        .flow-q-icon { font-size: 16px; }
+
+        /* ── CHECKLIST ────────────────────────────── */
+        .checklist-section { padding: 40px 0; }
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .checklist-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+        .checklist-card h4 {
+            font-size: 13px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: .05em;
+            color: var(--ink); margin-bottom: 14px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .check-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 12px; padding: 5px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .check-item:last-child { border-bottom: none; }
+        .check-box {
+            width: 16px; height: 16px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all .15s;
+        }
+        .check-box.checked {
+            background: var(--teal);
+            border-color: var(--teal);
+            color: white;
+            font-size: 10px;
+        }
+
+        /* ── SUMMARY ──────────────────────────────── */
+        .summary-section {
+            padding: 40px 0 64px;
+        }
+        .summary-card {
+            background: linear-gradient(135deg, #0f4c3a 0%, #064e3b 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 36px;
+        }
+        .summary-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #d1fae5;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .summary-item {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .summary-item .num {
+            font-size: 24px;
+            font-weight: 900;
+            color: #34d399;
+            font-family: 'DM Mono', monospace;
+        }
+        .summary-item .label {
+            font-size: 12px;
+            color: #a7f3d0;
+            margin-top: 2px;
+        }
+        .summary-tags {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .stag {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #d1fae5;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* ── NAV ──────────────────────────────────── */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-nav a {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .top-nav a:hover { text-decoration: underline; }
+        .top-nav .sep { color: #cbd5e1; }
+
+        /* ── TABLE UTILITY ────────────────────────── */
+        .data-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 13px; margin: 12px 0;
+        }
+        .data-table th {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: #f8fafc; }
+        .rank-badge {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 20px;
+        }
+        .rank-badge.r2 { background: #6366f1; }
+        .rank-badge.r3 { background: #0369a1; }
+        .rank-badge.r4 { background: var(--muted); }
+        .rank-badge.r5 { background: #94a3b8; }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Indicator_Chironomid_Strategy.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- NAV -->
+<nav class="top-nav">
+    <a href="/fly-fishing-hub/research/index.html">🎣 Archive</a>
+    <span class="sep">/</span>
+    <span>인디케이터 님핑</span>
+    <span class="sep">/</span>
+    <span>Indicator Chironomid Strategy</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">🎯 Indicator Nymphing · Stillwater</div>
+        <h1>Indicator Chironomid<br>Strategy</h1>
+        <p class="hero-sub">Chironomids Under an Indicator | 3 Techniques</p>
+        <div class="hero-tagline">
+            <strong>Naked Fishing은 찾는 낚시</strong>이고,<br>
+            <strong>Indicator Chironomid는 꽂아두는 낚시</strong>다.<br>
+            둘은 경쟁 관계가 아니라, 정지수면에서 Chironomid를 운용하는 두 개의 축이다.
+        </div>
+        <div class="hero-meta">
+            <span class="hero-chip">🏞️ 정지수면(저수지)</span>
+            <span class="hero-chip">🎯 바닥권 정밀 공략</span>
+            <span class="hero-chip">📏 6m 수심 대응</span>
+            <span class="hero-chip">🍃 Chironomid · Balanced Leech</span>
+        </div>
+    </div>
+</div>
+
+<!-- VS COMPARISON -->
+<div class="wrap">
+    <section class="vs-section">
+        <p class="section-label">00 · Overview</p>
+        <h2 class="section-title">두 기법의 역할 구분</h2>
+        <div class="vs-grid">
+            <div class="vs-card naked">
+                <h3>🌿 Naked Fishing</h3>
+                <div class="vs-row">
+                    <div class="vs-item"><span class="key">수심 접근</span>비스듬한 침강과 리트리브</div>
+                    <div class="vs-item"><span class="key">플라이</span>리트리브·드리프트로 계속 변화</div>
+                    <div class="vs-item"><span class="key">입질</span>어렵지만 예민함</div>
+                    <div class="vs-item"><span class="key">피딩층</span>탐색형</div>
+                    <div class="vs-item"><span class="key">바람 영향</span>라인 처짐과 감도 저하 가능</div>
+                    <div class="vs-item"><span class="key">적합한 날</span>넓게 찾아야 하는 날</div>
+                    <div class="vs-item"><span class="key">장점</span>자연스러운 움직임, 넓은 탐색</div>
+                    <div class="vs-item"><span class="key">약점</span>입질 감지 난도 높음, 바람에 취약</div>
+                </div>
+                <div class="tag-pill">찾는 낚시</div>
+            </div>
+            <div class="vs-card indicator">
+                <h3>🎯 Indicator Chironomid</h3>
+                <div class="vs-row">
+                    <div class="vs-item"><span class="key">수심 접근</span>수직에 가까운 정지 세팅</div>
+                    <div class="vs-item"><span class="key">플라이</span>정지 또는 매우 느린 이동</div>
+                    <div class="vs-item"><span class="key">입질</span>시각적으로 명확함</div>
+                    <div class="vs-item"><span class="key">피딩층</span>확인된 수심 공략형</div>
+                    <div class="vs-item"><span class="key">바람 영향</span>드리프트로 활용 가능 (과하면 불리)</div>
+                    <div class="vs-item"><span class="key">적합한 날</span>수심층이 어느 정도 잡힌 날</div>
+                    <div class="vs-item"><span class="key">장점</span>정밀 수심 고정, 정지 피딩 대응</div>
+                    <div class="vs-item"><span class="key">약점</span>캐스팅 부담, 탐색 범위 제한</div>
+                </div>
+                <div class="tag-pill">꽂아두는 낚시</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- GEAR -->
+<div class="wrap">
+    <section class="gear-section">
+        <p class="section-label">01 · Gear Setup</p>
+        <h2 class="section-title">기본 장비 구성</h2>
+        <div class="gear-grid">
+            <div class="gear-card">
+                <div class="gear-icon">🎣</div>
+                <h4>Rod</h4>
+                <p style="margin-bottom:10px;">10ft #5 또는 #6이 가장 적합. #5는 섬세함과 운용성, #6은 긴 리더·인디케이터·스플릿샷을 넘기는 힘을 제공.</p>
+                <div style="font-size:12px; color:var(--ink); font-weight:700; margin-bottom:6px;">10ft 로드가 유리한 이유</div>
+                <div style="display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted);">
+                    <div>· 긴 리더를 들어 올리기 쉬움</div>
+                    <div>· 인디케이터 채비를 수면에서 떼어내기 쉬움</div>
+                    <div>· 라인 멘딩과 드리프트 제어에 유리</div>
+                    <div>· 훅셋 시 긴 리더의 처짐 보완</div>
+                    <div>· 랜딩 시 긴 리더·인디케이터 다루기 용이</div>
+                </div>
+                <div style="margin-top:8px; font-size:11px; color:var(--muted);">한터 6m + 7m급 리더라면 #4보다 #5~#6이 현실적.</div>
+                <span class="gear-highlight">10ft #5~#6 권장</span>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🪡</div>
+                <h4>Fly Line</h4>
+                <p>WF 플로팅 라인. 짧거나 강한 헤드, 긴 리더와 인디케이터를 넘길 수 있는 프론트 파워가 핵심. 섬세한 프레젠테이션보다 운반력 우선.</p>
+                <table class="data-table" style="margin-top:10px;">
+                    <thead><tr><th>우선</th><th>라인</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="rank-badge">1</span></td><td style="font-size:11px;">RIO Xtreme Indicator WF6F</td></tr>
+                        <tr><td><span class="rank-badge r3">3</span></td><td style="font-size:11px;">Rio Elite Stillwater WF5F</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">📏</div>
+                <h4>Leader Length</h4>
+                <p>사전에 다양한 길이를 준비. 31ft 이상은 싱킹 라인 전환 검토. 인디케이터 채비는 실제 수심에 거의 맞춰 세팅(수직에 가깝게 매달림).</p>
+                <table class="data-table" style="margin-top:10px;">
+                    <thead><tr><th>길이</th><th>환산</th><th>용도</th></tr></thead>
+                    <tbody>
+                        <tr><td>15ft</td><td>4.6m</td><td>중층 이하</td></tr>
+                        <tr><td>19ft</td><td>5.8m</td><td>5~6m권</td></tr>
+                        <tr><td style="font-weight:700;color:var(--teal)">23ft</td><td style="font-weight:700;color:var(--teal)">7.0m</td><td style="font-weight:700;color:var(--teal)">한터 핵심</td></tr>
+                        <tr><td>27ft</td><td>8.2m</td><td>더 깊은 수심</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🔗</div>
+                <h4>Leader 구성 예시</h4>
+                <div style="background:#f8fafc; border-radius:8px; padding:12px; font-family:'DM Mono',monospace; font-size:11px; line-height:2; margin-top:6px;">
+                    플로팅 라인<br>
+                    → <strong>0X 카본</strong>: 버트 섹션<br>
+                    → <strong>3X 카본</strong>: 미드 섹션<br>
+                    → <strong>5X / 6X 카본</strong>: 최종 티펫<br>
+                    → <strong>Chironomid / Balanced Leech</strong>
+                </div>
+                <p style="font-size:11px; color:var(--muted); margin-top:8px;">매듭은 최소화. 스플릿샷 스토퍼용 매듭은 의도적으로 활용 가능.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- INDICATOR SECTION -->
+<div class="wrap">
+    <section class="gear-section">
+        <p class="section-label">02 · Indicator</p>
+        <h2 class="section-title">인디케이터 선택 가이드</h2>
+        <div class="gear-grid">
+            <div class="gear-card">
+                <div class="gear-icon">📌</div>
+                <h4>Quick Release 타입</h4>
+                <p>검은 핀으로 리더 루프를 눌러 고정. 훅셋 후 로드 텐션으로 루프가 풀려 인디케이터가 자유롭게 움직임. 6m 이상 리더 사용 시 랜딩 편의성 대폭 향상.</p>
+                <span class="gear-highlight">긴 리더 필수 선택</span>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">⚖️</div>
+                <h4>Ball vs Tapered</h4>
+                <table class="data-table" style="margin-top:8px;">
+                    <thead><tr><th>타입</th><th>특징</th><th>적합</th></tr></thead>
+                    <tbody>
+                        <tr><td>Ball</td><td>부력 크고 안정</td><td>바람·Balanced Leech·샷</td></tr>
+                        <tr><td>Tapered</td><td>예민·물 저항↓</td><td>작은 Chironomid·잔잔한 수면</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:11px; color:var(--muted); margin-top:8px;">한터처럼 바람과 깊은 수심이 변수라면 중형 이상 준비.</p>
+            </div>
+            <div class="gear-card">
+                <div class="gear-icon">🎨</div>
+                <h4>색상 선택</h4>
+                <div style="display:flex; flex-direction:column; gap:5px; margin-top:6px; font-size:12px;">
+                    <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;border-radius:50%;background:#f97316;display:inline-block;flex-shrink:0;"></span>맑은 날 · 등 뒤 햇빛 → 오렌지·핑크</div>
+                    <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;border-radius:50%;background:#eab308;display:inline-block;flex-shrink:0;"></span>흐린 날 → 옐로우·선버스트</div>
+                    <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>맑고 예민한 물색 → 그린</div>
+                    <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px;height:10px;border-radius:50%;background:#3b82f6;display:inline-block;flex-shrink:0;"></span>원거리 캐스팅 → 고시인성 우선</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- DEPTH CHECK -->
+<div class="wrap">
+    <section class="depth-section">
+        <p class="section-label">03 · Depth Check</p>
+        <h2 class="section-title">수심 체크 & 바닥찍기</h2>
+        <div class="depth-visual">
+            <div class="depth-diagram">
+                <div class="depth-bar-wrap">
+                    <div class="depth-bar">
+                        <div class="depth-layer layer-surface">수면</div>
+                        <div class="depth-layer layer-upper" style="height:60px;"></div>
+                        <div class="depth-layer layer-mid" style="height:60px;"></div>
+                        <div class="depth-layer layer-lower" style="height:60px;"></div>
+                        <div class="depth-layer layer-target" style="position:relative;">
+                            <span style="font-size:8px;">▶ FLY</span>
+                        </div>
+                        <div class="depth-layer layer-bottom">바닥</div>
+                    </div>
+                    <div style="font-size:10px; color:var(--muted); text-align:center; margin-top:4px;">~6m</div>
+                </div>
+                <div class="depth-info">
+                    <div class="depth-row" style="background:#f0f9ff; border:1px solid #bae6fd;">
+                        <div class="dot" style="background:#7dd3fc;"></div>
+                        <div><strong>수면</strong></div>
+                    </div>
+                    <div class="depth-row" style="background:#f8fafc; border:1px solid var(--border);">
+                        <div class="dot" style="background:#38bdf8;"></div>
+                        <div><strong>상층·중층</strong> — Naked / Hover 탐색 구간</div>
+                    </div>
+                    <div class="depth-row active">
+                        <div class="dot" style="background:#0d9488;"></div>
+                        <div>
+                            <strong>바닥 + 30~80cm</strong> — 목표 세팅 구간<br>
+                            <span style="font-size:11px; color:var(--teal-dk);">✓ Chironomid / Balanced Leech 배치</span>
+                        </div>
+                    </div>
+                    <div class="depth-row" style="background:#fef3c7; border:1px solid #fde047;">
+                        <div class="dot" style="background:#78350f;"></div>
+                        <div><strong>바닥</strong> — 바닥찍기 기준점</div>
+                    </div>
+                    <div style="margin-top:10px; font-size:13px; line-height:1.8;">
+                        <strong>바닥찍기 절차:</strong><br>
+                        ① 포셉 / Depth Locator 플라이에 장착<br>
+                        ② 목표 지점에 채비 내림<br>
+                        ③ 인디케이터가 수면 아래 → 아직 얕음<br>
+                        ④ 인디케이터 정상 부상 → 바닥 확인<br>
+                        ⑤ <strong>바닥 + 50cm</strong>에서 시작, 30cm 단위 조정<br>
+                        ⑥ 입질 수심은 마커 / 면사매듭으로 기억
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Split Shot -->
+        <div style="margin-top:20px;">
+            <div class="gear-card" style="max-width:100%;">
+                <div class="gear-icon">🔩</div>
+                <h4>스플릿샷 운용 원칙</h4>
+
+                <!-- 목적 2가지 -->
+                <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:14px 16px; margin-top:10px; margin-bottom:14px;">
+                    <p style="font-size:12px; font-weight:700; color:#166534; margin-bottom:8px;">스플릿샷을 쓰는 두 가지 이유</p>
+                    <div style="display:flex; flex-direction:column; gap:6px; font-size:12px; color:#166534;">
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <span style="background:#166534; color:white; border-radius:50%; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; margin-top:1px;">1</span>
+                            <span>플라이를 빠르게 목표 수심까지 내리기 위해 — 깊은 수심이나 바람이 부는 날에 침강 속도를 보완한다.</span>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:flex-start;">
+                            <span style="background:#166534; color:white; border-radius:50%; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; margin-top:1px;">2</span>
+                            <span>바람으로 인디케이터가 움직일 때 플라이가 떠오르는 것을 막기 위해 — 수심층 이탈을 방지한다.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div>
+                        <p style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:6px;">필요한 경우</p>
+                        <div style="display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted);">
+                            <div>· 수심이 깊어 침강이 늦을 때</div>
+                            <div>· 바람으로 인디케이터가 끌릴 때</div>
+                            <div>· 목표 수심층 안정 유지가 필요할 때</div>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:6px;">위치 &amp; 스토퍼</p>
+                        <div style="font-size:12px; font-family:'DM Mono',monospace; background:#f8fafc; padding:10px; border-radius:8px; line-height:2;">
+                            3X 플루오로카본<br>
+                            → <strong>[트리플 서전스 매듭]</strong> ← 샷 스토퍼<br>
+                            → 6호 스플릿샷<br>
+                            → 5X 4ft<br>
+                            → 플라이
+                        </div>
+                    </div>
+                </div>
+                <div style="background:#fef9c3; border-radius:8px; padding:10px 14px; margin-top:12px; font-size:12px; color:#854d0e;">
+                    💡 기본값: 도래 없이 매듭을 스토퍼로 사용. 맑은 물에서는 도래 자체가 이물감이 될 수 있어 비선호. 필요할 때만 도래 검토.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- 3 TECHNIQUES -->
+<div class="wrap">
+    <section class="tech-section">
+        <p class="section-label">04 · Core Techniques</p>
+        <h2 class="section-title">3 Techniques</h2>
+
+        <div class="tab-nav">
+            <button class="tab-btn active" data-t="1" onclick="switchTab(1)">
+                ① Cast &amp; Sit
+            </button>
+            <button class="tab-btn" data-t="2" onclick="switchTab(2)">
+                ② Slow Hand-Twist Retrieve
+            </button>
+            <button class="tab-btn" data-t="3" onclick="switchTab(3)">
+                ③ Wind Drift
+            </button>
+        </div>
+
+        <!-- T1: Cast & Sit -->
+        <div class="tab-panel active" id="panel-1">
+            <div class="tech-card t1">
+                <div class="tech-header">
+                    <div class="tech-number">Technique 01 · 정지형</div>
+                    <h3>Cast &amp; Sit</h3>
+                    <p>목표 수심을 맞춘 뒤 캐스팅하고, 인디케이터 아래 플라이를 그대로 매달아 둔다. 송어가 정지된 먹이를 먹는 상황에서 가장 강한 기법.</p>
+                </div>
+                <div class="tech-body">
+                    <div class="tech-col">
+                        <h4>운용 순서</h4>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span>목표 수심 확인 후 캐스팅</li>
+                            <li class="step-item"><span class="step-num">2</span>플라이가 목표 수심까지 내려가길 대기</li>
+                            <li class="step-item"><span class="step-num">3</span>인디케이터를 집중 관찰</li>
+                            <li class="step-item"><span class="step-num">4</span>불필요한 움직임 금지</li>
+                            <li class="step-item"><span class="step-num">5</span>입질 시 즉시 훅셋</li>
+                        </ul>
+                        <div class="quote-tip" style="margin-top:14px;">
+                            바닥찍기 후 30~80cm 위에 두고<br>오래 보여주는 것이 핵심.
+                        </div>
+                    </div>
+                    <div class="tech-col">
+                        <h4>장단점</h4>
+                        <div class="pro-con-grid">
+                            <div class="pro-item">특정 수심층에 플라이를 오래 보여줄 수 있음</div>
+                            <div class="pro-item">정지 피딩 상황에서 가장 강함</div>
+                            <div class="pro-item">바닥권 공략이 정확함</div>
+                            <div class="pro-item">Balanced Leech / Larva / Pupa 모두 적용 가능</div>
+                            <div class="con-item">탐색 범위가 좁음</div>
+                            <div class="con-item">수심을 잘못 맞추면 계속 틀린 층을 낚시하게 됨</div>
+                            <div class="con-item">바람이 없으면 플라이 움직임이 너무 적을 수 있음</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-footer">
+                    <h4>🏞️ 한터 6m 적용</h4>
+                    <div class="hanter-box">
+                        한터 6m 바닥권에서 가장 직접적인 방법. 바닥찍기 후 플라이를 바닥에서 30~80cm 위에 두고, 특히 <strong>소극적으로 먹는 송어</strong>를 상대할 때 효과적. 10~15분 반응 없으면 다음 기법으로 전환.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- T2: Slow Hand-Twist -->
+        <div class="tab-panel" id="panel-2">
+            <div class="tech-card t2">
+                <div class="tech-header">
+                    <div class="tech-number">Technique 02 · 고정 수심 이동형</div>
+                    <h3>Slow Hand-Twist Retrieve</h3>
+                    <p>인디케이터를 아주 천천히 끌어오는 방식. 정밀 수심 유지 + 마이크로 님핑의 느린 움직임이 결합된 형태. Cast &amp; Sit과 Naked Fishing의 중간.</p>
+                </div>
+                <div class="tech-body">
+                    <div class="tech-col">
+                        <h4>운용 순서</h4>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span>캐스팅 후 목표 수심까지 침강 대기</li>
+                            <li class="step-item"><span class="step-num">2</span>로드 팁을 낮춤</li>
+                            <li class="step-item"><span class="step-num">3</span>손에 힘을 뺌</li>
+                            <li class="step-item"><span class="step-num">4</span>아주 느린 핸드 트위스트 리트리브</li>
+                            <li class="step-item"><span class="step-num">5</span>인디케이터가 낚시인 쪽으로 천천히 이동</li>
+                        </ul>
+                        <div class="quote-tip" style="margin-top:14px;">
+                            "충분히 느리게 하고 있다고 생각하면,<br>더 느리게 한다."
+                        </div>
+                    </div>
+                    <div class="tech-col">
+                        <h4>포지셔닝</h4>
+                        <table class="data-table">
+                            <thead><tr><th>방식</th><th>성격</th></tr></thead>
+                            <tbody>
+                                <tr><td>Cast &amp; Sit</td><td>정지형</td></tr>
+                                <tr style="background:#faf5ff;"><td><strong>Slow Hand-Twist</strong></td><td><strong>수심 고정 이동형</strong></td></tr>
+                                <tr><td>Naked Fishing</td><td>긴 수평 탐색형</td></tr>
+                            </tbody>
+                        </table>
+                        <div style="margin-top:12px;">
+                            <h4>한터 적용 상황</h4>
+                            <div class="pro-con-grid">
+                                <div class="pro-item">정지에는 무반응, 약간 움직이면 입질할 때</div>
+                                <div class="pro-item">같은 수심층을 조금 더 넓게 훑고 싶을 때</div>
+                                <div class="pro-item">바람이 거의 없어 자연 움직임이 부족할 때</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tech-footer">
+                    <h4>⚠️ 핵심 주의사항</h4>
+                    <div class="hanter-box">
+                        빠른 리트리브는 플라이를 목표 수심층 위로 올려버림. 송어가 바닥에서 30~60cm만 떠 있다면, 빠른 리트리브는 플라이를 <strong>송어의 시야 위로</strong> 이동시킴. 핸드 트위스트로 최대한 천천히.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- T3: Wind Drift -->
+        <div class="tab-panel" id="panel-3">
+            <div class="tech-card t3">
+                <div class="tech-header">
+                    <div class="tech-number">Technique 03 · 드리프트형</div>
+                    <h3>Wind Drift</h3>
+                    <p>바람을 이용해 인디케이터를 흘리는 방식. 특정 수심층을 유지하면서 넓은 구역을 가로질러 이동하게 만드는 기법.</p>
+                </div>
+                <div class="tech-body">
+                    <div class="tech-col">
+                        <h4>운용 순서</h4>
+                        <ul class="step-list">
+                            <li class="step-item"><span class="step-num">1</span>바람 방향 확인</li>
+                            <li class="step-item"><span class="step-num">2</span>바람 정방향이 아닌 <strong>약 45도</strong> 각도로 캐스팅</li>
+                            <li class="step-item"><span class="step-num">3</span>라인에 자연스러운 벨리 형성</li>
+                            <li class="step-item"><span class="step-num">4</span>바람이 인디케이터를 천천히 밀도록 허용</li>
+                            <li class="step-item"><span class="step-num">5</span>플라이가 목표 수심층 유지하며 횡 이동</li>
+                            <li class="step-item"><span class="step-num">6</span>인디케이터가 빠르게 끌리면 무게 추가 또는 각도 조정</li>
+                        </ul>
+                    </div>
+                    <div class="tech-col">
+                        <h4>바람 상태별 운용 판단</h4>
+                        <table class="wind-table">
+                            <thead><tr><th>바람 상태</th><th>운용 판단</th></tr></thead>
+                            <tbody>
+                                <tr><td>무풍</td><td>Cast &amp; Sit / Slow Hand-Twist</td></tr>
+                                <tr style="background:#e0f2fe;"><td><strong>약한 일정한 바람</strong></td><td><strong>Wind Drift 적극 활용</strong></td></tr>
+                                <tr><td>중간 바람</td><td>스플릿샷 추가 후 드리프트</td></tr>
+                                <tr><td>강한 돌풍</td><td>거리 축소·포지션 변경·무게 조절</td></tr>
+                                <tr><td>라인 벨리 과다</td><td>멘딩 또는 재캐스팅</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tech-footer">
+                    <h4>🏞️ 활용 포인트</h4>
+                    <div class="hanter-box">
+                        넓은 구역 탐색 + 플라이 자연스러운 움직임을 동시에 달성. 단, 바람이 너무 강하면 플라이가 떠오르고 라인 벨리가 심해지면 <strong>훅셋이 늦어짐</strong>. 바람이 일정할 때 가장 강하다.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- DECISION FLOW -->
+<div class="wrap">
+    <section class="decision-section">
+        <p class="section-label">05 · Field Decision</p>
+        <h2 class="section-title">실전 판단 흐름</h2>
+        <div class="flow-wrap">
+            <div class="flow-row">
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>수심층을 모른다</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer gray">
+                    Naked Fishing / Hover / Intermediate 마이크로 님핑으로 탐색
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>바닥권 반응이 확인되었다</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer">
+                    바닥찍기 → 바닥 +50cm → Cast &amp; Sit 시작
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>정지에는 반응 없음</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer purple">
+                    Slow Hand-Twist Retrieve로 전환
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>바람이 일정하게 분다</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer blue">
+                    45도 캐스팅 → Wind Drift 활용
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>입질은 있는데 얕게 걸리거나 놓침</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer gray">
+                    수심 30cm 단위 조정 → 플라이 교체 → 샷 크기/위치 조정
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>움직이는 플라이에만 반응한다</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer purple">
+                    Slow Hand-Twist / Wind Drift / Naked Fishing / Hover·Intermediate 님핑
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="flow-node question">
+                    <span class="flow-q-icon">❓</span>
+                    <strong>정지된 플라이에 반응한다</strong>
+                </div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node answer">
+                    수심 정확히 맞춤 → 불필요한 움직임 제거 → 오래 보여줌 → 입질 수심 마커로 기억
+                </div>
+            </div>
+        </div>
+
+        <!-- 한터 장비 역할 분담 -->
+        <div style="margin-top:28px;">
+            <h3 style="font-size:1rem; font-weight:900; color:var(--ink); margin-bottom:14px;">🏞️ 한터 기준 장비 역할 분담</h3>
+            <div style="background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden;">
+                <table class="data-table" style="margin:0;">
+                    <thead>
+                        <tr>
+                            <th>장비 구성</th>
+                            <th>역할 판단</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-size:12px; font-weight:700;">Sage R8 Core 4100-4<br><span style="font-weight:400; color:var(--muted);">+ SA Amplitude Infinity WF5F</span></td>
+                            <td style="font-size:12px;">Naked Fishing, 긴 리더 프레젠테이션, 조용한 착수에 적합</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; font-weight:700;">#6 로드<br><span style="font-weight:400; color:var(--muted);">+ RIO Xtreme Indicator WF6F</span></td>
+                            <td style="font-size:12px;">깊은 인디케이터 채비, 6m 바닥권 고정에 적합</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; font-weight:700;">SA Amplitude Anadro WF6F</td>
+                            <td style="font-size:12px;">긴 리더와 무거운 채비 운반에 적합</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:12px; font-weight:700;">Rio Elite Stillwater WF5F<br><span style="font-weight:400; color:var(--muted);">30ft Head 185gr</span></td>
+                            <td style="font-size:12px;">Stillwater 플로팅 운용 후보, 짧은 헤드 장점 활용 가능</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="padding:12px 16px; background:#fef9c3; font-size:12px; color:#854d0e; border-top:1px solid var(--border);">
+                    💡 R8 Core 4100-4로도 가벼운 인디케이터 채비는 가능. 단, 6.5~7m 리더 + 인디케이터 + 스플릿샷 + Balanced Leech까지 포함되면 #6 쪽이 더 안정적.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- CHECKLIST -->
+<div class="wrap">
+    <section class="checklist-section">
+        <p class="section-label">06 · Checklist</p>
+        <h2 class="section-title">실전 체크리스트</h2>
+        <div class="checklist-grid">
+            <div class="checklist-card">
+                <h4>🎒 출조 전 준비</h4>
+                <div id="cl-pre">
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>15ft / 19ft / 23ft 리더 사전 제작</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>0X / 3X / 5X / 6X 카본 준비</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>Quick Release Indicator 준비</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>Ball 타입 + Tapered 타입 모두</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>색상별 인디케이터 준비</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>스플릿샷 크기별 준비</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>Depth Locator / 자작 무게추</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>짧은 포셉</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>라인 마커 또는 면사매듭</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>#14 Chironomid Larva / Pupa</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>Balanced Leech</span></div>
+                </div>
+            </div>
+            <div class="checklist-card">
+                <h4>🏞️ 현장 첫 세팅</h4>
+                <div id="cl-field">
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>바닥찍기 실시</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>바닥 +50cm 기준으로 시작</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>인디케이터 위치 표시</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>첫 10~15분 Cast &amp; Sit</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>무반응 시 Slow Hand-Twist 전환</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>바람이 일정하면 Wind Drift</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>입질 수심 기록</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>동일 수심으로 빠르게 복귀</span></div>
+                </div>
+            </div>
+            <div class="checklist-card">
+                <h4>🎣 입질 후 점검</h4>
+                <div id="cl-post">
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>인디케이터 위치가 변하지 않았는가</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>스플릿샷이 밀리지 않았는가</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>티펫 꼬임이 생기지 않았는가</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>플라이가 이물질을 끌고 오지 않았는가</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>훅 포인트가 무뎌지지 않았는가</span></div>
+                    <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><span>같은 수심에서 반복 입질이 나는가</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="divider"></div>
+
+<!-- SUMMARY -->
+<div class="wrap">
+    <section class="summary-section">
+        <p class="section-label">07 · Summary</p>
+        <h2 class="section-title">핵심 결론</h2>
+        <div class="summary-card">
+            <h3>Indicator Chironomid의 4가지 핵심</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="num">01</div>
+                    <div class="label">실제 수심을 찍는다</div>
+                </div>
+                <div class="summary-item">
+                    <div class="num">02</div>
+                    <div class="label">바닥 +30~80cm에 플라이 세팅</div>
+                </div>
+                <div class="summary-item">
+                    <div class="num">03</div>
+                    <div class="label">인디케이터로 수심 고정</div>
+                </div>
+                <div class="summary-item">
+                    <div class="num">04</div>
+                    <div class="label">정지·초저속·드리프트로 반응 탐색</div>
+                </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.08); border-radius:12px; padding:18px; margin-bottom:20px; font-size:13px; line-height:1.9; color:#d1fae5;">
+                <strong style="color:#6ee7b7;">Naked Fishing</strong> = 찾는 낚시 &nbsp;|&nbsp;
+                <strong style="color:#6ee7b7;">Indicator Chironomid</strong> = 꽂아두는 낚시 &nbsp;|&nbsp;
+                <strong style="color:#6ee7b7;">Slow Hand-Twist / Wind Drift</strong> = 두 세계를 이어주는 운용<br><br>
+                한터 6m 기준, 풀싱킹이 <em>지나가며 반응을 유도</em>한다면<br>
+                Indicator Chironomid는 <em>오래 머물게 하여 소극적인 송어를 상대</em>한다.
+            </div>
+            <div class="summary-tags">
+                <span class="stag">#인디케이터님핑</span>
+                <span class="stag">#Chironomid</span>
+                <span class="stag">#정지수면</span>
+                <span class="stag">#바닥권공략</span>
+                <span class="stag">#BalancedLeech</span>
+                <span class="stag">#한터6m</span>
+                <span class="stag">#CastAndSit</span>
+                <span class="stag">#WindDrift</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- FOOTER -->
+<footer style="background:#1e293b; color:white; padding:48px 20px 36px;">
+    <div style="max-width:900px; margin:0 auto;">
+
+        <!-- 참고 자료 -->
+        <div style="margin-bottom:32px;">
+            <div style="font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#64748b; margin-bottom:16px;">📚 참고 자료</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+
+                <!-- GitHub MD 파일 그룹 -->
+                <div style="font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#475569; padding:0 4px; margin-bottom:-2px;">📄 원본 자료 (GitHub)</div>
+
+                <a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/md/Indicator_Chironomid_Strategy.md"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">📝</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">Indicator_Chironomid_Strategy.md</div>
+                        <div style="font-size:11px; color:#64748b;">CADDIS-GR / fishing-technique · md</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+                <a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/md/chironomid_indicator_3techniques_and_line_match.md"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">📝</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">chironomid_indicator_3techniques_and_line_match.md</div>
+                        <div style="font-size:11px; color:#64748b;">CADDIS-GR / fishing-technique · md</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+                <a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/md/chironomid_indicator_fishing_transcript.md"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">📝</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">chironomid_indicator_fishing_transcript.md</div>
+                        <div style="font-size:11px; color:#64748b;">CADDIS-GR / fishing-technique · md</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+                <!-- 외부 링크 그룹 -->
+                <div style="font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#475569; padding:0 4px; margin-top:6px; margin-bottom:-2px;">🔗 외부 링크</div>
+
+                <a href="/fly-fishing-hub/research/archive/techniques/Naked_Fishing_Emerger_Tip.html"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">🎣</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">Naked Line Strategy</div>
+                        <div style="font-size:11px; color:#64748b;">CADDIS-GR Technique Archive</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+                <a href="https://www.stillwaterflyfishingstore.com/collections/accessories/products/depth-locator"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">📏</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">Depth Locator</div>
+                        <div style="font-size:11px; color:#64748b;">Phil Rowley &amp; Brian Chan's Stillwater Fly Fishing Store</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+                <a href="https://www.stillwaterflyfishingstore.com/collections/accessories/products/quick-release-indicators"
+                   target="_blank" rel="noopener"
+                   style="display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:14px 16px; text-decoration:none;"
+                   onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                    <span style="font-size:18px; flex-shrink:0;">📌</span>
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#d1fae5; margin-bottom:2px;">Quick Release Indicators</div>
+                        <div style="font-size:11px; color:#64748b;">Phil Rowley &amp; Brian Chan's Stillwater Fly Fishing Store</div>
+                    </div>
+                    <span style="margin-left:auto; font-size:11px; color:#38bdf8; flex-shrink:0; align-self:center;">↗</span>
+                </a>
+
+            </div>
+        </div>
+
+        <div style="border-top:1px solid #334155; padding-top:20px; text-align:center;">
+            <div style="font-size:12px; color:#475569; margin-bottom:4px;">
+                원본: Chironomids Under an Indicator | 3 Techniques (YouTube) · Phil Rowley &amp; Brian Chan
+            </div>
+            <div style="font-size:12px; color:#334155;">
+                © 2026 CADDIS-GR · <a href="/fly-fishing-hub/research/index.html" style="color:#38bdf8; text-decoration:none;">Fly Fishing Techniques Archive</a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+<script>
+function switchTab(n) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-t="'+n+'"]').classList.add('active');
+    document.getElementById('panel-'+n).classList.add('active');
+}
+
+function toggleCheck(el) {
+    el.classList.toggle('checked');
+    el.textContent = el.classList.contains('checked') ? '✓' : '';
+}
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

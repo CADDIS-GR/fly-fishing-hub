@@ -1,40 +1,19 @@
-# 🎣 플라이낚시 아카이브 허브
+# CADDIS-GR LAB
 
-관리형 낚시터에서의 플라이낚시 경험과 지식을 체계적으로 정리한 통합 포털입니다.
+관리형 저수지와 스틸워터 플라이낚시의 현장 기록, 장비 리뷰, 플라이 패턴과 연구 자료를 통합한 아카이브입니다.
 
-## 🌐 웹사이트
+## Website
 
-👉 **[https://caddis-gr.github.io/fly-fishing-hub/](https://caddis-gr.github.io/fly-fishing-hub/)**
+https://caddis-gr.github.io/fly-fishing-hub/
 
-## 📚 주요 저장소
+## Integrated archive
 
-### 핵심 아카이브
+- Field Log: 19편
+- Gear: 리뷰·현장 보고서 19편 + Gear Note 1편
+- Fly Patterns: 13편
+- Research: 핵심 연구 4편 + 이전 테크닉 17편
+- Library: 과학 자료 4편 + 인포그래픽 갤러리
 
-- **[Fishing Log](https://caddis-gr.github.io/fishing-log/)** - 출조 기록 및 데이터 분석
-- **[Fly Tying Archive](https://caddis-gr.github.io/fly-tying-archive/)** - 플라이 패턴 아카이브
-- **[Fishing Technique](https://caddis-gr.github.io/fishing-technique/)** - 낚시 기술과 노하우
-- **[Fishing Gear](https://caddis-gr.github.io/fishing-gear/)** - 장비 정보 및 리뷰
-- **[How Trout Feed](https://caddis-gr.github.io/trout-feeding-science/)** - 송어 섭식의 과학 시리즈
-- **[Fly Fishing Science](https://caddis-gr.github.io/fly-fishing-science/)** - 빛·색·형광 이론 아카이브
-- **[Caddis Infographics](https://caddis-gr.github.io/caddis-infographics/)** 🆕 - 플라이낚시 비주얼 인포그래픽 아카이브
+원문 본문을 최대한 보존하면서 공통 탐색 구조와 내부 링크를 적용했습니다. 사진과 대용량 미디어는 원본 저장소의 공개 자산을 사용합니다.
 
-### 🗓️ 시즌 전략 문서
-
-- **[26–27 새시즌 준비](https://caddis-gr.github.io/fishing-technique/stillwater/micro-nymphing/2026-oct-micro-nymphing-strategy.html)** 🆕  
-  25-26 시즌 경험을 바탕으로 설계한 10월 Micro Nymphing 전략 아카이브.  
-  채비 시스템 (Float · Hover · CamoLux), 수심별 운영표, 플라이 구성, 현장 판단 순서 수록.
-
-### 지원 도구
-
-- **[Expense Tracker](https://github.com/CADDIS-GR/fly-fishing-expense-tracker)** - 경비 관리
-- **[Weather Automation](https://github.com/CADDIS-GR/weather-automation)** - 날씨 자동화
-- **[My Gear](https://caddis-gr.github.io/my-gear/)** - 개인 장비 리스트
-- **[Web Docs](https://github.com/CADDIS-GR/web-docs2)** - 문서 자료
-
-## 💡 About
-
-20년간의 낚시 경험과 AI 도구를 활용한 체계적인 지식 관리 시스템입니다.
-
----
-
-© 2026 CADDIS-GR | 플라이낚시는 평생의 배움입니다
+© 2026 CADDIS-GR

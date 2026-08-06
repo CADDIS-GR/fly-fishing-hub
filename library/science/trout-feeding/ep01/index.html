@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EP01 · Fish the Math — How Trout Feed · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Sans+KR:wght@300;400;700&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --ink:   #0e1214;
+    --paper: #f5f0e8;
+    --river: #1a3a4a;
+    --teal:  #2a8a7f;
+    --amber: #c8873a;
+    --fog:   #8fa5aa;
+    --white: #fdfaf5;
+    --card-bg: rgba(255,255,255,.04);
+    --border:  rgba(143,165,170,.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--river);
+    color: var(--paper);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 10% 90%, rgba(42,138,127,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 70% at 90% 10%, rgba(200,135,58,.07) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  .page { position: relative; z-index: 1; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(14,18,20,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  }
+  .nav-home {
+    font-family: 'Fira Mono', monospace; font-size: .75rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--fog); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color .2s;
+  }
+  .nav-home:hover { color: var(--white); }
+  .nav-home::before { content: '←'; }
+  .nav-ep {
+    font-family: 'Fira Mono', monospace; font-size: .72rem;
+    letter-spacing: .12em; color: var(--teal);
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ep-badge {
+    font-family: 'Fira Mono', monospace; font-size: .7rem;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ep-badge::before { content: ''; display: block; width: 24px; height: 1px; background: var(--amber); }
+  h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--white); margin-bottom: 16px;
+  }
+  .hero-title span { color: var(--amber); }
+  .hero-sub {
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--fog); max-width: 520px;
+    line-height: 1.8; margin-bottom: 32px;
+  }
+  .motto-box {
+    display: inline-block;
+    border-left: 3px solid var(--amber);
+    background: rgba(200,135,58,.07);
+    padding: 14px 20px;
+    font-style: italic; font-size: .9rem;
+    color: #e8c88a; letter-spacing: .02em;
+  }
+
+  /* ── SECTION ── */
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .sec-label {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--teal); }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem; font-weight: 700;
+    color: var(--white); line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  h2 em { font-style: italic; color: var(--amber); }
+  p { font-size: .95rem; color: rgba(245,240,232,.8); margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── MYTH CARDS (FLIP) ── */
+  .myth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px; margin-top: 32px;
+  }
+  .flip-card {
+    height: 200px; perspective: 1000px; cursor: pointer;
+  }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform .55s cubic-bezier(.4,0,.2,1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 4px; padding: 24px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    gap: 8px;
+  }
+  .flip-front {
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--border);
+  }
+  .flip-back { transform: rotateY(180deg); }
+  .flip-back.teal  { background: rgba(42,138,127,.25); border: 1px solid rgba(42,138,127,.4); }
+  .flip-back.amber { background: rgba(200,135,58,.2);  border: 1px solid rgba(200,135,58,.35); }
+  .flip-back.indigo { background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.35); }
+  .flip-icon { font-size: 1.5rem; margin-bottom: 4px; }
+  .flip-q {
+    font-size: .9rem; font-weight: 700;
+    color: var(--white); line-height: 1.4;
+  }
+  .flip-hint {
+    font-family: 'Fira Mono', monospace;
+    font-size: .65rem; letter-spacing: .1em;
+    color: var(--teal); text-transform: uppercase;
+    margin-top: auto;
+  }
+  .flip-a { font-size: .85rem; color: var(--white); line-height: 1.6; }
+
+  /* ── CHART SECTION ── */
+  .chart-wrap {
+    background: rgba(14,18,20,.6);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 32px;
+    margin-top: 32px;
+  }
+  .chart-title {
+    font-family: 'Fira Mono', monospace; font-size: .72rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--fog); margin-bottom: 24px; text-align: center;
+  }
+  .chart-canvas { position: relative; height: 320px; width: 100%; }
+
+  /* ── INSIGHT CARDS ── */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2px; margin-top: 32px;
+    border: 1px solid var(--border);
+    background: var(--border);
+  }
+  .insight-card {
+    background: rgba(14,18,20,.6);
+    padding: 28px 24px;
+  }
+  .insight-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--amber); display: block;
+    margin-bottom: 8px;
+  }
+  .insight-lbl { font-size: .82rem; color: var(--fog); line-height: 1.5; }
+
+  /* ── ARTICLE TEXT ── */
+  .article { max-width: 680px; }
+  .article p { margin-bottom: 20px; line-height: 1.9; }
+  .article blockquote {
+    border-left: 3px solid var(--teal);
+    padding: 16px 20px;
+    background: rgba(42,138,127,.08);
+    margin: 28px 0;
+    font-style: italic;
+    color: #c8e8e5;
+    font-size: .95rem;
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER ── */
+  .ep-footer {
+    padding: 40px 0 60px;
+    display: flex; flex-wrap: wrap;
+    justify-content: space-between; align-items: center;
+    gap: 16px;
+  }
+  .next-ep {
+    display: flex; align-items: center; gap: 12px;
+    font-size: .85rem; color: var(--fog);
+    text-decoration: none; transition: color .2s;
+  }
+  .next-ep:hover { color: var(--white); }
+  .next-ep .arrow {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 1rem;
+    transition: border-color .2s, background .2s;
+  }
+  .next-ep:hover .arrow { border-color: var(--teal); background: rgba(42,138,127,.15); }
+  .footer-meta {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    color: rgba(143,165,170,.4); letter-spacing: .08em;
+  }
+
+  /* ── SOURCE CARDS ── */
+  .source-grid {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .source-card {
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+    border-radius: 2px;
+  }
+  .source-card:hover { background: rgba(255,255,255,.06); border-color: rgba(143,165,170,.3); }
+  .source-yt  { border-left: 3px solid #ff3d3d; }
+  .source-pdf { border-left: 3px solid var(--amber); }
+  .source-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .source-yt  .source-icon { background: rgba(255,61,61,.15); color: #ff6b6b; }
+  .source-pdf .source-icon { background: rgba(200,135,58,.15); color: var(--amber); }
+  .source-info {
+    display: flex; flex-direction: column; gap: 3px; flex: 1;
+  }
+  .source-type {
+    font-family: 'Fira Mono', monospace; font-size: .65rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--fog);
+  }
+  .source-yt  .source-type { color: #ff6b6b; }
+  .source-pdf .source-type { color: var(--amber); }
+  .source-title { font-size: .9rem; font-weight: 700; color: var(--white); }
+  .source-url   { font-family: 'Fira Mono', monospace; font-size: .72rem; color: rgba(143,165,170,.6); }
+  .source-arrow { font-size: 1.1rem; color: var(--fog); flex-shrink: 0; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp .6s both; }
+
+  @media (max-width: 600px) {
+    h1.hero-title { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    .chart-wrap { padding: 20px 16px; }
+  }
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="page archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html" aria-current="page">Library</a></nav></div><div class="lab-archive-source"><span>HOW TROUT FEED · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/trout-feeding-science/blob/main/ep01/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/fly-fishing-hub/library/index.html" class="nav-home">How Trout Feed</a>
+    <span class="nav-ep">Episode 01 · Fish the Math</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="ep-badge">Episode 01</div>
+    <h1 class="hero-title">Fish the <span>Math</span></h1>
+    <p class="hero-sub">플라이 낚시는 예술이 아니라 수학입니다. 송어가 가장 자주 먹는 먹이 크기를 이해하면, 확률이 당신 편이 됩니다.</p>
+    <div class="motto-box">"먹이가 작을수록 송어는 더 자주 먹습니다."</div>
+  </div>
+</div>
+
+<!-- SECTION: PROBLEM -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">The Problem</div>
+    <h2>왜 당신은 <em>못 잡고</em>, 옆 사람은 잡는가</h2>
+    <div class="article">
+      <p>우리 모두 이런 경험이 있을 겁니다. 강에서 낚시를 하는데 물고기가 전혀 물지 않아서 결국 포기하고 자리를 뜨는데, 다른 낚시꾼이 같은 웅덩이에 와서 한 번 던지더니 당신이 잡지 못했던 송어를 낚는 것을 보게 됩니다.</p>
+      <blockquote>그 낚시꾼이 수학에 반하지 않고, 수학을 이용해서 낚시를 했다면 어떨까요?</blockquote>
+      <p>태클 상자 안에 있는 어떤 것도 작동하지 않는 것 같을 때, 대부분의 낚시꾼은 플라이를 더 크게, 더 밝게 바꿉니다. 하지만 진짜 이유는 바로 <strong>숫자 게임</strong>에 있습니다. 여기서 말하는 것은 복잡한 수학이 아닙니다. 강 수학(River Math)입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: MYTHS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Common Myths</div>
+    <h2>낚시꾼의 오해 vs <em>과학적 진실</em></h2>
+    <p style="color:var(--fog); font-size:.85rem; margin-bottom:0;">카드를 클릭하면 뒤집힙니다.</p>
+    <div class="myth-grid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="flip-icon">👁️</span>
+            <span class="flip-q">"물고기가 내 플라이를 못 보나?"</span>
+            <span class="flip-hint">Click to reveal →</span>
+          </div>
+          <div class="flip-face flip-back teal">
+            <span class="flip-icon">✓</span>
+            <span class="flip-q">사실: 송어의 시력은 뛰어납니다.</span>
+            <span class="flip-a">송어는 시력뿐만 아니라 측선(육감)으로 미세한 진동까지 감지합니다. 못 보는 게 아니라 무시하는 것입니다.</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="flip-icon">🐟</span>
+            <span class="flip-q">"큰 고기는 큰 것만 먹는다"</span>
+            <span class="flip-hint">Click to reveal →</span>
+          </div>
+          <div class="flip-face flip-back amber">
+            <span class="flip-icon">✓</span>
+            <span class="flip-q">사실: 대물도 '풀'을 뜯습니다.</span>
+            <span class="flip-a">28인치 대물 송어도 하루 종일 4~6mm의 작은 먹이를 섭취하며 에너지를 보충합니다.</span>
+          </div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="flip-icon">🎲</span>
+            <span class="flip-q">"송어는 변덕쟁이다"</span>
+            <span class="flip-hint">Click to reveal →</span>
+          </div>
+          <div class="flip-face flip-back indigo">
+            <span class="flip-icon">✓</span>
+            <span class="flip-q">사실: 송어는 수학적입니다.</span>
+            <span class="flip-a">변덕이 아니라 가장 효율적이고 풍부한 먹이(4~6mm)에 집중하는 생존 전략입니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: THE MATH CHART -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">The Number Game</div>
+    <h2>숫자 게임 — <em>크기와 빈도</em>의 관계</h2>
+    <div class="article">
+      <p>송어가 가장 자주 섭취하는 먹이의 크기는 <strong>4~6mm</strong>입니다. 이것이 우리가 알아야 할 핵심 숫자입니다. 이 크기가 '가장 자주'라고 말할 때, 저는 <em>항상</em>이라고 말하는 것입니다.</p>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">먹이 크기(mm) vs 섭식 빈도 (Feeding Frequency)</div>
+      <div class="chart-canvas">
+        <canvas id="freqChart"></canvas>
+      </div>
+      <p style="font-family:'Fira Mono',monospace; font-size:.68rem; color:rgba(143,165,170,.5); text-align:center; margin-top:16px; letter-spacing:.08em;">
+        ★ 4~6mm 구간에서 섭식 빈도가 최고조에 달합니다
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: KEY NUMBERS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Key Findings</div>
+    <h2>핵심 <em>수치</em></h2>
+    <div class="insight-grid">
+      <div class="insight-card">
+        <span class="insight-val">4–6mm</span>
+        <span class="insight-lbl">송어가 가장 자주 먹는 먹이 크기. 이것이 플라이 박스의 기준이 되어야 합니다.</span>
+      </div>
+      <div class="insight-card">
+        <span class="insight-val">#18–22</span>
+        <span class="insight-lbl">4~6mm에 대응하는 훅 사이즈 범위. 대부분의 상황에서 유효합니다.</span>
+      </div>
+      <div class="insight-card">
+        <span class="insight-val">28"</span>
+        <span class="insight-lbl">실제로 #18 이하 플라이로 잡힌 대물 송어 사이즈. 대물이라고 큰 플라이가 필요하지 않습니다.</span>
+      </div>
+      <div class="insight-card">
+        <span class="insight-val">#24</span>
+        <span class="insight-lbl">초콜릿 폼 윙 이머저 — 실제 대형 송어 포획에 사용된 극소 플라이 사이즈.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: FULL TEXT -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Full Transcript</div>
+    <h2>원문 전체 내용</h2>
+    <div class="article">
+      <p>우리 모두 이런 경험이 있을 겁니다. 강에서 낚시를 하는데 물고기가 전혀 물지 않아서 결국 포기하고 자리를 뜨는데, 다른 낚시꾼이 같은 웅덩이에 와서 한 번 던지더니 당신이 잡지 못했던 송어를 낚는 것을 보게 됩니다. 왜일까요? 그 낚시꾼이 수학에 반하지 않고 수학을 이용해서 낚시를 했다면 어떨까요? 제가 여기서 말하는 것은 복잡한 수학이 아닙니다. 강 수학입니다. 숫자 게임이죠. 그리고 만약 당신이 이 게임을 잘못하고 있다면, 송어를 낚을 확률을 줄이고 있는 것입니다.</p>
+      <p>말씀드린 대로, 우리 모두 이런 경험이 있습니다. 태클 상자 안에 있는 어떤 것도 작동하지 않는 것 같습니다. 계속해서 플라이를 바꾸지만, 송어는 당신이 제공하는 모든 것을 무시합니다. "분명히 물고기가 내 플라이를 볼 수 없어. 더 큰 것을 찾아야겠어."라는 생각이 머릿속에 스며들기 시작합니다. 그래서 계속해서 플라이를 더 크게, 더 크게, 더 밝게, 그리고 더 크게, 더 어둡게 바꾸다가 결국 포기합니다. 왜 다른 낚시꾼은 우리가 잡지 못했을 때 송어를 낚았을까요? 많은 가능성이 있습니다. 더 나은 기술, 더 나은 전술, 님프에 더 많거나 적은 무게, 물에 더 낮게 뜨는 드라이플라이. 많은 가능성이 있지만, 그것들은 전술입니다. 진짜 이유는 당신이 알지 못하는 숫자 게임에 관한 것일 수 있습니다.</p>
+      <blockquote>송어가 가장 자주 먹는 특정 크기 범위가 실제로 있습니다. 그리고 이것을 고려하지 않으면 수학에 반하여 일하고 있는 것입니다.</blockquote>
+      <p>저는 궁금해지기 시작했습니다. 송어가 가장 자주 섭취하는 곤충의 크기에 대한 정보가 분명히 있을 텐데 말이죠. 만약 송어가 가장 섭취할 가능성이 높은 크기를 안다면, 그것을 기반으로 제 플라이 박스를 만들 수 있을 텐데 말입니다. 저는 그 크기가 무엇이든 상관없었습니다. 선호하는 바가 없었습니다. 만약 증거가 8 사이즈라고 말한다면 좋고, 18 사이즈라고 말한다면 괜찮았습니다. 하지만 그 하나의 크기가 무엇인지 알고 싶었습니다. 이것은 백업을 찾는 믿음이 아니었습니다. 정직한 질문이었습니다.</p>
+      <p>그 정보를 찾으려다 보니 매우 깊은 토끼굴로 빠져들었습니다. 그리고 여기 '송어 먹이주기' 시리즈에서 제가 그 토끼굴 깊은 곳에서 찾은 것을 여러분과 공유하고 싶습니다. 우선, 저는 낚시꾼을 위한 과학적 연구가 거의 없다는 것을 발견했습니다. 낚시꾼은 미리 정해진 생각을 가지고 가서 자신의 주장을 뒷받침할 증거를 찾습니다. 과학자들은 아무런 선입견 없이 연구에 들어갑니다. 그들은 플라이 크기에 신경 쓰지 않았습니다. 그들은 송어가 무엇을 먹고 있었는지 알고 싶었을 뿐입니다. 선입견도 없고, 편견도 없고, 오직 사실만 있었습니다.</p>
+      <p>강에서 송어를 꾸준히 더 많이 잡고 싶다면 플라이 크기를 줄이는 것이 더 낫다고 말씀드립니다. 과학은 이것이 우리가 지켜야 할 깨지지 않는 규칙임을 보여줍니다. 송어는 때때로 먹고, 가끔 폭식하지만, <strong>항상 풀을 뜯습니다.</strong></p>
+      <p>먹이감이 클수록 송어는 적게 먹고 그 반대도 마찬가지입니다. 따라서 우리의 좌우명은 먹이감이 작을수록 송어가 더 많이 먹는다는 것이어야 합니다. 이것이 우리가 승산에 유리하게 작용하는 방법입니다. 우리는 송어가 가장 자주 먹는 것을 나타내는 플라이로 낚시합니다.</p>
+      <p>그리고 이것은 작은 송어가 작은 플라이를 먹고 큰 송어가 큰 플라이를 먹는다는 생각에 관한 것이 아닙니다. 왜냐하면 그것은 명백히 거짓이기 때문입니다. 이것은 플라이 낚시에서 가장 큰 거짓말 중 하나입니다. 저는 큰 플라이를 거의 사용하지 않으며, 제가 잡은 가장 큰 송어 중 28인치까지의 모든 송어는 18 사이즈 플라이 이하로 잡은 것입니다.</p>
+      <p>대부분의 플라이 낚시꾼들은 작은 플라이를 거의 두려워합니다. 그들은 물고기가 그것을 볼 수 없거나, 낚시하기가 더 어렵거나, 작은 플라이로 송어를 잡기가 더 어렵다고 주장하며 피합니다. 만약 당신이 그렇다면, 당신의 세계관이 바뀔 준비를 하십시오.</p>
+      <blockquote>우리의 좌우명은 먹이감이 작을수록 송어가 더 자주 먹는다는 것입니다. 일단 이것을 받아들이면 다른 모든 것이 이해되기 시작할 것입니다.</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCE SECTION -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Sources</div>
+    <h2>출처 및 <em>참고 자료</em></h2>
+    <p style="color:var(--fog); font-size:.88rem; margin-bottom:28px;">이 에피소드의 원본 영상과 전문 PDF 자료입니다.</p>
+    <div class="source-grid">
+
+      <a href="https://youtu.be/x6Tkx4y2DXQ?si=hF80mhW7DuMnDQfx" target="_blank" rel="noopener" class="source-card source-yt">
+        <div class="source-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div class="source-info">
+          <span class="source-type">YouTube · 원본 영상</span>
+          <span class="source-title">How Trout Feed — EP01: Fish the Math</span>
+          <span class="source-url">youtu.be/x6Tkx4y2DXQ</span>
+        </div>
+        <span class="source-arrow">↗</span>
+      </a>
+
+      <a href="trout_feeding_article-01.pdf" target="_blank" class="source-card source-pdf">
+        <div class="source-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-5h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/>
+          </svg>
+        </div>
+        <div class="source-info">
+          <span class="source-type">PDF · 전문 자료</span>
+          <span class="source-title">EP01 전체 스크립트 (한국어 번역)</span>
+          <span class="source-url">trout_feeding_article-01.pdf</span>
+        </div>
+        <span class="source-arrow">↓</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER NAV -->
+<div class="wrap">
+  <div class="ep-footer">
+    <a href="/fly-fishing-hub/library/index.html" class="next-ep">
+      <span class="arrow">←</span>
+      <span>시리즈 목차로</span>
+    </a>
+    <a href="../ep02/index.html" class="next-ep">
+      <span>EP02 · The Search Image</span>
+      <span class="arrow">→</span>
+    </a>
+    <span class="footer-meta">CADDIS-GR / trout-feeding-science / ep01</span>
+  </div>
+</div>
+
+<script>
+const ctx = document.getElementById('freqChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['2mm\n(#26)', '4mm\n(#22)', '6mm\n(#18)', '8mm\n(#16)', '10mm\n(#14)', '12mm+\n(#10+)'],
+    datasets: [{
+      label: '섭식 빈도',
+      data: [72, 96, 94, 38, 18, 5],
+      borderColor: '#2a8a7f',
+      backgroundColor: (ctx) => {
+        const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+        g.addColorStop(0,   'rgba(42,138,127,.35)');
+        g.addColorStop(0.5, 'rgba(42,138,127,.1)');
+        g.addColorStop(1,   'rgba(42,138,127,.0)');
+        return g;
+      },
+      tension: 0.45,
+      fill: true,
+      pointBackgroundColor: ['#1a3a4a','#c8873a','#c8873a','#1a3a4a','#1a3a4a','#1a3a4a'],
+      pointBorderColor: ['#2a8a7f','#c8873a','#c8873a','#2a8a7f','#2a8a7f','#2a8a7f'],
+      pointRadius: [5, 10, 10, 5, 5, 5],
+      pointHoverRadius: [7, 12, 12, 7, 7, 7],
+      borderWidth: 2.5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(14,18,20,.9)',
+        borderColor: 'rgba(143,165,170,.2)', borderWidth: 1,
+        titleColor: '#c8873a', bodyColor: '#f5f0e8',
+        padding: 12,
+        callbacks: {
+          title: c => c[0].label.replace('\n', ' '),
+          label: c => c.dataIndex === 1 || c.dataIndex === 2
+            ? ' ★ 최적 섭식 구간 (Grazing Zone)'
+            : ' 섭식 빈도: ' + c.raw
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true, max: 110,
+        grid: { color: 'rgba(143,165,170,.08)' },
+        ticks: { color: '#8fa5aa', font: { size: 11 } },
+        title: { display: true, text: '섭식 빈도 →', color: '#8fa5aa', font: { size: 11 } }
+      },
+      x: {
+        grid: { display: false },
+        ticks: { color: '#8fa5aa', font: { size: 11 } }
+      }
+    },
+    animation: { duration: 1200, easing: 'easeInOutQuart' }
+  }
+});
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/library/index.html">← Library 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

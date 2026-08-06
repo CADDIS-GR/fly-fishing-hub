@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zucchini Chironomid Pupa - Tying Strategy · CADDIS-GR LAB</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 42rem;
+      width: 100%;
+      background: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+
+    .header {
+      background-color: #065f46;
+      padding: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .header p {
+      color: #a7f3d0;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .hero {
+      position: relative;
+      height: 18rem;
+      background-color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #f1f5f9;
+      overflow: hidden;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s;
+    }
+
+    .hero:hover img {
+      transform: scale(1.05);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+      padding: 1rem;
+    }
+
+    .hero-overlay span {
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #065f46;
+      text-transform: uppercase;
+      letter-spacing: -0.025em;
+      border-bottom: 1px solid #d1fae5;
+      padding-bottom: 0.5rem;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .material-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .material-icon {
+      color: #059669;
+      flex-shrink: 0;
+    }
+
+    .bead-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid #d1d5db;
+    }
+
+    .material-detail {
+      flex: 1;
+    }
+
+    .material-name {
+      font-size: 0.625rem;
+      font-weight: bold;
+      color: #94a3b8;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .material-spec {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-number {
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      background-color: #d1fae5;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.625rem;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 0.8125rem;
+      color: #475569;
+      line-height: 1.4;
+    }
+
+    .step-title {
+      font-weight: bold;
+      color: #1e293b;
+      display: block;
+    }
+
+    .core-points {
+      background-color: #0f172a;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      color: #cbd5e1;
+      box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+      border: 1px solid #1e293b;
+      margin-bottom: 2.5rem;
+    }
+
+    .core-points h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: white;
+      text-align: center;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 1rem;
+    }
+
+    .point-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .point-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .point-title {
+      font-weight: bold;
+      color: #34d399;
+    }
+
+    .point-list {
+      padding-left: 1.75rem;
+      list-style: disc;
+    }
+
+    .point-list li {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+
+    .point-list li::marker {
+      color: #059669;
+    }
+
+    .tip-box {
+      background-color: #fffbeb;
+      border-left: 4px solid #fbbf24;
+      padding: 1.25rem;
+      border-radius: 0 0.75rem 0.75rem 0;
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .tip-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+
+    .tip-label {
+      font-weight: bold;
+      color: #92400e;
+      font-size: 0.875rem;
+    }
+
+    .tip-text {
+      color: #78350f;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .footer {
+      background-color: #f8fafc;
+      padding: 1.5rem;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.625rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-left {
+      font-weight: 500;
+    }
+
+    .footer-right {
+      font-weight: bold;
+      color: #047857;
+    }
+
+    svg {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/chironomid/zucchini-pupa/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Zucchini Chironomid Pupa</h1>
+      <p>Tying Strategy Index #14</p>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero">
+      <img src="zucchini-pupa.jpg" alt="Zucchini Chironomid Pupa Photo">
+      <div class="hero-overlay">
+        <span>Field Proven Design</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Materials & Coating Grid -->
+      <div class="grid">
+        <!-- Materials -->
+        <div>
+          <h2 class="section-title">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            Materials
+          </h2>
+          <div>
+            <div class="material-item">
+              <svg class="icon material-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              <div class="material-detail">
+                <div class="material-name">Hook</div>
+                <div class="material-spec">FullingMill FM5065 #14</div>
+              </div>
+            </div>
+            <div class="material-item">
+              <div class="bead-icon"></div>
+              <div class="material-detail">
+                <div class="material-name">Bead</div>
+                <div class="material-spec">Brass White Bead 2.4mm</div>
+              </div>
+            </div>
+            <div class="material-item">
+              <svg class="icon material-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              <div class="material-detail">
+                <div class="material-name">Body</div>
+                <div class="material-spec">Dark Zucchini Base + Red Ribbing</div>
+              </div>
+            </div>
+            <div class="material-item">
+              <svg class="icon material-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="material-detail">
+                <div class="material-name">Point</div>
+                <div class="material-spec">Distinct Bubble Dot</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coating Process -->
+        <div>
+          <h2 class="section-title">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+            Coating
+          </h2>
+          <div>
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-text">
+                <span class="step-title">Base & Ribbing</span>
+                바디 형태를 잡고 레드 리빙을 일정한 간격으로 감아 마디를 표현합니다.
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-text">
+                <span class="step-title">1st: Thin UV Coat</span>
+                아주 얇은 UV 레진으로 전체적인 형태를 고정하고 바디를 보호합니다.
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-text">
+                <span class="step-title">2nd: Varnish Finish</span>
+                바니시로 최종 코팅하여 유리알 같은 맑은 광택과 매끄러운 질감을 완성합니다.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Points -->
+      <div class="core-points">
+        <h2>Zucchini Chironomid Pupa – 핵심 포인트 정리</h2>
+        
+        <div class="point-section">
+          <div class="point-header">
+            <svg class="icon" style="color: #34d399;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <h3 class="point-title">바디 컬러 & 질감 (Zucchini 톤)</h3>
+          </div>
+          <ul class="point-list">
+            <li>그린–블랙 계열의 차분한 딥 톤</li>
+            <li>빛을 받으면 은은하게 반응하여 실루엣 강조</li>
+            <li>흐린 날·딥 워터에서도 실루엣 인지성 우수</li>
+            <li>과장 없는 리얼 계열로 첫 수색 플라이에 적합</li>
+          </ul>
+        </div>
+
+        <div class="point-section">
+          <div class="point-header">
+            <svg class="icon" style="color: #ef4444;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <h3 class="point-title">레드 리빙 (와이어)</h3>
+          </div>
+          <ul class="point-list">
+            <li>핫스팟이 아닌 미세한 생체 신호 역할</li>
+            <li>#14 사이즈 기준, 밀도와 대비가 절제됨</li>
+            <li>원거리 비노출 ▶️ 근접 시에만 작동하는 트리거</li>
+          </ul>
+        </div>
+
+        <div class="point-section">
+          <div class="point-header">
+            <svg class="icon" style="color: #60a5fa;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+            <h3 class="point-title">Bubble Dot (헤드 처리)</h3>
+          </div>
+          <ul class="point-list">
+            <li>비드가 아닌 가스 버블의 잔상 표현</li>
+            <li>헤드에 시선 집중을 유도하는 최소한의 화이트</li>
+            <li>서스펜드 또는 슬로우 리프트 시 헤드가 먼저 인지되는 구조</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pro Tip -->
+      <div class="tip-box">
+        <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div>
+          <span class="tip-label">JEFF'S ADVICE: </span>
+          <span class="tip-text">Thin UV로 기초를 다진 후 바니시 마무리는 낚시대장님만의 '유리알 광택' 비결입니다. 이 미세한 질감 차이가 저수지 예민한 송어들의 입질을 유도하는 결정적 차이를 만듭니다.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-left">Curated by Jeff | Fly Tying Lab</div>
+      <div class="footer-right">Tight Lines for 낚시대장</div>
+    </div>
+  </div>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

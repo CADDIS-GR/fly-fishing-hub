@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airflo Shorty 하이브리드 드리프트 가이드 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        .rig-line {
+            transition: all 0.3s ease;
+        }
+        .rig-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .active-tab {
+            border-bottom: 2px solid #78716c; /* stone-500 */
+            color: #44403c; /* stone-700 */
+            font-weight: 700;
+        }
+        .inactive-tab {
+            color: #a8a29e; /* stone-400 */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-stone-200 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Hybrid_Drift_Fishing.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-stone-200 py-8 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-stone-500 font-medium tracking-wider text-sm uppercase mb-2">Neo-Style × Fly Fishing — 관리형 저수지 심층 공략</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">하이브리드 드리프트 가이드</h1>
+                <p class="text-lg text-stone-600 max-w-2xl mx-auto">
+                    네오스타일(Neo-Style) 텐션폴 루어 테크닉을 플라이낚시에 접목한 전략입니다. Airflo Euro Nymph Shorty와 롱 리더 시스템으로, 타겟 수심층에 가벼운 플라이를 안착시킨 뒤 횡으로 서서히 끌어오며 입질을 유도합니다.
+                </p>
+            </div>
+            
+            <!-- Key Metrics Dashboard -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-stone-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-stone-700">~52ft</div>
+                    <div class="text-xs text-stone-500 uppercase mt-1">총 시스템 길이</div>
+                </div>
+                <div class="bg-stone-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-stone-700">3~6m</div>
+                    <div class="text-xs text-stone-500 uppercase mt-1">타겟 수심</div>
+                </div>
+                <div class="bg-stone-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-stone-700">20ft</div>
+                    <div class="text-xs text-stone-500 uppercase mt-1">인디케이터 구간</div>
+                </div>
+                <div class="bg-stone-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-stone-700">Zero</div>
+                    <div class="text-xs text-stone-500 uppercase mt-1">드래그 목표</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+
+        <!-- Section 1: System Blueprint -->
+        <section id="system-blueprint">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-amber-600 pl-4 mb-2">1. 시스템 설계 (System Blueprint)</h2>
+                <p class="text-stone-600 leading-relaxed">
+                    네오스타일 텐션폴의 핵심: 송어가 있는 수심층에 채비를 안착시킨 뒤, 수심을 유지하며 횡으로 서서히 끌고 옵니다. 총 52ft의 하이브리드 시스템은 수면 위 드래그와 수중 저항을 제거하여, <span class="font-semibold text-stone-800">가벼운 플라이로도 타겟 수심층을 유지하면서 횡 회수가 가능한 환경</span>을 만들어 줍니다. 플라이 무게는 고정이 아닌, 원하는 회수 속도에 따라 0.1g급(극저속)~0.4g급(중저속)으로 선택합니다. 아래의 각 구성 요소를 클릭하여 역할을 확인해 보세요.
+                </p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8 items-start">
+                <!-- Interactive Diagram -->
+                <div class="w-full md:w-1/3 flex flex-col items-center space-y-2 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Rod Tip Connection</div>
+                    
+                    <!-- Shorty Node -->
+                    <div onclick="showPart('shorty')" class="rig-node cursor-pointer w-full p-3 bg-stone-800 text-stone-100 rounded text-center text-sm font-semibold hover:bg-stone-700 transition-colors">
+                        ① Airflo Shorty (22ft)
+                    </div>
+                    
+                    <div class="h-8 w-0.5 bg-stone-300"></div>
+                    
+                    <!-- Indicator Node -->
+                    <div onclick="showPart('indicator')" class="rig-node cursor-pointer w-full p-3 bg-gradient-to-r from-pink-500 to-lime-400 text-white rounded text-center text-sm font-semibold shadow-md hover:opacity-90 transition-opacity">
+                        ② RIO Two-Tone (20ft)
+                    </div>
+                    
+                    <div class="h-8 w-0.5 bg-stone-300 relative">
+                        <div class="absolute top-1/2 left-4 text-xs text-stone-400 whitespace-nowrap">◀ 수면 (Water Surface)</div>
+                    </div>
+                    
+                    <!-- Swivel Node -->
+                    <div class="w-3 h-3 bg-stone-900 rounded-full ring-2 ring-stone-200"></div>
+                    
+                    <div class="h-8 w-0.5 bg-stone-300"></div>
+
+                    <!-- Tippet Node -->
+                    <div onclick="showPart('tippet')" class="rig-node cursor-pointer w-full p-3 bg-blue-50 text-blue-900 border border-blue-200 rounded text-center text-sm font-semibold hover:bg-blue-100 transition-colors">
+                        ③ Fluorocarbon (10ft)
+                    </div>
+
+                    <div class="text-xs font-bold text-stone-400 uppercase tracking-widest mt-4">Nymph (Bottom 6m)</div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="w-full md:w-2/3 bg-stone-50 border border-stone-200 rounded-xl p-6 relative min-h-[300px]">
+                    <div id="detail-content" class="fade-in">
+                        <h3 class="text-xl font-bold text-stone-800 mb-2" id="detail-title">구성 요소를 선택하세요</h3>
+                        <p class="text-stone-500" id="detail-desc">왼쪽 다이어그램의 각 파트를 클릭하면 상세 스펙과 운용법이 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Sensitivity Analysis -->
+        <section id="sensitivity-analysis" class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-amber-600 pl-4 mb-2">2. 깊이에 따른 감도 분석</h2>
+                <p class="text-stone-600 leading-relaxed">
+                    일반 라인은 수심이 깊어질수록 물의 저항(Drag)으로 감도가 급격히 떨어집니다. 하이브리드 시스템은 숏티와 롱 리더로 저항을 제거한 위에, 횡 회수 동작이 라인 전체에 텐션을 만들어 주기 때문에 깊은 수심에서도 감도를 유지할 수 있습니다.
+                </p>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="flex flex-col items-center">
+                <div class="chart-container">
+                    <canvas id="sensitivityChart"></canvas>
+                </div>
+                <div class="mt-4 text-sm text-stone-500 text-center bg-stone-50 px-4 py-2 rounded-full inline-block">
+                    <span class="w-3 h-3 bg-stone-800 inline-block rounded-full mr-2"></span>하이브리드 시스템
+                    <span class="w-3 h-3 bg-stone-300 inline-block rounded-full mr-2 ml-4"></span>일반 라인
+                </div>
+                <p class="mt-3 text-xs text-stone-400 italic text-center">※ 위 차트는 실측 데이터가 아닌, 원리 이해를 위한 개념적 비교입니다.</p>
+            </div>
+        </section>
+
+        <!-- Section 3: Tactical Execution -->
+        <section id="tactical-execution">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-amber-600 pl-4 mb-2">3. 주요 운용 테크닉 (Execution)</h2>
+                <p class="text-stone-600 leading-relaxed">
+                    네오스타일 텐션폴을 플라이낚시에 적용하는 3단계 실전 프로세스입니다. 타겟 수심 안착 → 수심 유지 횡 회수 → 입질 감지의 흐름을 각 단계별로 확인하십시오.
+                </p>
+            </div>
+
+            <!-- Phase Tabs -->
+            <div class="flex border-b border-stone-200 mb-6">
+                <button onclick="setPhase(0)" id="tab-0" class="flex-1 py-3 text-center text-sm md:text-base font-medium transition-colors active-tab">
+                    ① 텐션폴 (Tension Fall)
+                </button>
+                <button onclick="setPhase(1)" id="tab-1" class="flex-1 py-3 text-center text-sm md:text-base font-medium transition-colors inactive-tab">
+                    ② 횡 회수 (Lateral Retrieve)
+                </button>
+                <button onclick="setPhase(2)" id="tab-2" class="flex-1 py-3 text-center text-sm md:text-base font-medium transition-colors inactive-tab">
+                    ③ 입질 감지 (Detection)
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="bg-stone-50 rounded-xl p-6 border border-stone-200 min-h-[250px] relative">
+                <div id="phase-content" class="fade-in">
+                    <!-- Dynamic Content Loaded Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Practical Tips -->
+        <section id="practical-tips">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-amber-600 pl-4 mb-2">4. 실전 생존 가이드 (Practical Tips)</h2>
+                <p class="text-stone-600 leading-relaxed">
+                    현장에서 마주칠 수 있는 변수들에 대한 대응법입니다. 바람, 패턴, 그리고 랜딩에 대한 노하우를 확인하세요.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tip Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">🪰</div>
+                    <h3 class="font-bold text-stone-800 mb-2">패턴 무게 선택 기준</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">
+                        플라이 무게는 고정이 아닙니다. 네오스타일과 동일하게, 
+                        <span class="font-semibold text-amber-700">송어가 반응하는 횡 회수 속도</span>에 따라 선택합니다.
+                        혹한기 극저속 반응 시 → <span class="font-semibold text-stone-800">2.4mm 텅스텐 / 브라스 비드</span> (네오스타일 0.1g 대응),
+                        어느 정도 속도에 반응 시 → <span class="font-semibold text-stone-800">3.0mm 텅스텐 비드</span> (네오스타일 0.4g 대응).
+                    </p>
+                </div>
+
+                <!-- Tip Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">🌬️</div>
+                    <h3 class="font-bold text-stone-800 mb-2">바람 대응법</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">
+                        롱 리더는 바람에 취약합니다. 바람이 강할 땐 
+                        <span class="font-semibold text-stone-800">로드 팁을 수면에 바짝 붙여</span> 
+                        공중에 노출된 인디케이터 라인을 최소화하여 텐션 손실을 막으세요.
+                    </p>
+                </div>
+
+                <!-- Tip Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                    <div class="text-2xl mb-3">🎣</div>
+                    <h3 class="font-bold text-stone-800 mb-2">랜딩 시 주의사항</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">
+                        30ft가 넘는 리더 시스템 때문에 릴링만으로는 고기를 뜰채에 담기 어렵습니다. 
+                        <span class="font-semibold text-stone-800">핸들링(Hand-lining)</span>으로 라인을 직접 당겨 
+                        랜딩하는 방식에 익숙해져야 합니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Tackle Setup -->
+        <section id="tackle-setup">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-800 border-l-4 border-amber-600 pl-4 mb-2">5. 채비 구성 (Tackle Setup)</h2>
+                <p class="text-stone-600 leading-relaxed">
+                    52ft 하이브리드 시스템을 구성하는 3가지 핵심 장비입니다. 각각의 역할이 결합되어 가벼운 플라이의 심층 횡 회수를 가능하게 합니다.
+                </p>
+            </div>
+
+            <div class="space-y-6">
+
+                <!-- Item 1: Airflo Shorty -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <img src="https://mayflyoutdoors.com/cdn/shop/files/ens-box-29431.jpg?v=1752085712&width=1800" 
+                             alt="Airflo Euro Nymph Shorty 22ft" 
+                             class="w-full md:w-1/2 rounded-lg shadow-md object-cover">
+                        <div class="flex-1">
+                            <span class="inline-block px-2 py-1 bg-stone-800 text-stone-100 text-xs font-bold rounded uppercase mb-2">① Shorty Line — 22ft</span>
+                            <h3 class="text-xl font-bold text-stone-800 mb-2">Airflo Euro Nymph Shorty</h3>
+                            <p class="text-stone-600 text-sm leading-relaxed">
+                                유로 님프 플라이 라인과 동일하게 0.55mm의 초슬림 직경으로 설계된 22ft 숏티 라인입니다. 매우 유연한 코팅과 극도로 낮은 신축성을 갖추어, 수중에서 뛰어난 입질 감지력과 퍼포먼스를 제공합니다. 기존 플라이 낚시 세팅을 몇 초 만에 유로 님프 세팅으로 전환할 수 있는 독창적인 라인이며, 하이비즈 오렌지 팁으로 아주 미세한 입질도 느낌과 동시에 눈으로 확인할 수 있습니다. 후단의 대형 웰디드 루프를 통해 드라이 플라이나 보버 리그와 빠르게 교체할 수 있어, 하나의 세팅만으로 다양한 상황에 대응할 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2: RIO Two Tone Indicator -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <img src="https://mistpool.com/img/SzBwdCxMOTo3NUclUXloOUF1OWY2NVFjYXo3eFNiSWxGS282U1g0elpEQnpRWi9hcnNWa0ZCWk1ZT0U9/47ef16cdc9/rio-two-tone-indicator.jpg?w=800&h=800&page=popup" 
+                             alt="RIO Two-Tone Indicator Tippet" 
+                             class="w-full md:w-1/2 rounded-lg shadow-md object-cover">
+                        <div class="flex-1">
+                            <span class="inline-block px-2 py-1 bg-gradient-to-r from-pink-500 to-lime-400 text-white text-xs font-bold rounded uppercase mb-2">② Indicator — 20ft</span>
+                            <h3 class="text-xl font-bold text-stone-800 mb-2">RIO Two-Tone Indicator Tippet</h3>
+                            <p class="text-stone-600 text-sm leading-relaxed">
+                                네오스타일의 마커리더에 해당하는 핵심 장비. Pink/Chartreuse 두 색상이 8인치 간격으로 교차하여, 횡 회수 중 수심 유지 여부를 실시간으로 모니터링할 수 있습니다. 색상 마디의 위치가 일정하면 타겟 수심 유지 중, 마디가 올라오면 플라이가 뜨는 것(허용), 내려가면 가라앉는 것(수정 필요). 입질 시에는 마디가 갑자기 멈추거나 방향이 틀어지는 것으로 감지합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3: Tiemco Fluorocarbon -->
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <img src="https://cdn.troutline.ro/media/catalog/product/cache/1/small_image/57d39829afd9da0a90b25ac8e1388bac/t/i/tiemco_tmc_fluorocarbon_stealth_tippet_50m_1_2.jpg" 
+                             alt="Tiemco TMC Fluorocarbon Stealth Tippet" 
+                             class="w-full md:w-1/2 rounded-lg shadow-md object-cover">
+                        <div class="flex-1">
+                            <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded uppercase mb-2">③ Tippet — 10ft</span>
+                            <h3 class="text-xl font-bold text-stone-800 mb-2">Tiemco TMC Fluorocarbon Stealth Tippet</h3>
+                            <p class="text-stone-600 text-sm leading-relaxed">
+                                수중 은폐성과 자연스러운 침강을 담당하는 플루오로카본 티펫(5X/6X). 고비중 카본 재질이 수면 아래에서 빛 굴절을 최소화하여 경계심 강한 송어에게 라인의 존재를 숨깁니다. 마이크로 스위벨 도래와 결합하여 횡 회수 시에도 줄 꼬임 없이 직선성을 유지하며, 타겟 수심층에서 플라이와 가장 가까운 마지막 10ft 구간으로서 감도에 직접적인 영향을 줍니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-800 text-stone-400 py-8 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-sm">Airflo Shorty Hybrid Drift Guide • Based on Expert Analysis</p>
+            <p class="text-xs mt-2 text-stone-500">Designed for Educational Purposes</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data Store
+        const rigData = {
+            'shorty': {
+                title: "① Airflo Euro Nymph Shorty (22ft)",
+                role: "무게 밸런스 & 전달자",
+                status: "공중 (Aerial)",
+                desc: "가이드 내에서 무게 밸런스를 잡아주고, 캐스팅 시 에너지를 리더로 전달하는 역할을 합니다. 6m 공략 시 수면에 닿지 않게 유지하여 불필요한 드래그를 방지합니다.",
+                highlightColor: "border-stone-800"
+            },
+            'indicator': {
+                title: "② RIO Two-Tone Indicator (20ft)",
+                role: "수심 유지 모니터 & 입질 탐지 (마커리더)",
+                status: "10ft 수중 / 10ft 공중",
+                desc: "네오스타일의 마커리더와 동일한 역할. 8인치 간격의 색상 변화(Pink/Chartreuse)로 수심을 실시간 모니터링합니다. 횡으로 끌고 올 때 색상 마디의 위치가 일정하면 수심 유지 중, 마디가 올라오면 플라이가 뜨는 것(허용), 내려가면 플라이가 가라앉는 것(수정 필요)을 의미합니다.",
+                highlightColor: "border-pink-500"
+            },
+            'tippet': {
+                title: "③ Fluorocarbon Tippet (10ft)",
+                role: "스텔스 & 수심층 유지",
+                status: "타겟 수심권",
+                desc: "고비중 카본 재질(5X/6X)이 자연스러운 침강을 돕고, 수중에서의 은폐성을 확보합니다. 마이크로 스위벨 도래로 줄 꼬임을 방지하여 횡 회수 시에도 직선성을 유지합니다. 타겟 수심은 송어가 위치한 층에 따라 3m, 4m, 6m 등 유동적으로 설정합니다.",
+                highlightColor: "border-blue-500"
+            }
+        };
+
+        const techniquePhases = [
+            {
+                title: "▣ 텐션폴 (Tension Fall) — 타겟 수심층 안착",
+                points: [
+                    "핵심: 송어가 있는 수심층을 파악하고, 그 층에 플라이를 안착시키는 단계 (3m인지, 4m인지, 6m인지가 중요)",
+                    "캐스팅 후 로드를 세워 라인의 긴장감(텐션)을 끊지 않고 유지하며, 플라이가 호를 그리듯 천천히 낙하",
+                    "인디케이터 색상 마디를 보며 원하는 수심에 도달했는지 확인 — 낙하 과정에서의 폴링 바이트(Falling Bite)도 놓치지 않기"
+                ],
+                icon: "⬇️"
+            },
+            {
+                title: "▣ 횡 회수 (Lateral Retrieve) — 수심 유지 + 서서히 끌기",
+                points: [
+                    "타겟 수심에 도달한 후, 그 수심층을 유지한 채 횡으로 서서히 끌고 온다 — 이것이 실제 낚시 구간",
+                    "인디케이터가 마커리더 역할: 색상 마디 위치가 일정하면 수심 유지 중, 살짝 위로 뜨는 건 OK, 내려가면 수정 필요",
+                    "횡 이동이 텐션을 만들어 주므로, 가벼운 플라이로도 6m 깊이에서 긴장감 유지 가능 — 회수 속도에 따라 플라이 무게 선택(극저속 0.1g급 / 중저속 0.4g급)"
+                ],
+                icon: "↔️"
+            },
+            {
+                title: "▣ 입질 감지 (Detection) — 인디케이터 변화 읽기",
+                points: [
+                    "횡 회수 중 인디케이터 색상 마디가 갑자기 멈추거나 방향이 틀어질 때 — 입질 신호",
+                    "텐션 변화: 일정하던 회수 저항이 갑자기 무거워지거나 가벼워질 때",
+                    "즉각 대응: 의심스러우면 즉시 길고 부드럽게 훅셋 — 네오스타일과 동일하게 마커리더(인디케이터)의 움직임이 최종 판단 근거"
+                ],
+                icon: "⚡"
+            }
+        ];
+
+        // Functions
+        function showPart(partId) {
+            const data = rigData[partId];
+            const contentDiv = document.getElementById('detail-content');
+            
+            // Remove Fade In class to restart animation
+            contentDiv.classList.remove('fade-in');
+            void contentDiv.offsetWidth; // trigger reflow
+            contentDiv.classList.add('fade-in');
+
+            let html = `
+                <div class="flex items-center mb-4">
+                    <div class="w-3 h-8 bg-stone-300 mr-3 rounded-sm ${partId === 'indicator' ? 'bg-gradient-to-b from-pink-500 to-lime-400' : (partId === 'tippet' ? 'bg-blue-200' : 'bg-stone-800')}"></div>
+                    <h3 class="text-xl font-bold text-stone-800">${data.title}</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white p-3 rounded border border-stone-200">
+                        <span class="text-xs text-stone-400 font-bold uppercase block">핵심 역할</span>
+                        <span class="text-sm font-semibold text-stone-700">${data.role}</span>
+                    </div>
+                    <div class="bg-white p-3 rounded border border-stone-200">
+                        <span class="text-xs text-stone-400 font-bold uppercase block">운용 상태</span>
+                        <span class="text-sm font-semibold text-stone-700">${data.status}</span>
+                    </div>
+                </div>
+                <p class="text-stone-600 leading-relaxed text-sm md:text-base">${data.desc}</p>
+            `;
+            
+            document.getElementById('detail-content').innerHTML = html;
+        }
+
+        function setPhase(index) {
+            // Update Tabs
+            for(let i=0; i<3; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                if(i === index) {
+                    tab.classList.add('active-tab');
+                    tab.classList.remove('inactive-tab');
+                } else {
+                    tab.classList.remove('active-tab');
+                    tab.classList.add('inactive-tab');
+                }
+            }
+
+            // Update Content
+            const data = techniquePhases[index];
+            const contentDiv = document.getElementById('phase-content');
+            
+            contentDiv.classList.remove('fade-in');
+            void contentDiv.offsetWidth;
+            contentDiv.classList.add('fade-in');
+
+            let pointsHtml = data.points.map(p => `<li class="flex items-start mb-2"><span class="text-amber-600 mr-2">✔</span><span>${p}</span></li>`).join('');
+
+            contentDiv.innerHTML = `
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                    <div class="text-5xl md:text-6xl bg-stone-100 p-6 rounded-full">${data.icon}</div>
+                    <div class="flex-1">
+                        <h3 class="text-lg md:text-xl font-bold text-stone-800 mb-4">${data.title}</h3>
+                        <ul class="text-stone-600 space-y-2 text-sm md:text-base">
+                            ${pointsHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render first rig detail by default
+            showPart('shorty');
+            
+            // Render first phase
+            setPhase(0);
+
+            // Chart.js Setup
+            const ctx = document.getElementById('sensitivityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0m (수면)', '1.5m', '3.0m', '4.5m', '6.0m (바닥)'],
+                    datasets: [
+                        {
+                            label: '하이브리드 시스템 (Shorty + Mono)',
+                            data: [100, 98, 95, 92, 90], // High sensitivity retained
+                            borderColor: '#4b5563', // stone-600
+                            backgroundColor: '#78716c',
+                            borderWidth: 3,
+                            tension: 0, // Straight line (Tight line)
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#4b5563',
+                            pointRadius: 5
+                        },
+                        {
+                            label: '일반 라인 시스템',
+                            data: [100, 80, 50, 30, 15], // Rapid drop-off due to drag
+                            borderColor: '#d6d3d1', // stone-300
+                            backgroundColor: '#e7e5e4',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4, // Curved (Sag)
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#d6d3d1',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { family: "'Noto Sans KR', sans-serif" }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1c1917',
+                            bodyColor: '#44403c',
+                            borderColor: '#e7e5e4',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': 감도 ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 110,
+                            title: {
+                                display: true,
+                                text: '입질 전달 감도 (%)'
+                            },
+                            grid: {
+                                color: '#f5f5f4'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                }
+            });
+        });
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화이트 버전 리치 | Fly Tying Archive · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .snow-particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 30;
+        }
+        .image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.85));
+            z-index: 10;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-slate-100 text-slate-800 flex items-center justify-center min-h-screen p-4 md:p-8 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html" aria-current="page">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FLY PATTERN · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fly-tying-archive/blob/main/flies/streamer/white-version-leech/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Back Button -->
+    <a href="/fly-fishing-hub/fly-patterns/index.html" class="fixed top-4 left-4 z-50 bg-white px-4 py-2 rounded-full shadow-lg text-sm font-bold text-slate-700 hover:bg-slate-50 transition-all hover:shadow-xl flex items-center gap-2">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back to Archive
+    </a>
+
+    <div class="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100">
+        
+        <!-- Header Section -->
+        <div class="relative h-80 bg-slate-900 overflow-hidden" id="snow-container">
+            <div class="absolute inset-0 image-container">
+                <img 
+                    src="white-version-leech.jpg" 
+                    alt="화이트 버전 리치 실제 사진" 
+                    class="w-full h-full object-cover"
+                >
+            </div>
+
+            <div class="absolute bottom-8 left-8 right-8 z-20 text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2.5 py-1 bg-red-600 text-white text-[10px] font-black rounded-full uppercase tracking-tighter shadow-lg">Christmas Edition</span>
+                    <span class="px-2.5 py-1 bg-white/10 text-white text-[10px] rounded-full backdrop-blur-md border border-white/20 tracking-widest uppercase">Size #16</span>
+                </div>
+                <h1 class="text-4xl font-black leading-none mb-1 tracking-tighter drop-shadow-xl text-white">
+                    화이트 버전 리치
+                </h1>
+                <p class="text-slate-300 text-sm font-light tracking-wide italic">"Winter morning's silver temptation"</p>
+            </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="p-8 space-y-8">
+            
+            <!-- Tying Recipe -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-slate-200"></span> Tying Recipe
+                </h4>
+                <div class="bg-slate-50 rounded-3xl p-5 border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center text-sm border-b border-slate-200/50 pb-2">
+                        <span class="text-slate-400 font-medium">Hook</span>
+                        <span class="font-bold text-slate-700 underline decoration-slate-200 underline-offset-4">FullingMill FM5140 #16</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm border-b border-slate-200/50 pb-2">
+                        <span class="text-slate-400 font-medium">Bead</span>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 bg-[#bef264] rounded-full ring-2 ring-white shadow-sm"></span>
+                            <span class="font-bold text-slate-700">2.4mm Tungsten (Fl. Chart)</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm border-b border-slate-200/50 pb-2">
+                        <span class="text-slate-400 font-medium">Tail</span>
+                        <span class="font-bold text-slate-700">White Marabou</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm border-b border-slate-200/50 pb-2">
+                        <span class="text-slate-400 font-medium">Body</span>
+                        <span class="font-bold text-slate-700 italic">Special White + Tan Dubbing</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-400 font-medium">Hotspot</span>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 bg-red-500 rounded-full ring-2 ring-white shadow-sm"></span>
+                            <span class="font-bold text-red-600 font-black">Ice Dub Red</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fishing Tips -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-slate-200"></span> Jeff's Fishing Tips
+                </h4>
+                <div class="bg-amber-50 rounded-3xl p-6 border border-amber-100 space-y-4 shadow-sm relative overflow-hidden">
+                    <!-- Background Icon Decoration -->
+                    <div class="absolute -right-4 -bottom-4 opacity-10 rotate-12">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-600"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A4.5 4.5 0 0 0 13.5 3.5c-1.3 0-2.6.5-3.5 1.5-.8.8-1.3 1.5-1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="bg-amber-400 p-1 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A4.5 4.5 0 0 0 13.5 3.5c-1.3 0-2.6.5-3.5 1.5-.8.8-1.3 1.5-1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+                            </div>
+                            <h5 class="font-black text-amber-900 text-sm uppercase">동절기 저수지 운용 전략</h5>
+                        </div>
+                        <p class="text-[13px] text-amber-800 leading-relaxed font-medium">
+                            <span class="bg-amber-200/50 px-1 rounded font-bold">환경:</span> 수온이 낮은 동절기에는 송어들이 바닥권에 밀집됩니다. 텅스텐 비드를 활용해 확실히 바닥까지 가라앉히세요.
+                        </p>
+                        <div class="mt-4 space-y-2">
+                            <div class="flex gap-2 text-[13px]">
+                                <span class="text-amber-500 font-bold shrink-0">운용:</span>
+                                <span class="text-amber-800">바닥 안착 후 아주 천천히 <strong class="text-amber-900 underline underline-offset-2">숏 스트립(Short Strip)</strong>을 하거나, 인디케이터 채비에서 살짝 끌어주는 액션에 반응이 탁활합니다.</span>
+                            </div>
+                            <div class="flex gap-2 text-[13px]">
+                                <span class="text-amber-500 font-bold shrink-0">시인:</span>
+                                <span class="text-amber-800">화이트는 앵글러의 시인성뿐 아니라, <strong class="text-amber-900 underline underline-offset-2">탁한 물속에서도 송어에게 강력한 존재감</strong>을 드러내는 필살기 컬러입니다.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blending Materials Gallery -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-slate-200"></span> Blending Process
+                </h4>
+                <div class="flex gap-3 overflow-x-auto pb-4 custom-scrollbar">
+                    <div class="w-32 shrink-0 space-y-2">
+                        <div class="h-32 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+                            <img src="special-white.jpg" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" alt="Special White">
+                        </div>
+                        <p class="text-[10px] text-center font-bold text-slate-500 uppercase">Special White</p>
+                    </div>
+                    <div class="w-32 shrink-0 space-y-2">
+                        <div class="h-32 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+                            <img src="tan-blending.jpg" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" alt="Tan Blending">
+                        </div>
+                        <p class="text-[10px] text-center font-bold text-slate-500 uppercase">Tan Blending</p>
+                    </div>
+                    <div class="w-32 shrink-0 space-y-2">
+                        <div class="h-32 rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
+                            <img src="final-mix.jpg" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" alt="Final Mix">
+                        </div>
+                        <p class="text-[10px] text-center font-bold text-slate-500 uppercase">Final Mix</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Designer Credit -->
+        <div class="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">
+            <span>By 낚시대장</span>
+            <span>Jeff's Fly Studio</span>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('snow-container');
+        for (let i = 0; i < 40; i++) {
+            const snow = document.createElement('div');
+            snow.className = 'snow-particle';
+            const size = Math.random() * 3 + 1;
+            snow.style.width = `${size}px`;
+            snow.style.height = `${size}px`;
+            snow.style.top = `${Math.random() * 100}%`;
+            snow.style.left = `${Math.random() * 100}%`;
+            snow.style.opacity = Math.random() * 0.7;
+            snow.animate([
+                { transform: 'translateY(0px) rotate(0deg)' },
+                { transform: `translateY(${Math.random() * 40 + 20}px) rotate(360deg)` }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'linear'
+            });
+            container.appendChild(snow);
+        }
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/fly-patterns/index.html">← Fly Patterns 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

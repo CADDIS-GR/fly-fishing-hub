@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플라이 호버링 액션 시뮬레이터 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        canvas { background: linear-gradient(to bottom, #0284c7 0%, #082f49 90%, #3f3f46 100%); border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .data-box { background-color: #1e293b; border: 1px solid #334155; }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/fly_hovering_simulation.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <div class="max-w-4xl w-full">
+        <h1 class="text-2xl md:text-3xl font-bold text-sky-400 mb-2">존커테일 미니리치 수중 궤적 시뮬레이터 (Pulling 액션)</h1>
+        <p class="text-sm text-slate-400 mb-6">수심 6m 바닥을 긁는 풀싱킹 라인에 이끌려가는 플라이의 '호버링(부상)' 역학을 모델링했습니다.</p>
+
+        <!-- 컨트롤 패널 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <!-- 기본 채비 -->
+            <div id="btn-original" class="data-box p-4 rounded-lg cursor-pointer border-sky-500 border-2 transition-all" onclick="setMode('original')">
+                <h2 class="text-xl font-bold text-white mb-2">기본 채비 (Original)</h2>
+                <ul class="text-sm text-slate-300 space-y-1">
+                    <li>• 티펫: <span class="text-rose-400 font-semibold">5X 카본 (무거움)</span></li>
+                    <li>• 칼라(Collar): <span class="text-rose-400 font-semibold">기본 볼륨</span></li>
+                    <li>• 비드: 2.4mm 텅스텐</li>
+                    <li class="mt-2 text-xs text-slate-400">* 무거운 카본티펫이 가라앉아 텐션이 꺾이며 바닥을 자주 찧음</li>
+                </ul>
+            </div>
+
+            <!-- 튜닝 채비 -->
+            <div id="btn-tuned" class="data-box p-4 rounded-lg cursor-pointer opacity-60 hover:opacity-100 transition-all" onclick="setMode('tuned')">
+                <h2 class="text-xl font-bold text-white mb-2">대장님 튜닝 (Tuned)</h2>
+                <ul class="text-sm text-slate-300 space-y-1">
+                    <li>• 티펫: <span class="text-emerald-400 font-semibold">5X 나일론 (물과 비슷함)</span></li>
+                    <li>• 칼라(Collar): <span class="text-emerald-400 font-semibold">볼륨업 (양력 증가)</span></li>
+                    <li>• 비드: 2.4mm 텅스텐</li>
+                    <li class="mt-2 text-xs text-slate-400">* 텐션이 빠져도 나일론과 풍성한 털이 완충하여 바닥 위를 유영함</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 시뮬레이션 캔버스 -->
+        <div class="relative w-full aspect-[21/9] mb-4">
+            <canvas id="simCanvas" class="w-full h-full"></canvas>
+            <div class="absolute bottom-2 left-2 text-xs text-white/50">바닥 (Mud/뻘)</div>
+            <div class="absolute top-2 right-2 text-xs text-white/50 text-right">리트리브 ➔<br>(풀싱킹 라인)</div>
+        </div>
+
+        <!-- 액션 버튼 및 실시간 데이터 -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 data-box p-4 rounded-lg">
+            <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                <button id="playBtn" onclick="togglePlay()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-6 rounded-full transition-colors shadow-lg">
+                    ▶ 시뮬레이션 시작
+                </button>
+                <button onclick="downloadHTML()" class="bg-slate-600 hover:bg-slate-500 text-white font-bold py-2 px-6 rounded-full transition-colors shadow-lg flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    HTML 파일로 저장
+                </button>
+            </div>
+            
+            <div class="flex gap-6 text-sm">
+                <div class="flex flex-col items-center">
+                    <span class="text-slate-400">평균 부상 높이</span>
+                    <span id="stat-height" class="text-xl font-bold text-sky-400">0.0 cm</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-slate-400">바닥 터치 횟수</span>
+                    <span id="stat-touch" class="text-xl font-bold text-rose-400">0 회</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-slate-400">체공(Hover) 비율</span>
+                    <span id="stat-hover" class="text-xl font-bold text-emerald-400">0 %</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 핵심 결론 요약 패널 추가 -->
+        <div class="mt-6 data-box p-6 rounded-lg border-l-4 border-amber-500 shadow-lg">
+            <h3 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                [현장 추론 핵심] 플라이는 바닥을 긁지 않고 '스치듯 떠서' 온다!
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-slate-800/50 p-4 rounded border border-slate-700 hover:bg-slate-800 transition-colors">
+                    <div class="text-sky-400 font-bold mb-2 text-lg">1. 라인 텐션과 20도 각도</div>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        30카운트 후 수면 라인 각도가 완만한 20도로 팽팽하게 유지됨. 바닥에 안착한 무거운 풀싱킹 라인이 전진하며, 뒤따르는 플라이를 일직선으로 끌어당겨 <span class="text-white font-semibold">'부상시키는 엘리베이터'</span> 역할을 함.
+                    </p>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded border border-slate-700 hover:bg-slate-800 transition-colors">
+                    <div class="text-emerald-400 font-bold mb-2 text-lg">2. 미세한 오염 패턴</div>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        밑걸림이나 바닥 쓰레기 없이 플라이가 온전함. 흰색 털이 서서히 갈색(뻘)으로 오염되는 현상은 바닥을 질질 끄는 것이 아니라, 텐션이 미세하게 풀릴 때만 <span class="text-white font-semibold">'바닥을 살짝 스치고 지나간다'</span>는 결정적 증거임.
+                    </p>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded border border-slate-700 hover:bg-slate-800 transition-colors">
+                    <div class="text-rose-400 font-bold mb-2 text-lg">3. 저항과 비중의 밸런스</div>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        물을 흠뻑 머금은 존커 테일의 브레이크(낙하산) 효과가 강력한 양력을 발생시킴. 이 저항력이 2.4mm 텅스텐 비드의 침강력을 상쇄시켜, <span class="text-white font-semibold">'바닥 바로 위를 스치는 완벽한 수평 유영(Hovering)'</span>을 연출함.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 캔버스 사이즈 조정
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // 물리 변수 설정
+        const physics = {
+            original: {
+                gravity: 1.8,    // 텅스텐 + 카본티펫 무게
+                lift: 2.2,       // 당길 때 발생하는 양력
+                fallSpeed: 1.5,  // 텐션 죽을 때 가라앉는 속도
+                tippetSag: 18,   // 카본 티펫은 텐션이 죽을 때 더 많이 처짐
+                color: '#f43f5e',
+                rgbaColor: 'rgba(244, 63, 94, 0.3)'
+            },
+            tuned: {
+                gravity: 1.2,    // 텅스텐 + 나일론티펫 (가벼워짐)
+                lift: 3.0,       // 볼륨업으로 양력 증가
+                fallSpeed: 0.8,  // 천천히 가라앉음
+                tippetSag: 6,    // 나일론 티펫은 물과 비중이 비슷해 덜 처짐
+                color: '#10b981',
+                rgbaColor: 'rgba(16, 185, 129, 0.3)'
+            }
+        };
+
+        let currentMode = 'original';
+        let isPlaying = false;
+        let animationId;
+        
+        // 플라이 및 라인 상태
+        let fly = { x: 0, y: 0 };
+        let sinkingLineEnd = { x: 0, y: 0 };
+        let path = [];
+        let time = 0;
+        let isPulling = false;
+        
+        // 통계용
+        let stats = { touches: 0, totalHeight: 0, frameCount: 0, hoverFrames: 0 };
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-original').classList.remove('border-sky-500', 'border-2', 'opacity-60');
+            document.getElementById('btn-tuned').classList.remove('border-sky-500', 'border-2', 'opacity-60');
+            
+            if(mode === 'original') {
+                document.getElementById('btn-original').classList.add('border-sky-500', 'border-2');
+                document.getElementById('btn-tuned').classList.add('opacity-60');
+            } else {
+                document.getElementById('btn-tuned').classList.add('border-sky-500', 'border-2');
+                document.getElementById('btn-original').classList.add('opacity-60');
+            }
+            resetSim();
+            draw();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').innerText = isPlaying ? '⏸ 일시정지' : '▶ 시뮬레이션 시작';
+            document.getElementById('playBtn').classList.toggle('bg-rose-600', isPlaying);
+            document.getElementById('playBtn').classList.toggle('bg-sky-600', !isPlaying);
+            if(isPlaying) loop();
+            else cancelAnimationFrame(animationId);
+        }
+
+        function resetSim() {
+            const bottomY = canvas.height * 0.9;
+            fly = { x: canvas.width * 0.2, y: bottomY }; // 플라이는 뒤에
+            sinkingLineEnd = { x: canvas.width * 0.4, y: bottomY - 2 }; // 싱킹라인 끝단은 앞에
+            path = [];
+            time = 0;
+            stats = { touches: 0, totalHeight: 0, frameCount: 0, hoverFrames: 0 };
+            updateStats();
+        }
+
+        function updateStats() {
+            let avgH = stats.frameCount === 0 ? 0 : (stats.totalHeight / stats.frameCount);
+            let cmHeight = (avgH / 5).toFixed(1); 
+            let hoverRatio = stats.frameCount === 0 ? 0 : Math.round((stats.hoverFrames / stats.frameCount) * 100);
+
+            document.getElementById('stat-height').innerText = `${cmHeight} cm`;
+            document.getElementById('stat-touch').innerText = `${stats.touches} 회`;
+            document.getElementById('stat-hover').innerText = `${hoverRatio} %`;
+        }
+
+        function loop() {
+            if(!isPlaying) return;
+
+            const p = physics[currentMode];
+            const bottomY = canvas.height * 0.9; 
+
+            // 8자 리트리브 (초당 약 60프레임 기준, 약 2초 사이클)
+            const retrieveCycle = Math.sin(time * 0.05); 
+            isPulling = retrieveCycle > 0;
+            
+            let yMovement = 0;
+            let forwardSpeed = 0;
+            
+            if (isPulling) {
+                // 당기는 중: 플라이가 앞으로 빨리 끌려오며 양력 발생
+                yMovement = -(p.lift - p.gravity);
+                forwardSpeed = 2.5;
+            } else {
+                // 손 교차 (Pause): 라인 텐션이 죽으면서 플라이 가라앉음
+                yMovement = p.fallSpeed;
+                forwardSpeed = 1.0; // 관성에 의해 미세하게 전진
+            }
+
+            // 미세한 불규칙성 (수류)
+            yMovement += (Math.random() - 0.5) * 0.5;
+
+            // 위치 업데이트
+            fly.y += yMovement;
+            fly.x += forwardSpeed;
+            
+            // 싱킹 라인은 일정한 속도로 바닥을 긁으며 앞으로 감
+            sinkingLineEnd.x = fly.x + 80; 
+            sinkingLineEnd.y = bottomY - 2;
+
+            // 바닥 충돌 처리
+            if (fly.y > bottomY) {
+                fly.y = bottomY;
+                if (path.length > 0 && path[path.length-1].y < bottomY) {
+                    stats.touches++; 
+                }
+            }
+            
+            // 수면 제한
+            if (fly.y < canvas.height * 0.5) fly.y = canvas.height * 0.5;
+
+            // 데이터 궤적 저장 (점선용)
+            path.push({x: fly.x, y: fly.y});
+
+            // 화면 넘어가면 스크롤 효과 (카메라 이동)
+            if (sinkingLineEnd.x > canvas.width * 0.8) {
+                const shift = forwardSpeed;
+                path.shift();
+                for(let pt of path) pt.x -= shift;
+                fly.x -= shift;
+                sinkingLineEnd.x -= shift;
+            }
+
+            // 통계 수집
+            stats.frameCount++;
+            let currentHeightFromBottom = bottomY - fly.y;
+            stats.totalHeight += currentHeightFromBottom;
+            if (currentHeightFromBottom > 2) stats.hoverFrames++; 
+
+            if (stats.frameCount % 10 === 0) updateStats();
+
+            time++;
+            draw();
+            animationId = requestAnimationFrame(loop);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bottomY = canvas.height * 0.9;
+
+            // 바닥 그리기
+            ctx.fillStyle = '#3f3f46';
+            ctx.fillRect(0, bottomY, canvas.width, canvas.height - bottomY);
+            ctx.strokeStyle = '#52525b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, bottomY);
+            ctx.lineTo(canvas.width, bottomY);
+            ctx.stroke();
+
+            // 1. 궤적 그리기 (연한 점선으로 데이터 흐름만 표시)
+            if (path.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(path[0].x, path[0].y);
+                for (let i = 1; i < path.length; i++) {
+                    ctx.lineTo(path[i].x, path[i].y);
+                }
+                ctx.strokeStyle = physics[currentMode].rgbaColor;
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([5, 5]); // 점선
+                ctx.stroke();
+                ctx.setLineDash([]); // 점선 초기화
+            }
+
+            // 2. 풀싱킹 라인 그리기 (화면 오른쪽 끝에서부터 끌고 오는 두꺼운 라인)
+            ctx.strokeStyle = '#1e293b'; // 어두운 회색
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(canvas.width + 10, bottomY - 30); // 수면쪽에서 내려오는 라인
+            ctx.quadraticCurveTo(sinkingLineEnd.x + 40, bottomY - 2, sinkingLineEnd.x, sinkingLineEnd.y);
+            ctx.stroke();
+
+            // 3. 리더/티펫 그리기 (싱킹라인 끝단 ~ 플라이)
+            ctx.beginPath();
+            ctx.moveTo(sinkingLineEnd.x, sinkingLineEnd.y);
+            
+            if (isPulling) {
+                // 당길 때: 텐션 팽팽함 (직선)
+                ctx.lineTo(fly.x, fly.y);
+            } else {
+                // 멈출 때(Pause): 텐션이 죽으면서 처짐(Sag)
+                const sagY = Math.max(sinkingLineEnd.y, fly.y) + physics[currentMode].tippetSag;
+                const midX = (sinkingLineEnd.x + fly.x) / 2;
+                ctx.quadraticCurveTo(midX, sagY, fly.x, fly.y);
+            }
+            
+            // 티펫 색상 설정 (튜닝버전은 살짝 녹색빛을 띄게 표현)
+            ctx.strokeStyle = currentMode === 'tuned' ? 'rgba(52, 211, 153, 0.7)' : 'rgba(251, 113, 133, 0.7)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // 4. 플라이(미니리치) 그리기
+            if (path.length > 0) {
+                // 비드
+                ctx.fillStyle = '#bef264';
+                ctx.beginPath();
+                ctx.arc(fly.x, fly.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 존커 테일 (물의 저항으로 뒤로 쏠림)
+                ctx.strokeStyle = '#a3e635'; 
+                ctx.lineWidth = currentMode === 'tuned' ? 3 : 2; // 볼륨업 튜닝은 털을 두껍게 표현
+                ctx.beginPath();
+                ctx.moveTo(fly.x, fly.y);
+                ctx.lineTo(fly.x - 18, fly.y - (Math.random() * 4 - 2)); 
+                ctx.stroke();
+            }
+        }
+
+        // 전체 HTML 코드를 다운로드 파일로 생성하는 함수
+        function downloadHTML() {
+            // 문서의 현재 HTML 내용을 가져옴 (자체 복제)
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            // Blob 형태로 변환 (마임타입은 text/html)
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjecturl(blob);
+            
+            // 임시 링크 생성 및 클릭 이벤트 발생시켜 다운로드 유도
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fly_hovering_simulation.html'; // 저장될 파일 이름
+            document.body.appendChild(a);
+            a.click();
+            
+            // 마무리 정리
+            document.body.removeChild(a);
+            URL.revokeObjecturl(url);
+        }
+
+        resetSim();
+        draw();
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

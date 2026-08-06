@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trout Like Big Bugs · CADDIS-GR LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c2b3a;
+    --deep: #0d1f2d;
+    --accent: #2e6f8e;
+    --accent2: #4da6c8;
+    --gold: #c9a84c;
+    --bg: #f5f0e8;
+    --paper: #faf7f2;
+    --light: #e8e0d0;
+    --muted: #7a8a96;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--ink);
+    line-height: 1.8;
+  }
+
+  @media print {
+    body { background: white; }
+    .no-print { display: none; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; }
+    a { text-decoration: none; color: inherit; }
+  }
+
+  .no-print {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  .no-print button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(46,111,142,0.3);
+    transition: all 0.2s;
+  }
+  .no-print button:hover { background: var(--deep); transform: translateY(-1px); }
+
+  .page {
+    max-width: 800px;
+    margin: 40px auto;
+    background: var(--paper);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: var(--deep);
+    padding: 52px 56px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 60px solid rgba(255,255,255,0.03);
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--accent2), var(--gold));
+  }
+
+  .series-tag {
+    display: inline-block;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding: 4px 12px;
+    border: 1px solid rgba(77,166,200,0.3);
+    border-radius: 2px;
+  }
+
+  h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+  }
+
+  .header-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .header-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-youtube {
+    background: rgba(255,0,0,0.15);
+    border: 1px solid rgba(255,80,80,0.35);
+    color: #ff8a8a;
+  }
+  .btn-youtube:hover {
+    background: rgba(255,0,0,0.28);
+    border-color: rgba(255,80,80,0.6);
+    color: #ffaaaa;
+  }
+
+  .btn-pdf {
+    background: rgba(77,166,200,0.12);
+    border: 1px solid rgba(77,166,200,0.3);
+    color: var(--accent2);
+  }
+  .btn-pdf:hover {
+    background: rgba(77,166,200,0.22);
+    border-color: rgba(77,166,200,0.55);
+    color: #7dc8e0;
+  }
+
+  /* Body */
+  .body {
+    padding: 48px 56px 56px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .section-num {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--deep);
+  }
+
+  p {
+    font-size: 14.5px;
+    color: #3a4a56;
+    margin-bottom: 14px;
+    line-height: 1.95;
+    word-break: keep-all;
+  }
+
+  /* Highlight box */
+  .highlight {
+    background: linear-gradient(135deg, #eef5fa, #e8f2f8);
+    border-left: 3px solid var(--accent);
+    padding: 18px 22px;
+    margin: 18px 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .highlight p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--deep);
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--deep);
+    color: white;
+    padding: 20px 24px;
+    border-radius: 6px;
+    margin: 20px 0;
+  }
+
+  .callout-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .callout p {
+    color: rgba(255,255,255,0.85);
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.85;
+  }
+
+  /* Data grid */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .data-card {
+    background: white;
+    border: 1px solid var(--light);
+    border-radius: 8px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .data-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .data-card .num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Noto Serif KR', serif;
+    line-height: 1.2;
+  }
+
+  .data-card .label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* Calorie comparison */
+  .calorie-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 13.5px;
+  }
+
+  .calorie-table th {
+    background: var(--deep);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .calorie-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--light);
+    color: var(--ink);
+  }
+
+  .calorie-table tr:nth-child(even) td { background: #f8f5f0; }
+  .calorie-table .winner { color: var(--accent); font-weight: 600; }
+
+  /* Quote */
+  .quote {
+    border-top: 1px solid var(--light);
+    border-bottom: 1px solid var(--light);
+    padding: 20px 0;
+    margin: 24px 0;
+    text-align: center;
+  }
+
+  .quote p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    color: var(--deep);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--light), transparent);
+    margin: 36px 0;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--deep);
+    padding: 22px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  .footer-next {
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.3px;
+  }
+
+  ul {
+    padding-left: 20px;
+    margin-bottom: 14px;
+  }
+
+  li {
+    font-size: 14px;
+    color: #3a4a56;
+    margin-bottom: 6px;
+    line-height: 1.8;
+    word-break: keep-all;
+  }
+
+  .arrow { color: var(--accent); font-weight: 700; }
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html" aria-current="page">Library</a></nav></div><div class="lab-archive-source"><span>HOW TROUT FEED · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/trout-feeding-science/blob/main/ep03/Trout_Like_Big_Bugs.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<div class="no-print">
+  <button onclick="window.print()">🖨️ PDF로 저장</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <div class="series-tag">Fly Fishing Science · Episode 3</div>
+    <h1>Trout Like Big Bugs</h1>
+    <p class="subtitle">송어의 먹이 선택 메커니즘과 플라이 사이즈 전략</p>
+    <div class="header-links">
+      <a href="https://youtu.be/ZO4sLzJvNXg?si=NZuib__w3tH5W87d" target="_blank" class="btn-youtube">
+        ▶ YouTube 원본 영상
+      </a>
+      <a href="https://github.com/CADDIS-GR/trout-feeding-science/blob/main/ep03/Trout_Like_Big_Bugs.pdf" target="_blank" class="btn-pdf">
+        📄 한국어 원문 스크립트 PDF
+      </a>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- Section 1 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>사회적 학습과 검색 이미지</h2>
+      </div>
+      <p>한 소(pool)에 있는 모든 송어가 왜 동일한 크기에 집중하게 되는 걸까요? 수십 마리의 똑같은 벌레가 줄지어 떠내려오지는 않는데도 말입니다. 그 답은 <strong>사회적 학습</strong>에 있습니다.</p>
+      <p>송어는 다른 송어가 무엇을 먹는지 지켜봄으로써 무엇을 먹을지 배울 수 있습니다. 마치 소셜 미디어로 최고의 푸드트럭 위치를 공유하는 것처럼, 혼자 알아내는 것보다 훨씬 빠르게 최적의 먹이 정보를 습득합니다.</p>
+      <div class="highlight">
+        <p>📌 <strong>브룩 송어 연구 결과:</strong> 사회적 학습을 활용하면 <strong>단 하루</strong> 만에 검색 이미지를 형성할 수 있습니다. 혼자 학습하는 송어는 동일한 과정에 <strong>일주일</strong>이 걸립니다.</p>
+      </div>
+      <p>검색 이미지는 단순히 벌레 크기만의 문제가 아닙니다. 최적의 위치, 시간대, 경쟁 개체 분포, 그리고 대기 포인트까지 모두 포함됩니다. 이것이 바로 특정 시간, 특정 장소에서 항상 특정 물고기를 발견하는 이유입니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 2 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>최적 먹이 찾기 이론</h2>
+      </div>
+      <p>낚시꾼들은 "송어는 큰 벌레를 좋아하니까 큰 플라이가 효과적"이라고 말합니다. 이 주장의 근거인 <strong>최적 먹이 찾기 이론(Optimal Foraging Theory)</strong>은 무엇을 실제로 말할까요?</p>
+      <div class="callout">
+        <div class="callout-label">핵심 조건</div>
+        <p>"탐색과 처리 비용이 동일할 때, 포식자는 더 많은 칼로리를 가진 큰 먹이를 선호해야 한다."</p>
+      </div>
+
+      <table class="calorie-table">
+        <tr>
+          <th>먹이</th>
+          <th>칼로리 섭취</th>
+          <th>소모 칼로리</th>
+          <th>순이익</th>
+        </tr>
+        <tr>
+          <td>미지(깔따구) 번데기</td>
+          <td>5 kcal</td>
+          <td>~1 kcal</td>
+          <td class="winner">≈4 kcal</td>
+        </tr>
+        <tr>
+          <td>베이트피시(치어)</td>
+          <td>50 kcal</td>
+          <td>~30 kcal (추격)</td>
+          <td>≈20 kcal</td>
+        </tr>
+        <tr>
+          <td colspan="3" style="font-size:12px; color:#888;">미지 번데기 5마리로 동일 칼로리 획득 가능</td>
+          <td class="winner">≈20 kcal</td>
+        </tr>
+      </table>
+
+      <p>결론은 명확합니다. 강에서 송어는 가능할 때마다 <strong>'앉아서 기다리는'</strong> 방식을 선택합니다. 큰 먹이를 쫓아다니는 것보다 소형 먹이를 수동적으로 기다리는 것이 에너지 효율 면에서 훨씬 유리한 경우가 많습니다.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 3 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2>데이터가 말하는 진실</h2>
+      </div>
+      <p>대규모 송어 먹이 분석 연구 결과를 살펴보면 세 가지 중요한 사실이 드러납니다.</p>
+
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="num">0.08%</div>
+          <div class="label">10mm 이상 벌레가<br>유하(drift) 중 차지하는 비율</div>
+        </div>
+        <div class="data-card">
+          <div class="num">4~5mm</div>
+          <div class="label">가용성보다 높은 소비율을 보인<br>송어 선호 크기</div>
+        </div>
+        <div class="data-card">
+          <div class="num">90%+</div>
+          <div class="label">소형 먹이(10mm 미만)로<br>채워지는 송어 식단</div>
+        </div>
+        <div class="data-card">
+          <div class="num">↑</div>
+          <div class="label">크기 커질수록 선택 선호도는<br>높아짐 (단, 절대 빈도는 희귀)</div>
+        </div>
+      </div>
+
+      <div class="highlight">
+        <p>⚠️ 큰 플라이의 선택 확률이 높다는 데이터를 근거로 "큰 플라이가 더 좋다"고 결론 내리는 것은 <strong>체리피킹</strong>입니다. 90%를 차지하는 소형 먹이 데이터를 무시하고 0.08%에 베팅하는 것은 수학과 싸우는 낚시입니다.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 4 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>실제 수치: 큰 벌레는 얼마나 희귀한가</h2>
+      </div>
+      <p>캐스팅 범위 내에 75,000마리의 메이플라이가 있다고 가정하고 계산해보겠습니다.</p>
+
+      <ul>
+        <li>10mm로 성장 후 하루 유하(drift) 개체 수: <strong>약 10,000마리</strong></li>
+        <li>시간당: <strong>약 430마리</strong> / 분당: <strong>약 7마리</strong></li>
+        <li>송어의 가시 범위: 약 10피트 → 전체 캐스팅 영역의 <strong>10%</strong>만 인식</li>
+        <li>실제 송어가 볼 수 있는 수: <strong>분당 0.7마리</strong></li>
+        <li>새로운 검색 이미지 형성 임계치: <strong>분당 2마리</strong></li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-label">결론</div>
+        <p>분당 0.7마리 ← 임계치(2마리)에 한참 못 미침<br>10mm 이상의 큰 벌레는 송어에게 <strong>'무작위적인 우연'</strong>에 불과하며, 검색 이미지를 새로 형성할 만큼 충분하지 않습니다.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 5 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2>결론: 영리하게 낚시하기</h2>
+      </div>
+
+      <div class="quote">
+        <p>"때로는 크게 낚시하는 것과 영리하게 낚시하는 것이 같을 때도 있습니다.<br>하지만 작은 벌레가 더 풍부하고, 수학은 거짓말하지 않습니다."</p>
+      </div>
+
+      <p>송어의 의사결정은 복잡합니다. 검색 이미지, 사회적 학습, 최적 먹이 찾기 이론, 탐지 가능성이 모두 복합적으로 작용합니다. 큰 벌레를 좋아하는 건 사실이지만, 먹이의 가용성과 에너지 효율이 먼저입니다.</p>
+
+      <p>작은 플라이로 낚시할 수 있는 능력은 도구 상자의 필수 도구입니다. 어떤 도구든 소홀히 하면 정작 필요할 때 쓸 수 없습니다. 강에는 <strong>'크게 할 거 아니면 집에 가라'</strong>는 말이 무색하게, 정말 크게 할 거면 차라리 집에 가는 게 나은 날들이 분명 존재합니다.</p>
+
+      <div class="divider"></div>
+
+      <!-- 영상 요약 -->
+      <div class="callout" style="margin-top: 0;">
+        <div class="callout-label">📹 영상 핵심 요약 (AI 분석)</div>
+        <p style="margin-bottom: 12px;">결국 이 영상은 송어가 <strong>효율성과 먹이의 가용성</strong>에 따라 먹이 행동을 결정한다는 것을 주장합니다. <span style="color: var(--gold); font-size: 11px;">13:34</span></p>
+        <p style="margin-bottom: 10px; color: rgba(255,255,255,0.6); font-size: 12px; letter-spacing: 1px; text-transform: uppercase;">주요 포인트</p>
+        <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <td style="padding: 9px 0; color: var(--gold); font-weight: 600; width: 42%; vertical-align: top;">사회적 학습</td>
+            <td style="padding: 9px 0 9px 12px; color: rgba(255,255,255,0.75); line-height: 1.7;">다른 송어를 관찰하며 특정 크기, 모양, 색깔의 먹이를 먹는 법을 배웁니다. <span style="color: var(--gold); font-size: 11px;">1:25</span></td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <td style="padding: 9px 0; color: var(--gold); font-weight: 600; vertical-align: top;">최적 섭이 이론</td>
+            <td style="padding: 9px 0 9px 12px; color: rgba(255,255,255,0.75); line-height: 1.7;">최소한의 노력으로 최대 칼로리를 얻으려 합니다. 큰 먹이는 칼로리가 높지만, 잡기 위한 노력이 크면 비효율적으로 판단합니다. <span style="color: var(--gold); font-size: 11px;">3:11 / 3:26</span></td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <td style="padding: 9px 0; color: var(--gold); font-weight: 600; vertical-align: top;">먹이 선호도</td>
+            <td style="padding: 9px 0 9px 12px; color: rgba(255,255,255,0.75); line-height: 1.7;">큰 벌레를 좋아하지만 강물에 더 흔한 4~6mm 작은 벌레를 주로 먹습니다. 이 크기가 풍부하고 잡기 쉽기 때문입니다. <span style="color: var(--gold); font-size: 11px;">3:08 / 6:34</span></td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <td style="padding: 9px 0; color: var(--gold); font-weight: 600; vertical-align: top;">검색 이미지</td>
+            <td style="padding: 9px 0 9px 12px; color: rgba(255,255,255,0.75); line-height: 1.7;">특정 크기의 먹이에 집중하여 다른 먹이를 무시합니다. 10mm 먹이는 너무 드물어 새로운 검색 이미지를 형성하기 어렵습니다. <span style="color: var(--gold); font-size: 11px;">0:05 / 10:34</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 9px 0; color: var(--gold); font-weight: 600; vertical-align: top;">낚시 전략</td>
+            <td style="padding: 9px 0 9px 12px; color: rgba(255,255,255,0.75); line-height: 1.7;">큰 미끼를 고집하는 것은 송어의 자연적 먹이 행동, 검색 이미지, 강물의 벌레 수에 역행하는 것입니다. <span style="color: var(--gold); font-size: 11px;">9:30</span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">Fly Fishing Science Series · Episode 3</span>
+    <span class="footer-next">다음: 검색 이미지를 바꾸는 조건 →</span>
+  </div>
+
+</div>
+
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/library/index.html">← Library 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

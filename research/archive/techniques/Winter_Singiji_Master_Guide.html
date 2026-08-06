@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>혹한기 신기지 실전 공략 가이드 · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .card-transition {
+            transition: all 0.3s ease-out;
+        }
+        .nav-btn {
+            cursor: pointer;
+            z-index: 100;
+            position: relative;
+        }
+        .nav-btn:active {
+            transform: scale(0.9);
+        }
+        i[data-lucide] {
+            pointer-events: none;
+        }
+        #card-body {
+            cursor: pointer;
+        }
+        /* 하단 도트 애니메이션 */
+        .dot-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-center p-4 archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Winter_Singiji_Master_Guide.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <!-- Header -->
+    <div class="mb-6 text-center">
+        <h1 class="text-2xl font-black tracking-tight text-blue-600 flex items-center justify-center gap-2">
+            <i data-lucide="wind" class="w-7 h-7"></i> 혹한기 신기지 마스터 가이드
+        </h1>
+        <p class="text-slate-500 text-sm mt-1 font-medium italic">Master Naksi-daejang Edition (by Jeff)</p>
+    </div>
+
+    <!-- Main Card Container -->
+    <div id="card-container" class="relative w-full max-w-sm min-h-[580px] rounded-[2.5rem] shadow-xl border-2 flex flex-col card-transition bg-white">
+        
+        <!-- Progress Bar (Top) -->
+        <div id="top-progress" class="w-full h-1 bg-black/5 rounded-t-[2.5rem] overflow-hidden">
+            <div id="progress-fill" class="h-full bg-blue-500 transition-all duration-500" style="width: 10%"></div>
+        </div>
+
+        <!-- Card Content Area -->
+        <div id="card-body" class="flex-1 px-8 py-6 flex flex-col items-center justify-center text-center">
+            <div id="icon-container" class="mb-4 p-4 bg-white rounded-3xl shadow-sm border border-slate-100">
+                <i id="card-icon" class="w-10 h-10"></i>
+            </div>
+            
+            <h2 id="card-title" class="text-xl font-black mb-1"></h2>
+            <p id="card-subtitle" class="text-slate-600 font-bold mb-5 text-sm"></p>
+            
+            <div id="card-items" class="w-full space-y-2"></div>
+        </div>
+
+        <!-- Navigation Controls (Bottom) -->
+        <div class="px-8 pb-8 pt-2 flex flex-col items-center gap-4 relative z-50">
+            
+            <!-- Bottom Pagination Dots -->
+            <div id="bottom-dots" class="flex gap-1.5 mb-1 h-2 items-center"></div>
+
+            <div class="w-full flex justify-between items-center">
+                <button id="prev-btn" class="nav-btn p-4 bg-white/90 rounded-full shadow-lg border border-slate-200">
+                    <i data-lucide="chevron-left" class="text-slate-800 w-6 h-6"></i>
+                </button>
+                
+                <div class="flex flex-col items-center">
+                    <span id="page-number" class="text-lg font-black text-slate-800">1</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Card</span>
+                </div>
+
+                <button id="next-btn" class="nav-btn p-4 bg-white/90 rounded-full shadow-lg border border-slate-200">
+                    <i data-lucide="chevron-right" class="text-slate-800 w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Alert -->
+    <div id="final-alert" class="mt-4 p-4 bg-emerald-600 text-white rounded-2xl max-w-sm w-full shadow-lg transition-all transform scale-0 opacity-0 text-center">
+        <p class="text-xs font-bold leading-relaxed">
+            혹한기 신기지는 테크닉 싸움입니다.<br>작게, 느리게, 자주 바꾸세요!
+        </p>
+    </div>
+
+    <!-- Footer Help -->
+    <div class="mt-6 text-center px-6">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed mb-1">
+            Strategy: SMALL • SLOW • ROTATE • TIMING
+        </p>
+        <p class="text-[9px] text-slate-400 font-medium italic">카드나 화살표를 눌러 넘기세요</p>
+    </div>
+
+    <script>
+        const cards = [
+            {
+                title: "01. 혹한기 상황 인식",
+                icon: "snowflake",
+                subtitle: "조건을 맞춰야만 문다!",
+                content: [
+                    { label: "환경", value: "기온 -10~-6℃ / 수온 2℃ 이하" },
+                    { label: "활성도", value: "전반적으로 낮으나 분명히 존재함" },
+                    { label: "핵심", value: "크고 빠르고 자극적인 것엔 반응 불가" },
+                    { label: "결론", value: "안 문다가 아니라 조건을 맞춰야 함" }
+                ],
+                style: "from-blue-50 to-blue-100 border-blue-200 text-blue-700 icon-blue-500"
+            },
+            {
+                title: "02. 플라이 운영 기본 원칙",
+                icon: "target",
+                subtitle: "작게 · 느리게 · 다양하게",
+                content: [
+                    { label: "사이즈", value: "#18 이하 (거부감↓ 입질 강도↑)" },
+                    { label: "티펫", value: "5X 이하 권장 (굵은 티펫 즉각 거부)" },
+                    { label: "환경", value: "맑은 물색 + 낮은 활성도 대응 필수" },
+                    { label: "액션", value: "최소한의 움직임으로 호기심 유발" }
+                ],
+                style: "from-rose-50 to-rose-100 border-rose-200 text-rose-700 icon-rose-500"
+            },
+            {
+                title: "03. 색상 전략: 무채색",
+                icon: "palette",
+                subtitle: "혹한기의 답은 '무채색'",
+                content: [
+                    { label: "유리", value: "화이트 / 블랙 계열 주력" },
+                    { label: "장점", value: "자극 적음, 경계심 감소, 대비 우수" },
+                    { label: "피해야 할 조건", value: "강한 유채색 및 과도한 어필 컬러" },
+                    { label: "인식률", value: "저광량에서도 형태가 뚜렷하게 인식됨" }
+                ],
+                style: "from-slate-100 to-slate-200 border-slate-300 text-slate-700 icon-gray-600"
+            },
+            {
+                title: "04. 인디케이터 님핑 핵심",
+                icon: "zap",
+                subtitle: "입질의 70~80%가 발생하는 순간",
+                content: [
+                    { label: "골든 타임", value: "폴링 종료 후 눈앞에서 '멈출 때'" },
+                    { label: "심리", value: "안전한 은신처에 나타난 먹이로 인식" },
+                    { label: "운용", value: "아주 짧고 느리게, 반드시 멈춤 포함" },
+                    { label: "금기", value: "과도한 이동 거리 및 속도는 즉각 거부" }
+                ],
+                style: "from-amber-50 to-amber-100 border-amber-200 text-amber-700 icon-amber-500"
+            },
+            {
+                title: "05. 느린 스위밍의 위력",
+                icon: "refresh-cw",
+                subtitle: "천천히 먹는 상황을 연출하라",
+                content: [
+                    { label: "구성", value: "작은 플라이 + 아주 느린 스위밍" },
+                    { label: "액션", value: "짧고 간결한 스트립 후 긴 스테이" },
+                    { label: "효과", value: "저활성에도 의외로 강한 입질 유도" },
+                    { label: "인식", value: "도망가지 않는 쉬운 먹이감으로 어필" }
+                ],
+                style: "from-emerald-50 to-emerald-100 border-emerald-200 text-emerald-700 icon-emerald-500"
+            },
+            {
+                title: "06. 송어의 학습력 대응",
+                icon: "search",
+                subtitle: "절대 과소평가 금물!",
+                content: [
+                    { label: "함정", value: "한두 마리 랜딩 후 주변 경계심 급증" },
+                    { label: "캐스팅", value: "동일 자리 반복 X, 랜덤 캐스팅 O" },
+                    { label: "패턴 교체", value: "색상, 실루엣, 크기, 무게 수시 변경" },
+                    { label: "경고", value: "한 패턴 고집 = 실패 확률 급상승" }
+                ],
+                style: "from-purple-50 to-purple-100 border-purple-200 text-purple-700 icon-purple-500"
+            },
+            {
+                title: "07. 신기지 포인트 선정",
+                icon: "map-pin",
+                subtitle: "지형과 수심 변화의 이해",
+                content: [
+                    { label: "수심 급변", value: "상류~중간 부교 (1.5 ~ 4.5m)" },
+                    { label: "주요 포인트", value: "새물 유입부, 코너, 가두리, 브레이크" },
+                    { label: "특성", value: "전층 분포 X, 군집 위치가 시시각각 변화" },
+                    { label: "환경", value: "그늘과 양지가 극명하게 나뉘는 구조" }
+                ],
+                style: "from-orange-50 to-orange-100 border-orange-200 text-orange-700 icon-orange-600"
+            },
+            {
+                title: "08. 포인트 공략법 구분",
+                icon: "target",
+                subtitle: "대상 개체에 따른 차별화",
+                content: [
+                    { label: "사이드 공략", value: "휴식 개체, 얕은 연안 (섬세한 접근)" },
+                    { label: "물골/심층", value: "회유 개체 밀집, 경계심 상대적 낮음" },
+                    { label: "시야", value: "맑은 물색으로 사이드 개체 확인 가능" },
+                    { label: "방법", value: "심층은 님핑, 사이드는 사이트 피싱" }
+                ],
+                style: "from-teal-50 to-teal-100 border-teal-200 text-teal-700 icon-teal-600"
+            },
+            {
+                title: "09. 시간대별 활성 변화",
+                icon: "clock",
+                subtitle: "시간 + 포인트 결합 전략",
+                content: [
+                    { label: "오전~11시", value: "저활성 유지 (정교한 님핑 집중)" },
+                    { label: "11시 전후", value: "수온 상승과 함께 활동성 회복" },
+                    { label: "15시 이후", value: "산 그늘 형성 시점 (활성 급상승)" },
+                    { label: "필승 포인트", value: "오후엔 관리소 앞~상류 그늘 공략" }
+                ],
+                style: "from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-700 icon-indigo-600"
+            },
+            {
+                title: "10. 최종 요약 (The Essence)",
+                icon: "check-circle-2",
+                subtitle: "낚시대장님을 위한 한 줄 평",
+                content: [
+                    { label: "정수", value: "혹한기 신기지는 '테크닉 싸움'이다" },
+                    { label: "핵심", value: "작게, 느리게, 자주 바꾸기" },
+                    { label: "타이밍", value: "폴링 종료 순간에 집중" },
+                    { label: "전략", value: "군집과 시간 흐름을 읽는 낚시" }
+                ],
+                style: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 icon-emerald-600"
+            }
+        ];
+
+        let currentIdx = 0;
+
+        const renderCard = () => {
+            const card = cards[currentIdx];
+            
+            const container = document.getElementById('card-container');
+            const icon = document.getElementById('card-icon');
+            const title = document.getElementById('card-title');
+            const subtitle = document.getElementById('card-subtitle');
+            const items = document.getElementById('card-items');
+            const pageNum = document.getElementById('page-number');
+            const bottomDots = document.getElementById('bottom-dots');
+            const progressFill = document.getElementById('progress-fill');
+            const finalAlert = document.getElementById('final-alert');
+
+            const [bgFrom, bgTo, border, text, iconColor] = card.style.split(' ');
+            container.className = `relative w-full max-w-sm min-h-[580px] rounded-[2.5rem] shadow-xl border-2 flex flex-col card-transition overflow-hidden bg-gradient-to-br ${bgFrom} ${bgTo} ${border}`;
+            
+            title.innerText = card.title;
+            title.className = `text-xl font-black mb-1 ${text}`;
+            subtitle.innerText = `"${card.subtitle}"`;
+            pageNum.innerText = currentIdx + 1;
+            
+            icon.setAttribute('data-lucide', card.icon);
+            icon.className = `w-10 h-10 ${iconColor.replace('icon-', 'text-')}`;
+            
+            items.innerHTML = card.content.map(item => `
+                <div class="flex flex-col items-center bg-white/70 backdrop-blur-sm rounded-xl p-2.5 border border-white/50 shadow-sm">
+                    <span class="text-[10px] uppercase tracking-wider font-bold opacity-60 mb-0.5">${item.label}</span>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">${item.value}</span>
+                </div>
+            `).join('');
+
+            // 하단 도트 업데이트
+            bottomDots.innerHTML = cards.map((_, i) => `
+                <div class="h-1.5 rounded-full dot-transition ${i === currentIdx ? 'w-6 bg-slate-800' : 'w-1.5 bg-slate-400/50'}"></div>
+            `).join('');
+
+            // 상단 진행바 업데이트
+            progressFill.style.width = `${((currentIdx + 1) / cards.length) * 100}%`;
+
+            if (currentIdx === cards.length - 1) {
+                finalAlert.classList.remove('scale-0', 'opacity-0');
+                finalAlert.classList.add('scale-100', 'opacity-100', 'animate-bounce');
+            } else {
+                finalAlert.classList.add('scale-0', 'opacity-0');
+                finalAlert.classList.remove('scale-100', 'opacity-100', 'animate-bounce');
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        };
+
+        const goNext = () => {
+            currentIdx = (currentIdx + 1) % cards.length;
+            renderCard();
+        };
+
+        const goPrev = () => {
+            currentIdx = (currentIdx - 1 + cards.length) % cards.length;
+            renderCard();
+        };
+
+        const init = () => {
+            renderCard();
+
+            document.getElementById('next-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                goNext();
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                goPrev();
+            });
+
+            document.getElementById('card-body').addEventListener('click', () => {
+                goNext();
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') goNext();
+                if (e.key === 'ArrowLeft') goPrev();
+            });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

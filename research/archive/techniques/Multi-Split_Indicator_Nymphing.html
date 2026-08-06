@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다분할 인디케이터 마이크로 님핑 시스템 | Fly Fishing Archive · CADDIS-GR LAB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b2a;
+            --deep: #1b2d42;
+            --water: #1a6ea8;
+            --water-light: #2e8bc0;
+            --accent: #e8a045;
+            --accent2: #e84545;
+            --surface: #f4f7fa;
+            --text: #1a1a2e;
+            --muted: #5a6a7a;
+            --white: #ffffff;
+            --card-bg: #ffffff;
+            --border: #dde3eb;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--surface);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(160deg, var(--navy) 0%, #0a2540 50%, #0d3b6e 100%);
+            color: white;
+            padding: 60px 24px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300'%3E%3Cpath d='M0 150 Q200 80 400 150 Q600 220 800 150' fill='none' stroke='rgba(30,110,168,0.18)' stroke-width='2'/%3E%3Cpath d='M0 170 Q200 100 400 170 Q600 240 800 170' fill='none' stroke='rgba(30,110,168,0.12)' stroke-width='2'/%3E%3Cpath d='M0 130 Q200 60 400 130 Q600 200 800 130' fill='none' stroke='rgba(46,139,192,0.1)' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center / cover;
+        }
+        .hero-inner { max-width: 860px; margin: 0 auto; position: relative; }
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--navy);
+            font-weight: 900;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 14px;
+            border-radius: 30px;
+            margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero-sub {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            max-width: 620px;
+            font-weight: 300;
+        }
+        .hero-tags {
+            margin-top: 22px;
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .hero-tag {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* ── LAYOUT ── */
+        .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+        /* ── SECTION TITLE ── */
+        .sec-title {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--deep);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+        .sec-title .icon { font-size: 1.3rem; }
+
+        /* ── INTRO CARD ── */
+        .intro-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--water);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 40px;
+            line-height: 1.85;
+            font-size: 0.95rem;
+            color: #2c3e50;
+        }
+        .intro-card p + p { margin-top: 12px; }
+        .intro-card strong { color: var(--water); }
+
+        /* ── VISUALIZATION ── */
+        .viz-wrap {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .viz-header {
+            background: var(--deep);
+            color: white;
+            padding: 14px 22px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .viz-header span { opacity: 0.6; font-size: 0.78rem; font-weight: 400; }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: linear-gradient(to bottom,
+                #c8e6f5 0%, #a8d8f0 25%, #7ec8e8 50%, #5ab0d8 75%, #3a94c0 100%);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+        .annotation {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            border: 1px solid #ddd;
+            color: #333;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .viz-btn-row {
+            padding: 14px 20px;
+            text-align: center;
+            background: #fafbfc;
+            border-top: 1px solid var(--border);
+        }
+        .viz-btn {
+            background: var(--accent2);
+            color: white;
+            border: none;
+            padding: 11px 32px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            box-shadow: 0 3px 10px rgba(232,69,69,0.3);
+            transition: all 0.2s;
+        }
+        .viz-btn:hover { background: #cc3333; transform: translateY(-2px); }
+        .viz-btn:active { transform: scale(0.96); }
+
+        /* ── SYSTEM CONFIG ── */
+        .system-section { margin-bottom: 40px; }
+        .sys-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+        .sys-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .sys-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 4px;
+        }
+        .sys-card.c-blue::before { background: var(--water); }
+        .sys-card.c-orange::before { background: var(--accent); }
+        .sys-card.c-red::before { background: var(--accent2); }
+        .sys-card h4 {
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+        .sys-card .sys-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        .sys-card p {
+            font-size: 0.86rem;
+            color: #4a5568;
+            line-height: 1.75;
+        }
+        .sys-card .kw { color: var(--water); font-weight: 700; }
+        .sys-card .kw-orange { color: var(--accent); font-weight: 700; }
+
+        /* ── PRESENTATION STEPS ── */
+        .steps-section { margin-bottom: 40px; }
+        .step-list { display: flex; flex-direction: column; gap: 14px; }
+        .step-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 22px;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+        .step-num {
+            min-width: 36px; height: 36px;
+            background: var(--navy);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .step-body h4 {
+            font-size: 1rem; font-weight: 700;
+            margin-bottom: 6px; color: var(--deep);
+        }
+        .step-body p {
+            font-size: 0.88rem; color: #4a5568;
+            line-height: 1.8;
+        }
+        .step-body .kw { color: var(--water); font-weight: 700; }
+        .step-body .kw-r { color: var(--accent2); font-weight: 700; }
+
+        /* ── TIP BOX ── */
+        .tip-box {
+            background: #fff8ec;
+            border: 1px solid #f5c842;
+            border-left: 5px solid var(--accent);
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 40px;
+            font-size: 0.9rem;
+            color: #5a4000;
+            line-height: 1.8;
+        }
+        .tip-box strong { color: #b07800; }
+
+        /* ── KEY POINT GRID ── */
+        .keypoints { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 40px; }
+        .kp-card {
+            background: var(--navy);
+            color: white;
+            border-radius: 12px;
+            padding: 18px 16px;
+            text-align: center;
+        }
+        .kp-card .kp-icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .kp-card .kp-label { font-size: 0.75rem; opacity: 0.6; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .kp-card .kp-val { font-size: 1rem; font-weight: 900; color: var(--accent); }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--water); text-decoration: none;
+            font-size: 0.85rem; font-weight: 700;
+            margin-bottom: 28px;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* ── IMAGE GALLERY ── */
+        .gallery-section { margin-bottom: 40px; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            cursor: zoom-in;
+            aspect-ratio: 4/3;
+            background: #e8edf2;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.07); }
+        .gallery-item .gallery-overlay {
+            position: absolute; inset: 0;
+            background: rgba(13, 27, 42, 0);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.25s ease;
+        }
+        .gallery-item:hover .gallery-overlay { background: rgba(13, 27, 42, 0.28); }
+        .gallery-overlay-icon {
+            color: white;
+            font-size: 1.6rem;
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.25s ease;
+        }
+        .gallery-item:hover .gallery-overlay-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .gallery-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.55));
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 18px 10px 8px;
+            text-align: center;
+        }
+
+        /* ── LIGHTBOX ── */
+        .lightbox {
+            display: none;
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.88);
+            align-items: center; justify-content: center;
+            cursor: zoom-out;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 92vw;
+            max-height: 88vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: lbIn 0.22s ease;
+        }
+        @keyframes lbIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 24px;
+            color: white; font-size: 2rem; line-height: 1;
+            cursor: pointer; opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .lightbox-close:hover { opacity: 1; }
+        .lightbox-caption {
+            position: absolute; bottom: 24px; left: 0; right: 0;
+            text-align: center; color: rgba(255,255,255,0.7);
+            font-size: 0.85rem; font-weight: 700;
+        }
+
+        /* ── SOURCE BOX ── */
+        .source-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 0;
+        }
+        .source-inner {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .source-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+        .source-label {
+            font-size: 0.72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+        .source-link {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--water);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+        .source-link:hover { color: #0d4f7a; text-decoration: underline; }
+        .source-arrow { font-size: 0.85rem; }
+
+        @media (max-width: 600px) {
+            .hero { padding: 40px 16px 36px; }
+            .page { padding: 28px 16px 60px; }
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Multi-Split_Indicator_Nymphing.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<div class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">🎯 Nymphing · Advanced</div>
+        <h1>다분할 인디케이터<br><span>마이크로 님핑 시스템</span></h1>
+        <p class="hero-sub">겨울철 저수지 송어 낚시의 핵심 장르. 예민한 입질 감지와 뛰어난 조과를 자랑하는 수평 인디케이터 시스템의 이론과 실전.</p>
+        <div class="hero-tags">
+            <span class="hero-tag">#다분할인디케이터</span>
+            <span class="hero-tag">#마이크로님핑</span>
+            <span class="hero-tag">#저수지플라이</span>
+            <span class="hero-tag">#겨울송어</span>
+            <span class="hero-tag">#BioStrike</span>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <a href="/fly-fishing-hub/research/index.html" class="back-link">← 아카이브로 돌아가기</a>
+
+    <!-- INTRO -->
+    <div class="intro-card">
+        <p>저수지 송어 낚시 님핑 방식 중 한 장르로 자리잡은 다분할 인디케이터 마이크로 님핑 시스템은 <strong>예민한 입질을 받아낼 수 있고 조과가 뛰어난 장점</strong>이 있습니다. 특히 근거리 님핑 시 보다 섬세하고 다양한 테크닉을 구사할 수 있어 운용 범위가 넓은 것이 특징입니다.</p>
+        <p>인디케이터 하나만을 사용하는 일반적인 님핑 방식에서는 입질 시 인디케이터가 <strong>아래로 잠기는 현상</strong>으로 입질을 파악하는 반면, 이 시스템은 <strong>수평 방향의 인디케이터 움직임</strong>으로 입질을 파악합니다. 따라서 시각적으로 보다 다이나믹한 님핑을 즐길 수 있습니다.</p>
+    </div>
+
+    <!-- KEY POINTS -->
+    <div class="keypoints">
+        <div class="kp-card">
+            <div class="kp-icon">🎯</div>
+            <div class="kp-label">인디케이터 수</div>
+            <div class="kp-val">3개 (일반)</div>
+        </div>
+        <div class="kp-card">
+            <div class="kp-icon">📏</div>
+            <div class="kp-label">부착 간격</div>
+            <div class="kp-val">20~25cm</div>
+        </div>
+        <div class="kp-card">
+            <div class="kp-icon">🪝</div>
+            <div class="kp-label">티펫 굵기</div>
+            <div class="kp-val">5X 이하</div>
+        </div>
+        <div class="kp-card">
+            <div class="kp-icon">📐</div>
+            <div class="kp-label">티펫 길이</div>
+            <div class="kp-val">1.5m 이상</div>
+        </div>
+    </div>
+
+    <!-- VISUALIZATION -->
+    <div class="viz-wrap">
+        <div class="viz-header">
+            🎬 입질 시뮬레이션 — 수평 인디케이터 반응
+            <span>캔버스를 클릭하거나 버튼을 눌러보세요</span>
+        </div>
+        <div class="canvas-container" id="canvasWrap">
+            <canvas id="fishingCanvas"></canvas>
+        </div>
+        <div class="viz-btn-row">
+            <button class="viz-btn" id="actionBtn">🎣 송어 입질 시뮬레이션 (Click!)</button>
+        </div>
+    </div>
+
+    <!-- SYSTEM COMPONENTS -->
+    <div class="system-section">
+        <div class="sec-title"><span class="icon">⚙️</span> 시스템 구성</div>
+        <div class="sys-cards">
+            <div class="sys-card c-blue">
+                <h4>Line System</h4>
+                <div class="sys-title">플로팅 라인 + 롱리더</div>
+                <p>플로팅 라인에 <span class="kw">롱리더</span>를 연결합니다. 리더에 다분할 인디케이터를 부착하여 수면 위에서 정렬·부양 상태를 유지합니다.</p>
+            </div>
+            <div class="sys-card c-orange">
+                <h4>Indicator</h4>
+                <div class="sys-title">바이오 스트라이크 퍼티 × 3개</div>
+                <p>리더 시작 10cm 지점부터 <span class="kw-orange">20~25cm 간격</span>으로 연속 부착. 지름 5~8mm 타원형이 이상적. 크기가 너무 크면 캐스팅 밸런스와 감도가 저하됩니다.</p>
+            </div>
+            <div class="sys-card c-red">
+                <h4>Tippet &amp; Fly</h4>
+                <div class="sys-title">5X 이하 플로로 티펫 + 님프</div>
+                <p>가는 플로로 카본 티펫(1.5m 이상)으로 송어 경계심 감소. 님프·웨트·라바·에그·스트리머 모두 사용 가능. <span class="kw">2개 연결</span> 시 드롭퍼 또는 훅아이 방식.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRESENTATION STEPS -->
+    <div class="steps-section">
+        <div class="sec-title"><span class="icon">🌊</span> 프리젠테이션 테크닉</div>
+        <div class="step-list">
+
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <h4>캐스팅 &amp; 자연 하강</h4>
+                    <p>캐스팅 후 플라이는 자연스럽게 하강합니다. 하부 수심층까지 내려가 무게가 실리면 <span class="kw">끝단 인디케이터가 살짝 잠기는 현상</span>이 발생합니다. 완전히 잠길 때까지 기다릴 필요는 없으며, 상층·중층·하층 등 <span class="kw">목표 수심층에 따라 스위밍 시점</span>을 결정합니다.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <h4>로드 업 &amp; 느린 리트리브</h4>
+                    <p>플라이가 목표 수심층에 도달하면 <span class="kw">플라이 로드를 천천히 위로 올리며</span> 라인을 끌어당깁니다. 로드가 일정 정도 올라가면 다른 손으로 라인을 <span class="kw-r">매우 천천히 리트리브</span>합니다. 빠른 리트리브보다 느린 리트리브가 훨씬 효과적입니다.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <h4>불규칙 액션 연출 (옵션)</h4>
+                    <p>연속적인 스위밍 상태를 유지하면서 필요에 따라 <span class="kw">멈춤 동작(Pause)</span>을 삽입하여 불규칙한 액션을 연출합니다. 저활성 송어가 머무는 바닥층에서부터 수면으로 이어지는 상승 액션을 느리게 연출하는 방식도 효과적입니다.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <h4>수평 입질 감지 &amp; 훅셋</h4>
+                    <p>수면 위에서 정렬 상태로 끌려오는 인디케이터를 주시합니다. 입질이 들어오면 <span class="kw-r">분할 인디케이터가 수평 방향으로 쭉 끌려가는</span> 확실하고 다이나믹한 움직임이 발생합니다. 즉시 로드를 들어올려 훅셋합니다.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TIP BOX -->
+    <div class="tip-box">
+        <strong>💡 Pro Tip — 인디케이터 세팅 포인트</strong><br>
+        마지막 인디케이터를 수면 아래 살짝 잠기게 세팅하면, 아주 미약한 입질에도 수중으로 빨려 들어가는 시인성이 극대화됩니다. 인디케이터 사이즈는 캐스팅 밸런스와 감도 사이에서 균형을 잡는 것이 핵심입니다. 지름 5~8mm 타원형을 기준점으로 삼아 조건에 맞게 조정해보세요.
+    </div>
+
+    <!-- IMAGE GALLERY -->
+    <div class="gallery-section">
+        <div class="sec-title"><span class="icon">📷</span> 현장 사진</div>
+        <div class="gallery-grid">
+
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/0424-Putty.JPEG"
+                     alt="바이오 스트라이크 퍼티 인디케이터" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-overlay-icon">🔍</span>
+                </div>
+                <div class="gallery-caption">바이오 스트라이크 퍼티</div>
+            </div>
+
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/0424-RedChironomid.jpg"
+                     alt="레드 키로노미드 플라이 패턴" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-overlay-icon">🔍</span>
+                </div>
+                <div class="gallery-caption">Red Chironomid</div>
+            </div>
+
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/0424-WhiteChironomidd.JPEG"
+                     alt="화이트 키로노미드 플라이 패턴" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-overlay-icon">🔍</span>
+                </div>
+                <div class="gallery-caption">White Chironomid</div>
+            </div>
+
+            <div class="gallery-item" onclick="openLightbox(this)">
+                <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-technique/main/images/0424-Trout.JPEG"
+                     alt="송어 조과" loading="lazy">
+                <div class="gallery-overlay">
+                    <span class="gallery-overlay-icon">🔍</span>
+                </div>
+                <div class="gallery-caption">조과</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
+    <!-- SOURCE -->
+    <div class="source-box">
+        <div class="source-inner">
+            <span class="source-icon">📄</span>
+            <div>
+                <div class="source-label">원문 출처</div>
+                <a href="https://lureflyhouse.co.kr/bbs/board.php?bo_table=fly_info&wr_id=49"
+                   target="_blank" rel="noopener noreferrer" class="source-link">
+                    루어플라이하우스 — 다분할 인디케이터 마이크로 님핑 시스템 <span class="source-arrow">↗</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /page -->
+
+<script>
+    const canvas = document.getElementById('fishingCanvas');
+    const ctx = canvas.getContext('2d');
+    const wrap = document.getElementById('canvasWrap');
+    const btn = document.getElementById('actionBtn');
+
+    let width, height;
+    let isBiting = false;
+    let biteProgress = 0;
+    let animationFrame;
+    let time = 0;
+
+    const cfg = {
+        waterLevel: 0.32,
+        indSpacing: 60,
+        indSize: 7,
+        rodTip: { x: 35, y: 35 }
+    };
+
+    function resize() {
+        width = wrap.clientWidth;
+        height = wrap.clientHeight;
+        canvas.width = width;
+        canvas.height = height;
+        draw();
+    }
+    window.addEventListener('resize', resize);
+
+    function getOrCreate(id) {
+        let el = document.getElementById(id);
+        if (!el) {
+            el = document.createElement('div');
+            el.id = id;
+            el.className = 'annotation';
+            wrap.appendChild(el);
+        }
+        return el;
+    }
+
+    function setLabel(id, text, x, y, color) {
+        const el = getOrCreate(id);
+        el.textContent = text;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.display = 'block';
+        if (color) el.style.color = color;
+        else el.style.color = '#333';
+    }
+
+    function hideLabel(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    }
+
+    function drawWater() {
+        const y = height * cfg.waterLevel;
+        // Water surface shimmer
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Bottom area
+        ctx.fillStyle = 'rgba(20, 60, 100, 0.15)';
+        ctx.fillRect(0, height * 0.8, width, height * 0.2);
+    }
+
+    function drawRod() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(cfg.rodTip.x, cfg.rodTip.y);
+        ctx.strokeStyle = '#2c1a0e';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawFish(fx, fy) {
+        const x = fx + 48;
+        const y = fy;
+        ctx.save();
+        ctx.translate(x, y);
+        if (isBiting) ctx.rotate(-0.12);
+
+        // Body
+        ctx.fillStyle = '#7eb8d4';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 26, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Darker back
+        ctx.fillStyle = '#4a8fa8';
+        ctx.beginPath();
+        ctx.ellipse(2, -2, 22, 5, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        // Tail
+        ctx.fillStyle = '#7eb8d4';
+        ctx.beginPath();
+        ctx.moveTo(-22, 0);
+        ctx.lineTo(-30, -7);
+        ctx.lineTo(-30, 7);
+        ctx.closePath();
+        ctx.fill();
+        // Pink stripe (rainbow trout)
+        ctx.strokeStyle = 'rgba(255,100,150,0.7)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-16, 0);
+        ctx.lineTo(12, 0);
+        ctx.stroke();
+        // Eye
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(18, -2, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1a1a1a';
+        ctx.beginPath();
+        ctx.arc(19, -2, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    function drawSystem() {
+        const surfY = height * cfg.waterLevel;
+        time += 0.016;
+
+        // Indicator base X positions
+        const i1x = width * 0.22;
+        const i2x = i1x + cfg.indSpacing;
+        const i3x = i2x + cfg.indSpacing;
+
+        // Bite movement
+        const mv = biteProgress * 65;
+        const sk = biteProgress * 50;
+
+        // Gentle bob
+        const b1 = (1 - biteProgress) * Math.sin(time * 1.1) * 1.5;
+        const b2 = (1 - biteProgress) * Math.sin(time * 1.3 + 0.7) * 1.5;
+        const b3 = (1 - biteProgress) * Math.sin(time * 0.9 + 1.4) * 1.5;
+
+        const c1x = i1x + mv * 0.15, c1y = surfY + b1 + sk * 0.2;
+        const c2x = i2x + mv * 0.55, c2y = surfY + b2 + sk * 0.6;
+        const c3x = i3x + mv * 1.0,  c3y = surfY + 12 + b3 + sk * 1.0; // last ind slightly sunk
+
+        // ── Line: rod → ind1
+        ctx.beginPath();
+        ctx.moveTo(cfg.rodTip.x, cfg.rodTip.y);
+        const cp0x = (cfg.rodTip.x + c1x) / 2;
+        const cp0y = surfY + 25 * (1 - biteProgress);
+        ctx.quadraticCurveTo(cp0x, cp0y, c1x, c1y);
+        ctx.strokeStyle = '#e84545';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        // ── Lines between indicators
+        const drawSegment = (ax, ay, bx, by, sag) => {
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.quadraticCurveTo((ax + bx) / 2, surfY + sag * (1 - biteProgress), bx, by);
+            ctx.stroke();
+        };
+        ctx.strokeStyle = '#e84545';
+        ctx.lineWidth = 1.4;
+        drawSegment(c1x, c1y, c2x, c2y, 6);
+        drawSegment(c2x, c2y, c3x, c3y, 6);
+
+        // ── Tippet & fly
+        const flyY = c3y + 110;
+        const flyX = c3x + 35 + mv * 1.3;
+
+        ctx.beginPath();
+        ctx.moveTo(c3x, c3y);
+        ctx.quadraticCurveTo(c3x + (isBiting ? 8 : -8), (c3y + flyY) / 2, flyX, flyY);
+        ctx.strokeStyle = 'rgba(10, 40, 80, 0.35)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        // Fly
+        ctx.fillStyle = '#3b2007';
+        ctx.beginPath();
+        ctx.arc(flyX, flyY, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#c08040';
+        ctx.beginPath();
+        ctx.ellipse(flyX, flyY - 2, 4, 2, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        drawFish(flyX, flyY);
+
+        // ── Indicators (putties)
+        const drawPutty = (x, y, colorA, colorB) => {
+            const grad = ctx.createRadialGradient(x - 2, y - 2, 1, x, y, cfg.indSize);
+            grad.addColorStop(0, colorA);
+            grad.addColorStop(1, colorB);
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.ellipse(x, y, cfg.indSize, cfg.indSize * 0.65, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+        };
+
+        drawPutty(c1x, c1y, '#ffe082', '#f5a623');
+        drawPutty(c2x, c2y, '#ff80ab', '#e91e63');
+        drawPutty(c3x, c3y, '#ffe082', '#f5a623');
+
+        // ── Water depth line (subtle)
+        ctx.setLineDash([4, 8]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, height * 0.65);
+        ctx.lineTo(width, height * 0.65);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // ── Labels
+        setLabel('lbl-ind', '분할 인디케이터 ×3', c1x + 10, surfY - 32, '#1a3a6e');
+        setLabel('lbl-fly', '님프', flyX + 10, flyY - 6, '#5a3000');
+
+        if (isBiting && biteProgress > 0.3) {
+            setLabel('lbl-hit', '↔ 수평으로 끌려감!', c2x - 30, surfY - 50, '#c00000');
+        } else {
+            hideLabel('lbl-hit');
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        drawWater();
+        drawRod();
+        drawSystem();
+        if (!isBiting || biteProgress > 0) {
+            animationFrame = requestAnimationFrame(draw);
+        }
+    }
+
+    function animateBite() {
+        cancelAnimationFrame(animationFrame);
+        let start = null;
+        const dur = 550;
+        isBiting = true;
+        function step(ts) {
+            if (!start) start = ts;
+            const p = Math.min((ts - start) / dur, 1);
+            biteProgress = 1 - Math.pow(1 - p, 2.5);
+            ctx.clearRect(0, 0, width, height);
+            drawWater(); drawRod(); drawSystem();
+            if (p < 1) requestAnimationFrame(step);
+            else setTimeout(releaseStrike, 1000);
+        }
+        requestAnimationFrame(step);
+    }
+
+    function releaseStrike() {
+        let start = null;
+        const dur = 900;
+        function step(ts) {
+            if (!start) start = ts;
+            const p = Math.min((ts - start) / dur, 1);
+            biteProgress = 1 - p;
+            ctx.clearRect(0, 0, width, height);
+            drawWater(); drawRod(); drawSystem();
+            if (p < 1) requestAnimationFrame(step);
+            else {
+                isBiting = false;
+                biteProgress = 0;
+                draw();
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    btn.addEventListener('click', () => {
+        if (isBiting && biteProgress > 0.1) return;
+        animateBite();
+    });
+    wrap.addEventListener('click', () => {
+        if (isBiting && biteProgress > 0.1) return;
+        animateBite();
+    });
+
+    // ── LIGHTBOX ──
+    function openLightbox(el) {
+        const img = el.querySelector('img');
+        const caption = el.querySelector('.gallery-caption');
+        document.getElementById('lightbox-img').src = img.src;
+        document.getElementById('lightbox-img').alt = img.alt;
+        document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+    // Prevent lightbox close when clicking image itself
+    document.getElementById('lightbox').querySelector('img').addEventListener('click', e => e.stopPropagation());
+
+    resize();
+</script>
+
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

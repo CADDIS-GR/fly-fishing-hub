@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naked Fishing Strategy · CADDIS-GR LAB</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #222;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: white;
+        }
+        h2 {
+            margin: 10px 0;
+            color: #ffcc00;
+        }
+        canvas {
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 30%, #2F4F4F 30%, #1a2e2e 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            max-width: 100%;
+        }
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff9900;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e68a00;
+        }
+        button.active {
+            background-color: #00cc66;
+        }
+        .legend {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ddd;
+            text-align: left;
+            width: 800px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Naked_Fishing_With_Indicator.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+    <h2>🎣 낚시대장의 Naked Fishing Strategy</h2>
+    <canvas id="fishingCanvas" width="800" height="500"></canvas>
+    
+    <div class="controls">
+        <button onclick="resetAnimation()">▶ 캐스팅 & 액션 시작 (Replay)</button>
+        <button id="indicatorBtn" onclick="toggleIndicator()">🎯 인디케이터 ON/OFF</button>
+    </div>
+
+    <div class="legend">
+        <div>
+            <strong>[채비 구성]</strong><br>
+            🎣 <strong>ROD:</strong> Sage DS2 690-2 (#6)<br>
+            🧵 <strong>LINE:</strong> SA Emerger Tip (WF-6-F/I)<br>
+            🔗 <strong>LEADER:</strong> 15ft Fluorocarbon (4X+4.5X)<br>
+            🪰 <strong>FLY:</strong> 2.5mm Tungsten (Leech/Pupa)
+        </div>
+        <div>
+            <strong>[필드 & 액션]</strong><br>
+            🌊 <strong>MAX DEPTH:</strong> 4.2m<br>
+            ⏱️ <strong>COUNT:</strong> 20초 (바닥층 도달)<br>
+            ✋ <strong>ACTION:</strong> 8자 한 꼬집 (수평 유영)<br>
+            🎯 <strong>TARGET:</strong> 4m권 바닥층
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('fishingCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let animationState = 'cast';
+        let timer = 0;
+        let castProgress = 0;
+        let flyX = 100;
+        let flyY = 150;
+        let indicatorX = 100;
+        let indicatorY = 150;
+        let showIndicator = false;
+        let indicatorBobAmount = 0;
+        let isComplete = false;
+        
+        const WATER_LEVEL = 150;
+        const BOTTOM_LEVEL = 450;
+        const CAST_DISTANCE = 600;
+        const SINK_TIME_LIMIT = 20;
+        const INDICATOR_DISTANCE = 200;
+        const RETRIEVE_END_X = 300;
+
+        function toggleIndicator() {
+            showIndicator = !showIndicator;
+            const btn = document.getElementById('indicatorBtn');
+            if (showIndicator) {
+                btn.classList.add('active');
+                btn.textContent = '🎯 인디케이터 ON';
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🎯 인디케이터 OFF';
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            drawFisherman();
+
+            if (!isComplete) {
+                if (animationState === 'cast') {
+                    updateCast();
+                } else if (animationState === 'sink') {
+                    updateSink();
+                } else if (animationState === 'retrieve') {
+                    updateRetrieve();
+                }
+            }
+
+            drawGear();
+            requestAnimationFrame(draw);
+        }
+
+        function drawBackground() {
+            ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.font = "12px Arial";
+            ctx.fillText("수면 (0m)", 720, WATER_LEVEL - 5);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+            ctx.moveTo(0, WATER_LEVEL + 75);
+            ctx.lineTo(800, WATER_LEVEL + 75);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, WATER_LEVEL + 150);
+            ctx.lineTo(800, WATER_LEVEL + 150);
+            ctx.stroke();
+            ctx.fillText("2.0m", 750, WATER_LEVEL + 150 - 5);
+
+            ctx.beginPath();
+            ctx.moveTo(0, WATER_LEVEL + 300);
+            ctx.lineTo(800, WATER_LEVEL + 300);
+            ctx.stroke();
+            ctx.fillText("4.0m", 750, WATER_LEVEL + 300 - 5);
+
+            ctx.fillStyle = "#3e2723";
+            ctx.fillRect(0, BOTTOM_LEVEL, 800, 50);
+            ctx.fillStyle = "#a1887f";
+            ctx.fillText("바닥 (4.2m)", 720, BOTTOM_LEVEL - 5);
+
+            drawFish(600, 400);
+            drawFish(450, 420);
+        }
+
+        function drawFish(x, y) {
+            ctx.fillStyle = "#CD853F";
+            ctx.beginPath();
+            ctx.ellipse(x, y, 15, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x + 15, y);
+            ctx.lineTo(x + 22, y - 5);
+            ctx.lineTo(x + 22, y + 5);
+            ctx.fill();
+        }
+
+        function drawFisherman() {
+            ctx.fillStyle = "#333";
+            ctx.fillRect(50, 80, 20, 70);
+            ctx.beginPath();
+            ctx.arc(60, 70, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(60, 100);
+            ctx.lineTo(120, 50);
+            ctx.stroke();
+        }
+
+        function updateCast() {
+            castProgress += 15;
+            flyX = 120 + castProgress;
+            flyY = WATER_LEVEL;
+            
+            if (showIndicator) {
+                indicatorX = flyX - INDICATOR_DISTANCE;
+                indicatorY = WATER_LEVEL;
+            }
+            
+            if (flyX >= CAST_DISTANCE) {
+                flyX = CAST_DISTANCE;
+                if (showIndicator) {
+                    indicatorX = flyX - INDICATOR_DISTANCE;
+                }
+                animationState = 'sink';
+                timer = 0;
+            }
+        }
+
+        function updateSink() {
+            if (timer < SINK_TIME_LIMIT) {
+                timer += 0.1;
+                let maxSinkDepth = BOTTOM_LEVEL - 20;
+                let progress = timer / SINK_TIME_LIMIT;
+                flyY = WATER_LEVEL + (maxSinkDepth - WATER_LEVEL) * progress;
+                
+                if (showIndicator) {
+                    indicatorY = WATER_LEVEL;
+                    let tension = (flyY - WATER_LEVEL) / (maxSinkDepth - WATER_LEVEL);
+                    indicatorBobAmount = tension * 15;
+                    indicatorY = WATER_LEVEL + indicatorBobAmount;
+                }
+            } else {
+                animationState = 'retrieve';
+            }
+        }
+
+        function updateRetrieve() {
+            let nextFlyX = flyX - 1.0;
+            
+            if (nextFlyX <= RETRIEVE_END_X) {
+                isComplete = true;
+                animationState = 'complete';
+                flyX = RETRIEVE_END_X;
+                flyY = WATER_LEVEL + 30;
+                if (showIndicator) {
+                    indicatorX = RETRIEVE_END_X - 50;
+                    indicatorY = WATER_LEVEL;
+                }
+                return;
+            }
+            
+            flyX = Math.max(nextFlyX, RETRIEVE_END_X);
+            flyY = (BOTTOM_LEVEL - 20) + Math.sin(flyX * 0.1) * 2;
+            
+            if (showIndicator) {
+                indicatorX = Math.max(indicatorX - 1.0, RETRIEVE_END_X - 50);
+                let retrieveTension = Math.abs(Math.sin(flyX * 0.1)) * 8;
+                indicatorY = WATER_LEVEL + retrieveTension + Math.sin(flyX * 0.2) * 3;
+            }
+            
+            if (flyX === RETRIEVE_END_X) {
+                isComplete = true;
+                animationState = 'complete';
+                flyY = WATER_LEVEL + 30;
+                if (showIndicator) {
+                    indicatorY = WATER_LEVEL;
+                }
+            }
+        }
+
+        function drawGear() {
+            let lineWaterEntry = 250;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "#FF8C00";
+            ctx.lineWidth = 2;
+            ctx.moveTo(120, 50);
+
+            if (animationState === 'cast') {
+                ctx.lineTo(flyX, 50);
+            } else {
+                let connectionPoint = showIndicator ? indicatorX : lineWaterEntry;
+                ctx.quadraticCurveTo(150, 120, connectionPoint, WATER_LEVEL);
+                ctx.stroke();
+
+                if (showIndicator) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = "rgba(200, 255, 255, 0.8)";
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([3, 3]);
+                    ctx.moveTo(indicatorX, indicatorY);
+                    ctx.lineTo(flyX, flyY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    drawIndicator(indicatorX, indicatorY);
+                } else {
+                    ctx.beginPath();
+                    ctx.strokeStyle = "#808000";
+                    let tipStart = flyX - (flyX - lineWaterEntry) * 0.2;
+                    ctx.moveTo(lineWaterEntry, WATER_LEVEL);
+                    ctx.lineTo(tipStart, WATER_LEVEL);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.strokeStyle = "rgba(200, 255, 255, 0.6)";
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([2, 2]);
+                    ctx.moveTo(tipStart, WATER_LEVEL);
+                    ctx.lineTo(flyX, flyY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            ctx.fillStyle = "#FF0000";
+            ctx.beginPath();
+            ctx.arc(flyX, flyY, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = "white";
+            ctx.font = "bold 16px Arial";
+            
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "12px Arial";
+            ctx.fillText(`FlyX: ${Math.floor(flyX)} / End: ${RETRIEVE_END_X}`, 20, 30);
+            
+            if (animationState === 'sink') {
+                ctx.fillStyle = "#FFFF00";
+                ctx.fillText(`⏱️ 카운트다운: ${Math.floor(timer)} / 20초`, 350, 100);
+                ctx.fillText("▼ 침강 중 (Free Fall)", flyX + 10, flyY);
+                
+                if (showIndicator) {
+                    ctx.fillStyle = "#FF6600";
+                    ctx.font = "12px Arial";
+                    ctx.fillText("🎯 인디케이터 반응 중", indicatorX - 60, indicatorY - 20);
+                }
+            } else if (animationState === 'retrieve') {
+                ctx.fillStyle = "#00FFFF";
+                ctx.fillText("✋ 8자 리트리브 중 (수평 유영)", 350, 100);
+                ctx.fillText("◀ 은밀한 수평 이동", flyX + 10, flyY);
+                
+                if (showIndicator) {
+                    ctx.fillStyle = "#FF9999";
+                    ctx.font = "12px Arial";
+                    ctx.fillText("⚡ 인디케이터 움직임 감지", 200, 180);
+                }
+            } else if (animationState === 'complete') {
+                ctx.fillStyle = "#00FF00";
+                ctx.fillText("✅ 리트리브 완료!", 350, 100);
+                ctx.fillStyle = "#90EE90";
+                ctx.font = "12px Arial";
+                ctx.fillText("다시 시작하려면 Replay 버튼 클릭", 300, 130);
+            }
+        }
+
+        function drawIndicator(x, y) {
+            ctx.fillStyle = "#FF3300";
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = "#FF6644";
+            ctx.beginPath();
+            ctx.arc(x - 2, y - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = "#CC0000";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            if (animationState !== 'cast') {
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(x, y, 16, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        draw();
+
+        function resetAnimation() {
+            animationState = 'cast';
+            timer = 0;
+            castProgress = 0;
+            flyX = 100;
+            flyY = WATER_LEVEL;
+            indicatorX = 100;
+            indicatorY = WATER_LEVEL;
+            indicatorBobAmount = 0;
+            isComplete = false;
+        }
+    </script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

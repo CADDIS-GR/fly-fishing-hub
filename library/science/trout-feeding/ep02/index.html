@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EP02 · The Search Image — How Trout Feed · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Sans+KR:wght@300;400;700&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --ink:   #0e1214;
+    --paper: #f5f0e8;
+    --river: #1a3a4a;
+    --teal:  #2a8a7f;
+    --amber: #c8873a;
+    --fog:   #8fa5aa;
+    --white: #fdfaf5;
+    --border: rgba(143,165,170,.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--river);
+    color: var(--paper);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300; line-height: 1.8;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 55% at 85% 85%, rgba(42,138,127,.13) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 65% at 15% 15%, rgba(200,135,58,.07) 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(14,18,20,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  }
+  .nav-home {
+    font-family: 'Fira Mono', monospace; font-size: .75rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--fog); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color .2s;
+  }
+  .nav-home:hover { color: var(--white); }
+  .nav-home::before { content: '←'; }
+  .nav-ep {
+    font-family: 'Fira Mono', monospace; font-size: .72rem;
+    letter-spacing: .12em; color: var(--teal); text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero { padding: 80px 0 60px; border-bottom: 1px solid var(--border); animation: fadeUp .6s both; }
+  .ep-badge {
+    font-family: 'Fira Mono', monospace; font-size: .7rem;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ep-badge::before { content: ''; display: block; width: 24px; height: 1px; background: var(--amber); }
+  h1.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--white); margin-bottom: 16px;
+  }
+  h1 em { font-style: italic; color: var(--amber); }
+  .hero-sub {
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--fog); max-width: 520px; line-height: 1.8;
+    margin-bottom: 32px;
+  }
+  .motto-box {
+    display: inline-block;
+    border-left: 3px solid var(--teal);
+    background: rgba(42,138,127,.07);
+    padding: 14px 20px;
+    font-style: italic; font-size: .9rem;
+    color: #c8e8e5; letter-spacing: .02em;
+  }
+
+  /* SECTIONS */
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .sec-label {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--teal); }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem; font-weight: 700;
+    color: var(--white); line-height: 1.2; margin-bottom: 20px;
+  }
+  h2 em { font-style: italic; color: var(--amber); }
+  p { font-size: .95rem; color: rgba(245,240,232,.8); margin-bottom: 16px; }
+
+  /* SEARCH IMAGE PROCESS */
+  .process-steps {
+    display: flex; flex-direction: column; gap: 2px;
+    margin-top: 32px;
+  }
+  .step {
+    display: flex; align-items: flex-start; gap: 20px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    padding: 24px 24px;
+    transition: background .2s;
+  }
+  .step:hover { background: rgba(255,255,255,.06); }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--teal); opacity: .6;
+    min-width: 40px; line-height: 1;
+    margin-top: 2px;
+  }
+  .step-content h3 {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: .95rem; font-weight: 700;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .step-content p { font-size: .87rem; color: var(--fog); margin: 0; }
+
+  /* METRICS GRID */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 32px;
+  }
+  .metric {
+    background: rgba(14,18,20,.7);
+    padding: 28px 22px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .metric-label {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--fog);
+  }
+  .metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--amber);
+  }
+  .metric-desc { font-size: .8rem; color: rgba(143,165,170,.7); line-height: 1.5; }
+
+  /* CHARTS */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-top: 32px;
+  }
+  @media (max-width: 640px) { .charts-row { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: rgba(14,18,20,.6);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px 20px;
+  }
+  .chart-card-title {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--fog); margin-bottom: 20px; text-align: center;
+  }
+  .chart-canvas { position: relative; height: 240px; }
+
+  /* MIDGE HIGHLIGHT */
+  .midge-highlight {
+    background: linear-gradient(135deg, rgba(42,138,127,.12), rgba(42,138,127,.04));
+    border: 1px solid rgba(42,138,127,.3);
+    border-left: 4px solid var(--teal);
+    padding: 28px 28px;
+    margin-top: 32px;
+    border-radius: 2px;
+  }
+  .midge-highlight h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--white); margin-bottom: 14px;
+  }
+  .midge-highlight p { font-size: .9rem; color: rgba(200,232,229,.85); margin-bottom: 12px; }
+  .midge-stat-row {
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px;
+  }
+  .midge-stat {
+    flex: 1; min-width: 120px;
+    background: rgba(42,138,127,.1);
+    border: 1px solid rgba(42,138,127,.2);
+    padding: 16px;
+  }
+  .midge-stat span:first-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--teal); display: block; margin-bottom: 4px;
+  }
+  .midge-stat span:last-child { font-size: .77rem; color: var(--fog); }
+
+  /* TACTICS */
+  .tactic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px; margin-top: 32px;
+  }
+  .tactic-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative; overflow: hidden;
+    transition: background .2s, border-color .2s;
+  }
+  .tactic-card:hover { background: rgba(255,255,255,.07); border-color: rgba(143,165,170,.3); }
+  .tactic-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 40px; height: 2px; background: var(--amber);
+  }
+  .tactic-situation {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 10px;
+  }
+  .tactic-card h3 {
+    font-size: .95rem; font-weight: 700;
+    color: var(--white); margin-bottom: 10px; line-height: 1.4;
+  }
+  .tactic-card p { font-size: .83rem; color: var(--fog); line-height: 1.6; margin: 0; }
+
+  /* ARTICLE */
+  .article p { margin-bottom: 20px; line-height: 1.9; }
+  .article blockquote {
+    border-left: 3px solid var(--teal);
+    padding: 16px 20px;
+    background: rgba(42,138,127,.08);
+    margin: 28px 0;
+    font-style: italic; color: #c8e8e5;
+    font-size: .95rem; line-height: 1.8;
+  }
+  .article strong { color: var(--white); font-weight: 700; }
+
+  /* FOOTER */
+  .ep-footer {
+    padding: 40px 0 60px;
+    display: flex; flex-wrap: wrap;
+    justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .nav-link {
+    display: flex; align-items: center; gap: 12px;
+    font-size: .85rem; color: var(--fog);
+    text-decoration: none; transition: color .2s;
+  }
+  .nav-link:hover { color: var(--white); }
+  .arrow {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 1rem;
+    transition: border-color .2s, background .2s;
+  }
+  .nav-link:hover .arrow { border-color: var(--teal); background: rgba(42,138,127,.15); }
+  .footer-meta {
+    font-family: 'Fira Mono', monospace; font-size: .68rem;
+    color: rgba(143,165,170,.4); letter-spacing: .08em;
+  }
+
+  /* ── SOURCE CARDS ── */
+  .source-grid { display: flex; flex-direction: column; gap: 10px; }
+  .source-card {
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+    border-radius: 2px;
+  }
+  .source-card:hover { background: rgba(255,255,255,.06); border-color: rgba(143,165,170,.3); }
+  .source-yt  { border-left: 3px solid #ff3d3d; }
+  .source-pdf { border-left: 3px solid var(--amber); }
+  .source-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .source-yt  .source-icon { background: rgba(255,61,61,.15); color: #ff6b6b; }
+  .source-pdf .source-icon { background: rgba(200,135,58,.15); color: var(--amber); }
+  .source-info { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .source-type {
+    font-family: 'Fira Mono', monospace; font-size: .65rem;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--fog);
+  }
+  .source-yt  .source-type { color: #ff6b6b; }
+  .source-pdf .source-type { color: var(--amber); }
+  .source-title { font-size: .9rem; font-weight: 700; color: var(--white); }
+  .source-url   { font-family: 'Fira Mono', monospace; font-size: .72rem; color: rgba(143,165,170,.6); }
+  .source-arrow { font-size: 1.1rem; color: var(--fog); flex-shrink: 0; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 600px) {
+    h1.hero-title { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    .metrics-grid { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="page archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html" aria-current="page">Library</a></nav></div><div class="lab-archive-source"><span>HOW TROUT FEED · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/trout-feeding-science/blob/main/ep02/index.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/fly-fishing-hub/library/index.html" class="nav-home">How Trout Feed</a>
+    <span class="nav-ep">Episode 02 · The Search Image</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="ep-badge">Episode 02</div>
+    <h1 class="hero-title">The <em>Search Image</em></h1>
+    <p class="hero-sub">송어는 어떻게 먹이를 식별하는가. 탐색 이미지의 형성 원리, 그리고 깔따구가 왜 송어의 가장 친한 친구인지.</p>
+    <div class="motto-box">분당 2회 성공 포획 → 탐색 이미지 형성 → 14일~3개월 유지</div>
+  </div>
+</div>
+
+<!-- SECTION: SEARCH IMAGE PROCESS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">The Search Image</div>
+    <h2>탐색 이미지의 <em>형성 과정</em></h2>
+    <p>송어는 물속을 떠다니는 수천 가지 부유물 중에서 2초 이내에 먹이를 판별합니다. 이 놀라운 능력의 비밀이 바로 탐색 이미지입니다.</p>
+    <div class="process-steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <h3>인식 (Recognition)</h3>
+          <p>시각 또는 측선 감각으로 먹이 후보 항목을 감지합니다. 매분 수천 가지의 것들이 송어 옆을 지나갑니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <h3>샘플링 (Sampling)</h3>
+          <p>항목을 포획하여 입에 넣고 맛을 봅니다. 먹이가 아니면 뱉고, 먹이면 삼킵니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <h3>임계값 도달 (Threshold)</h3>
+          <p>60초 안에 최소 2회 성공 포획 시 탐색 이미지가 형성됩니다. 이것이 핵심 조건입니다.</p>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <div class="step-content">
+          <h3>필터링 (Filtering)</h3>
+          <p>형성된 탐색 이미지를 기반으로 같은 패턴의 먹이를 집중 탐색합니다. 14일~3개월간 유지됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: METRICS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Key Metrics</div>
+    <h2>탐색 이미지 <em>핵심 수치</em></h2>
+    <div class="metrics-grid">
+      <div class="metric">
+        <span class="metric-label">형성 임계값</span>
+        <span class="metric-val">2회/분</span>
+        <span class="metric-desc">60초 안에 2번 이상 성공적으로 포획해야 탐색 이미지가 형성됩니다.</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">유지 기간</span>
+        <span class="metric-val">14d–3m</span>
+        <span class="metric-desc">한번 형성된 탐색 이미지는 최소 2주, 최대 3개월까지 지속됩니다.</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">판단 시간</span>
+        <span class="metric-val">&lt; 2초</span>
+        <span class="metric-desc">각 부유물에 대한 먹이 판단이 2초 이내에 이루어집니다.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CHARTS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Ecological Basis</div>
+    <h2>왜 항상 <em>4~6mm</em>인가</h2>
+    <p>탐색 이미지가 4~6mm에 고정되는 데는 생태학적 근거가 있습니다. 단순히 작은 먹이가 많아서가 아닙니다.</p>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-card-title">강 생태계 곤충 구성 비율</div>
+        <div class="chart-canvas"><canvas id="biomassChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">곤충 성장 단계별 개체 수 (생존 곡선)</div>
+        <div class="chart-canvas"><canvas id="survivalChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Midge Highlight -->
+    <div class="midge-highlight">
+      <h3>🦟 깔따구(Midge) — 송어의 가장 친한 친구</h3>
+      <p>깔따구는 강 전체 수생 곤충의 50% 이상을 차지하며, 일 년 365일 내내 부화합니다. 하루살이·스톤플라이·날도래가 1년에 한 번 부화하는 것과 비교해보면, 깔따구가 얼마나 압도적인 존재인지 알 수 있습니다.</p>
+      <div class="midge-stat-row">
+        <div class="midge-stat">
+          <span>4–7mm</span>
+          <span>깔따구 유충의 평균 크기</span>
+        </div>
+        <div class="midge-stat">
+          <span>365일</span>
+          <span>연중 부화 일수</span>
+        </div>
+        <div class="midge-stat">
+          <span>50%+</span>
+          <span>강 곤충 중 점유율</span>
+        </div>
+        <div class="midge-stat">
+          <span>2주</span>
+          <span>알→성충 최단 생애주기</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: TACTICS -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Tactical Application</div>
+    <h2>상황별 <em>수학적 솔루션</em></h2>
+    <p>탐색 이미지 이론을 현장에 적용하면 다음과 같은 판단 기준이 생깁니다.</p>
+    <div class="tactic-grid">
+      <div class="tactic-card">
+        <div class="tactic-situation">상황 01</div>
+        <h3>물고기가 전혀 물지 않음</h3>
+        <p>플라이 크기가 탐색 이미지(4~6mm)보다 클 가능성이 높습니다. #20~#22로 사이즈를 줄이세요.</p>
+      </div>
+      <div class="tactic-card">
+        <div class="tactic-situation">상황 02</div>
+        <h3>다가왔다가 돌아서거나 뱉음</h3>
+        <p>크기나 실루엣이 탐색 이미지와 마지막 순간에 불일치. 한 단계 더 작은 사이즈로 교체하세요.</p>
+      </div>
+      <div class="tactic-card">
+        <div class="tactic-situation">상황 03</div>
+        <h3>해치가 있지만 내 플라이는 무시</h3>
+        <p>눈에 보이는 큰 성충보다 수면 아래 4~6mm 이머저·님프가 압도적으로 많습니다. 성충 패턴 대신 님프로 교체.</p>
+      </div>
+      <div class="tactic-card">
+        <div class="tactic-situation">상황 04</div>
+        <h3>대물 송어가 눈앞에 보임</h3>
+        <p>큰 고기라도 탐색 이미지는 동일합니다. #18 이하의 작은 님프를 정교하게 흘려주세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: FULL TEXT -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Full Transcript</div>
+    <h2>원문 전체 내용</h2>
+    <div class="article">
+      <p>1화에서, 저희는 송어 낚시가 숫자 게임이라고 말씀드렸습니다. 숫자를 이해하고, 게임을 이해하면 송어를 낚을 확률이 높아집니다. 송어가 가장 자주 섭취하는 먹이의 크기에 대해 말씀드렸습니다. 그리고 송어는 까다로울 뿐만 아니라, 먹이 크기에 있어서는 믿을 수 없을 정도로 까다롭다고 말씀드렸습니다. 오늘은 송어가 무엇을 먹을지 어떻게 결정하는지, 먹이를 어떻게 식별하는지 살펴보겠습니다.</p>
+      <p>송어는 '탐색 이미지'라는 것을 사용하여 먹이를 찾습니다. 이것이 작동하는 방식은 송어가 시각이나 측선 감각과 같은 것을 사용하여 먹이가 될 만한 항목을 인식한다는 것입니다. 송어는 그 항목을 잡습니다. 그것을 입에 넣어 맛을 봅니다. 송어가 먹이가 아니라고 판단하면, 뱉어냅니다. 하지만 송어가 먹이라고 판단하면, 삼킵니다. 아주 간단하죠? 그런 다음 송어는 방금 먹은 것과 일치하는 것을 찾기 시작합니다.</p>
+      <blockquote>샘플링이 '포획률'이라는 특정 임계값에 도달해야 탐색 이미지가 형성됩니다. 연구에 따르면 이는 분당 약 2회 포획입니다.</blockquote>
+      <p>따라서 송어가 60초 안에 먹이라고 생각하는 항목을 최소 2개 성공적으로 포획할 수 있다면, 그것은 기억에 남는 탐색 이미지를 갖게 됩니다. 우리는 송어가 그 탐색 이미지를 최소 14일, 그리고 최대 3개월 동안 유지할 수 있다는 것을 알고 있습니다. 우리가 모르는 것은 송어가 한 번에 얼마나 많은 탐색 이미지를 사용할 수 있는지 또는 그 이미지를 어떻게 우선순위화하는지입니다.</p>
+      <p>매분 수천 가지의 것들이 송어 옆으로 떠다닙니다. 우리는 송어가 2초 또는 그 이하의 시간 안에 이 조각들 중 어떤 것이 먹이이고 어떤 것이 아닌지 결정해야 한다는 것을 알고 있습니다. 이것은 우리가 바닥에 누워 천장에서 떨어지는 다양한 동전들 중에서 특정 동전을 식별하려고 하는 것과 같을 것입니다.</p>
+      <p>이 곤충들이 점점 더 커질수록, 그들의 숫자는 줄어듭니다. 하루살이의 경우, 알에서 번식하는 성충까지의 생존율은 1% 미만으로 추정됩니다. 500개의 알 뭉치에서 두세 마리의 성충 하루살이만 나올 수도 있습니다.</p>
+      <p>하루살이는 약 500개에서 5,000개의 알을 낳을 수 있습니다. 강에서 정말 두꺼운 부화가 일어나는 것을 볼 때, 이는 평방 피트당 약 50마리의 하루살이에 해당합니다. 30피트 캐스팅한다고 가정해 봅시다. 그러면 약 1,500평방 피트를 커버하게 됩니다. 이는 캐스팅 범위 내에 75,000마리의 하루살이가 있다는 것을 의미합니다. 각 개체가 3,000개의 알을 낳는다고 가정하면, 그러면 1억 1,200만 개의 알이 됩니다. 그 중 1%만 부화한다고 해도 다음 부화 시에는 110만 마리가 됩니다.</p>
+      <blockquote>곤충조차도 숫자 게임을 하고 있는 것입니다. 따라서 단순히 큰 벌레보다 작은 벌레가 더 많습니다. 이것이 생물학이고, 이것이 자연입니다.</blockquote>
+      <p>깔따구는 송어의 가장 친한 친구입니다. 깔따구는 지구상의 모든 생물 중 약 1%를 차지하며, 강 전체 수생 곤충의 50% 이상을 차지하는 경우가 많습니다. 깔따구 유충의 평균 크기는 얼마일까요? <strong>4~7mm</strong>입니다.</p>
+      <p>깔따구는 거의 모든 수원에서 번성할 수 있습니다. 하루살이, 스톤플라이, 캐디스는 열악한 수질 조건에 덜 견딥니다. 대부분의 강에서 깔따구는 일 년 내내 부화하며, 온도에 거의 영향을 받지 않습니다. 깔따구는 짧은 수명 주기를 가지며, 알에서 성충까지 한 달, 때로는 2주 만에 자랄 수 있습니다.</p>
+      <p>생각해 보세요. 하루살이, 스톤플라이, 캐디스가 1년에 한 번 부화하는 것에 비해 깔따구는 1년에 365일 부화합니다. 따라서 4~6mm 탐색 이미지는 끊임없이 강화되고 있습니다.</p>
+      <p>5mm 스톤플라이 유충, 5mm 하루살이 유충, 또는 5mm 깔따구 번데기 사이에는 큰 차이가 없습니다. 빛이 적고 색상이 더 흐릿하며 평가하는 데 2초 이하의 시간이 주어지는 수면 아래에서 보면, 이들 중 어떤 것도 탐색 이미지에 충분히 가깝습니다. 따라서 4~6mm 탐색 이미지는 대부분의 송어를 먹이고, 더 빈약한 달 동안 그들을 살려주는 것입니다.</p>
+      <blockquote>우리는 여기서 부화를 맞추는 것이 아닙니다. 우리는 송어의 먹이 선호를 맞추는 것입니다. 먹이가 작을수록 송어는 더 자주 먹습니다.</blockquote>
+      <p>제가 이전에 말했듯이, 깔따구는 송어의 가장 친한 친구입니다. 그리고 송어가 어떻게 먹이를 먹는지에 주의를 기울인다면 여러분의 가장 친한 친구가 될 수도 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCE SECTION -->
+<section>
+  <div class="wrap">
+    <div class="sec-label">Sources</div>
+    <h2>출처 및 <em>참고 자료</em></h2>
+    <p style="color:var(--fog); font-size:.88rem; margin-bottom:28px;">이 에피소드의 원본 영상과 전문 PDF 자료입니다.</p>
+    <div class="source-grid">
+
+      <a href="https://youtu.be/mrdWgvGov_c?si=TbWdFMud6AEcFkiZ" target="_blank" rel="noopener" class="source-card source-yt">
+        <div class="source-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div class="source-info">
+          <span class="source-type">YouTube · 원본 영상</span>
+          <span class="source-title">How Trout Feed — EP02: The Search Image</span>
+          <span class="source-url">youtu.be/mrdWgvGov_c</span>
+        </div>
+        <span class="source-arrow">↗</span>
+      </a>
+
+      <a href="trout_feeding_search_image-02.pdf" target="_blank" class="source-card source-pdf">
+        <div class="source-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-5h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/>
+          </svg>
+        </div>
+        <div class="source-info">
+          <span class="source-type">PDF · 전문 자료</span>
+          <span class="source-title">EP02 전체 스크립트 (한국어 번역)</span>
+          <span class="source-url">trout_feeding_search_image-02.pdf</span>
+        </div>
+        <span class="source-arrow">↓</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER NAV -->
+<div class="wrap">
+  <div class="ep-footer">
+    <a href="../ep01/index.html" class="nav-link">
+      <span class="arrow">←</span>
+      <span>EP01 · Fish the Math</span>
+    </a>
+    <a href="/fly-fishing-hub/library/index.html" class="nav-link">
+      <span>시리즈 목차</span>
+    </a>
+    <span class="footer-meta">CADDIS-GR / trout-feeding-science / ep02</span>
+  </div>
+</div>
+
+<script>
+// Biomass Doughnut Chart
+const ctx1 = document.getElementById('biomassChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'doughnut',
+  data: {
+    labels: ['깔따구 (Midge)', '하루살이 (Mayfly)', '날도래 (Caddis)', '강도래 (Stonefly)', '기타'],
+    datasets: [{
+      data: [55, 15, 15, 10, 5],
+      backgroundColor: ['#2a8a7f','rgba(143,165,170,.5)','rgba(143,165,170,.35)','rgba(143,165,170,.22)','rgba(143,165,170,.12)'],
+      borderWidth: 0, hoverOffset: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#8fa5aa', font: { size: 10 }, boxWidth: 10, padding: 12 } },
+      tooltip: {
+        backgroundColor: 'rgba(14,18,20,.9)', borderColor: 'rgba(143,165,170,.2)', borderWidth: 1,
+        titleColor: '#c8873a', bodyColor: '#f5f0e8', padding: 10
+      }
+    }
+  }
+});
+
+// Survival Bar Chart
+const ctx2 = document.getElementById('survivalChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: ['알 (Eggs)', '초기 유충\n(2–6mm)', '성장 유충\n(7–15mm)', '성충'],
+    datasets: [{
+      data: [1000, 480, 85, 8],
+      backgroundColor: ['rgba(143,165,170,.2)','rgba(42,138,127,.85)','rgba(143,165,170,.35)','rgba(143,165,170,.2)'],
+      borderColor: ['rgba(143,165,170,.3)','rgba(42,138,127,1)','rgba(143,165,170,.4)','rgba(143,165,170,.3)'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(14,18,20,.9)', borderColor: 'rgba(143,165,170,.2)', borderWidth: 1,
+        titleColor: '#c8873a', bodyColor: '#f5f0e8', padding: 10,
+        callbacks: {
+          label: c => c.dataIndex === 1 ? ' ★ 송어의 주 먹이원 (4–6mm)' : ' 상대적 개체 수: ' + c.raw
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'logarithmic',
+        grid: { color: 'rgba(143,165,170,.08)' },
+        ticks: { color: '#8fa5aa', font: { size: 10 } }
+      },
+      y: {
+        ticks: { color: '#8fa5aa', font: { size: 10 } },
+        grid: { display: false }
+      }
+    },
+    animation: { duration: 1200, easing: 'easeInOutQuart' }
+  }
+});
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/library/index.html">← Library 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

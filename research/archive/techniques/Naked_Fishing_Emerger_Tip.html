@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="ko" style="scroll-behavior:smooth;scroll-padding-top:64px;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naked Line Strategy — CADDIS-GR Technique Archive · CADDIS-GR LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+KR:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --olive:       #5C6B3A;
+  --olive-light: #7a8c4e;
+  --olive-pale:  #e8eddc;
+  --orange:      #D95B1A;
+  --orange-light:#f0834a;
+  --orange-pale: #faeee6;
+  --dark:        #1a1c16;
+  --mid:         #3a3d30;
+  --text:        #2e3124;
+  --muted:       #6b7058;
+  --border:      #d4d8c4;
+  --bg:          #f5f4ef;
+  --white:       #fafaf7;
+  /* water palette */
+  --water-deep:  #0d3a5c;
+  --water-mid:   #1a5a8a;
+  --water-surf:  #2a7ab8;
+  --cyan:        #0068aa;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;word-break:keep-all;overflow-x:hidden;}
+
+/* ── STICKY NAV ── */
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(26,28,22,.96);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);}
+.sticky-nav-inner{max-width:1080px;margin:0 auto;padding:0 24px;height:52px;display:flex;align-items:center;gap:28px;}
+.sticky-nav-menu{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-right:8px;}
+.snl{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(255,255,255,.55);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;}
+.snl:hover{color:var(--orange-light);border-color:var(--orange-light);}
+
+/* ── HERO ── */
+.hero{position:relative;background:linear-gradient(160deg,#1a1c16 0%,#2a3d1a 45%,#0d3a5c 100%);padding:72px 40px 60px;min-height:380px;display:flex;align-items:flex-end;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(0,104,170,.18),transparent);pointer-events:none;}
+.hero-inner{max-width:1080px;margin:0 auto;width:100%;position:relative;z-index:2;}
+.hero-avatar{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.hero-avatar img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(217,91,26,.4);flex-shrink:0;}
+.hero-avatar-name{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(200,190,170,.8);}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:rgba(90,158,200,.8);margin-bottom:12px;}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(40px,8vw,80px);line-height:1;color:#fff;letter-spacing:2px;margin-bottom:6px;}
+.hero-title span{color:var(--orange-light);}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.5);font-weight:400;margin-top:14px;max-width:540px;line-height:1.7;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+.badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;padding:5px 12px;border-radius:3px;border:1px solid;text-transform:uppercase;}
+.badge-olive{background:rgba(92,107,58,.2);border-color:rgba(92,107,58,.5);color:#a8c070;}
+.badge-orange{background:rgba(217,91,26,.15);border-color:rgba(217,91,26,.4);color:var(--orange-light);}
+.badge-cyan{background:rgba(0,104,170,.15);border-color:rgba(0,104,170,.4);color:#60b8e8;}
+/* BGM */
+.bgm-wrap{position:absolute;bottom:28px;right:40px;z-index:4;}
+.bgm-btn-inner{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.10);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:32px;padding:10px 18px;}
+.bgm-play{width:28px;height:28px;background:var(--orange);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;padding:0;}
+.bgm-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;line-height:1.4;color:#fff;}
+
+/* ── WATER VISUAL BAR ── */
+.water-bar{background:linear-gradient(180deg,#87ceeb 0%,#2a7ab8 15%,#1a5a8a 50%,#0d3a5c 80%,#5a3a1a 100%);height:120px;position:relative;overflow:hidden;}
+.water-bar-labels{position:absolute;right:16px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;}
+.wbl{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.08em;}
+.water-bar-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.2);}
+.water-bar-surface{position:absolute;left:0;right:0;top:15%;height:1.5px;background:rgba(255,255,255,.6);}
+.water-bar-fish{position:absolute;font-size:18px;animation:fishSwim 8s linear infinite;}
+@keyframes fishSwim{0%{left:-30px;opacity:0}5%{opacity:1}90%{opacity:1}100%{left:calc(100% + 30px);opacity:0}}
+
+/* ── MAIN ── */
+.main{max-width:1080px;margin:0 auto;padding:0 24px 80px;}
+
+/* ── SECTION COMMON ── */
+.section{opacity:0;animation:fadeUp .6s forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.s1{animation-delay:.1s}.s2{animation-delay:.2s}.s3{animation-delay:.3s}
+.s4{animation-delay:.4s}.s5{animation-delay:.5s}.s6{animation-delay:.6s}.s7{animation-delay:.7s}.s8{animation-delay:.8s}
+
+.sec-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,4vw,32px);color:var(--text);margin-bottom:6px;line-height:1.2;}
+.sec-divider{height:1px;background:linear-gradient(90deg,var(--orange),transparent);width:60px;margin:12px 0 24px;}
+.sec-wrap{padding:56px 0 0;}
+
+/* ── CONCEPT CARDS (why naked) ── */
+.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;}
+.concept-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px;position:relative;overflow:hidden;transition:border-color .25s,transform .2s;}
+.concept-card:hover{border-color:var(--olive-light);transform:translateY(-2px);}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.concept-card:nth-child(1)::before{background:var(--cyan);}
+.concept-card:nth-child(2)::before{background:var(--orange);}
+.concept-num{font-family:'DM Serif Display',serif;font-size:52px;color:rgba(92,107,58,.08);position:absolute;top:8px;right:16px;line-height:1;}
+.concept-icon{font-size:24px;margin-bottom:12px;}
+.concept-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.concept-body{font-size:13px;color:var(--muted);line-height:1.8;}
+.concept-body strong{color:var(--text);font-weight:600;}
+.concept-formula{margin-top:14px;padding:10px 14px;background:var(--olive-pale);border-left:3px solid var(--olive);border-radius:0 4px 4px 0;font-family:'DM Mono',monospace;font-size:12px;color:var(--olive);}
+
+/* ── vs TABLE ── */
+.vs-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+.vs-table th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;background:var(--white);}
+.vs-table th:first-child{width:180px;}
+.vs-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3a5a2a;line-height:1.6;}
+.vs-table td:first-child{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.vs-table td:nth-child(2){color:var(--muted);}
+.vs-table td:nth-child(3){color:var(--olive);font-weight:500;}
+.vs-table tr:last-child td{border-bottom:none;}
+.vs-table tr:hover td{background:rgba(92,107,58,.04);}
+.vs-head-indicator{background:rgba(107,112,88,.06)!important;}
+.vs-head-naked{background:rgba(92,107,58,.08)!important;color:var(--olive)!important;}
+
+/* ── LEADER FORMULA ── */
+.formula-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:28px 28px 24px;margin-top:8px;}
+.formula-main{font-family:'DM Serif Display',serif;font-size:clamp(22px,4vw,36px);color:var(--olive);margin:12px 0 8px;letter-spacing:1px;}
+.formula-note{font-size:13px;color:var(--muted);line-height:1.7;margin-top:6px;}
+.formula-note strong{color:var(--text);}
+
+/* DEPTH TABLE */
+.depth-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:13px;}
+.depth-table th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border-bottom:1px solid var(--border);text-align:left;}
+.depth-table td{padding:11px 14px;border-bottom:1px solid rgba(212,216,196,.5);color:var(--text);}
+.depth-table td:first-child{font-family:'DM Mono',monospace;font-size:12px;color:var(--cyan);font-weight:500;}
+.depth-table td:nth-child(3){color:var(--olive);font-weight:500;}
+.depth-table tr:last-child td{border-bottom:none;}
+.depth-table tr:hover td{background:rgba(92,107,58,.04);}
+
+/* LEADER DIAGRAM */
+.leader-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px;margin-top:20px;}
+.leader-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.leader-item{display:flex;align-items:center;gap:14px;padding:8px 0;}
+.leader-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.leader-dot.fly-line{background:var(--orange);}
+.leader-dot.taper{background:var(--olive);}
+.leader-dot.mid{background:#7ab648;}
+.leader-dot.tippet{background:var(--border);border:1px solid var(--muted);}
+.leader-dot.fly{background:var(--cyan);}
+.leader-connector{width:1px;height:18px;background:var(--border);margin-left:4.5px;}
+.leader-name{font-size:14px;font-weight:600;color:var(--text);min-width:200px;}
+.leader-desc{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);}
+.leader-note{background:var(--olive-pale);border-left:3px solid var(--olive);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;color:var(--olive);line-height:1.7;margin-top:16px;}
+
+/* ── LINE RECOMMENDATION ── */
+.line-rec{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px 28px;margin-top:8px;display:flex;gap:28px;align-items:flex-start;}
+.line-rec-bar{width:8px;border-radius:4px;background:linear-gradient(180deg,var(--orange),var(--orange-light));flex-shrink:0;align-self:stretch;min-height:80px;}
+.line-rec-body .line-rec-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:6px;}
+.line-rec-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;padding:3px 10px;border-radius:3px;background:var(--orange-pale);border:1px solid rgba(217,91,26,.3);color:var(--orange);text-transform:uppercase;margin-bottom:12px;display:inline-block;}
+.line-rec-body p{font-size:13px;color:var(--muted);line-height:1.8;margin-bottom:8px;}
+.line-rec-body p:last-child{margin-bottom:0;}
+.line-rec-body strong{color:var(--text);font-weight:600;}
+.line-rec-body em{color:var(--olive);font-style:normal;font-weight:500;}
+
+/* ── RETRIEVE FLOW ── */
+.flow{position:relative;margin-top:8px;}
+.flow-item{display:flex;gap:20px;padding-bottom:8px;position:relative;}
+.flow-item:not(:last-child)::before{content:'';position:absolute;left:15px;top:36px;width:1px;height:calc(100% - 8px);background:var(--border);}
+.flow-num{width:32px;height:32px;border-radius:50%;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);flex-shrink:0;margin-top:2px;}
+.flow-item.highlight .flow-num{background:var(--orange-pale);border-color:var(--orange);color:var(--orange);}
+.flow-content{padding-bottom:28px;}
+.flow-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.flow-desc{font-size:13px;color:var(--muted);line-height:1.8;}
+.flow-desc strong{color:var(--text);font-weight:600;}
+.flow-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;padding:2px 10px;border-radius:20px;margin-top:8px;}
+.tag-blue{background:rgba(0,104,170,.1);color:var(--cyan);border:1px solid rgba(0,104,170,.25);}
+.tag-orange{background:rgba(217,91,26,.1);color:var(--orange);border:1px solid rgba(217,91,26,.25);}
+.tag-olive{background:rgba(92,107,58,.1);color:var(--olive);border:1px solid rgba(92,107,58,.25);}
+
+/* ── WIND SECTION ── */
+.wind-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.wind-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px;transition:border-color .2s;}
+.wind-card:hover{border-color:var(--olive-light);}
+.wind-card-icon{font-size:28px;margin-bottom:12px;}
+.wind-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.wind-card-body{font-size:13px;color:var(--muted);line-height:1.8;}
+.wind-card-body strong{color:var(--text);}
+.wind-card-body em{color:var(--olive);font-style:normal;font-weight:500;}
+.wind-tip{background:var(--olive-pale);border-radius:6px;padding:14px 18px;font-size:13px;color:var(--olive);line-height:1.7;margin-top:16px;}
+.wind-tip strong{font-weight:700;}
+
+/* ── BITE DETECTION ── */
+.bite-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+.bite-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;transition:border-color .2s,transform .2s;}
+.bite-card:hover{border-color:var(--orange);transform:translateY(-2px);}
+.bite-card-head{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+.bite-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.bite-card-body{font-size:13px;color:var(--muted);line-height:1.8;}
+.bite-card-body strong{color:var(--text);}
+.bite-alert{background:rgba(217,91,26,.06);border:1px solid rgba(217,91,26,.2);border-radius:6px;padding:14px 18px;margin-top:8px;font-size:13px;color:var(--orange);line-height:1.7;}
+.bite-alert strong{font-weight:700;}
+
+/* ── GEAR TABLE ── */
+.gear-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+.gear-table th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;}
+.gear-table td{padding:13px 14px;border-bottom:1px solid rgba(212,216,196,.5);vertical-align:top;line-height:1.6;}
+.gear-table td:first-child{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;width:100px;padding-top:15px;}
+.gear-table td:nth-child(2){font-weight:500;color:var(--text);}
+.gear-table td:nth-child(3){color:var(--muted);}
+.gear-table tr:last-child td{border-bottom:none;}
+.gear-table tr:hover td{background:rgba(92,107,58,.04);}
+
+/* ── CALC BOX ── */
+.calc-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:28px;margin-top:8px;}
+.calc-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.calc-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap;}
+.calc-input{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:9px 14px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;width:100px;outline:none;transition:border-color .2s;}
+.calc-input:focus{border-color:var(--olive);}
+.calc-result{font-family:'DM Serif Display',serif;font-size:26px;color:var(--olive);}
+.calc-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6;}
+.calc-note strong{color:var(--orange);}
+
+/* ── CANVAS SECTION ── */
+.canvas-wrap{background:var(--dark);border-radius:8px;overflow:hidden;margin-top:8px;}
+canvas{display:block;width:100%;height:auto;}
+.canvas-controls{display:flex;gap:10px;justify-content:center;padding:14px 16px;background:var(--mid);flex-wrap:wrap;align-items:center;}
+.btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;padding:8px 20px;border-radius:3px;cursor:pointer;transition:all .2s;text-transform:uppercase;border:1px solid;}
+.btn-olive{border-color:var(--olive);color:var(--olive);background:transparent;}
+.btn-olive:hover{background:var(--olive);color:#fff;}
+.btn-orange{border-color:var(--orange);color:var(--orange);background:transparent;}
+.btn-orange:hover{background:var(--orange);color:#fff;}
+.speed-wrap{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);}
+.speed-wrap input[type=range]{width:80px;accent-color:var(--orange);}
+.status-bar{display:flex;gap:0;background:rgba(255,255,255,.04);border-top:1px solid rgba(255,255,255,.06);flex-wrap:wrap;}
+.status-item{display:flex;flex-direction:column;gap:3px;padding:12px 20px;border-right:1px solid rgba(255,255,255,.06);}
+.status-item:last-child{border-right:none;}
+.status-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.status-val{font-family:'DM Mono',monospace;font-size:13px;color:rgba(255,255,255,.7);}
+.status-val.on{color:#7ab648;animation:pulse 1.2s infinite;}
+.status-val.bite{color:var(--orange-light);animation:pulse .6s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);color:#6b7058;text-align:center;padding:32px 40px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;border-top:1px solid rgba(255,255,255,.06);}
+footer span{color:var(--orange);}
+
+/* ── LIGHTBOX ── */
+.lb-trigger{cursor:zoom-in;position:relative;display:block;}
+.lb-trigger::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .2s;border-radius:inherit;}
+.lb-trigger:hover::after{background:rgba(0,0,0,.18);}
+#lb{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
+#lb.open{display:flex;}
+#lb-img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:4px;display:block;}
+#lb-cap{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:rgba(255,255,255,.55);white-space:nowrap;}
+.lb-close{position:absolute;top:20px;right:24px;background:none;border:none;color:rgba(255,255,255,.6);font-size:28px;cursor:pointer;line-height:1;padding:4px 8px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .hero{padding:48px 20px 44px;}
+  .bgm-wrap{right:16px;bottom:16px;}
+  .concept-grid,.wind-grid,.bite-grid{grid-template-columns:1fr;}
+  .bite-grid{grid-template-columns:1fr 1fr;}
+  .main{padding:0 16px 60px;}
+  .sticky-nav-inner{gap:16px;overflow-x:auto;}
+  .line-rec{flex-direction:column;gap:16px;}
+  .line-rec-bar{width:100%;height:6px;min-height:unset;}
+}
+@media(max-width:500px){
+  .bite-grid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="/fly-fishing-hub/assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar"><a class="lab-archive-brand" href="/fly-fishing-hub/">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="/fly-fishing-hub/research/index.html" aria-current="page">Research</a><a href="/fly-fishing-hub/gear/index.html">Gear</a><a href="/fly-fishing-hub/fly-patterns/index.html">Fly Patterns</a><a href="/fly-fishing-hub/field-log/index.html">Field Log</a><a href="/fly-fishing-hub/library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>RESEARCH · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-technique/blob/main/techniques/Naked_Fishing_Emerger_Tip.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav" id="stickyNav">
+  <div class="sticky-nav-inner">
+    <span class="sticky-nav-menu">MENU</span>
+    <a href="#sec-top"      class="snl">맨 위</a>
+    <a href="#sec-concept"  class="snl">기법 개념</a>
+    <a href="#sec-leader"   class="snl">리더 세팅</a>
+    <a href="#sec-line"     class="snl">라인 선택</a>
+    <a href="#sec-retrieve" class="snl">리트리브</a>
+    <a href="#sec-wind"     class="snl">바람 운용</a>
+    <a href="#sec-bite"     class="snl">입질 감지</a>
+    <a href="#sec-gear"     class="snl">기어 세팅</a>
+    <a href="#sec-anim"     class="snl">애니메이션</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="sec-top">
+  <div class="hero-inner">
+    <div class="hero-avatar">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG" alt="낚시대장 프로필">
+      <span class="hero-avatar-name">낚시대장 · CADDIS-GR</span>
+    </div>
+    <div class="hero-eyebrow">Technique Archive · Stillwater Fly Fishing</div>
+    <h1 class="hero-title">NAKED <span>LINE</span><br>STRATEGY</h1>
+    <p class="hero-sub">인디케이터 없이 플로팅 라인과 긴 리더만으로 크로노미드를 운용하는 스틸워터 고급 기법.<br>더 넓은 수역 탐색, 더 자연스러운 플라이 움직임, 더 많은 입질.</p>
+    <div class="hero-badges">
+      <span class="badge badge-cyan">Floating Line</span>
+      <span class="badge badge-olive">Long Leader · ×1.25</span>
+      <span class="badge badge-orange">Chironomid · Nymph</span>
+      <span class="badge badge-cyan">Hand Twist Retrieve</span>
+    </div>
+  </div>
+  <!-- BGM -->
+  <div class="bgm-wrap">
+    <div class="bgm-btn-inner">
+      <button class="bgm-play" onclick="toggleBgm()">
+        <svg id="bgm-icon-play" width="10" height="12" viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+        <svg id="bgm-icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="white" style="display:none"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>
+      </button>
+      <span class="bgm-label">된다 된다 오늘도 된다<br><span style="opacity:.6;font-size:10px">되고송 🎶</span></span>
+    </div>
+    <audio id="bgm" loop><source src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/OK-Song.m4a" type="audio/mp4"></audio>
+  </div>
+</section>
+
+<!-- WATER VISUAL BAR -->
+<div class="water-bar">
+  <div class="water-bar-surface"></div>
+  <div class="water-bar-line" style="top:40%"></div>
+  <div class="water-bar-line" style="top:70%"></div>
+  <div class="water-bar-labels">
+    <span class="wbl">수면</span>
+    <span class="wbl">중층</span>
+    <span class="wbl">바닥</span>
+  </div>
+  <div class="water-bar-fish" style="top:55%;animation-delay:1s;">🐟</div>
+  <div class="water-bar-fish" style="top:72%;animation-delay:4.5s;animation-duration:11s;">🐟</div>
+</div>
+
+<div class="main">
+
+  <!-- ── 01. 기법 개념 ── -->
+  <div class="sec-wrap section s1" id="sec-concept">
+    <div class="sec-label">01 · What &amp; Why</div>
+    <h2 class="sec-title">네이키드 라인이란 무엇인가</h2>
+    <div class="sec-divider"></div>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-num">01</div>
+        <div class="concept-icon">🎣</div>
+        <div class="concept-title">기법 정의</div>
+        <div class="concept-body">
+          <strong>플로팅 라인 + 긴 리더</strong>만으로 크로노미드를 인디케이터(찌) 없이 운용하는 스틸워터 기법입니다.<br><br>
+          외부 무게추, 조실봉돌, 도래 없이 플라이 자체 무게로만 침강시키며, 라인 끝의 시각 신호와 손의 감각으로 입질을 감지합니다.<br><br>
+          인디케이터 채비처럼 한 지점에 수직 정지시키기보다, <em>착수 지점에서 낚시인 앞까지 이어지는 긴 수평 구간 전체를 탐색</em>한다는 점이 핵심 차이입니다.
+        </div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-num">02</div>
+        <div class="concept-icon">⚡</div>
+        <div class="concept-title">왜 더 잘 먹히는가 — 두 가지 메커니즘</div>
+        <div class="concept-body">
+          <strong>① 수평 탐색 거리</strong><br>
+          50ft 원투 이후 보트 앞까지의 전 구간을 훑습니다. 인디케이터는 한 지점만 공략하지만, 네이키드는 그 구간 전체를 탐색합니다.<br><br>
+          <strong>② 입체적 수직 움직임</strong><br>
+          리트리브 방식과 바람의 영향에 따라 플라이가 수중에서 위아래로도 움직입니다. 두 가지 효과가 동시에 일어나 반응하는 개체를 만날 확률이 크게 높아집니다.
+        </div>
+        <div class="concept-formula">수평 탐색 + 수직 액션 = 인디케이터 대비 우위</div>
+      </div>
+    </div>
+
+    <!-- vs 비교표 -->
+    <div style="margin-top:20px;background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <table class="vs-table">
+        <tr>
+          <th>항목</th>
+          <th class="vs-head-indicator">인디케이터 크로노미드</th>
+          <th class="vs-head-naked">네이키드 라인 크로노미드</th>
+        </tr>
+        <tr>
+          <td>리더 길이 기준</td>
+          <td>목표 수심과 비슷</td>
+          <td>목표 수심 × 1.25</td>
+        </tr>
+        <tr>
+          <td>입질 파악</td>
+          <td>인디케이터 시각 신호</td>
+          <td>라인 끝 시각 + 손 감각</td>
+        </tr>
+        <tr>
+          <td>탐색 방식</td>
+          <td>좁은 수직 구간 정지</td>
+          <td>긴 수평 구간 전체 탐색</td>
+        </tr>
+        <tr>
+          <td>플라이 움직임</td>
+          <td>거의 없음</td>
+          <td>리트리브 + 드리프트로 많음</td>
+        </tr>
+        <tr>
+          <td>적합 상황</td>
+          <td>정지 피딩, 정밀 수심 고정</td>
+          <td>넓은 탐색, 움직임 반응 유도</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 02. 리더 세팅 ── -->
+  <div class="sec-wrap section s2" id="sec-leader">
+    <div class="sec-label">02 · Leader Setup</div>
+    <h2 class="sec-title">리더 길이 설정과 구성</h2>
+    <div class="sec-divider"></div>
+
+    <div class="formula-wrap">
+      <div class="sec-label" style="margin-bottom:4px;">핵심 공식</div>
+      <div class="formula-main">리더 길이 = 목표 수심 × 1.25</div>
+      <div class="formula-note">
+        인디케이터 채비에서는 플라이가 비교적 수직으로 내려가므로 목표 수심과 리더 길이를 비슷하게 맞출 수 있습니다.<br>
+        하지만 네이키드 라인에서는 외부 무게추나 인디케이터가 없어 플라이가 <strong>비스듬한 각도로 침강</strong>합니다.<br>
+        이 경사각을 보정하기 위해 목표 수심보다 <strong>약 25% 더 긴 리더</strong>가 필요합니다.<br>
+        예: 수심 20ft(약 6m)를 노릴 때 → 25ft(약 7.5m) 리더 사용.
+      </div>
+
+      <!-- 수심별 권장표 -->
+      <table class="depth-table">
+        <tr>
+          <th>목표 수심</th>
+          <th>권장 리더 길이</th>
+          <th>예시 구성</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>2 m</td>
+          <td>2.5 m 전후</td>
+          <td>9ft 테이퍼 + 티펫 0.6m</td>
+          <td>얕은 수심, 캐스팅 부담 적음</td>
+        </tr>
+        <tr>
+          <td>3 m</td>
+          <td>3.75 m 전후</td>
+          <td>9ft 테이퍼 + 미드 0.6m + 티펫 0.7m</td>
+          <td>관리형 저수지 표준</td>
+        </tr>
+        <tr>
+          <td>4 m</td>
+          <td>5.0 m 전후</td>
+          <td>9ft 테이퍼 + 미드 1.4m + 티펫 0.9m</td>
+          <td>깊은 수심, 정렬 관리 중요</td>
+        </tr>
+        <tr>
+          <td>5 m</td>
+          <td>6.25 m 전후</td>
+          <td>12ft 테이퍼 + 미드 1.8m + 티펫 1.0m</td>
+          <td>캐스팅 숙련 필요</td>
+        </tr>
+        <tr>
+          <td>6 m (한터)</td>
+          <td>7.5 m 전후</td>
+          <td>12ft 테이퍼 + 미드 2.2m + 6X FC 1.0m</td>
+          <td>풀카본 리더 추천</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 리더 다이어그램 -->
+    <div class="leader-wrap">
+      <div class="leader-title">표준 리더 구조 — 수심 4~5m 기준</div>
+      <div class="leader-item">
+        <div class="leader-dot fly-line"></div>
+        <span class="leader-name">플로팅 라인</span>
+        <span class="leader-desc">WF, 오버사이즈 헤드 권장 · 라인 끝이 이제 인디케이터</span>
+      </div>
+      <div class="leader-connector"></div>
+      <div class="leader-item">
+        <div class="leader-dot taper"></div>
+        <span class="leader-name">테이퍼드 리더 9ft / 3X</span>
+        <span class="leader-desc">2.74 m · 턴오버·캐스팅 안정 확보</span>
+      </div>
+      <div class="leader-connector"></div>
+      <div class="leader-item">
+        <div class="leader-dot mid"></div>
+        <span class="leader-name">미드 섹션 4X 스트레이트</span>
+        <span class="leader-desc">1.2~2.0 m · 전체 길이 보정, 직진성 유지</span>
+      </div>
+      <div class="leader-connector"></div>
+      <div class="leader-item">
+        <div class="leader-dot tippet"></div>
+        <span class="leader-name">플루오로카본 티펫 5X~6X</span>
+        <span class="leader-desc">0.8~1.0 m · 자연스러운 침강 + 플라이 표현</span>
+      </div>
+      <div class="leader-connector"></div>
+      <div class="leader-item">
+        <div class="leader-dot fly"></div>
+        <span class="leader-name">크로노미드 플라이</span>
+        <span class="leader-desc">텅스텐 비드 · 루프 매듭 연결 권장</span>
+      </div>
+      <div class="leader-note">
+        <strong>핵심 원칙:</strong> 처음부터 티펫만 길게 늘리지 마세요. <strong>버트(테이퍼 리더)와 미드 섹션으로 전체 길이를 확보</strong>한 뒤, 마지막 0.8~1.0m만 가는 티펫으로 마무리하는 것이 캐스팅 안정성과 감도 모두에 유리합니다.
+      </div>
+    </div>
+
+    <!-- 수심 계산기 -->
+    <div class="calc-box" style="margin-top:20px;">
+      <div class="sec-label" style="margin-bottom:12px;">리더 길이 계산기</div>
+      <div class="calc-row">
+        <span class="calc-label">목표 수심 (m)</span>
+        <input class="calc-input" type="number" id="depthInput" value="6" step="0.1" oninput="calcLeader()">
+        <span class="calc-label">→ 필요 리더 길이</span>
+        <span class="calc-result" id="leaderResult">—</span>
+      </div>
+      <div class="calc-note" id="calcNote"></div>
+    </div>
+  </div>
+
+  <!-- ── 03. 라인 선택 ── -->
+  <div class="sec-wrap section s3" id="sec-line">
+    <div class="sec-label">03 · Line Selection</div>
+    <h2 class="sec-title">추천 플로팅 라인</h2>
+    <div class="sec-divider"></div>
+
+    <div class="line-rec">
+      <div class="line-rec-bar"></div>
+      <div class="line-rec-body">
+        <div class="line-rec-badge">RECOMMENDED LINE</div>
+        <div class="line-rec-name">Scientific Anglers — Amplitude Smooth Infinity</div>
+        <p>
+          일반 인디케이터용 플로팅 라인을 네이키드 라인 기법에 써도 되지만, <strong>조금 둔탁한 감</strong>이 있습니다.<br>
+          SA Amplitude Smooth Infinity는 <em>매우 부드러운 코팅과 완만한 테이퍼</em>로 인해 긴 리더 채비가 수면에 <strong>아주 조용하고 깔끔하게 안착</strong>합니다.
+        </p>
+        <p>
+          또한 캐스팅 감각 자체가 뛰어나 장거리 정밀 캐스팅에서 피로가 적습니다. 긴 리더의 턴오버 안정성도 우수하여 네이키드 라인 기법 전용 라인으로 적극 추천합니다.
+        </p>
+        <p style="margin-top:4px;">
+          ⚠️ 단, SA Amplitude Smooth Infinity는 <strong>패스트 액션 로드</strong>와 궁합이 가장 좋습니다. 미디엄 액션 로드에서는 긴 프론트 테이퍼로 인해 에너지 분산이 생길 수 있으니 로드 매칭을 확인하세요.
+        </p>
+      </div>
+    </div>
+
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin-top:14px;">
+      <div class="sec-label" style="margin-bottom:10px;">라인 선택 일반 기준</div>
+      <table class="gear-table">
+        <tr>
+          <th>구분</th><th>권장 스펙</th><th>이유</th>
+        </tr>
+        <tr>
+          <td>코팅</td>
+          <td>부드럽고 슬릭한 코팅</td>
+          <td>긴 리더 캐스팅 시 가이드 저항 감소, 조용한 착수</td>
+        </tr>
+        <tr>
+          <td>테이퍼</td>
+          <td>완만한 프론트 테이퍼</td>
+          <td>긴 리더 턴오버 안정성 확보</td>
+        </tr>
+        <tr>
+          <td>헤드</td>
+          <td>WF 오버사이즈 or 표준</td>
+          <td>인디케이터용 라인 그대로 사용 가능</td>
+        </tr>
+        <tr>
+          <td>색상</td>
+          <td>밝은 색 or Hi-Vis 권장</td>
+          <td>라인 끝이 인디케이터 역할 → 시인성이 핵심</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 04. 리트리브 절차 ── -->
+  <div class="sec-wrap section s4" id="sec-retrieve">
+    <div class="sec-label">04 · Retrieve Sequence</div>
+    <h2 class="sec-title">리트리브 절차 — 단계별 순서</h2>
+    <div class="sec-divider"></div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">원투 캐스팅 (Long Cast)</div>
+          <div class="flow-desc">
+            <strong>최대한 멀리 던집니다.</strong> 네이키드 라인의 탐색 범위는 착수 지점부터 낚시인 앞까지 전 구간입니다. 멀리 던질수록 더 넓은 수역을 훑을 수 있습니다.<br>
+            착수 시 채비가 조용하게 내려앉도록 캐스트 끝 무렵 로드 팁을 부드럽게 내려줍니다.
+          </div>
+          <span class="flow-tag tag-blue">롱 캐스트 = 탐색 범위 확대</span>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">카운트다운 침강 (Countdown Sink)</div>
+          <div class="flow-desc">
+            캐스팅 직후 <strong>속으로 초를 세며</strong> 플라이가 목표 수심까지 완전히 내려가기를 기다립니다. 이 과정에서 인내심이 필요합니다.<br>
+            침강 중에도 라인 끝을 주시하세요. <strong>폴링 중 입질이 상당수 발생</strong>하며, 저항 징후가 느껴지면 즉시 챔질 준비를 합니다.
+          </div>
+          <span class="flow-tag tag-blue">폴링 입질 주의 — 카운트 중 방심 금지</span>
+        </div>
+      </div>
+      <div class="flow-item highlight">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">⭐ 스트립 1회 — 채비 직선 정렬 (Critical Step)</div>
+          <div class="flow-desc">
+            플라이가 바닥에 도달했다고 판단되면, <strong>한 번 쭉 스트립하여 라인과 리더 전체를 직선화</strong>합니다.<br>
+            이 단계를 생략하면 라인에 S자·C자 처짐이 남아 입질 전달이 흐려집니다. 리트리브 시작 전 반드시 정렬을 먼저 확보하세요.<br>
+            라인과 리더 모두 뼈처럼 곧게 펴져 있어야 미세한 입질도 감지할 수 있습니다.
+          </div>
+          <span class="flow-tag tag-orange">⚠️ 가장 중요한 단계 — 절대 생략 금지</span>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">4</div>
+        <div class="flow-content">
+          <div class="flow-title">초슬로 핸드 트위스트 리트리브</div>
+          <div class="flow-desc">
+            정렬 확인 후 <strong>아주, 아주 느리게 핸드 트위스트(손을 꼬며 감아들이는 동작)</strong>를 시작합니다.<br>
+            목표는 플라이 라인을 빠르게 이동시키는 것이 아니라, <strong>라인과의 텐션을 지속적으로 유지</strong>하는 것입니다.<br>
+            이를 통해 크로노미드가 바닥에서 살짝 떠올라 보트 쪽으로 천천히 걸어오듯 움직입니다.
+          </div>
+          <span class="flow-tag tag-olive">텐션 유지가 핵심 — 플라이를 걷게 하라</span>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">5</div>
+        <div class="flow-content">
+          <div class="flow-title">간헐적 스트립 추가 (선택)</div>
+          <div class="flow-desc">
+            기본은 핸드 트위스트이지만, 반응이 없을 때 두어 번 짧게 스트립하여 <strong>플라이를 수층에서 위로 띄워주는 액션</strong>을 추가할 수 있습니다.<br>
+            이 움직임이 우화 중인 곤충의 상승 동작을 모방하여 반응을 유도합니다.
+          </div>
+          <span class="flow-tag tag-blue">우화 상승 모방 액션</span>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">6</div>
+        <div class="flow-content">
+          <div class="flow-title">입질 확인 → 챔질 → 재캐스팅</div>
+          <div class="flow-desc">
+            라인이 <strong>툭 당겨지거나, 빠르게 휙 움직이거나, 정지했다 다시 움직이면</strong> 입질 신호입니다.<br>
+            손에서 미세하게 툭 치는 느낌도 입질입니다. 즉시 부드럽게 챔질하고, 플라이가 낚싯대 2~3개 길이 안으로 들어오면 재캐스팅합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 05. 바람 운용 ── -->
+  <div class="sec-wrap section s5" id="sec-wind">
+    <div class="sec-label">05 · Wind Management</div>
+    <h2 class="sec-title">바람 운용 — 등지기 vs. 드리프트 활용</h2>
+    <div class="sec-divider"></div>
+
+    <div class="wind-grid">
+      <div class="wind-card">
+        <div class="wind-card-icon">🧭</div>
+        <div class="wind-card-title">바람을 등지고 캐스팅 (기본 원칙)</div>
+        <div class="wind-card-body">
+          네이키드 라인 기법에서 <strong>기본 포지션은 바람을 등지는 것</strong>입니다.<br><br>
+          바람을 등지면 라인이 곧게 유지되어 <em>감도 확보에 가장 유리</em>합니다. 측풍이나 맞바람에서는 긴 리더가 느슨해지기 쉬워 입질 전달이 흐려집니다.<br><br>
+          측풍·맞바람 상황에서는 <strong>리더 길이를 조금 줄이거나 캐스팅 각도를 조정</strong>하는 편이 낫습니다.
+        </div>
+      </div>
+      <div class="wind-card">
+        <div class="wind-card-icon">🌬️</div>
+        <div class="wind-card-title">바람 드리프트 활용 (응용)</div>
+        <div class="wind-card-body">
+          바람에 의한 자연스러운 드리프트는 단점만은 아닙니다.<br><br>
+          적당한 <strong>Wind Drift는 플라이를 더 넓은 수역으로 이동</strong>시키며, 그 과정에서 위아래 움직임이 생겨 반응이 오히려 좋아질 수 있습니다.<br><br>
+          이럴 때는 바람이 대신 일을 하도록 두고, <em>리트리브는 텐션만 최소한으로 유지</em>하면 됩니다.
+        </div>
+      </div>
+    </div>
+    <div class="wind-tip">
+      <strong>실전 판단 기준:</strong> 바람이 라인을 곧게 유지시켜 주면 드리프트로 활용하고, 라인을 처지게 만들면 등지는 포지션으로 전환합니다. 바람의 세기와 방향은 하루 종일 바뀌므로 지속적으로 모니터링이 필요합니다.
+    </div>
+  </div>
+
+  <!-- ── 06. 입질 감지 ── -->
+  <div class="sec-wrap section s6" id="sec-bite">
+    <div class="sec-label">06 · Bite Detection</div>
+    <h2 class="sec-title">인디케이터 없는 입질 감지</h2>
+    <div class="sec-divider"></div>
+
+    <div class="bite-grid">
+      <div class="bite-card">
+        <div class="bite-card-head">Visual — 시각 신호</div>
+        <div class="bite-card-title">라인 끝 움직임</div>
+        <div class="bite-card-body">
+          플라이 라인 끝부분이 <strong>빠르게 휙 옆으로 움직이면</strong> 거의 확실한 입질 신호입니다.<br><br>
+          라인이 <strong>정지했다 다시 움직이거나, 떨리거나, 예상치 못하게 방향이 바뀌면</strong> 모두 입질을 의심합니다.
+        </div>
+      </div>
+      <div class="bite-card">
+        <div class="bite-card-head">Tactile — 촉각 신호</div>
+        <div class="bite-card-title">손의 감각</div>
+        <div class="bite-card-body">
+          라인을 감는 손에 <strong>미세하게 툭 치는 느낌</strong>이 오면 입질입니다.<br><br>
+          라인에 항상 미세한 긴장감(tension)을 유지해야만 이 촉각 신호를 감지할 수 있습니다. <strong>이것이 이 기법에서 가장 어려운 부분</strong>입니다.
+        </div>
+      </div>
+      <div class="bite-card">
+        <div class="bite-card-head">On the Drop — 폴링 입질</div>
+        <div class="bite-card-title">침강 중 입질</div>
+        <div class="bite-card-body">
+          카운트다운 중에도 상당수의 입질이 발생합니다.<br><br>
+          침강 중 <strong>저항 징후가 느껴지거나 라인이 멈추면</strong> 즉시 챔질 준비를 합니다. 라인이 <strong>떨리거나 툭 떨어졌다 올라오면</strong> 이미 입질을 놓친 것입니다.
+        </div>
+      </div>
+    </div>
+    <div class="bite-alert">
+      <strong>⚠️ S자·C자 처짐 절대 금지:</strong> 라인에 처짐이 있으면 입질 신호가 전달되지 않습니다. 항상 미세한 직선 텐션을 유지해야 시각·촉각 신호 모두 살아납니다. 텐션 유지가 네이키드 라인 기법의 전부입니다.
+    </div>
+  </div>
+
+  <!-- ── 07. 기어 세팅 ── -->
+  <div class="sec-wrap section s7" id="sec-gear">
+    <div class="sec-label">07 · Gear Setup</div>
+    <h2 class="sec-title">전체 기어 세팅 가이드</h2>
+    <div class="sec-divider"></div>
+
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <table class="gear-table">
+        <tr>
+          <th>구성</th><th>권장 사양</th><th>비고</th>
+        </tr>
+        <tr>
+          <td>ROD</td>
+          <td>9~10ft, #4~#6, 패스트 액션</td>
+          <td>롱 캐스팅 + 드리프트 제어에 유리. SA Infinity 사용 시 패스트 액션 필수</td>
+        </tr>
+        <tr>
+          <td>LINE</td>
+          <td>플로팅 WF · SA Amplitude Smooth Infinity 추천</td>
+          <td>라인 끝이 인디케이터 역할 → Hi-Vis 색상 or 밝은 색 권장</td>
+        </tr>
+        <tr>
+          <td>LEADER</td>
+          <td>테이퍼드 9~12ft + 미드 섹션 + FC 티펫</td>
+          <td>목표 수심 × 1.25 공식 적용. 단순 구조 유지 (매듭 수 최소화)</td>
+        </tr>
+        <tr>
+          <td>TIPPET</td>
+          <td>플루오로카본 5X~6X · 0.8~1.0m</td>
+          <td>자연스러운 침강, 플라이 표현력 확보. 인디케이터 기법과 동일 소재 사용 가능</td>
+        </tr>
+        <tr>
+          <td>KNOT</td>
+          <td>루프 매듭 (Loop Knot)</td>
+          <td>클린치 매듭보다 플라이 자연스러운 움직임 우위. 티펫 연결은 트리플 서전스</td>
+        </tr>
+        <tr>
+          <td>FLY</td>
+          <td>텅스텐 비드 크로노미드 #14~#18 · 메이플라이 님프 · 소형 리치</td>
+          <td>침강 속도 확보 필수. 빛 적음→어두운 색, 밝음→밝은 색. 작은 사이즈가 최적</td>
+        </tr>
+        <tr>
+          <td>WEIGHT</td>
+          <td>배럴 스위벨 or 좁쌀봉돌 (선택)</td>
+          <td>18ft(약 5.5m) 이상 수심에서 플라이 위 18인치 지점에 추가 검토</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── 08. 애니메이션 ── -->
+  <div class="sec-wrap section s8" id="sec-anim">
+    <div class="sec-label">08 · Visual Guide</div>
+    <h2 class="sec-title">기법 시각화 애니메이션</h2>
+    <div class="sec-divider"></div>
+
+    <div class="canvas-wrap">
+      <canvas id="c" width="900" height="460"></canvas>
+      <div class="canvas-controls">
+        <button class="btn btn-olive" onclick="resetAnim()">▶ REPLAY</button>
+        <button class="btn btn-orange" onclick="togglePause()">⏸ PAUSE</button>
+        <div class="speed-wrap">
+          <span>SPEED</span>
+          <input type="range" id="speedSlider" min="0.5" max="3" step="0.5" value="1" oninput="setSpeed(this.value)">
+          <span id="speedLabel">×1</span>
+        </div>
+      </div>
+      <div class="status-bar">
+        <div class="status-item">
+          <span class="status-lbl">PHASE</span>
+          <span class="status-val" id="stPhase">READY</span>
+        </div>
+        <div class="status-item">
+          <span class="status-lbl">DEPTH</span>
+          <span class="status-val" id="stDepth">0.0m</span>
+        </div>
+        <div class="status-item">
+          <span class="status-lbl">COUNT</span>
+          <span class="status-val" id="stCount">—</span>
+        </div>
+        <div class="status-item">
+          <span class="status-lbl">TENSION</span>
+          <span class="status-val" id="stTension">—</span>
+        </div>
+        <div class="status-item">
+          <span class="status-lbl">ALIGN</span>
+          <span class="status-val" id="stAlign">—</span>
+        </div>
+        <div class="status-item">
+          <span class="status-lbl">BITE</span>
+          <span class="status-val" id="stBite">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <p>CADDIS-GR · Technique Archive · <span>Naked Line Strategy</span> · 인디케이터 없이 전 수층을 탐색하라</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <img id="lb-img" src="" alt="">
+  <span id="lb-cap"></span>
+</div>
+
+<script>
+// ── BGM ──
+function toggleBgm() {
+  const a=document.getElementById('bgm');
+  const p=document.getElementById('bgm-icon-play');
+  const u=document.getElementById('bgm-icon-pause');
+  if(a.paused){a.play();p.style.display='none';u.style.display='block';}
+  else{a.pause();p.style.display='block';u.style.display='none';}
+}
+
+// ── LIGHTBOX ──
+function closeLb(){document.getElementById('lb').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))closeLb();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
+
+// ── LEADER CALC ──
+function calcLeader(){
+  const d=parseFloat(document.getElementById('depthInput').value);
+  const res=document.getElementById('leaderResult');
+  const note=document.getElementById('calcNote');
+  if(isNaN(d)||d<=0){res.textContent='—';note.textContent='';return;}
+  const lm=(d*1.25).toFixed(2);
+  const lft=(d*1.25*3.281).toFixed(1);
+  res.textContent=lm+'m  ('+lft+'ft)';
+  const ext=Math.max(0,(d*1.25-2.74-0.9)).toFixed(1);
+  let txt='9ft(2.74m) 테이퍼 리더 + 미드 섹션 약 '+ext+'m + 플루오로카본 티펫 0.8~1.0m 구성 권장';
+  if(d*1.25>5.5)txt+=' · <strong>⚠ 배럴 스위벨 or 좁쌀봉돌 추가 검토</strong>';
+  if(d*1.25>6.5)txt+=' · 12ft 테이퍼 리더 교체 권장';
+  note.innerHTML=txt;
+}
+calcLeader();
+
+// ── ANIMATION ──
+const cv=document.getElementById('c');
+const ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+
+const SKY_H=H*0.18,SURF_Y=H*0.18,BOT_Y=H*0.90;
+const WATER_H=BOT_Y-SURF_Y;
+const MAX_DEPTH=6.0;
+const ROD_BASE={x:55,y:SURF_Y-25};
+const ROD_TIP={x:115,y:SURF_Y-75};
+const CAST_X=W*0.83;
+const SINK_D=5.6;
+
+function dY(d){return SURF_Y+(d/MAX_DEPTH)*WATER_H;}
+function yD(y){return((y-SURF_Y)/WATER_H)*MAX_DEPTH;}
+function lerp(a,b,t){return a+(b-a)*t;}
+function eOut(t){return 1-Math.pow(1-t,3);}
+function eInOut(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+
+let state='idle',t=0,paused=false,spd=1;
+let fly={x:ROD_TIP.x,y:SURF_Y};
+let lineEntryX=CAST_X;
+let biteAlpha=0,biteActive=false;
+let alignPhase=false; // strip-to-align phase
+let alignT=0;
+
+let fishes=[
+  {x:W*.74,y:dY(5.3),vx:-.28,ph:0},
+  {x:W*.60,y:dY(4.9),vx:.20,ph:1.4},
+  {x:W*.50,y:dY(5.6),vx:-.14,ph:2.6},
+];
+
+const CAST_DUR=55,SINK_DUR=170,ALIGN_DUR=22,RET_DUR=220;
+
+function drawBG(){
+  // Sky
+  let sg=ctx.createLinearGradient(0,0,0,SKY_H);
+  sg.addColorStop(0,'#5aa4d4');sg.addColorStop(1,'#b8d8f0');
+  ctx.fillStyle=sg;ctx.fillRect(0,0,W,SKY_H);
+  // Water
+  let wg=ctx.createLinearGradient(0,SURF_Y,0,H);
+  wg.addColorStop(0,'#2a7ab8');wg.addColorStop(.35,'#1a5a8a');
+  wg.addColorStop(.7,'#0e3d62');wg.addColorStop(1,'#082840');
+  ctx.fillStyle=wg;ctx.fillRect(0,SURF_Y,W,H-SURF_Y);
+  // Surface
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,SURF_Y);ctx.lineTo(W,SURF_Y);ctx.stroke();
+  // Depth lines
+  [1,2,3,4,5,6].forEach(d=>{
+    const y=dY(d);
+    ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1;ctx.setLineDash([4,8]);
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(120,180,220,.32)';ctx.font='10px "DM Mono",monospace';
+    ctx.fillText(d+'m',W-32,y-3);
+  });
+  // Bottom
+  let bg=ctx.createLinearGradient(0,BOT_Y,0,H);
+  bg.addColorStop(0,'#5a3a1a');bg.addColorStop(1,'#2a1808');
+  ctx.fillStyle=bg;ctx.fillRect(0,BOT_Y,W,H-BOT_Y);
+  ctx.fillStyle='rgba(120,80,40,.4)';
+  for(let i=0;i<45;i++){ctx.beginPath();ctx.arc(20+i*20,BOT_Y+5,1.5+Math.random()*2.5,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='rgba(180,130,80,.35)';ctx.font='10px "DM Mono",monospace';
+  ctx.fillText('바닥 · 6m',W-72,BOT_Y-4);
+}
+
+function drawFisherman(){
+  const bx=ROD_BASE.x,by=ROD_BASE.y;
+  ctx.fillStyle='rgba(0,0,0,.18)';ctx.beginPath();ctx.ellipse(bx+4,SURF_Y-2,17,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#2a3a4a';ctx.fillRect(bx-9,by,20,52);
+  ctx.fillStyle='#f5c5a0';ctx.beginPath();ctx.arc(bx+1,by-10,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a2a3a';ctx.fillRect(bx-8,by-22,20,6);ctx.fillRect(bx-4,by-32,13,12);
+  ctx.strokeStyle='#8B6914';ctx.lineWidth=3;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(bx+4,by+8);ctx.lineTo(ROD_TIP.x,ROD_TIP.y);ctx.stroke();
+  ctx.fillStyle='#aaa';ctx.beginPath();ctx.arc(bx+7,by+18,6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#888';ctx.beginPath();ctx.arc(bx+7,by+18,3.5,0,Math.PI*2);ctx.fill();
+}
+
+function drawLine(){
+  if(state==='idle')return;
+  if(state==='cast'){
+    ctx.strokeStyle='#FF7C1E';ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(ROD_TIP.x,ROD_TIP.y);
+    const mx=(ROD_TIP.x+fly.x)/2,my=ROD_TIP.y-45;
+    ctx.quadraticCurveTo(mx,my,fly.x,fly.y);ctx.stroke();
+  } else {
+    // Rod to water surface
+    ctx.strokeStyle='#FF7C1E';ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(ROD_TIP.x,ROD_TIP.y);
+    ctx.quadraticCurveTo((ROD_TIP.x+lineEntryX)*.5,SURF_Y-28,lineEntryX,SURF_Y);ctx.stroke();
+    // Olive floating section on surface
+    const floatEnd=lineEntryX-(lineEntryX-ROD_TIP.x)*.12;
+    ctx.strokeStyle='#8aaa30';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(lineEntryX,SURF_Y);ctx.lineTo(floatEnd,SURF_Y);ctx.stroke();
+    // Leader underwater
+    // Alignment indicator: if alignPhase → straight, else slight curve
+    const leaderColor=alignPhase?'rgba(120,255,120,.7)':'rgba(180,240,255,.5)';
+    ctx.strokeStyle=leaderColor;ctx.lineWidth=1.2;ctx.setLineDash([3,5]);
+    ctx.beginPath();ctx.moveTo(floatEnd,SURF_Y);
+    if(alignPhase){
+      // straight line
+      ctx.lineTo(fly.x,fly.y);
+    } else {
+      ctx.quadraticCurveTo((floatEnd+fly.x)*.5,(SURF_Y+fly.y)*.5-8,fly.x,fly.y);
+    }
+    ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Fly — tungsten bead chironomid
+  ctx.fillStyle='#aa1010';
+  ctx.beginPath();ctx.ellipse(fly.x,fly.y,2,6,-.3,0,Math.PI*2);ctx.fill();
+  const bc=biteActive?'#ff6600':'#dd1188';
+  ctx.fillStyle=bc;
+  ctx.beginPath();ctx.arc(fly.x+2,fly.y-5,3.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=.5;ctx.stroke();
+
+  // Bite ring
+  if(biteAlpha>0){
+    ctx.strokeStyle=`rgba(255,220,0,${biteAlpha})`;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(fly.x,fly.y,(1-biteAlpha)*32+5,0,Math.PI*2);ctx.stroke();
+  }
+}
+
+function drawFish(f){
+  const x=f.x,y=f.y,dir=f.vx>=0?1:-1;
+  ctx.save();ctx.translate(x,y);ctx.scale(dir,1);
+  ctx.fillStyle='#c07840';ctx.beginPath();ctx.ellipse(0,0,14,5,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(40,20,0,.35)';
+  [-5,0,5].forEach(dx=>{ctx.beginPath();ctx.arc(dx,-1,1.5,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle='#a06030';ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(22,-5);ctx.lineTo(22,5);ctx.closePath();ctx.fill();
+  ctx.fillStyle='white';ctx.beginPath();ctx.arc(-8,-1,2,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-8,-1,1,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+function drawPhaseLabel(){
+  let label='',color='#fff',sub='';
+  if(state==='cast'){label='▶ CASTING';color='#ff9900';sub='롱 캐스팅 — 최대한 멀리';}
+  else if(state==='sink'){const d=yD(fly.y);label=`⬇ SINKING  ${d.toFixed(1)}m`;color='#00e5ff';sub='카운트다운 — 폴링 중 입질 주시!';}
+  else if(state==='align'){label='⟶ STRIP & ALIGN';color='#80ff40';sub='⭐ 스트립 1회 → 라인 직선화 중';}
+  else if(state==='retrieve'){label='◀ RETRIEVE';color='#00ff88';sub='초슬로 핸드 트위스트 — 텐션 유지';}
+  else if(state==='done'){label='✓ DONE';color='#f5b800';sub='REPLAY 버튼으로 다시 보기';}
+
+  ctx.fillStyle='rgba(250,250,245,.9)';ctx.strokeStyle='rgba(92,107,58,.3)';ctx.lineWidth=1;
+  ctx.beginPath();
+  if(ctx.roundRect)ctx.roundRect(14,14,290,54,6);
+  else ctx.rect(14,14,290,54);
+  ctx.fill();ctx.stroke();
+  ctx.fillStyle=color;ctx.font='bold 14px "DM Serif Display",serif';ctx.fillText(label,24,36);
+  ctx.fillStyle='#3a5a2a';ctx.font='11px "Noto Sans KR",sans-serif';ctx.fillText(sub,24,55);
+}
+
+function drawTensionBar(){
+  if(state!=='retrieve'&&state!=='align')return;
+  const dist=Math.sqrt((fly.x-lineEntryX)**2+(fly.y-SURF_Y)**2);
+  const tension=Math.min(dist/220,1);
+  ctx.fillStyle='rgba(250,250,245,.9)';ctx.strokeStyle='rgba(92,107,58,.25)';ctx.lineWidth=1;
+  ctx.beginPath();
+  if(ctx.roundRect)ctx.roundRect(14,76,185,28,4);
+  else ctx.rect(14,76,185,28);
+  ctx.fill();ctx.stroke();
+  const good=tension>.45;
+  ctx.fillStyle=good?'#5C6B3A':'#cc3300';
+  ctx.font='10px "DM Mono",monospace';ctx.fillText('TENSION  '+(good?'GOOD':'LOW'),24,93);
+  ctx.fillStyle='rgba(92,107,58,.15)';ctx.fillRect(96,83,80,10);
+  ctx.fillStyle=good?'#7ab648':'#cc3300';ctx.fillRect(96,83,80*tension,10);
+}
+
+function updateStatus(){
+  const depth=(state==='sink'||state==='retrieve'||state==='align')?yD(fly.y).toFixed(1):'0.0';
+  document.getElementById('stDepth').textContent=depth+'m';
+  const phases={idle:'READY',cast:'CASTING',sink:'SINKING',align:'ALIGNING',retrieve:'RETRIEVE',done:'DONE'};
+  document.getElementById('stPhase').textContent=phases[state]||state;
+  const countEl=document.getElementById('stCount');
+  if(state==='sink'){countEl.textContent=(t*spd/60).toFixed(1)+'s';countEl.className='status-val on';}
+  else{countEl.className='status-val';countEl.textContent=state==='retrieve'?'✓':'—';}
+  const tensEl=document.getElementById('stTension');
+  tensEl.textContent=(state==='retrieve'||state==='align')?'ACTIVE':'—';
+  tensEl.className=(state==='retrieve'||state==='align')?'status-val on':'status-val';
+  const alignEl=document.getElementById('stAlign');
+  alignEl.textContent=alignPhase?'STRAIGHT':'—';
+  alignEl.className=alignPhase?'status-val on':'status-val';
+  const biteEl=document.getElementById('stBite');
+  if(biteActive&&biteAlpha>0){biteEl.textContent='⚡ BITE!';biteEl.className='status-val bite';}
+  else{biteEl.textContent='—';biteEl.className='status-val';}
+}
+
+function tick(){
+  if(!paused){
+    t+=spd;
+    if(state==='cast'){
+      const p=Math.min(t/CAST_DUR,1),ep=eOut(p);
+      fly.x=lerp(ROD_TIP.x,CAST_X,ep);
+      fly.y=SURF_Y-Math.sin(p*Math.PI)*55;
+      if(p>=1){state='sink';t=0;}
+    }
+    else if(state==='sink'){
+      const p=Math.min(t/SINK_DUR,1);
+      fly.x=CAST_X;fly.y=lerp(SURF_Y,dY(SINK_D),eInOut(p));
+      if(p>.36&&p<.44&&!biteActive&&Math.random()<.012){biteActive=true;biteAlpha=1;}
+      if(p>=1){state='align';t=0;alignPhase=false;}
+    }
+    else if(state==='align'){
+      // animate strip-to-align
+      const p=Math.min(t/ALIGN_DUR,1);
+      alignPhase=(p>.5);
+      // fly stays at bottom, line straightens visually
+      if(p>=1){state='retrieve';t=0;alignPhase=true;}
+    }
+    else if(state==='retrieve'){
+      fly.x-=.55*spd;
+      fly.y=dY(SINK_D)+Math.sin(t*.06)*4;
+      lineEntryX=Math.max(ROD_TIP.x+50,CAST_X-(t*.55*spd));
+      if(t>90&&t<110&&!biteActive&&Math.random()<.018){biteActive=true;biteAlpha=1;}
+      if(fly.x<ROD_TIP.x+75){state='done';alignPhase=false;}
+    }
+    if(biteAlpha>0)biteAlpha-=.018;
+    else biteActive=false;
+  }
+
+  ctx.clearRect(0,0,W,H);
+  drawBG();
+  fishes.forEach(f=>{
+    if(!paused){f.x+=f.vx*spd;f.y+=Math.sin(t*.025+f.ph)*.28;if(f.x>W+30)f.x=-30;if(f.x<-30)f.x=W+30;}
+    if(state==='retrieve'&&biteActive&&f===fishes[0]){f.x=lerp(f.x,fly.x+12,.04);f.y=lerp(f.y,fly.y,.04);}
+    drawFish(f);
+  });
+  drawFisherman();
+  drawLine();
+  drawPhaseLabel();
+  drawTensionBar();
+  updateStatus();
+  requestAnimationFrame(tick);
+}
+
+function resetAnim(){
+  state='cast';t=0;paused=false;alignPhase=false;
+  fly={x:ROD_TIP.x,y:SURF_Y};lineEntryX=CAST_X;
+  biteActive=false;biteAlpha=0;
+  fishes=[{x:W*.74,y:dY(5.3),vx:-.28,ph:0},{x:W*.60,y:dY(4.9),vx:.20,ph:1.4},{x:W*.50,y:dY(5.6),vx:-.14,ph:2.6}];
+  document.querySelector('.btn-orange').textContent='⏸ PAUSE';
+}
+function togglePause(){paused=!paused;document.querySelector('.btn-orange').textContent=paused?'▶ RESUME':'⏸ PAUSE';}
+function setSpeed(v){spd=parseFloat(v);document.getElementById('speedLabel').textContent='×'+v;}
+
+calcLeader();
+tick();
+</script>
+<footer class="lab-archive-footer"><a href="/fly-fishing-hub/research/index.html">← Research 목록</a><a href="/fly-fishing-hub/">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

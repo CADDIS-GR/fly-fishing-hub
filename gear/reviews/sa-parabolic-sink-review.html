@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SA Sonar Stillwater Parabolic Sink · 라인 리뷰 — CADDIS-GR · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a;--ink-mid:#444;--ink-soft:#888;
+  --paper:#f7f4ef;--paper-2:#eeeae2;
+  --water:#4a7c6f;--water-dk:#2d5248;--water-lt:#a8c5be;
+  --accent:#c0392b;--accent-lt:#f5e6e5;
+  --gold:#b8952a;--rule:#d6d0c4;
+  /* Parabolic 전용 */
+  --pb:#e06040;--pb-lt:rgba(224,96,64,.10);
+  --s5:#f0a030;--s3:#4fa3c8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background-color:#e8e2d8;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff8f0' surfaceScale='1.6'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.88'/%3E%3C/svg%3E");
+  background-size:500px 500px;
+  color:var(--ink);line-height:1.7;font-size:17px;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:88vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:0 0 64px;overflow:hidden;
+  background:linear-gradient(135deg,#0a1e1a 0%,#1a3530 40%,#0d2820 100%);
+}
+.hero-canvas-bg{position:absolute;inset:0;opacity:.18;pointer-events:none}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 30%,rgba(10,20,16,.85) 100%);
+}
+.hero>*{position:relative;z-index:2}
+.hero-tag{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);
+  padding:44px 52px 0;margin-bottom:auto;
+}
+.hero-label{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--pb);
+  padding:0 52px;margin-bottom:14px;
+}
+.hero h1{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(42px,6.5vw,84px);
+  color:#fff;line-height:1.0;
+  padding:0 52px;margin-bottom:16px;
+}
+.hero h1 em{color:var(--pb);font-style:normal}
+.hero-sub{
+  font-size:clamp(14px,1.8vw,18px);font-weight:300;
+  color:rgba(255,255,255,.58);padding:0 52px;margin-bottom:30px;
+  max-width:640px;
+}
+.hero-specs{
+  display:flex;gap:24px;flex-wrap:wrap;
+  padding:0 52px;margin-bottom:8px;
+}
+.hero-spec{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,.4);letter-spacing:.08em;
+}
+.hero-spec strong{color:rgba(255,255,255,.82);font-weight:400}
+.hero-wave{position:absolute;bottom:-1px;left:0;width:100%;pointer-events:none;z-index:3}
+
+/* ── WRAP ── */
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ── SUMMARY CARD ── */
+.summary{
+  background-color:#faf7f2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff8f0' surfaceScale='1.2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23n)' opacity='0.70'/%3E%3C/svg%3E");
+  background-size:500px 500px;
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 32px rgba(0,0,0,.09);
+  margin:56px auto;max-width:880px;padding:0 24px;
+}
+.summary-head{
+  background:var(--ink);color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 28px;margin:0 -24px;
+}
+.summary-head span{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.summary-score{font-family:'DM Serif Display',serif;font-size:38px;color:var(--gold)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 32px;padding:28px 4px}
+.sg-item label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px}
+.sg-item p{font-size:15px;color:var(--ink-mid);line-height:1.65}
+.sg-full{grid-column:1/-1}
+.tag-flow{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.tag{font-family:'DM Mono',monospace;font-size:12px;padding:3px 11px;border-radius:20px}
+.tag-pro{background:var(--water-dk);color:#fff}
+.tag-con{background:var(--paper-2);color:var(--ink-soft);border:1px solid var(--rule)}
+.tag-neutral{background:#fff3cd;color:#7a5c00}
+.summary-verdict{
+  background:var(--pb-lt);border-left:3px solid var(--pb);
+  padding:16px 20px;margin:4px 0 24px;border-radius:0 8px 8px 0;
+  font-size:15px;color:var(--ink-mid);line-height:1.75;
+}
+
+/* ── ARTICLE ── */
+.article{padding:8px 0 64px}
+.sec-title{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-top:1px solid var(--rule);padding-top:14px;margin:56px 0 24px;
+}
+h2.ch-title{
+  font-size:clamp(24px,3.5vw,34px);font-weight:700;
+  color:var(--ink);margin-bottom:20px;line-height:1.2;
+}
+.article p{color:var(--ink-mid);margin-bottom:18px;font-size:16.5px;line-height:1.9}
+.article strong{color:var(--ink);font-weight:700}
+
+/* ── SPEC TABLE ── */
+.spec-table-wrap{margin:32px 0;overflow-x:auto}
+.spec-table{width:100%;border-collapse:collapse;font-size:14.5px}
+.spec-table thead tr{background:var(--ink);color:#fff}
+.spec-table thead th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:12px 16px;text-align:left;font-weight:400}
+.spec-table tbody tr{border-bottom:1px solid var(--rule)}
+.spec-table tbody tr:nth-child(even){background:var(--paper-2)}
+.spec-table tbody td{padding:11px 16px;color:var(--ink-mid);font-family:'DM Mono',monospace;font-size:13.5px}
+.spec-table tbody td:first-child{font-weight:500;color:var(--ink)}
+.spec-highlight{background:var(--pb-lt) !important;border-left:3px solid var(--pb)}
+.spec-highlight td:first-child{color:var(--pb) !important}
+
+/* ── SINK 구조 박스 ── */
+.sink-struct{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;margin:32px 0;border:1px solid var(--rule);border-radius:12px;overflow:hidden;
+}
+.sink-seg{padding:20px 18px;text-align:center}
+.sink-seg:nth-child(1){background:rgba(79,163,200,.08);border-right:1px solid var(--rule)}
+.sink-seg:nth-child(2){background:rgba(224,96,64,.09);border-right:1px solid var(--rule)}
+.sink-seg:nth-child(3){background:rgba(79,163,200,.08)}
+.sink-seg-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
+.sink-seg-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.sink-seg-rate{font-family:'DM Mono',monospace;font-size:22px;font-weight:400;margin-bottom:4px}
+.sink-seg-rate.s5{color:var(--pb)}
+.sink-seg-rate.s3{color:var(--s3)}
+.sink-seg-len{font-size:13px;color:var(--ink-soft)}
+
+/* ── PULLQUOTE ── */
+.pullquote{
+  border-left:3px solid var(--water);
+  padding:20px 28px;margin:40px 0;
+  background:rgba(74,124,111,.06);border-radius:0 10px 10px 0;
+}
+.pullquote p{font-size:18px;font-weight:500;color:var(--water-dk);font-style:italic;line-height:1.7;margin-bottom:0}
+
+/* ── 궤적 비교 카드 ── */
+.trajectory-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
+.traj-card{border:1px solid var(--rule);border-radius:12px;padding:20px;background:#fff}
+.traj-card-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
+.traj-card-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.traj-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:14px;color:var(--ink-mid);line-height:1.5}
+.traj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* ── 궤적 다이어그램 ── */
+.traj-diagram-wrap{
+  margin:40px 0;
+  border:1px solid var(--rule);
+  border-radius:14px;
+  background:var(--ink);overflow:hidden;
+}
+.traj-diagram-header{
+  padding:16px 24px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.traj-diagram-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.traj-diagram-sub{font-size:12px;color:rgba(255,255,255,.28);font-family:'DM Mono',monospace}
+.traj-diagram-img{padding:0;line-height:0}
+.traj-diagram-img img{width:100%;height:auto;display:block;object-fit:contain}
+
+/* ── 장단점 CSS 제거 ── */
+
+/* ── 한터 운용 전략 ── */
+.strategy-box{
+  background:var(--ink);color:#e8e8e8;
+  border-radius:14px;padding:32px;margin:40px 0;
+}
+.strategy-box h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:22px}
+.strategy-row{
+  display:grid;grid-template-columns:80px 1fr;
+  gap:12px 20px;align-items:start;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.strategy-row:last-child{border-bottom:none}
+.st-time{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.38);padding-top:2px}
+.st-content{font-size:15px;color:rgba(255,255,255,.78);line-height:1.65}
+.st-line-badge{
+  display:inline-block;font-family:'DM Mono',monospace;font-size:11px;
+  padding:2px 9px;border-radius:12px;margin-bottom:6px;
+}
+.st-pb{background:rgba(224,96,64,.22);color:var(--pb)}
+.st-int{background:rgba(79,163,200,.18);color:#4fa3c8}
+.st-titan{background:rgba(139,92,246,.18);color:#8b5cf6}
+.st-helix{background:rgba(45,82,72,.25);color:var(--water-lt)}
+
+/* ── 4단 시스템 CSS 제거 ── */
+
+/* ── CLOSING ── */
+.closing{
+  background:var(--water-dk);
+  padding:56px 52px;margin:56px -24px 0;border-radius:12px;
+  position:relative;overflow:hidden;
+}
+.closing::before{
+  content:'U';position:absolute;
+  font-family:'DM Serif Display',serif;font-size:320px;font-weight:400;
+  color:#fff;opacity:.04;
+  right:-20px;bottom:-60px;line-height:1;z-index:0;
+}
+.closing>*{position:relative;z-index:1}
+.closing h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:20px}
+.closing p{font-size:16px;margin-bottom:16px;line-height:1.88;color:rgba(255,255,255,.85)}
+.closing p:last-child{color:rgba(255,255,255,.95);font-weight:500}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:rgba(255,255,255,.35);padding:40px 24px;text-align:center}
+.ft-nav{display:flex;justify-content:center;gap:32px;margin-bottom:16px;flex-wrap:wrap}
+.ft-nav a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);transition:color .2s}
+.ft-nav a:hover{color:rgba(255,255,255,.75)}
+footer p{font-size:13px}
+
+/* ── MEDIA ── */
+@media(max-width:600px){
+  .hero{padding:0 0 48px}
+  .hero-tag,.hero-label,.hero h1,.hero-sub,.hero-specs{padding-left:24px;padding-right:24px}
+  .summary-grid{grid-template-columns:1fr}
+  .sink-struct{grid-template-columns:1fr}
+  .sink-seg:nth-child(1){border-right:none;border-bottom:1px solid var(--rule)}
+  .sink-seg:nth-child(2){border-right:none;border-bottom:1px solid var(--rule)}
+  .trajectory-grid{grid-template-columns:1fr}
+  .closing{padding:40px 24px;border-radius:8px}
+  .strategy-box{padding:24px 20px}
+  .strategy-row{grid-template-columns:1fr}
+  .st-time{font-size:11px}
+}
+@media(max-width:540px){
+  .hero h1{font-size:36px}
+  .spec-table{font-size:12px}
+  .spec-table tbody td,.spec-table thead th{padding:9px 10px}
+}
+</style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/sa-parabolic-sink-review.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <!-- 배경 파티클: 수중 버블 효과 -->
+  <canvas id="heroBg" class="hero-canvas-bg"></canvas>
+
+  <div class="hero-tag">CADDIS-GR · Gear Review · Fly Line</div>
+  <div class="hero-label">Line Review — Scientific Anglers</div>
+  <h1>Sonar Stillwater<br><em>Parabolic Sink</em></h1>
+  <p class="hero-sub">U형 침강이 설계하는 수직상승 — 바닥을 아는 자의 라인</p>
+  <div class="hero-specs">
+    <div class="hero-spec">Weight <strong>WF5S</strong></div>
+    <div class="hero-spec">Density <strong>Sink 3 / 5 / 3</strong></div>
+    <div class="hero-spec">Head <strong>35.5ft / 10.8m</strong></div>
+    <div class="hero-spec">Total <strong>105ft / 32m</strong></div>
+    <div class="hero-spec">Price <strong>$99.95</strong></div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 48 C360 0 1080 0 1440 48 L1440 48 L0 48Z" fill="#e8e2d8"/>
+  </svg>
+</header>
+
+<!-- ── SUMMARY ── -->
+<div class="summary wrap">
+  <div class="summary-head">
+    <span>라인 리뷰 — SA Sonar Stillwater Parabolic Sink WF5S</span>
+    <span class="summary-score">9.2</span>
+  </div>
+  <div class="summary-grid">
+    <div class="sg-item">
+      <label>제품 정보</label>
+      <p>Scientific Anglers · SONAR 시리즈<br>Stillwater 전용 · Made in USA</p>
+    </div>
+    <div class="sg-item">
+      <label>라인 구성</label>
+      <p>런닝(Sink 3) · 헤드(Sink 5) · 팁(Sink 3)<br>Seamless Density 기술 · 힌지 없음</p>
+    </div>
+    <div class="sg-item">
+      <label>적용 수역</label>
+      <p>Stillwater 전용 (저수지·관리형 낚시터)</p>
+    </div>
+    <div class="sg-item">
+      <label>추천 패턴</label>
+      <p>Chironomid Larva · Pupa<br>Soft Hackle Wet Fly</p>
+    </div>
+    <div class="sg-full">
+      <label>운용 성격</label>
+      <div class="tag-flow">
+        <span class="tag tag-pro">바닥 바로 위 고정</span>
+        <span class="tag tag-pro">수직상승 Pupa 재현</span>
+        <span class="tag tag-pro">U형 Belly 물리 설계</span>
+        <span class="tag tag-neutral">Sink 3/5/3 · Seamless</span>
+        <span class="tag tag-neutral">오버웨이트 +2</span>
+        <span class="tag tag-con">중층 수평 유지 약함</span>
+        <span class="tag tag-con">긴 카운트 필요</span>
+      </div>
+    </div>
+    <div class="sg-full">
+      <div class="summary-verdict">
+        전 수심층을 빠르게 탐색하는 파일럿 기능 위주로 설계된 라인이지만, 느린 8자 리트리브로 운영한다면 전혀 다른 성격의 라인으로 바뀐다. Sink 5의 밸리가 Sink 3의 팁보다 먼저 떨어지면서 U자 형태가 만들어지고, 뒤따르는 플라이가 이 궤적을 그대로 따라 움직이게 된다. <strong>떨어지면서 전층을 통과하고, 바닥을 탐색하고, 다시 수직으로 올라오는 — 하나의 캐스팅으로 다양한 수층 궤적을 만들어내는 라인이다.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ARTICLE ── -->
+<main class="article wrap">
+
+  <!-- SPEC -->
+  <div class="sec-title">Chapter 01 · Technical Specification</div>
+  <h2 class="ch-title">공식 스펙 — Sink 3/5/3 구조의 물리학</h2>
+  <p>SA의 Parabolic Sink는 단순한 멀티밀도 라인이 아니다. <strong>Sink 5 헤드가 Sink 3 런닝·팁보다 약 1.67배 빠르게 침강</strong>하도록 설계해, 캐스팅 후 라인이 수중에서 자연스럽게 U자형을 형성한다. 이 물리적 차이가 "수직상승 프레젠테이션"의 근거다.</p>
+
+  <!-- Sink 구조 시각화 -->
+  <div class="sink-struct">
+    <div class="sink-seg">
+      <div class="sink-seg-label">Running Line</div>
+      <div class="sink-seg-name">런닝라인</div>
+      <div class="sink-seg-rate s3">Sink 3</div>
+      <div class="sink-seg-len">약 7.6 cm/s (3 ips) · 낚시꾼 ~ 2.7m</div>
+    </div>
+    <div class="sink-seg">
+      <div class="sink-seg-label">Head (35.5ft)</div>
+      <div class="sink-seg-name">헤드 · 밸리</div>
+      <div class="sink-seg-rate s5">Sink 5</div>
+      <div class="sink-seg-len">약 12.7 cm/s (5 ips) · 2.7 ~ 13.5m 구간</div>
+    </div>
+    <div class="sink-seg">
+      <div class="sink-seg-label">Tip</div>
+      <div class="sink-seg-name">팁 · 플라이</div>
+      <div class="sink-seg-rate s3">Sink 3</div>
+      <div class="sink-seg-len">약 7.6 cm/s (3 ips) · 13.5 ~ 15m 구간</div>
+    </div>
+  </div>
+
+  <div class="spec-table-wrap">
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Item No.</th>
+          <th>Line Weight</th>
+          <th>Head Length</th>
+          <th>Total Length</th>
+          <th>Head Weight</th>
+          <th>Grain (30ft)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>129435</td><td>WF-5-S</td><td>35.5ft / 10.8m</td><td>105ft / 32m</td><td>215 gr / 13.9g</td><td>185 gr / 12.0g</td>
+        </tr>
+        <tr class="spec-highlight">
+          <td>129442</td><td>WF-6-S ★</td><td>35.5ft / 10.8m</td><td>105ft / 32m</td><td>185 gr / 15.8g †</td><td>210 gr / 13.6g</td>
+        </tr>
+        <tr>
+          <td>129459</td><td>WF-7-S</td><td>35.5ft / 10.8m</td><td>105ft / 32m</td><td>275 gr / 17.8g</td><td>240 gr / 15.6g</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:13.5px;color:var(--ink-soft);margin-top:-8px">★ 운용 번호. 오버웨이트 설계 (+2 line weight) — 멀티플라이·긴 리더 운용 시 캐스팅 용이.</p>
+  <p style="font-size:12.5px;color:var(--ink-soft);margin-top:6px">† SA 공식 표기상 WF6-S Head Weight가 "185 gr / 15.8g"으로 표시되어 있으나, 단위 환산상 15.8g은 약 244 gr에 해당한다. 공식 페이지의 표기 오류 가능성이 있으므로, Grain weight for first 30ft 기준인 210 gr을 우선 참고하는 것이 현실적이다.</p>
+
+  <div class="pullquote">
+    <p>"Sink 5는 약 12.7 cm/s, Sink 3는 약 7.6 cm/s — 5:3, 약 1.67배의 차이다. 절대값으로는 초당 5cm 남짓의 간격이지만, 15m 수중에서 긴 시간 동안 누적되어 U형을 만든다."</p>
+  </div>
+
+  <!-- 텍스처 마커 -->
+  <p>공식 설명에는 10ft · 20ft 텍스처드 행 마커가 적용된 것으로 소개되어 있지만, 실제 구입품에는 별도 튜브형 마커 2개가 동봉되어 있었다. 따라서 사용자가 원하는 위치에 직접 부착해 행 구간을 표시하는 방식으로 이해하는 편이 현실적이다. Seamless Density 기술은 밀도 전환 구간의 힌지(꺾임)를 제거해 바닥층 미세 입질을 직결 전달한다.</p>
+
+  <!-- 궤적 비교 -->
+  <div class="sec-title">Chapter 02 · 수중 궤적 비교</div>
+  <h2 class="ch-title">다름이 무기가 된다</h2>
+  <p>인터미디어트와 Parabolic Sink의 차이는 단순한 침강속도 차이가 아니다. <strong>수중에서 그리는 궤적의 형태 자체가 다르다</strong>. 같은 착수점에서 출발하지만, 플라이가 경험하는 수층의 순서와 방향이 근본적으로 다른 것이다.</p>
+
+  <div class="trajectory-grid">
+    <div class="traj-card">
+      <div class="traj-card-label" style="color:#4fa3c8">Intermediate</div>
+      <div class="traj-card-title">착수 수면 → 사선으로 바닥</div>
+      <div class="traj-item"><div class="traj-dot" style="background:#4fa3c8"></div>착수 직후 수면 근처에서 시작</div>
+      <div class="traj-item"><div class="traj-dot" style="background:#4fa3c8"></div>끌려오며 점점 가라앉는 사선 (~24°)</div>
+      <div class="traj-item"><div class="traj-dot" style="background:#4fa3c8"></div>표층→중층→바닥 순서로 통과</div>
+      <div class="traj-item"><div class="traj-dot" style="background:#4fa3c8"></div>발 앞 수직상승으로 마무리</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--ink-soft)">"수층을 모를 때 찾는 라인"</div>
+    </div>
+    <div class="traj-card" style="border-color:var(--pb)">
+      <div class="traj-card-label" style="color:var(--pb)">Parabolic Sink</div>
+      <div class="traj-card-title">착수 → U형 침강 → 바닥 바로 위 → 수직상승</div>
+      <div class="traj-item"><div class="traj-dot" style="background:var(--pb)"></div>착수 후 Sink 5 밸리가 먼저 선침강</div>
+      <div class="traj-item"><div class="traj-dot" style="background:var(--pb)"></div>카운트 충분 시 밸리가 바닥권에 먼저 접근, 팁·플라이 뒤따름</div>
+      <div class="traj-item"><div class="traj-dot" style="background:var(--pb)"></div>헤드 전체가 바닥 바로 위에 가라앉아 깔림</div>
+      <div class="traj-item"><div class="traj-dot" style="background:var(--s5)"></div>발 앞 수직상승 — Pupa 우화 재현</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(224,96,64,.3);font-size:13.5px;color:var(--ink-soft)">"물고기가 바닥권에 붙어 있을 때, 플라이를 코앞에서 천천히 올려주는 라인으로, 인터미디어트보다 빠르게 수심층을 통과하고 중거리부터 바닥을 탐색하며 다시 수직으로 상승하는 라인"</div>
+    </div>
+  </div>
+
+  <!-- 시뮬레이터 -->
+  <div class="sec-title">Chapter 03 · 수중 궤적 다이어그램</div>
+  <h2 class="ch-title">15m 캐스팅 — 4개 라인의 수층 비교</h2>
+  <p>Sink 5:3 비율이 어떻게 U형을 만드는지, 그리고 4개 라인의 플라이 궤적이 각각 어떻게 다른지 아래 다이어그램에서 확인할 수 있다.</p>
+</main>
+
+<!-- 수층 궤적 다이어그램 — 4단 시스템 -->
+<div class="wrap">
+<div class="traj-diagram-wrap">
+  <div class="traj-diagram-header">
+    <span class="traj-diagram-title">Fly Trajectory — 4-Line System</span>
+    <span class="traj-diagram-sub">6m 수심 · 15m casting · 라인 침강에 따른 플라이의 수중 궤적</span>
+  </div>
+  <div class="traj-diagram-svg">
+
+<style>
+.sc-rv{background:var(--paper);border:0.5px solid var(--rule);border-radius:10px;padding:14px 18px;margin-bottom:9px}
+.ll-rv{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.ln-rv{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.lr-rv{font-size:14px;color:var(--ink-mid);line-height:1.65}
+.pl-rv{display:inline-block;font-size:12px;padding:2px 9px;border-radius:10px;margin:3px 3px 0 0;font-family:'DM Mono',monospace}
+.ts-rv{font-size:10px;font-family:'DM Mono',monospace}
+</style>
+
+<svg width="100%" viewBox="0 0 680 315" role="img" style="display:block">
+  <title>4단 라인 시스템 — 플라이 수중 궤적 비교</title>
+  <defs>
+    <marker id="arv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <linearGradient id="wg-rv" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8dff0" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#2a5f7a" stop-opacity="0.58"/>
+    </linearGradient>
+    <linearGradient id="btm-rv" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B7355" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#5C4A2A" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 수체 -->
+  <rect x="44" y="14" width="622" height="262" rx="8" fill="url(#wg-rv)" stroke="#d6d0c4" stroke-width="0.5"/>
+  <!-- 수면 -->
+  <line x1="44" y1="40" x2="666" y2="40" stroke="#7ec8e3" stroke-width="1.2" opacity="0.65"/>
+  <!-- 바닥 -->
+  <rect x="44" y="250" width="622" height="26" fill="url(#btm-rv)"/>
+  <ellipse cx="140" cy="258" rx="9" ry="4" fill="#8B7355" opacity="0.28"/>
+  <ellipse cx="320" cy="260" rx="6" ry="3" fill="#6B5535" opacity="0.25"/>
+  <ellipse cx="500" cy="257" rx="8" ry="3.5" fill="#8B7355" opacity="0.28"/>
+  <ellipse cx="590" cy="259" rx="6" ry="3" fill="#6B5535" opacity="0.22"/>
+
+  <!-- 수심 눈금 -->
+  <line x1="57" y1="40" x2="57" y2="250" stroke="#888" stroke-width="0.4" stroke-dasharray="2 4" opacity="0.22"/>
+  <text class="ts-rv" x="51" y="38" fill="#7ec8e3" opacity="0.7">수면</text>
+  <text class="ts-rv" x="61" y="82"  fill="#888" opacity="0.4">1m</text>
+  <text class="ts-rv" x="61" y="124" fill="#888" opacity="0.4">2m</text>
+  <text class="ts-rv" x="61" y="166" fill="#888" opacity="0.4">3m</text>
+  <text class="ts-rv" x="61" y="208" fill="#888" opacity="0.4">4m</text>
+  <text class="ts-rv" x="61" y="250" fill="#c8a87a" opacity="0.7">6m</text>
+
+  <!-- 거리 눈금 -->
+  <text class="ts-rv" x="648" y="290" text-anchor="middle" fill="#888" opacity="0.45">0m</text>
+  <text class="ts-rv" x="508" y="290" text-anchor="middle" fill="#888" opacity="0.45">5m</text>
+  <text class="ts-rv" x="368" y="290" text-anchor="middle" fill="#888" opacity="0.45">10m</text>
+  <text class="ts-rv" x="228" y="290" text-anchor="middle" fill="#888" opacity="0.45">12.5m</text>
+  <text class="ts-rv" x="88"  y="290" text-anchor="middle" fill="#888" opacity="0.45">15m</text>
+
+  <!-- 낚시꾼 -->
+  <circle cx="648" cy="32" r="6" fill="#888" opacity="0.32"/>
+  <line x1="648" y1="38" x2="648" y2="40" stroke="#888" stroke-width="1.5" opacity="0.32"/>
+
+  <!-- ① Helix + Rio Elite: 표층 고정 -->
+  <path d="M88 40 Q230 38 370 40 Q480 41 620 40"
+        fill="none" stroke="#27ae7a" stroke-width="2.5" stroke-linecap="round" opacity="0.88"/>
+  <rect x="88" y="38" width="532" height="38" rx="4" fill="#27ae7a" opacity="0.07"/>
+  <circle cx="88" cy="40" r="4" fill="#27ae7a" opacity="0.85"/>
+  <path d="M620 40 L648 40" fill="none" stroke="#27ae7a" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4"/>
+  <text class="ts-rv" x="354" y="56" text-anchor="middle" fill="#27ae7a" opacity="0.9">① Helix + Rio Elite — 플라이 표층 · 2m권 유영</text>
+
+  <!-- ② Intermediate: 사선 전층 -->
+  <path d="M88 42 Q200 70 320 115 Q440 165 560 220 Q592 236 620 248"
+        fill="none" stroke="#4fa3c8" stroke-width="2.8" stroke-linecap="round" opacity="0.85"/>
+  <path d="M88 42 Q200 70 320 115 Q440 165 560 220 Q592 236 620 248 L620 236 Q592 222 560 206 Q440 150 320 102 Q200 56 88 34 Z"
+        fill="#4fa3c8" opacity="0.06"/>
+  <circle cx="88" cy="42" r="4" fill="#4fa3c8" opacity="0.85"/>
+  <path d="M620 248 L648 40" fill="none" stroke="#4fa3c8" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.5" marker-end="url(#arv)"/>
+  <text class="ts-rv" x="330" y="133" text-anchor="middle" fill="#4fa3c8" opacity="0.9">② Intermediate — 플라이 사선 전층 통과</text>
+
+  <!-- ③ Parabolic Sink: U형 -->
+  <path d="M88 42 Q145 58 192 90 Q248 132 298 178 Q338 214 385 244 Q424 255 462 252 Q506 246 542 228 Q578 204 606 172 Q624 150 632 128"
+        fill="none" stroke="#e06040" stroke-width="2.8" stroke-linecap="round" opacity="0.85"/>
+  <!-- 바닥 안착 구간 강조 -->
+  <path d="M338 214 Q385 244 424 255 Q462 252 506 246" fill="none" stroke="#e06040" stroke-width="4.5" stroke-linecap="round" opacity="0.28"/>
+  <circle cx="88" cy="42" r="4" fill="#e06040" opacity="0.82"/>
+  <path d="M632 128 L648 40" fill="none" stroke="#e06040" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.48" marker-end="url(#arv)"/>
+  <text class="ts-rv" x="225" y="152" fill="#e06040" opacity="0.9">③ Parabolic — 플라이 중층→바닥 안착→수직상승</text>
+
+  <!-- ④ Titan 3D: 바닥 수평 -->
+  <path d="M88 42 Q108 82 122 132 Q132 178 138 232 Q140 248 145 251 L550 251 Q584 249 620 240"
+        fill="none" stroke="#8b5cf6" stroke-width="2.8" stroke-linecap="round" opacity="0.8"/>
+  <path d="M145 251 L550 251" fill="none" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round" opacity="0.25"/>
+  <circle cx="88" cy="42" r="4" fill="#8b5cf6" opacity="0.78"/>
+  <path d="M620 240 L648 40" fill="none" stroke="#8b5cf6" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.42" marker-end="url(#arv)"/>
+  <text class="ts-rv" x="370" y="242" text-anchor="middle" fill="#8b5cf6" opacity="0.9">④ Titan 3D — 플라이 바닥 수평 통과</text>
+
+  <!-- 수층 가이드 -->
+  <line x1="44" y1="82" x2="666" y2="82" stroke="#d6d0c4" stroke-width="0.5" stroke-dasharray="4 6" opacity="0.38"/>
+</svg>
+
+  </div><!-- /traj-diagram-svg -->
+</div><!-- /traj-diagram-wrap -->
+</div><!-- /wrap -->
+
+<div class="wrap" style="margin-top:0">
+
+<div class="sc-rv" style="border-left:3px solid #27ae7a;margin-top:24px">
+  <div class="ll-rv" style="color:#27ae7a">① 표층 · 2m권 피네스</div>
+  <div class="ln-rv">T&T Helix 863-4 (#3) + Rio Elite Technical Trout WF4F</div>
+  <div style="margin:5px 0">
+    <span class="pl-rv" style="background:rgba(39,174,122,0.1);color:#1a8055">Chironomid Larva · Pupa</span>
+    <span class="pl-rv" style="background:rgba(39,174,122,0.1);color:#1a8055">마이크로 님핑</span>
+    <span class="pl-rv" style="background:rgba(39,174,122,0.1);color:#1a8055">피네스 드라이</span>
+  </div>
+  <div class="lr-rv">수면 피딩, 떠오른 송어 대상. 가장 섬세한 채비 — 플라이를 건드리듯 프레젠테이션. 표층~2m 이내를 커버한다.</div>
+</div>
+
+<div class="sc-rv" style="border-left:3px solid #4fa3c8">
+  <div class="ll-rv" style="color:#4fa3c8">② 전층 서칭</div>
+  <div class="ln-rv">Intermediate + Chironomid Larva</div>
+  <div style="margin:5px 0">
+    <span class="pl-rv" style="background:rgba(79,163,200,0.1);color:#2980a8">Larva · Pupa</span>
+    <span class="pl-rv" style="background:rgba(79,163,200,0.1);color:#2980a8">느린 리트리브</span>
+    <span class="pl-rv" style="background:rgba(79,163,200,0.1);color:#2980a8">카운트 수심 조절</span>
+  </div>
+  <div class="lr-rv">수층 불분명 시 탐색 1순위. 착수 후 사선으로 표층→중층→바닥을 차례로 통과. 웨이트 없는 Larva가 라인 침강을 그대로 따라가며 자연 유영.</div>
+</div>
+
+<div class="sc-rv" style="border-left:3px solid #e06040">
+  <div class="ll-rv" style="color:#e06040">③ 중층 + 바닥 반반 서칭 — 이 라인</div>
+  <div class="ln-rv">SA Sonar Stillwater Parabolic Sink WF5S + Chironomid Larva</div>
+  <div style="margin:5px 0">
+    <span class="pl-rv" style="background:rgba(224,96,64,0.1);color:#c04030">Larva · Pupa</span>
+    <span class="pl-rv" style="background:rgba(224,96,64,0.1);color:#c04030">8자 느린 리트리브</span>
+    <span class="pl-rv" style="background:rgba(224,96,64,0.1);color:#c04030">수직상승 극대화</span>
+  </div>
+  <div class="lr-rv">웨이트 없는 Larva가 U형 설계를 온전히 살려준다. 중거리부터 바닥 바로 위에 내려앉고, 느린 8자가 수직으로 올라오는 구간을 길게 만든다. Pupa가 우화 직전 수직으로 떠오르는 동작과 가깝다.</div>
+</div>
+
+<div class="sc-rv" style="border-left:3px solid #8b5cf6">
+  <div class="ll-rv" style="color:#8b5cf6">④ 바닥 전용 서칭</div>
+  <div class="ln-rv">SA Sonar Titan 3D i/3/5 + 스트리머류</div>
+  <div style="margin:5px 0">
+    <span class="pl-rv" style="background:rgba(139,92,246,0.1);color:#7040c0">Leech · Damsel</span>
+    <span class="pl-rv" style="background:rgba(139,92,246,0.1);color:#7040c0">Wooly Bugger</span>
+    <span class="pl-rv" style="background:rgba(139,92,246,0.1);color:#7040c0">루어 어필</span>
+  </div>
+  <div class="lr-rv">카운트다운 후 바닥 직행. 수평 리트리브로 가장 넓은 바닥 구간 커버. 스트리머의 움직임 어필이 바닥층 활성 송어를 자극.</div>
+</div>
+
+<div style="background:var(--paper-2);border-radius:8px;padding:12px 16px;font-size:14px;color:var(--ink-mid);line-height:1.8;border-left:3px solid var(--rule);margin-bottom:32px">
+  <strong style="color:var(--ink)">완성된 논리</strong> — 각 라인의 침강 특성이 만들어내는 <strong style="color:var(--ink)">플라이의 수중 궤적</strong>이다 — 라인 자체의 위치가 아니라, 라인이 움직이는 방식에 따라 플라이가 통과하는 수층의 순서와 자세가 결정된다. Helix가 수면을, Intermediate가 전층 사선을, Parabolic이 중층~바닥 전환을, Titan 3D가 바닥 수평을 각각 담당한다. ②③④는 모두 <strong style="color:var(--ink)">발 앞 수직상승</strong>으로 마무리된다.
+</div>
+
+</div><!-- /wrap -->
+
+<main class="article wrap">
+
+  <!-- 플라이 궤적 서술 -->
+  <div class="sec-title">플라이의 수중 여정 — 직접 읽어낸 궤적</div>
+  <h2 class="ch-title">다이어그램 너머의 실제 움직임</h2>
+  <p>캐스팅 후 라인이 수면에 펼쳐지면서 침강이 시작된다. Sink 3 / Sink 5 / Sink 3 구조이다 보니 — 시간이 지날수록 Sink 5 헤드가 먼저 내려가면서 라인이 아래로 볼록한 형태를 띠기 시작한다. 리트리브를 시작하면 라인이 낚시꾼 쪽으로 이동하는 동시에 볼록은 점점 깊어진다. Sink 5와 Sink 3 사이의 거리는 라인 구조상 고정돼 있으니, 침강이 깊어질수록 볼록의 폭은 커지고 — 바닥에 가까워질 즈음에는 완만한 곡선이 아니라 U자에 가까운 형태가 된다.</p>
+  <p>카운트가 충분하고 리트리브가 느리다면, Sink 5 밸리부터 바닥권에 먼저 접근하고, 이후 팁과 플라이가 뒤따라 내려오면서 바닥 바로 위 또는 바닥 접촉에 가까운 구간이 생긴다. 이 구간이 바로 Chironomid Larva가 바닥 머드층에 가장 가까운 자세로 머무는 순간이다. 그렇게 바닥권을 통과하다가 — 발 앞 수직상승 구간에 이르면 비로소 플라이가 수직으로 솟아오른다.</p>
+  <div class="pullquote">
+    <p>"밸리가 바닥에 닿는다고 바로 올라오는 게 아니다 — 카운트가 충분하다면 팁과 플라이까지 차례로 바닥권에 내려앉고, 발 앞에서야 수직으로 솟아오른다."</p>
+  </div>
+
+  <!-- 장단점 -->
+  <!-- 송어 사진 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:40px 0">
+    <div style="border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--paper-2)">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/0429-Trout01.JPEG" alt="송어 01" style="width:100%;height:100%;object-fit:cover;display:block">
+    </div>
+    <div style="border-radius:10px;overflow:hidden;aspect-ratio:4/3;background:var(--paper-2)">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/images/0429-Trout02.JPEG" alt="송어 02" style="width:100%;height:100%;object-fit:cover;display:block">
+    </div>
+  </div>
+
+  <!-- Larva 꼭지 -->
+  <div class="sec-title">Chapter 05 · Larva on the Bottom</div>
+  <h2 class="ch-title">싱킹라인에 라바를 넣는다는 것</h2>
+  <p>싱킹라인은 기본적으로 <strong>가라앉음</strong>을 전제로 한다. 그 전제가 플라이 선택까지 제한한다 — 라인이 침강하면서 끌려오기 때문에, 자연스럽게 리트리브에 반응하도록 설계된 스트리머, Leech, Damsel 계열이 주를 이룬다. 무게와 볼륨이 있어야 바닥층에서 살아있는 움직임을 만들 수 있기 때문이다.</p>
+  <p>그런데 Parabolic Sink는 그 공식에 균열을 낸다. <strong>U형 침강 구조</strong>가 밸리를 먼저 바닥에 안착시키고, 팁과 플라이가 뒤따라 내려오는 순서 덕분에 — 웨이트가 거의 없는 Chironomid Larva류도 바닥 바로 위에 자리를 잡을 수 있다. 라인이 플라이를 끌고 다니는 게 아니라, 라인 자체가 바닥에 깔리면서 플라이를 제자리에 눌러두는 구조다.</p>
+  <div class="pullquote">
+    <p>"싱킹라인 조건에서 Larva를 바닥에 넣을 수 있다 — 이것만으로도 큰 수확이다."</p>
+  </div>
+  <p>실제 수중에서 Chironomid Larva는 바닥 머드층(mud)에 서식하며 거의 움직이지 않는다. 리트리브가 아니라 <strong>정지</strong>가 본래 자세다. 기존 싱킹라인 운용에서 Larva를 쓰기 어려웠던 이유가 바로 이 지점이다 — 라인이 계속 움직이는 구조에서 Larva의 정지 자세를 유지하기 어렵다. Parabolic Sink는 바닥에 가라앉은 뒤 8자 리트리브의 느린 당김으로 Larva를 바닥 바로 위에 띄워놓고, 발 앞 수직상승 구간에서 Pupa로의 탈피 직전 상승을 재현한다. 플라이의 본능적 자세와 라인의 물리적 구조가 맞아떨어지는 순간이다.</p>
+
+  <!-- 운용 전략 -->
+  <div class="sec-title">Chapter 06 · 관리형 저수지 운용 전략</div>
+  <h2 class="ch-title">언제, 어떻게 꺼낼 것인가</h2>
+  <p>이 라인은 모든 상황을 대체하는 만능 라인이 아니라, 인터미디어트와 Titan 3D 사이의 빈 공간을 메우는 라인이다. 전층을 빠르게 읽는 라인은 아니고, 완전 바닥 수평 서칭 라인도 아니다. 중층에서 바닥권으로 넘어가는 전환 구간, 그리고 회수 말미의 수직상승을 의도적으로 만드는 라인이다.</p>
+  <p>단, 운용 방식에 따라 이 성격은 달라진다. 빠른 리트리브로 쓰면 설계 의도대로 전층 파일럿 라인에 가까워지고 — 느린 8자 리트리브를 얹으면 바닥권 탐색과 수직상승에 집중하는 전혀 다른 라인이 된다. 같은 라인이지만, 손 속도가 성격을 결정한다.</p>
+
+  <div class="strategy-box">
+    <h3>상황별 라인 선택 전략 — 6m 수심 관리형 저수지</h3>
+    <div class="strategy-row">
+      <div class="st-time">입장 직후</div>
+      <div class="st-content">
+        <div class="st-line-badge st-int">② Intermediate</div><br>
+        수층 불분명. 피딩 수층 탐색이 우선. 전층 사선 서칭으로 어디 있는지 먼저 읽는다.
+      </div>
+    </div>
+    <div class="strategy-row">
+      <div class="st-time">수면 조용</div>
+      <div class="st-content">
+        <div class="st-line-badge st-pb">③ Parabolic Sink</div><br>
+        바닥 패턴 확신 시. 카운트와 수심 조건에 따라 밸리가 바닥권에 안착하는 타이밍을 익히면 플라이를 바닥 바로 위에 띄울 수 있다. Larva 장착.
+      </div>
+    </div>
+    <div class="strategy-row">
+      <div class="st-time">오후 강광</div>
+      <div class="st-content">
+        <div class="st-line-badge st-pb">③ Parabolic Sink</div>
+        <div class="st-line-badge st-titan" style="margin-left:6px">④ Titan 3D</div><br>
+        물고기가 바닥권으로 내려간 상황. Parabolic의 수직상승 또는 Titan의 수평 바닥 서칭. 패턴에 따라 선택.
+      </div>
+    </div>
+    <div class="strategy-row">
+      <div class="st-time">피네스 요구</div>
+      <div class="st-content">
+        <div class="st-line-badge st-helix">① Helix + Rio Elite</div><br>
+        떠오른 송어, 표층 피딩. WF4F 플로팅. Parabolic은 이 상황에서 꺼내지 않는다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 첫 출조 카운트 팁 -->
+  <p>Sink 5 밸리가 바닥권에 접근하는 타이밍을 앞뒤로 조절하는 것만으로 — 바닥층을 공략하는 구간을 길게도, 짧게도 충분히 조절할 수 있다. 카운트가 짧으면 중층 통과 비중이 늘고, 길면 바닥 구간이 늘어난다. 이 타이밍을 손으로 익혀두면 이 라인의 가능성이 한층 넓어진다.</p>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <h3>결론 — 서랍에서 꺼내는 날</h3>
+    <p>인터미디어트가 "어디 있는지 모를 때 찾는 라인"이라면, Parabolic Sink는 "바닥을 알고 쓰는 라인"이다. 그 차이를 이해한 뒤에 쥐는 낚싯대와 이해 없이 쥐는 낚싯대는 같은 15m를 날아가도 전혀 다른 결과를 만든다.</p>
+    <p>U형 궤적을 머릿속에 그릴 수 있게 된 지금, Parabolic Sink는 단순한 신규 라인이 아니다. 표층(Helix), 전층(Intermediate), 중층+바닥(Parabolic), 바닥(Titan 3D) — 이 4단 체계가 완성되는 마지막 퍼즐이다.</p>
+    <p>다들 물어주는 건 송어 마음이라고 한다. 이젠 틀렸다 — 내 맘이다.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="ft-nav">
+    <a href="../index.html">CADDIS-GR Home</a>
+    <a href="../../gear/index.html">Gear Archive</a>
+    <a href="../../field-log/index.html">Fishing Log</a>
+    <a href="https://scientificanglers.com/product/sonar-stillwater-parabolic-sink/" target="_blank">SA 공식 페이지 ↗</a>
+  </div>
+  <p>© 2026 CADDIS-GR · 낚시대장 · SA Sonar Stillwater Parabolic Sink WF5S Review</p>
+</footer>
+
+<script>
+// ── 히어로 배경: 수중 버블 파티클 ──
+(function(){
+  const cv = document.getElementById('heroBg');
+  if(!cv) return;
+  const c = cv.getContext('2d');
+  let W, H, bubbles=[];
+
+  function resize(){
+    W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function mkBubble(){
+    return {
+      x: Math.random()*W,
+      y: H + Math.random()*80,
+      r: 1 + Math.random()*3.5,
+      vx: (Math.random()-.5)*0.3,
+      vy: -(0.3+Math.random()*0.7),
+      a: 0.1+Math.random()*0.35,
+      wobble: Math.random()*Math.PI*2,
+      wSpeed: 0.01+Math.random()*0.02,
+    };
+  }
+  for(let i=0;i<60;i++){
+    const b=mkBubble();
+    b.y=Math.random()*H;
+    bubbles.push(b);
+  }
+
+  function frame(){
+    c.clearRect(0,0,W,H);
+    bubbles.forEach((b,i)=>{
+      b.y+=b.vy; b.wobble+=b.wSpeed; b.x+=b.vx+Math.sin(b.wobble)*0.18;
+      b.a*=0.9998;
+      c.save();
+      c.strokeStyle=`rgba(120,200,220,${b.a})`;
+      c.lineWidth=0.7;
+      c.beginPath();c.arc(b.x,b.y,b.r,0,Math.PI*2);c.stroke();
+      c.restore();
+      if(b.y<-20) bubbles[i]=mkBubble();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

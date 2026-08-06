@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>겸손은… 힘들다!! · 2026.05.08 한터낚시터 · CADDIS-GR LAB</title>
+  <meta name="description" content="2026년 5월 8일 한터낚시터 플라이낚시 조행기. 겸손은… 힘들다!!">
+  <style>
+    :root {
+      --bg: #f6f3ec;
+      --paper: #fffdf8;
+      --ink: #26231f;
+      --muted: #716b62;
+      --line: #ded6c8;
+      --accent: #7b4b2a;
+      --accent-2: #314b3f;
+      --soft: #eee6d8;
+      --warning: #8a4c22;
+      --shadow: 0 18px 45px rgba(42, 35, 26, 0.12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(123, 75, 42, 0.12), transparent 34rem),
+        linear-gradient(180deg, #f8f5ef 0%, var(--bg) 42%, #efe7da 100%);
+      color: var(--ink);
+      line-height: 1.78;
+      word-break: keep-all;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0 auto 22px;
+      padding: 12px;
+      border: 1px solid rgba(222, 214, 200, 0.9);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.82);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 24px rgba(42, 35, 26, 0.08);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .top-nav a {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .top-nav a:hover {
+      background: var(--soft);
+      color: var(--ink);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(49, 75, 63, 0.62), rgba(38, 35, 31, 0.55)),
+        url("https://caddis-gr.github.io/fishing-log/images/0508/0508-Hanter01.JPEG") center/cover;
+      color: #fffaf2;
+      padding: clamp(34px, 6vw, 78px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 18%, rgba(255, 255, 255, 0.08), transparent 17rem),
+        linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.04) 100%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(800px, 100%);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: rgba(255, 250, 242, 0.76);
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.1rem, 9vw, 7.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.075em;
+    }
+
+    .subtitle {
+      margin: 26px 0 0;
+      font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+      color: rgba(255, 250, 242, 0.9);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 30px 0 0;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 250, 242, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.1);
+      color: rgba(255, 250, 242, 0.88);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 34px;
+      padding: clamp(24px, 4.5vw, 46px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.88);
+      box-shadow: 0 10px 28px rgba(42, 35, 26, 0.065);
+    }
+
+    .section h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.65rem, 3.5vw, 2.55rem);
+      line-height: 1.2;
+      letter-spacing: -0.045em;
+    }
+
+    .chapter-label {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .lead {
+      font-size: clamp(1.08rem, 2vw, 1.22rem);
+      color: #3d3832;
+      font-weight: 650;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .summary-item {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fbf7ef;
+    }
+
+    .summary-item h3 {
+      margin: 0 0 8px;
+      color: var(--accent-2);
+      font-size: 0.98rem;
+    }
+
+    .summary-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    blockquote {
+      margin: 28px 0;
+      padding: 22px 24px;
+      border-left: 6px solid var(--accent);
+      border-radius: 16px;
+      background: #f4eadb;
+      color: #3b2d22;
+      font-size: clamp(1.12rem, 2.2vw, 1.42rem);
+      line-height: 1.55;
+      font-weight: 800;
+    }
+
+    figure {
+      margin: 28px 0 0;
+    }
+
+    figcaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .image-grid figure {
+      margin: 0;
+    }
+
+    .image-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .note-box {
+      margin-top: 26px;
+      padding: 22px;
+      border: 1px solid rgba(123, 75, 42, 0.25);
+      border-radius: 18px;
+      background: #f7efe3;
+    }
+
+    .note-box h3 {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 1.08rem;
+    }
+
+    .note-box p {
+      margin: 0;
+      color: #4b443d;
+    }
+
+    .analysis-box {
+      margin-top: 26px;
+      padding: 24px;
+      border: 1px solid rgba(49, 75, 63, 0.28);
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, rgba(49, 75, 63, 0.08), transparent 22rem),
+        #f8f3ea;
+    }
+
+    .analysis-box h3 {
+      margin: 0 0 12px;
+      color: var(--accent-2);
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .analysis-box ol {
+      margin: 14px 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .analysis-box li {
+      margin: 10px 0;
+    }
+
+    .analysis-box strong {
+      color: #2f4a3d;
+    }
+
+    .caution {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(138, 76, 34, 0.1);
+      color: #5b371f;
+      font-weight: 700;
+    }
+
+
+    .section figure:not(.wide-image) {
+      width: min(420px, 100%);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .image-grid figure {
+      width: 100%;
+    }
+
+    .zoomable {
+      cursor: zoom-in;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .zoomable:hover {
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 16px 34px rgba(42, 35, 26, 0.18);
+      filter: saturate(1.04) contrast(1.02);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(20, 18, 16, 0.86);
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      width: auto;
+      max-width: min(1100px, 94vw);
+      max-height: 88vh;
+      border-radius: 18px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+      cursor: zoom-out;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255, 250, 242, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.12);
+      color: #fffaf2;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .lightbox-caption {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(780px, calc(100% - 40px));
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.12);
+      color: rgba(255, 250, 242, 0.88);
+      text-align: center;
+      font-size: 0.92rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .closing {
+      background:
+        linear-gradient(135deg, rgba(123, 75, 42, 0.12), transparent 34rem),
+        rgba(255, 253, 248, 0.92);
+    }
+
+    .closing-title {
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 6vw, 4.6rem);
+      letter-spacing: -0.06em;
+      line-height: 1;
+    }
+
+    .footer {
+      margin-top: 34px;
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 860px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .image-grid.three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 12px;
+      }
+
+      .hero {
+        border-radius: 24px;
+      }
+
+      .section {
+        border-radius: 20px;
+      }
+
+      .summary-grid,
+      .image-grid,
+      .image-grid.three {
+        grid-template-columns: 1fr;
+      }
+
+      .top-nav {
+        border-radius: 18px;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">\n</head>
+
+<body class="archive-page"><div class="lab-archive-bar"><a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a><nav aria-label="아카이브 탐색"><a href="../../research/index.html">Research</a><a href="../../gear/index.html">Gear</a><a href="../../fly-patterns/index.html">Fly Patterns</a><a href="../../field-log/index.html" aria-current="page">Field Log</a><a href="../../library/index.html">Library</a></nav></div><div class="lab-archive-source"><span>FIELD LOG · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-log/blob/main/logs/2026-05-08-hanter-final-v3.html" target="_blank" rel="noopener">원본 저장소</a></div>
+  <main class="page">
+
+    <nav class="top-nav" aria-label="페이지 바로가기">
+      <a href="#summary">요약</a>
+      <a href="#chapter-01">평일 출조</a>
+      <a href="#chapter-02">쎄한 수면</a>
+      <a href="#chapter-03">바텀 전환</a>
+      <a href="#chapter-04">침묵의 패턴</a>
+      <a href="#chapter-05">봄바람</a>
+      <a href="#chapter-06">오늘은 인정</a>
+      <a href="#analysis">밋지 무반응</a>
+      <a href="#closing">마무리</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">CADDIS-GR · Fly Fishing Log · Hanter</p>
+        <h1>겸손은…<br>힘들다!!</h1>
+        <p class="subtitle">
+          호기롭게 평일 필드를 지배하러 갔다가,<br>
+          자연 앞에서 다시 겸손을 배운 하루.
+        </p>
+        <div class="meta">
+          <span>2026.05.08</span>
+          <span>한터낚시터</span>
+          <span>평일 출조</span>
+          <span>강한 봄바람</span>
+          <span>두 자리 기록</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="section" id="summary">
+      <p class="chapter-label">Overview</p>
+      <h2>오늘의 조행 요약</h2>
+
+      <p class="lead">
+        근래 들어 가장 어려운 낚시였다. 호기롭게, 의기양양하게, 위풍당당하게 필드를 지배할 줄 알았는데
+        자연 앞에서 나는 다시 겸손을 배웠다.
+      </p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <h3>상황</h3>
+          <p>평일 휴가 출조. 송어장은 한산했지만 수면창은 처음부터 쎄했다.</p>
+        </div>
+        <div class="summary-item">
+          <h3>조과</h3>
+          <p>어려운 조건 속 최종 두 자리 기록. 긴 침묵 사이 바텀에서 뜨문뜨문 반응.</p>
+        </div>
+        <div class="summary-item">
+          <h3>핵심 채비</h3>
+          <p>Hover, Intermediate, SA Sonar Titan 3D i/3/5를 반복 운용.</p>
+        </div>
+        <div class="summary-item">
+          <h3>핵심 결론</h3>
+          <p>싱킹라인 솔루션은 유효했다. 그러나 특정 국면에서는 플로팅 인디케이터 채비도 인정.</p>
+        </div>
+      </div>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Counter.PNG" alt="2026년 5월 8일 한터낚시터 조과 카운터" loading="lazy">
+        <figcaption>그래도 결국 두 자리. 어려운 날일수록 숫자보다 과정이 더 크게 남는다.</figcaption>
+      </figure>
+
+      <blockquote>
+        “나도 휴가, 송어도 휴가…”
+      </blockquote>
+    </section>
+
+    <section class="section" id="chapter-01">
+      <p class="chapter-label">Chapter 01</p>
+      <h2>호기로운 평일 낚시</h2>
+
+      <p>
+        직장인이 평일에 낚시하기란 쉽지 않다. 그래서 그동안은 대부분 주말에 낚시를 다녀왔다.
+        그런데 이번에는 어찌어찌 기회가 생겼다. 하루 휴가를 냈고, 호기롭게 평일 낚시에 나섰다.
+      </p>
+
+      <p>
+        주말과 다르게 송어장은 한가로웠다. 나를 포함해 서너 명 정도.
+        좋다. 좋긴 좋은데, 뭔가 수면창이 쎄했다.
+      </p>
+
+      <p>
+        이건 그저 꾼이라면 느낄 수 있는 그런 감각이다.
+        말로 딱 설명하기는 어렵지만, 고요함 속에 생기가 빠진 듯한 느낌.
+        던지기 전부터 어딘가 마음 한쪽이 불편했다.
+      </p>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Hanter01.JPEG" alt="2026년 5월 8일 한터낚시터 전경 1" loading="lazy">
+        <figcaption>평일의 한터. 한산해서 좋았지만, 수면창은 처음부터 어딘가 쎄했다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="chapter-02">
+      <p class="chapter-label">Chapter 02</p>
+      <h2>그래, 쎄했다!!</h2>
+
+      <p>
+        근래 몇 번의 경험이 있으니 고민은 길지 않았다.
+        바로 Hover로 들어갔고, 이어 Intermediate로 바꿔가며 탐색했다.
+        그렇게 교대로 30~40분 정도를 살폈다.
+      </p>
+
+      <p>
+        그런데 아무것도 없다. 잡고 못 잡고의 문제가 아니었다.
+        단 한 번의 툭 하는 반응조차 없었다.
+        슬슬 멘붕이 오기 시작했다.
+      </p>
+
+      <blockquote>
+        “그래! 쎄했다!!”
+      </blockquote>
+
+      <p>
+        특히 의아했던 것은 Chironomid, Midge Larva, Pupa 계열의 완전한 침묵이었다.
+        최근 몇 번의 낚시에서는 장원급 반응을 만들었던 패턴들인데,
+        이날은 단 한 번의 터치도 없었다.
+      </p>
+
+      <p>
+        송어가 떠 있지 않은 것인가. 아니면 떠 있어도 먹지 않는 것인가.
+        어느 쪽이든 분명한 사실은 하나였다.
+        지금의 중상층 마이크로 님핑에는 반응하지 않는다.
+      </p>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Hanter02.JPEG" alt="2026년 5월 8일 한터낚시터 전경 2" loading="lazy">
+        <figcaption>겉보기엔 평온했다. 그러나 반응은 없었다. 툭, 조차 없었다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="chapter-03">
+      <p class="chapter-label">Chapter 03</p>
+      <h2>한터지는 뭐다? 바닥이 답이다!</h2>
+
+      <p>
+        그러면 뭐다. 그렇다. 한터지는 바닥이 답이다.
+      </p>
+
+      <p>
+        바로 풀싱킹 채비, SA Sonar Titan 3D i/3/5로 바텀을 훑기 시작했다.
+        그리고 서너 번 만에 연거푸 두 마리의 송어를 끌어 올렸다.
+      </p>
+
+      <p>
+        휴. 그나마 경험이 만들어준 선물 같았다.
+        수심 6미터의 한터에서 보낸 두 시즌의 시간이 완전히 헛되지는 않았다.
+        반응이 사라진 상황에서도 최소한 어디를 먼저 두드려야 하는지는 몸이 기억하고 있었다.
+      </p>
+
+      <blockquote>
+        “그래도 바닥은 배신하지 않았다. 적어도 처음 두 마리는.”
+      </blockquote>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout01.JPEG" alt="2026년 5월 8일 한터낚시터 송어 1" loading="lazy">
+        <figcaption>긴 침묵을 끊고 올라온 송어. 오늘은 한 마리 한 마리가 귀했다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="chapter-04">
+      <p class="chapter-label">Chapter 04</p>
+      <h2>한두 마리, 그리고 다시 한 시간 침묵</h2>
+
+      <p>
+        그런데 또 이게 전부였다.
+        이후 한 시간 내내 아무런 반응조차 없었다.
+        나도, 그 옆의 낚시인들도, 아무도 송어를 보지 못했다.
+      </p>
+
+      <p>
+        이날은 종일토록 이런 패턴을 보였다.
+        바텀에서 한두 마리가 올라온다. 그리고 다시 한 시간 가까이 조용하다.
+        또 어딘가에서 한 마리가 반응한다. 그리고 다시 침묵.
+      </p>
+
+      <p>
+        어찌 되었든 송어는 바닥으로 바짝 내려간 듯했다.
+        무엇 때문인지는 알 수 없지만, 먹이활동을 극도로 제한하고 있는 것으로 보였다.
+        그 와중에 뜨문뜨문 활성된 개체만 반응했을 뿐이다.
+      </p>
+
+      <p>
+        워낙 오랜 시간 반응이 없다 보니 혹시나 싶은 생각에 다시 Hover, Intermediate,
+        그리고 다시 바텀. 이 패턴의 연속이었다.
+      </p>
+
+      <div class="image-grid">
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout02.JPEG" alt="2026년 5월 8일 한터낚시터 송어 2" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout03.JPEG" alt="2026년 5월 8일 한터낚시터 송어 3" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="chapter-05">
+      <p class="chapter-label">Chapter 05</p>
+      <h2>봄바람, 지난번의 x2</h2>
+
+      <p>
+        사실 지난 5월 1일 마지막 낚시가 거센 봄 똥바람 탓에 너무 아쉬웠다.
+        그래서 그 마지막을 한 번 더 하게 된 것이 이번 출조였다.
+      </p>
+
+      <p>
+        그런데 오전 9시쯤부터 다시 거친 봄바람이 시작됐다.
+        체감상 지난번의 두 배였다. 쳇.
+      </p>
+
+      <p>
+        바람은 라인을 흔들고, 캐스팅을 흔들고, 리트리브의 감각까지 흔든다.
+        이미 송어 반응이 닫힌 상황에서 바람까지 더해지니,
+        낚시는 더 거칠고 더 답답해졌다.
+      </p>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Hanter04.JPEG" alt="2026년 5월 8일 한터낚시터 전경 4" loading="lazy">
+        <figcaption>다시 시작된 봄바람. 지난번보다 더 거칠게 느껴졌다.</figcaption>
+      </figure>
+
+      <div class="note-box">
+        <h3>오늘의 가장 이상했던 지점</h3>
+        <p>
+          Chironomid와 Midge 계열에 단 한 번의 툭도 없었다는 것.
+          최근의 확신이 이날만큼은 전혀 통하지 않았다.
+          이 점은 다음 시즌 준비에서 반드시 다시 점검해야 할 부분이다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="chapter-06">
+      <p class="chapter-label">Chapter 06</p>
+      <h2>인정! 플로팅 채비에 완패!</h2>
+
+      <p>
+        오후 3시가 넘어가면서 바텀 쪽에서 반응이 조금씩 살아나기 시작했다.
+        그런데 옆쪽에서는 플로팅 라인에 인디케이터 채비로 제법 잡아내기 시작했다.
+      </p>
+
+      <p>
+        하루 전체의 조과로 보면 나의 싱킹라인 솔루션은 여전히 유효했다.
+        어려운 조건 속에서도 결국 두 자리 숫자를 기록했기 때문이다.
+      </p>
+
+      <p>
+        그러나 오후 3시 이후의 특정 시간대, 특정 자리, 특정 조건만 놓고 보면
+        플로팅 with indicator 채비에 완패였다.
+      </p>
+
+      <p>
+        수심 6미터로 꽤 깊은 한터지에서 나는 그동안 이 채비를 인정하지 않았다.
+        시즌 내내 이 채비로 송어를 잘 잡는 사람을 거의 보지 못했기 때문이다.
+        잘 잡는 것 같아 다가가 보면 사료, 민바늘, 루어용 웜 같은 변칙 채비인 경우가 많았다.
+      </p>
+
+      <p>
+        그래서 나의 싱킹라인 솔루션은 완벽한 대안이라고 생각했다.
+        실제로 깊은 수심, 강풍, 긴 리더 문제를 고려하면 싱킹라인 중심의 접근은 여전히 유효하다.
+        다만 이날 오후의 그 국면만큼은 인정해야 했다.
+      </p>
+
+      <blockquote>
+        “인정, 인정. 오늘은 인정!!”
+      </blockquote>
+
+      <figure>
+        <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Hanter03.JPEG" alt="2026년 5월 8일 한터낚시터 전경 3" loading="lazy">
+        <figcaption>오늘은 인정. 플로팅 채비가 맞는 시간과 자리가 있었다.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="analysis">
+      <p class="chapter-label">Analysis</p>
+      <h2>왜 인터미디어트 파일럿 채비도 통하지 않았을까?</h2>
+
+      <p class="lead">
+        이날 가장 의아했던 점은 Chironomid와 Midge Larva/Pupa 계열의 완전한 무반응이었다.
+        단순히 한 수심층을 놓친 문제가 아니었다. 전 수심층을 사선으로 훑기 위해 사용한
+        인터미디어트 파일럿 채비마저 단 한 번의 툭을 만들지 못했다.
+      </p>
+
+      <div class="analysis-box">
+        <h3>인터미디어트 채비의 의도</h3>
+
+        <p>
+          이날 사용한 인터미디어트 채비는 Intermediate line에 5~6ft 정도의 짧은 리더를 구성한 형태였다.
+          15m 정도 캐스팅한 뒤 착수 직후부터 아주 천천히 figure-8 리트리브를 시작하면,
+          플라이는 수면에서 출발해 약 3분여의 러닝타임 동안 서서히 가라앉으며 끌려온다.
+        </p>
+
+        <p>
+          여러 차례의 현장 경험과 거리·침강 계산을 종합하면,
+          이 채비는 15m 전방 수면에서 시작해 한터의 최대 수심인 약 6m권까지
+          긴 사선 궤적을 그리며 내려온다. 마지막에는 발앞 행 구간까지 이어진다.
+        </p>
+
+        <p>
+          따라서 이 채비는 단순한 중층 채비가 아니라,
+          <strong>상층·중층·하층·발앞 상승 구간까지 한 번에 훑는 파일럿 탐색 채비</strong>에 가깝다.
+        </p>
+      </div>
+
+      <div class="analysis-box">
+        <h3>층을 못 찾은 것이 아니라, 먹는 방식이 달랐다</h3>
+
+        <p>
+          그런데도 밋지류에는 반응이 없었다.
+          이것은 단순히 “수심층을 잘못 잡았다”는 설명만으로는 부족하다.
+          인터미디어트 파일럿 채비는 이미 상층에서 하층까지 긴 사선으로 훑는 구조였기 때문이다.
+        </p>
+
+        <p>
+          이날의 실제 관찰은 오히려 더 분명했다.
+          송어는 바텀권에 가까웠고, 오후 3시 이후에는 플로팅 인디케이터 채비처럼
+          특정 수심에 정적으로 걸어두는 방식에 분명한 반응을 보였다.
+        </p>
+
+        <p>
+          즉, 문제는 밋지류라는 먹이 자체가 아니라
+          <strong>밋지류가 지나가는 방식</strong>이었을 가능성이 크다.
+          천천히 사선으로 이동하며 내려오는 플라이보다,
+          바텀권 특정 수심에 오래 머무는 정적인 프레젠테이션이 이날의 송어에게 더 맞았던 것이다.
+        </p>
+      </div>
+
+      <div class="analysis-box">
+        <h3>이날의 결론</h3>
+
+        <p>
+          이날은 층을 못 찾은 날이라기보다,
+          송어가 원하는 위치와 먹는 방식이 매우 좁게 제한된 날에 가까웠다.
+          반응층은 바텀권이었고, 움직이는 탐색형 밋지류보다
+          정적으로 머무는 마커 채비가 더 맞았다.
+        </p>
+
+        <p>
+          따라서 인터미디어트 파일럿 채비의 실패는 채비의 무용함을 뜻하지 않는다.
+          오히려 그 채비가 전 수심층을 훑었음에도 반응이 없었다는 점에서,
+          이날 송어가 단순 탐색형 프레젠테이션에는 마음을 열지 않았다는 근거가 된다.
+        </p>
+      </div>
+
+      <div class="analysis-box">
+        <h3>맹하니 마커만 보는 낚시의 힘</h3>
+
+        <p>
+          생각해보면 예전에는 그런 낚시를 했다.
+          의도라기보다는 그것밖에 할 수 없어서였지만,
+          수심을 바닥에서 약 30cm 위에 맞춰두고 거의 발앞에 짧게 던져놓은 뒤,
+          맹하니 마커만 바라보는 구멍치기식 마커 채비.
+        </p>
+
+        <p>
+          그런데 그 방식이 제법 반응은 좋았다.
+          엄청난 낚시는 아니어도 심심찮게 송어가 올라왔다.
+          지금 와서 생각해보면 이유는 단순하다.
+          탐색 능력은 낮지만, 바텀권 특정 수심에 플라이를 오래 머물게 하는 능력은 확실했기 때문이다.
+        </p>
+
+        <p>
+          이날처럼 송어가 바닥권에 붙어 있고,
+          움직이며 지나가는 플라이보다 정적으로 머무는 플라이에 반응하는 날이라면,
+          오히려 그 답답하고 단순한 방식이 더 맞았을 수도 있다.
+        </p>
+      </div>
+
+      <blockquote>
+        “오늘은 수심을 못 찾은 날이 아니라, 송어가 허락한 방식이 매우 좁았던 날이었다.”
+      </blockquote>
+    </section>
+
+    <section class="section">
+      <p class="chapter-label">Gallery</p>
+      <h2>어려운 하루의 기록들</h2>
+
+      <p>
+        긴 침묵 사이사이에 겨우 만난 송어들.
+        쉽게 나온 고기는 아니었다. 그래서 더 또렷하게 남는다.
+      </p>
+
+      <div class="image-grid three">
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout04.JPEG" alt="2026년 5월 8일 한터낚시터 송어 4" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout05.JPEG" alt="2026년 5월 8일 한터낚시터 송어 5" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout06.JPEG" alt="2026년 5월 8일 한터낚시터 송어 6" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout07.JPEG" alt="2026년 5월 8일 한터낚시터 송어 7" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout08.JPEG" alt="2026년 5월 8일 한터낚시터 송어 8" loading="lazy">
+        </figure>
+        <figure>
+          <img class="zoomable" src="https://caddis-gr.github.io/fishing-log/images/0508/0508-Trout09.JPEG" alt="2026년 5월 8일 한터낚시터 송어 9" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <section class="section closing" id="closing">
+      <p class="chapter-label">Closing Note</p>
+      <h2 class="closing-title">겸손은… 힘들다!!</h2>
+
+      <p class="lead">
+        시즌을 마치며, 다음을 준비해야 한다.
+        채비도, 패턴도, 운용 방식도 다시 정비해야 한다.
+      </p>
+
+      <p>
+        나는 칼과 총, 두 아이템을 가지고 있었다.
+        Hover와 Intermediate로 중상층을 콕콕 찔렀고,
+        Titan 3D로 바닥을 콩콩 쐈다.
+      </p>
+
+      <p>
+        그런데 칼로 콕콕 찔러도, 총으로 콩콩 쏴봐도 아무런 반응이 없으니,
+        더는 어찌할 바가 없었다.
+      </p>
+
+      <p>
+        열린 마음으로, 겸손하게, 초심으로.
+        다시 배우고 다시 준비해야겠다.
+      </p>
+
+      <p>
+        한터지는 여전히 깊고, 어렵고, 변덕스럽다.
+        싱킹라인 솔루션은 여전히 유효하다.
+        그러나 그것만으로 모든 상황을 지배할 수는 없다.
+      </p>
+
+      <blockquote>
+        “겸손은… 힘들다!!”
+      </blockquote>
+    </section>
+
+    <footer class="footer">
+      CADDIS-GR · Fly Fishing Log · 2026.05.08 Hanter
+    </footer>
+
+    <div class="lightbox" id="lightbox" aria-modal="true" role="dialog" aria-label="이미지 확대 보기">
+      <button class="lightbox-close" type="button" aria-label="닫기">×</button>
+      <img src="" alt="">
+      <div class="lightbox-caption"></div>
+    </div>
+
+  </main>
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = lightbox.querySelector('img');
+    const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+    const closeButton = lightbox.querySelector('.lightbox-close');
+
+    function openLightbox(image) {
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt || '';
+      const caption = image.closest('figure')?.querySelector('figcaption')?.textContent?.trim();
+      lightboxCaption.textContent = caption || image.alt || '';
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightboxImage.src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('img.zoomable').forEach((image) => {
+      image.addEventListener('click', () => openLightbox(image));
+    });
+
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox || event.target === lightboxImage) {
+        closeLightbox();
+      }
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox.classList.contains('open')) {
+        closeLightbox();
+      }
+    });
+  </script>
+
+<footer class="lab-archive-footer"><a href="../../field-log/index.html">← FIELD LOG 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer></body>
+</html>

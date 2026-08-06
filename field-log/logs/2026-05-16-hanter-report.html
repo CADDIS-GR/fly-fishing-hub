@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finale · 2026.05.16 한터낚시터 · CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #1a1a1a;
+  --ink-mid:   #444;
+  --ink-soft:  #888;
+  --paper:     #f7f4ef;
+  --paper-2:   #eeeae2;
+  --water:     #4a7c6f;
+  --water-dk:  #2d5248;
+  --water-lt:  #a8c5be;
+  --accent:    #c0392b;
+  --accent-lt: #f5e6e5;
+  --gold:      #b8952a;
+  --rule:      #d6d0c4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background-color:#e8e2d8;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.6'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.88'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  color:var(--ink);line-height:1.7;font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* ── STICKY NAV ── */
+.sticky-nav{position:fixed;top:0;left:0;right:0;z-index:8000;background:rgba(20,35,30,.94);backdrop-filter:blur(10px);border-bottom:1px solid rgba(168,197,190,.18)}
+.sticky-nav-inner{display:flex;align-items:center;gap:0;height:48px;max-width:860px;margin:0 auto;padding:0 24px}
+.sticky-nav-menu{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(168,197,190,.5);padding-right:20px;border-right:1px solid rgba(168,197,190,.15);margin-right:16px;white-space:nowrap}
+.sticky-nav-links{display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+.sticky-nav-links::-webkit-scrollbar{display:none}
+.snl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.55);text-decoration:none;padding:6px 12px;border-radius:20px;white-space:nowrap;transition:background .2s,color .2s}
+.snl:hover{background:rgba(168,197,190,.15);color:#fff}
+.snl.active{background:var(--water);color:#fff}
+@media(max-width:600px){.sticky-nav-menu{display:none}.snl{padding:6px 9px;font-size:9px}}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:0 0 64px;overflow:hidden;
+  background:
+    url('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter03.JPEG') center 42%/cover no-repeat;
+  background-color:#6d6a62;
+  background-blend-mode:multiply;
+}
+/* 시즌 리뷰 히어로처럼 사진을 한 톤 눌러주고, 아래쪽은 종이 배경으로 자연스럽게 빼는 오버레이 */
+.hero::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg,
+      rgba(12,15,16,.55) 0%,
+      rgba(12,15,16,.42) 38%,
+      rgba(12,15,16,.28) 62%,
+      rgba(232,226,216,.70) 86%,
+      rgba(232,226,216,.96) 100%),
+    linear-gradient(90deg,
+      rgba(12,15,16,.58) 0%,
+      rgba(12,15,16,.34) 34%,
+      rgba(12,15,16,.10) 62%,
+      rgba(12,15,16,.36) 100%);
+  pointer-events:none;
+}
+/* 격자선 오버레이 — 기존보다 낮은 대비로 톤다운 */
+.hero::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.hero>*{position:relative;z-index:2}
+.hero-tag{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,.6);
+  padding:56px 48px 0;margin-bottom:auto;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-tag img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.4);flex-shrink:0}
+.hero h1{
+  font-family:'Playfair Display',serif;font-weight:700;font-style:italic;
+  font-size:clamp(72px,14vw,180px);
+  color:#fff;line-height:1.0;letter-spacing:-.02em;
+  padding:0 48px;margin-bottom:18px;
+}
+.hero-sub{
+  font-size:clamp(14px,2vw,18px);font-weight:300;
+  color:rgba(255,255,255,.78);padding:0 48px;margin-bottom:28px;
+  max-width:680px;
+}
+.hero-meta{
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.15em;
+  color:rgba(255,255,255,.62);padding:0 48px;
+}
+/* 번외편 뱃지 */
+.extra-badge{
+  display:inline-block;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  background:rgba(184,149,42,.70);color:#fff;
+  padding:4px 14px;border-radius:4px;margin:0 48px 20px;
+}
+/* BGM 버튼 */
+.bgm-wrap{position:absolute;bottom:72px;right:48px;z-index:4}
+.bgm-btn-inner{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:32px;padding:10px 18px}
+.bgm-play{width:28px;height:28px;background:var(--accent);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;padding:0}
+.bgm-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;line-height:1.4;color:#fff}
+.hero-wave{position:absolute;bottom:-1px;left:0;width:100%;pointer-events:none;z-index:2}
+
+/* ── WRAP ── */
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+/* ── SUMMARY ── */
+.summary{
+  background-color:#faf7f2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.2'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.7'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 32px rgba(0,0,0,.08);margin:56px auto;max-width:860px;padding:0 24px;
+}
+.summary-inner{max-width:860px;margin:0 auto}
+.summary-head{
+  background:var(--ink);color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 28px;margin:0 -24px;
+}
+.summary-head span{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.summary-score{font-family:'DM Serif Display',serif;font-size:38px;color:var(--gold)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 32px;padding:28px 4px}
+.sg-item label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px}
+.sg-item p{font-size:14px;color:var(--ink-mid);line-height:1.6}
+.sg-full{grid-column:1/-1}
+.pattern-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pattern-item{font-family:'DM Mono',monospace;font-size:12px;padding:4px 12px;border-radius:20px}
+.pattern-item.dead{text-decoration:line-through;color:var(--ink-soft);background:var(--paper-2)}
+.pattern-item.mid{background:#fff3cd;color:#7a5c00}
+.pattern-item.win{background:var(--water-dk);color:#fff;font-weight:700}
+.summary-verdict{
+  background:var(--accent-lt);border-left:3px solid var(--accent);
+  padding:16px 20px;margin:4px 0 20px;border-radius:0 8px 8px 0;
+  font-size:14px;color:var(--ink-mid);line-height:1.7;
+}
+.plan-link{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(184,149,42,.3);border-radius:999px;
+  padding:6px 14px;text-decoration:none;margin-bottom:24px;
+  transition:background .2s;
+}
+.plan-link:hover{background:rgba(184,149,42,.08)}
+
+/* ── ARTICLE ── */
+.article{padding:8px 0 64px}
+.sec-title{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-top:1px solid var(--rule);padding-top:14px;margin:56px 0 24px;
+}
+h2.ch-title{
+  font-family:'Noto Sans KR',sans-serif;font-weight:700;
+  font-size:clamp(22px,3.5vw,30px);color:var(--ink);margin-bottom:20px;line-height:1.3;
+}
+.article p{color:var(--ink-mid);margin-bottom:18px;font-size:15.5px;line-height:1.85}
+.article strong{color:var(--ink);font-weight:700}
+
+/* ── COUNT WRAP ── */
+.count-wrap{display:flex;gap:16px;flex-wrap:wrap;margin:32px 0}
+.count-item{
+  flex:1;min-width:100px;background:#faf7f2;border:1px solid var(--rule);
+  border-radius:12px;padding:18px 20px;text-align:center;
+}
+.count-num{font-family:'DM Serif Display',serif;font-size:40px;color:var(--water-dk);line-height:1;display:block}
+.count-num.accent{color:var(--accent)}
+.count-num.gold{color:var(--gold)}
+.count-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px;display:block}
+
+/* ── GEAR BOX ── */
+.gear-box{background:var(--ink);color:#e8e8e8;border-radius:14px;padding:32px;margin:32px 0}
+.gear-box h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:24px}
+.gear-item{border-bottom:1px solid rgba(255,255,255,.08);padding:16px 0;display:flex;gap:16px;align-items:flex-start}
+.gear-item:last-child{border-bottom:none}
+.gl-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:4px;flex-shrink:0;margin-top:3px}
+.gl-bot{background:#444;color:#ccc}
+.gl-mid{background:var(--water);color:#fff}
+.gl-float{background:var(--water-dk);color:var(--water-lt)}
+.gl-new{background:var(--accent);color:#fff}
+.gear-info strong{color:#fff;font-size:14px;display:block;margin-bottom:4px}
+.gear-info span{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* ── PULLQUOTE ── */
+.pullquote{border-left:4px solid var(--water);padding:16px 24px;margin:32px 0;background:rgba(74,124,111,.06);border-radius:0 8px 8px 0}
+.pullquote p{font-family:'Noto Sans KR',sans-serif;font-weight:500;font-size:clamp(16px,2.2vw,20px);color:var(--water-dk);line-height:1.7;margin:0}
+
+/* ── DISCOVERY BOX ── */
+.discovery-box{
+  background:linear-gradient(135deg,#fff9e6 0%,#fff3cd 100%);
+  border:1px solid rgba(184,149,42,.35);border-radius:12px;
+  padding:24px 28px;margin:32px 0;
+}
+.discovery-box .disc-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block}
+.discovery-box p{font-size:15px;color:#5a4500;line-height:1.8;margin:0}
+
+/* ── TIME TABLE ── */
+.time-table{border:1px solid var(--rule);border-radius:12px;overflow:hidden;margin:32px 0}
+.tt-head{background:var(--ink);color:#fff;display:grid;grid-template-columns:110px 1fr 1fr;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:12px 16px;gap:16px}
+.tt-row{display:grid;grid-template-columns:110px 1fr 1fr;padding:14px 16px;gap:16px;border-bottom:1px solid var(--rule);font-size:14px;align-items:center}
+.tt-row:last-child{border-bottom:none}
+.tt-row:nth-child(even){background:rgba(0,0,0,.02)}
+.tt-time{font-family:'DM Mono',monospace;font-size:12px;color:var(--water-dk);font-weight:500}
+
+/* ── 갤러리 ── */
+.gallery-section{padding:56px 0}
+.gallery-section h2{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:24px;margin-bottom:28px;color:var(--ink)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.g3 .gallery-item{aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:zoom-in}
+.lb-trigger{cursor:zoom-in;position:relative;display:block}
+.lb-trigger::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .2s;border-radius:inherit}
+.lb-trigger:hover::after{background:rgba(0,0,0,.18)}
+.lb-trigger:hover img{transform:scale(1.02)}
+.lb-trigger img{transition:transform .3s ease}
+
+/* ── SERIES ── */
+.series-strip{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}
+.series-item{
+  flex:1;min-width:80px;
+  background:#faf7f2;border:1px solid var(--rule);border-radius:10px;
+  padding:14px 12px;text-align:center;
+}
+.series-item.current{background:var(--water-dk);border-color:var(--water-dk)}
+.series-date{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink-soft);display:block;margin-bottom:6px}
+.series-item.current .series-date{color:rgba(255,255,255,.6)}
+.series-num{font-family:'DM Serif Display',serif;font-size:26px;color:var(--water-dk);line-height:1}
+.series-item.current .series-num{color:#fff}
+
+/* ── CLOSING ── */
+.closing{
+  background:var(--water-dk);color:rgba(255,255,255,.88);
+  padding:64px 48px;margin:56px -24px 0;border-radius:16px;
+  position:relative;overflow:hidden;
+}
+.closing::before{
+  content:'終';font-family:'Noto Sans KR',sans-serif;
+  font-size:240px;color:rgba(255,255,255,.04);
+  position:absolute;right:-10px;top:-40px;line-height:1;pointer-events:none;
+}
+.closing>*{position:relative;z-index:1}
+.closing h3{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--water-lt);margin-bottom:20px}
+.closing p{font-size:15px;margin-bottom:16px;line-height:1.85;color:rgba(255,255,255,.88)}
+.closing p:last-child{color:rgba(255,255,255,.95);font-weight:500}
+
+/* ── SEASON CHART ── */
+.season-chart{margin:32px 0;background:#faf7f2;border:1px solid var(--rule);border-radius:12px;padding:28px 24px}
+.sc-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px;display:block}
+.sc-bars{display:flex;align-items:flex-end;gap:8px;height:100px}
+.sc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.sc-bar{width:100%;border-radius:4px 4px 0 0;background:var(--water);transition:opacity .2s;position:relative}
+.sc-bar.current{background:var(--water-dk)}
+.sc-bar-val{font-family:'DM Serif Display',serif;font-size:12px;color:var(--water-dk);line-height:1}
+.sc-bar.current+.sc-bar-val,.sc-bar-wrap.current-wrap .sc-bar-val{color:var(--water-dk);font-weight:700}
+.sc-bar-date{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.06em;color:var(--ink-soft);text-align:center}
+
+/* ── 베스트 훅 갤러리 ── */
+.fly-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.fly-item{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;overflow:hidden;cursor:zoom-in;aspect-ratio:1;position:relative}
+.fly-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.fly-item:hover img{transform:scale(1.04)}
+.fly-caption{position:absolute;bottom:0;left:0;right:0;background:rgba(20,35,30,.78);padding:8px 10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:#fff;text-align:center}
+
+/* ── SCIENCE ── */
+.science-section{
+  background-color:#faf7f2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='6' stitchTiles='stitch'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23fff8f0' surfaceScale='1.2'%3E%3CfeDistantLight azimuth='50' elevation='65'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='500' height='500' filter='url(%23p)' opacity='0.7'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:500px 500px;
+  padding:64px 0;border-top:1px solid var(--rule);
+}
+.sci-item{margin-bottom:44px}
+.sci-num{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--water);display:block;margin-bottom:8px}
+.sci-item h3{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:18px;margin-bottom:12px;color:var(--ink)}
+.sci-item p{font-size:14px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px}
+.sci-summary{background:var(--paper-2);border-radius:10px;padding:22px 26px;margin-top:36px;font-size:14px;color:var(--ink-mid);line-height:1.85}
+.sci-summary strong{color:var(--ink)}
+
+/* ── LIGHTBOX ── */
+#lb{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,20,18,.92);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+#lb.open{display:flex}
+#lb-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:90vw}
+#lb-img{max-width:min(90vw,820px);max-height:82vh;object-fit:contain;border-radius:10px;box-shadow:0 24px 72px rgba(0,0,0,.7)}
+#lb-cap{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,.5)}
+#lb-close{position:absolute;top:-42px;right:0;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;opacity:.7;line-height:1}
+#lb-close:hover{opacity:1}
+.lb-arr{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:28px;cursor:pointer;padding:12px 18px;border-radius:8px;z-index:10000}
+.lb-arr:hover{background:rgba(255,255,255,.25)}
+#lb-prev{left:20px}
+#lb-next{right:20px}
+
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:40px 24px;text-align:center}
+.ft-nav{display:flex;justify-content:center;gap:24px;margin-bottom:14px;flex-wrap:wrap}
+.ft-nav a{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .2s}
+.ft-nav a:hover{color:var(--water-lt)}
+footer p{font-size:12px}
+
+@media(max-width:600px){
+  .hero{padding-bottom:48px}
+  .hero h1,.hero-sub,.hero-meta,.hero-tag{padding-left:20px;padding-right:20px}
+  .extra-badge{margin-left:20px;margin-right:20px}
+  .bgm-wrap{right:20px;bottom:60px}
+  .summary{margin:32px 16px}
+  .summary-head{margin:0 -24px}
+  .summary-grid{grid-template-columns:1fr;gap:16px}
+  .sg-full{grid-column:1}
+  .count-wrap{gap:10px}
+  .gear-box{padding:20px}
+  .closing{padding:40px 24px;margin:40px -24px 0}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .tt-head,.tt-row{grid-template-columns:80px 1fr;font-size:12px}
+  .tt-head>:last-child,.tt-row>:last-child{display:none}
+}
+@media(max-width:540px){.lb-arr{display:none}}
+</style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html" aria-current="page">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>FIELD LOG · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-log/blob/main/logs/2026-05-16-hanter-report.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- ── STICKY NAV ── -->
+<nav class="sticky-nav" id="stickyNav">
+  <div class="sticky-nav-inner">
+    <span class="sticky-nav-menu">MENU</span>
+    <div class="sticky-nav-links">
+      <a href="#sec-top"     class="snl">맨 위</a>
+      <a href="#sec-summary" class="snl">요약</a>
+      <a href="#sec-series"  class="snl">시즌 시리즈</a>
+      <a href="#sec-gear"    class="snl">채비</a>
+      <a href="#sec-fly"     class="snl">베스트 훅</a>
+      <a href="#sec-science" class="snl">검색해보니</a>
+      <a href="#sec-closing" class="snl">마치며</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero" id="sec-top">
+  <div class="hero-tag">
+    <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG" alt="낚시대장 프로필">
+    CADDIS-GR · Fly Fishing Log · 한터낚시터
+  </div>
+  <div class="extra-badge">番外篇 · Extra Round — Season Finale</div>
+  <h1>Finale 🎬</h1>
+  <p class="hero-sub">도대체 송어가 원하는 장르가 뭐야 — 액션, 멜로, 스릴러, 드라마... 내가 다 해줄게</p>
+  <div class="hero-meta">📅 2026 · 05 · 16 &nbsp;&nbsp; 📍 한터낚시터, 용인 &nbsp;&nbsp; 🎣 23수</div>
+
+  <!-- BGM -->
+  <div class="bgm-wrap">
+    <div class="bgm-btn-inner">
+      <button class="bgm-play" onclick="toggleBgm()">
+        <svg id="bgm-icon-play" width="10" height="12" viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+        <svg id="bgm-icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="white" style="display:none"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>
+      </button>
+      <span class="bgm-label">Separate Ways<br><span style="opacity:.6;font-size:10px">Journey 🎸</span></span>
+    </div>
+  </div>
+  <div id="yt-player-wrap" style="display:none">
+    <iframe id="yt-player" width="1" height="1"
+      src="https://www.youtube.com/embed/u0KkjQPUIzY?enablejsapi=1&loop=1&playlist=u0KkjQPUIzY"
+      allow="autoplay" frameborder="0"></iframe>
+  </div>
+
+  <svg class="hero-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 48 C360 0 1080 0 1440 48 L1440 48 L0 48Z" fill="#e8e2d8"/>
+  </svg>
+</header>
+
+<!-- ── 번외편 인트로 ── -->
+<div style="max-width:860px;margin:48px auto 0;padding:0 24px">
+  <p style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px">Extra Round · 2026.05.16</p>
+  <p style="font-size:16px;color:var(--ink-mid);line-height:1.9;max-width:680px">5월 8일, 장비를 닦아두고 시즌을 마무리했는데, 폐장전에 한번 더 나서기로 했고, — 아직 뭔가 남은 것 같은 그 느낌. 주어진 기회가 아니라, 스스로 만든 번외전. 아쉬움이 동기였고, 미련은 아니었다.</p>
+</div>
+
+<!-- ── SUMMARY ── -->
+<div class="summary" id="sec-summary">
+  <div class="summary-inner">
+    <div class="summary-head">
+      <span>오늘의 조행 요약</span>
+      <span class="summary-score">72점</span>
+    </div>
+    <div class="summary-grid">
+      <div class="sg-item">
+        <label>장소 · 날씨</label>
+        <p>한터낚시터, 용인<br>맑음 · 최저 15°C / 최고 29°C · 무풍→오후 선선한 바람<br>송진가루 수면 오염, 폐장 전날</p>
+      </div>
+      <div class="sg-item">
+        <label>조과</label>
+        <p><span style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--water-dk)">23</span>수<br>06:00 ~ 19:10</p>
+      </div>
+      <div class="sg-item">
+        <label>주요 채비</label>
+        <p>Rio Elite Technical Trout WF4F + T&T HELIX 863-4<br>마이크로님핑 / 인디케이터 6m→4m 수정 운용<br>Airflo Sixth Sense 2 DI5 + Scott Centric · 마무리 바텀</p>
+      </div>
+      <div class="sg-item">
+        <label>유효 플라이</label>
+        <p>흰색 Chironomid Pupa · 흰색 Maggot<br>Balanced Leech #14 · 풀싱킹 바텀패턴</p>
+      </div>
+      <div class="sg-full">
+        <label>패턴 전환 흐름</label>
+        <div class="pattern-flow">
+          <span class="pattern-item dead">인터미디어트 전층탐색</span>
+          <span style="color:var(--ink-soft)">→</span>
+          <span class="pattern-item dead">풀싱킹 바텀</span>
+          <span style="color:var(--ink-soft)">→</span>
+          <span class="pattern-item mid">컨닝 후 마이크로님핑</span>
+          <span style="color:var(--ink-soft)">→</span>
+          <span class="pattern-item win">인디케이터 4m 수심 수정</span>
+          <span style="color:var(--ink-soft)">→</span>
+          <span class="pattern-item win">Balanced Leech</span>
+          <span style="color:var(--ink-soft)">→</span>
+          <span class="pattern-item win">DI5 바텀 피날레</span>
+        </div>
+      </div>
+    </div>
+    <div class="summary-verdict">
+      <strong>번외편, 내가 만든 마지막 한 판.</strong> 시즌을 마무리했지만 한번 더.., 스스로 만든 번외전이었다. 필드는 예상대로 쎄~했다 — 하지만 슬쩍 본 컨닝 한번으로, 수심 재발견 하나가 하루의 판도를 바꾸다. 송어가 없는 게 아니라, 내가 아직 그날의 답을 못 찾고 있었던 것이다. 오늘도 겸손은 힘들다.
+    </div>
+    <a href="2026-05-16-hanter.html" class="plan-link">← 출조 전 플랜 보기</a>
+  </div>
+</div>
+
+<!-- ── ARTICLE ── -->
+<main class="article wrap">
+
+  <!-- 시즌 시리즈 -->
+  <div id="sec-series">
+    <p class="sec-title">Season Series 2026</p>
+    <h2 class="ch-title">시즌 누적 기록</h2>
+    <div class="series-strip">
+      <div class="series-item">
+        <span class="series-date">02·14</span>
+        <span class="series-num">32</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">02·21</span>
+        <span class="series-num">20</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">03·01</span>
+        <span class="series-num">39</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">03·14</span>
+        <span class="series-num">51</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">03·29</span>
+        <span class="series-num">23</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">04·11</span>
+        <span class="series-num">58</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">04·25</span>
+        <span class="series-num">48</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">05·01</span>
+        <span class="series-num">31</span>
+      </div>
+      <div class="series-item">
+        <span class="series-date">05·08</span>
+        <span class="series-num">12</span>
+      </div>
+      <div class="series-item current">
+        <span class="series-date">05·16 번외</span>
+        <span class="series-num" style="color:#fff">23</span>
+      </div>
+    </div>
+    <div class="count-wrap">
+      <div class="count-item">
+        <span class="count-num gold">10</span>
+        <span class="count-label">총 출조 (번외 포함)</span>
+      </div>
+      <div class="count-item">
+        <span class="count-num">337</span>
+        <span class="count-label">시즌 누적 조과</span>
+      </div>
+      <div class="count-item">
+        <span class="count-num accent">33.7</span>
+        <span class="count-label">회당 평균</span>
+      </div>
+    </div>
+    <div class="season-chart">
+      <span class="sc-label">Season 2026 — 출조별 조과 흐름</span>
+      <div class="sc-bars">
+        <!-- max 58 기준으로 높이 계산 -->
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">32</span>
+          <div class="sc-bar" style="height:55%"></div>
+          <span class="sc-bar-date">02·14</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">20</span>
+          <div class="sc-bar" style="height:34%"></div>
+          <span class="sc-bar-date">02·21</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">39</span>
+          <div class="sc-bar" style="height:67%"></div>
+          <span class="sc-bar-date">03·01</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">51</span>
+          <div class="sc-bar" style="height:88%"></div>
+          <span class="sc-bar-date">03·14</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">23</span>
+          <div class="sc-bar" style="height:40%"></div>
+          <span class="sc-bar-date">03·29</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">58</span>
+          <div class="sc-bar" style="height:100%"></div>
+          <span class="sc-bar-date">04·11</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">48</span>
+          <div class="sc-bar" style="height:83%"></div>
+          <span class="sc-bar-date">04·25</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">31</span>
+          <div class="sc-bar" style="height:53%"></div>
+          <span class="sc-bar-date">05·01</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">12</span>
+          <div class="sc-bar" style="height:21%"></div>
+          <span class="sc-bar-date">05·08</span>
+        </div>
+        <div class="sc-bar-wrap">
+          <span class="sc-bar-val">23</span>
+          <div class="sc-bar current" style="height:40%"></div>
+          <span class="sc-bar-date" style="color:var(--water-dk);font-weight:700">05·16</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 채비 박스 -->
+  <div id="sec-gear">
+    <p class="sec-title">Tackle Setup · 번외편 4채비</p>
+    <div class="gear-box">
+      <h3>Rod · Line Configuration</h3>
+      <div class="gear-item">
+        <span class="gl-label gl-mid">인터미디어트</span>
+        <div class="gear-info">
+          <strong>Rio Sub Surface CamoLux WF5I</strong>
+          <span>Sage Foundation 690-4 · 전층 파일럿 · 중층 탐색<br>풀카본 1X + 6X 카본 티펫, 총 5~6ft</span>
+        </div>
+      </div>
+      <div class="gear-item">
+        <span class="gl-label gl-new">마이크로님핑</span>
+        <div class="gear-info">
+          <strong>Rio Elite Technical Trout WF4F</strong>
+          <span>T&T HELIX 863-4 (#3, 8.6ft) · 퍼티 마커 3개 · 표층~중층<br>풀카본 1X + 6X 카본 티펫</span>
+        </div>
+      </div>
+      <div class="gear-item">
+        <span class="gl-label gl-float">인디케이터</span>
+        <div class="gear-info">
+          <strong>Rio Xtreme Indicator WF6F</strong>
+          <span>Vision VPU 4906 (#6, 9ft) · 수심 4m 고정 드리프트 (수심 재발견 후 수정)<br>풀카본 1X + 5X 나일론 티펫</span>
+        </div>
+      </div>
+      <div class="gear-item">
+        <span class="gl-label gl-bot">바텀</span>
+        <div class="gear-info">
+          <strong>Airflo Sixth Sense 2 Sink 6/7 DI5</strong>
+          <span>Scott Centric 690-4 · 최심부 바텀 공략 · 시즌 피날레 마무리<br>풀카본 1X + 5X 나일론 티펫</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 01 위 이미지 -->
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;margin:40px 0 32px">
+    <div style="overflow:hidden;border-radius:12px;aspect-ratio:.85;cursor:zoom-in">
+      <span class="lb-trigger" onclick="openLb(3)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout01.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div style="overflow:hidden;border-radius:12px;cursor:zoom-in">
+      <span class="lb-trigger" onclick="openLb(0)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter02.JPEG" alt="05·16 현장">
+      </span>
+    </div>
+  </div>
+
+  <!-- 제1장 -->
+  <p class="sec-title">Chapter 01</p>
+  <h2 class="ch-title">역시 쎄~했다</h2>
+  <p>패장을 하루 앞둔 송어장은 예상대로, 정말 예상대로 쎄~했다. 송진가루로 수면은 지저분했고, 바람도 없이 잔잔함은 전성기의 화려함을 지나, 마지막 장면을 앞둔 노배우 같은 분위기랄까. 아름답지만, 이미 한 발이 무대 밖에 걸쳐 있는 그런 현장이었다.</p>
+  <p>계획대로 인터미디어트로 전층을 탐색했다. 반응 없음. 풀싱킹라인으로 바텀을 탐색했다. 역시 반응 없음. 그렇게 시작 한 시간 반이 지나서야 겨우 두 마리의 송어 얼굴을 볼 수 있었다. 지나칠 정도로 좋은 날씨에 새벽부터 날도 엄청 덥다. 힘든 하루를 예고하는 듯 했다.</p>
+
+  <!-- 제2장 -->
+  <p class="sec-title">Chapter 02</p>
+  <h2 class="ch-title">모르면 어떻게 한다?... 컨닝이다</h2>
+  <p>옆에서 낚시하는 분이 그래도 뜨문뜨문 송어를 잡아낸다. 플로팅 노마커 채비로 길게 캐스팅해서 아주 천천히, 지긋이 끌어댄다. 흡사 나의 마이크로님핑처럼. 랜딩할 때 힐끗 보니 훅 패턴은 <strong>흰색 라바</strong>로 보였다. 흰색 라바… 이게 오늘의 "킥"이 될 줄이야.</p>
+  <p>어차피 어려운 낚시, 그래, 할 거 다 해보자 — 식으로 차에서 바로 채비를 준비했다. <strong>Rio Elite Technical Trout WF4F + T&T HELIX 863-4(#3, 8.6ft)</strong>, 다분할 인디케이터 마이크로님핑 채비로 퍼티(이른바 떡마커) 3개를 달았다. 전혀 예상치 못한 결과를 맞이하게 된 건 그 직후였다. 순식간에 서너 마리의 송어가 올라왔다. 와~~ 당황스러웠지만, 상황을 읽고 대처할 능력이 생겼다는 게 흐뭇하기도 했다.</p>
+
+  <div class="discovery-box">
+    <span class="disc-label">🎣 컨닝 노트</span>
+    <p>옆분 훅 패턴은 힐끗 본 화이트 라바. 이후 흰색 Chironomid Pupa와 흰색 Maggot에서 실제로 반응이 뜨거웠다. — 5/8 낚시에선 전혀 반응을 못받았는데, 반응이 없는 게 아니라 공략법이 달랐던 것이었던... 것이었다.</p>
+  </div>
+
+  <!-- 제3장 -->
+  <p class="sec-title">Chapter 03</p>
+  <h2 class="ch-title">그래, 네가 범인이었어!</h2>
+  <p>당연히 폭발적인 날은 아니고, 어려운 상황이 지속되면서 뜨문뜨문 한두 마리씩 올라오는 패턴이다. 뜸하길래 준비한 플로팅(with indicator) 채비를 꺼냈다. 바닥 찍고 30cm!</p>
+  <p>그런데 뭔가 이상하다. 평상시 6미터 수심의 깊이가 전혀 달라진 것이 아닌가. 여러 번 체크를 해서 맞춘  수심이 <strong>4미터</strong> 캬하… 그랬구나. 그랬어..  그래서 근래 몇 번의 낚시가 이렇게 어려웠던 것이었네. "배수"로 인해 1.5~1.8미터 정도 수위가 낮아진 게다.</p>
+  <p>무척 당황스러웠다. 수심 4미터에, 나는 그 몇 번 동안 수심 6미터에 맞춘 채비와 운영을 해왔으니 말이다. 퍼즐 하나가 맞춰진 순간이었다. 그리고 그건 시작이었다.</p>
+
+  <!-- 시간대별 타임테이블 -->
+  <div class="time-table">
+    <div class="tt-head">
+      <div>시간대</div>
+      <div>채비 · 전술</div>
+      <div>결과</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-time">06:00~07:30</div>
+      <div>CamoLux 인터미디어트 전층탐색 → DI5 바텀</div>
+      <div>2수 — 쎄~한 개장</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-time">07:30~09:00</div>
+      <div>컨닝 후 T&T HELIX 마이크로님핑 (퍼티 3개)</div>
+      <div>순식간에 3~4수 — 예상 밖 반응</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-time">09:00~15:00</div>
+      <div>인디케이터 수심 4m 수정 + Chironomid/Maggot 운용</div>
+      <div>뜨문뜨문 꾸준한 추가 — 수심 재발견 효과</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-time">15:00~18:00</div>
+      <div>Balanced Leech #14 인디케이터 — 바람 일기 시작</div>
+      <div>15m 원거리에서 마커 쳐박힘 — 눈맛·손맛 일품</div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-time">18:00~19:10</div>
+      <div>DI5 풀싱킹 바텀 공략 — 루어 옆 반응 보고 전환</div>
+      <div>연거푸 4~5수 · 1캐스팅에 2~3회 반응 — 시즌 피날레</div>
+    </div>
+  </div>
+
+  <!-- 제4장 -->
+  <p class="sec-title">Chapter 04</p>
+  <h2 class="ch-title">얻어 걸린 결과로 하루를 지배하다</h2>
+  <p>모든 퍼즐은 맞춰졌고, 새로운 키는 작동하기 시작했다. 수심 찍고 30cm는 종일 뜨문뜨문이지만 꾸준한 결과를 보여줬고, 가끔씩 마이크로님핑에도 반응을 해주었다. <strong>흰색 Chironomid Pupa</strong>의 반응이 뜨거웠고, 흰색 Maggot도 한몫을 했다.</p>
+  <p>오후 3시로 접어들면서 바람이 불기 시작했고, 때를 맞춰 반응이 좀 더 살아나기 시작했다. 이번엔 <strong>Balanced Leech #14</strong>. 자세 때문인지, 피딩 때문인지는 알 수 없지만 반응이 아주 좋다. 15미터 이상 먼 거리에서 꾹! 하고 마커가 쳐박히고, 4미터 수심의 15미터를 끌고 오는 손맛은 — 이거 아주 일품이다. 눈맛, 손맛!</p>
+
+  <div class="pullquote">
+    <p>"정보를 얻고, 판단하고, 대응하고 — 송어가 없는 게 아니라, 내가 아직 그날의 답을 못 찾고 있었던 것이다."</p>
+  </div>
+
+  <!-- 제5장 -->
+  <p class="sec-title">Chapter 05</p>
+  <h2 class="ch-title">마무리는 오승환!</h2>
+  <p>오후 5시가 지나면서 옆의 루어 쪽 반응이 확 살아났다. 거의 "느나" 수준. 바텀 싱킹 공략이 될 것 같았다 — 준비해!</p>
+  <p>게임의 마무리는 <strong>풀싱킹 채비</strong>였다. 시즌 내내 이 필드를 지배했고, 그래서 가장 듬직하고 믿음스러운 싱킹 채비. 바닥에 넣자마자 연거푸 4~5마리의 송어가 올라왔다. 한 번 캐스팅에서 끌어당기는 동안 2~3번의 반응이 있을 정도로 반응이 핫하다. 이렇게 시즌 마무리는 싱킹라인!</p>
+  <p>19:00, 카운터 앱이 23수를 가리키며 "Goal Reached" 배너를 띄웠다. 번외편의 막이 내렸다.</p>
+
+  <!-- 마치며 클로징 -->
+  <div class="closing" id="sec-closing">
+    <h3>Closing · 마치며</h3>
+    <p>오늘도 겸손은 힘들다…였다. 호기롭게 필드를 지배하는 것 같았지만, 필드는, 물속 상황은 보다 훨씬 복잡하고 다양하다. 수위가 1.5미터 낮아진 줄도 모르고 낚시를 했다. 눈에 보이지 않는 것이 이렇게나 많다.</p>
+    <p>컨닝(귀동냥)은 좋은 정보다. 정보를 얻고, 판단하고, 대응하고 — 낚시는 그렇게 하는거다. 옆사람에게서 훔쳐본 힌트 하나가 하루의 실마리가 됐다. 수심 체크 한 번이 퍼즐을 완성했다. 그리고 마무리는 언제나 믿음직한 싱킹 채비.</p>
+    <p>아무튼, 겁나 뜨거워진 햇볕에 나는 "구운감자"가 되어버렸다. 그래도 됐다. 훌륭한 번외편-패자부활전-이 만들어졌다. 🎬</p>
+  </div>
+
+</main>
+
+<!-- ── 베스트 훅 갤러리 ── -->
+<section class="gallery-section wrap" id="sec-fly">
+  <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);border-top:1px solid var(--rule);padding-top:14px;margin-bottom:24px">Best Flies · 2026.05.16</p>
+  <h2>오늘의 킬 패턴</h2>
+  <div class="fly-gallery">
+    <div class="fly-item">
+      <span class="lb-trigger" onclick="openLbFly(0)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-chironomid.JPEG" alt="흰색 Chironomid Pupa">
+      </span>
+      <div class="fly-caption">White Chironomid Pupa</div>
+    </div>
+    <div class="fly-item">
+      <span class="lb-trigger" onclick="openLbFly(1)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-BlancedLeech01.JPEG" alt="Balanced Leech #14">
+      </span>
+      <div class="fly-caption">Balanced Leech #14</div>
+    </div>
+    <div class="fly-item">
+      <span class="lb-trigger" onclick="openLbFly(2)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-BlancedLeech02.jpg" alt="Balanced Leech #14">
+      </span>
+      <div class="fly-caption">Balanced Leech #14 · detail</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 검색해보니 ── -->
+<section class="science-section" id="sec-science">
+  <div class="wrap">
+    <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:32px">검색해보니 · Field Analysis</p>
+
+    <div class="sci-item">
+      <span class="sci-num">Observation 01</span>
+      <h3>5월 농사철 배수기 — 저수지 저수위가 낚시에 미치는 영향</h3>
+      <p>한국의 관리형 저수지는 5월 모내기 시즌을 전후해 농업용 배수가 본격적으로 진행되는 경우가 많다. 수위가 1~2미터 낮아지면 저수지 전체 환경이 달라진다 — 수면적이 줄어들고, 유효 수심이 얕아지며, 수온 변화 속도도 빨라진다. 수심이 줄어든다는 건 단순히 물이 적어지는 게 아니라, 송어가 이용할 수 있는 수층 자체가 압축된다는 의미다.</p>
+      <p>수위가 낮아진 환경에서는 송어가 상대적으로 안정적인 수온과 은신 조건을 찾아 더 깊거나 안정된 구역에 머물 가능성이 있다. 수심이 압축되면 결과적으로 송어 밀도가 높아지는 구역이 생길 수 있고, 반대로 예전에 유효했던 수층이 사라져버리는 구역도 생길 수 있다. 시즌 후반 낚시터가 갑자기 어려워지는 이유 중 하나로 이 배수기 저수위를 의심해볼 수 있다. 현장에서 주기적으로 수심을 직접 확인하는 습관이 중요한 이유다.</p>
+    </div>
+
+    <div class="sci-item">
+      <span class="sci-num">Observation 02</span>
+      <h3>패장 직전 바텀 집결 — 오후 늦게 싱킹이 터진 이유</h3>
+      <p>오후 5시 이후 루어 낚시 쪽에서 반응이 급격히 살아났고, 이를 보고 투입한 DI5 풀싱킹 채비에서 연거푸 4~5수가 올라왔다. 한 캐스팅에 2~3회 반응이 있을 정도였다. 폐장을 앞둔 시점, 고온으로 인해 표층 활성이 억제된 상황에서 송어들이 상대적으로 안정적인 바텀층에 머물렀을 가능성이 있다.</p>
+      <p>5월 1일 출조에서도 오후 이후 바텀 반응이 뜨거웠던 것과 흐름이 유사하다. 다만 그날은 오후 늦게 바텀 킬존이 약화되는 경향이 있었는데, 이날은 마감까지 바텀 반응이 유지된 편이었다. 수위 저하로 수심 자체가 줄어들면서 송어 밀도가 더 높아진 영향일 수도 있고, 단순히 조건이 맞아떨어진 것일 수도 있다 — 한 번의 관찰로 결론 내리기는 어렵다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 현장 갤러리 ── -->
+<section class="gallery-section wrap">
+  <p style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);border-top:1px solid var(--rule);padding-top:14px;margin-bottom:24px">Field Gallery · 2026.05.16</p>
+  <h2>현장 갤러리</h2>
+
+  <!-- 현장 3열 — Hanter02, 03 + Counter -->
+  <div class="g3" style="margin-bottom:8px">
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(0)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter02.JPEG" alt="05·16 현장">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(1)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter03.JPEG" alt="05·16 현장">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(2)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Counter.PNG" alt="05·16 카운터 23수">
+      </span>
+    </div>
+  </div>
+
+  <!-- 송어 3열 — Trout01~06 -->
+  <div class="g3" style="margin-bottom:8px">
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(3)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout01.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(4)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout02.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(5)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout03.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:8px">
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(6)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout04.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(7)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout05.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div class="gallery-item">
+      <span class="lb-trigger" onclick="openLb(8)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout06.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+  </div>
+
+  <!-- Trout07, 08 — 2열 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="gallery-item" style="aspect-ratio:.75;border-radius:10px;overflow:hidden">
+      <span class="lb-trigger" onclick="openLb(9)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout07.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+    <div class="gallery-item" style="aspect-ratio:.75;border-radius:10px;overflow:hidden">
+      <span class="lb-trigger" onclick="openLb(10)">
+        <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout08.JPEG" alt="05·16 송어">
+      </span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-nav">
+    <a href="../index.html">CADDIS-GR Home</a>
+    <a href="../../field-log/index.html">Fishing Log</a>
+    <a href="https://caddis-gr.github.io/fly-tying-archive/">Fly Tying</a>
+  </div>
+  <p>© 2026 CADDIS-GR · 낚시대장</p>
+</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lb">
+  <div id="lb-inner">
+    <button id="lb-close" onclick="closeLb()">✕</button>
+    <img id="lb-img" src="" alt="">
+    <span id="lb-cap"></span>
+  </div>
+  <button class="lb-arr" id="lb-prev" onclick="moveLb(-1)">‹</button>
+  <button class="lb-arr" id="lb-next" onclick="moveLb(1)">›</button>
+</div>
+
+<script>
+// 베스트 훅 라이트박스
+const FLY_ITEMS = [
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-chironomid.JPEG', cap:'White Chironomid Pupa · 2026.05.16 킬패턴' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-BlancedLeech01.JPEG', cap:'Balanced Leech #14 · 오후 원거리 반응' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-BlancedLeech02.jpg', cap:'Balanced Leech #14 · detail' },
+];
+let lbFlyIdx = 0;
+function openLbFly(i) {
+  lbFlyIdx = i;
+  document.getElementById('lb-img').src = FLY_ITEMS[i].src;
+  document.getElementById('lb-cap').textContent = FLY_ITEMS[i].cap;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// BGM — YouTube iframe
+let ytPlayer = null;
+let bgmPlaying = false;
+function toggleBgm() {
+  const play  = document.getElementById('bgm-icon-play');
+  const pause = document.getElementById('bgm-icon-pause');
+  if (!bgmPlaying) {
+    document.getElementById('yt-player-wrap').style.display = 'block';
+    if (ytPlayer && ytPlayer.playVideo) {
+      ytPlayer.playVideo();
+    }
+    play.style.display  = 'none';
+    pause.style.display = 'block';
+    bgmPlaying = true;
+  } else {
+    if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+    play.style.display  = 'block';
+    pause.style.display = 'none';
+    bgmPlaying = false;
+  }
+}
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('yt-player', {
+    events: { 'onReady': function(e){ if(bgmPlaying) e.target.playVideo(); } }
+  });
+}
+(function(){
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+})();
+
+// Lightbox
+const LB_ITEMS = [
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter02.JPEG', cap:'2026.05.16 · 수위가 낮아진 한터지' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Hanter03.JPEG', cap:'2026.05.16 · 한터낚시터 현장' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Counter.PNG', cap:'2026.05.16 · 19:10 · 23수 Goal Reached' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout01.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout02.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout03.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout04.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout05.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout06.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout07.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+  { src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0516/0516-Trout08.JPEG', cap:'2026.05.16 · 한터낚시터 · 송어' },
+];
+let lbIdx = 0;
+function openLb(i) {
+  lbIdx = i;
+  document.getElementById('lb-img').src = LB_ITEMS[i].src;
+  document.getElementById('lb-cap').textContent = LB_ITEMS[i].cap;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function moveLb(dir) {
+  lbIdx = (lbIdx + dir + LB_ITEMS.length) % LB_ITEMS.length;
+  document.getElementById('lb-img').src = LB_ITEMS[lbIdx].src;
+  document.getElementById('lb-cap').textContent = LB_ITEMS[lbIdx].cap;
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lb').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') moveLb(-1);
+  if (e.key === 'ArrowRight') moveLb(1);
+});
+document.getElementById('lb').addEventListener('click', e => {
+  if (e.target === document.getElementById('lb')) closeLb();
+});
+
+// Sticky nav active
+const navLinks = document.querySelectorAll('.snl');
+const sections = ['sec-top','sec-summary','sec-series','sec-gear','sec-fly','sec-science','sec-closing'];
+window.addEventListener('scroll', () => {
+  let current = sections[0];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) current = id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+navLinks.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 58, behavior:'smooth' });
+  });
+});
+</script>
+<footer class="lab-archive-footer"><a href="../../field-log/index.html">← FIELD LOG 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

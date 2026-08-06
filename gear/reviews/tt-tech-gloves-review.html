@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T&T Tech Gloves — CADDIS-GR Gear Review · CADDIS-GR LAB</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #f5f3ee;
+  --bg2:       #eeece6;
+  --bg3:       #e6e2da;
+  --surface:   #ffffff;
+  --surface2:  #f0ede8;
+  --border:    rgba(0,0,0,.08);
+  --border2:   rgba(0,0,0,.14);
+  --ink:       #1a1814;
+  --ink2:      #2e2b24;
+  --ink3:      #52493c;
+  --ink4:      #8a8070;
+  --gold:      #9a7a28;
+  --gold2:     #7a5e18;
+  --gold-dim:  rgba(154,122,40,.1);
+  --gold-glow: rgba(154,122,40,.05);
+  --water:     #2d6e5c;
+  --water2:    #235848;
+  --water-dim: rgba(45,110,92,.1);
+  --red:       #b03828;
+  --red-dim:   rgba(176,56,40,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.7;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:9999;
+  pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+}
+
+/* NAV */
+.sticky-nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(245,243,238,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:960px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:56px;
+}
+.nav-logo{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink4);text-decoration:none;transition:color .2s;
+}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 60px 80px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(15,14,11,.15) 0%,rgba(15,14,11,.52) 55%,rgba(245,243,238,.96) 100%),
+    linear-gradient(90deg,rgba(15,14,11,.28) 0%,transparent 60%),
+    url('https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/images/0508/0508-Hanter01.JPEG') center 40%/cover no-repeat;
+}
+.hero-lines{
+  position:absolute;inset:0;
+  background-image:repeating-linear-gradient(
+    90deg,transparent,transparent 79px,
+    rgba(255,255,255,.03) 79px,rgba(255,255,255,.03) 80px
+  );
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:2;max-width:860px;}
+.hero-avatar{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.hero-avatar img{
+  width:44px;height:44px;border-radius:50%;
+  border:2px solid rgba(240,216,120,.5);object-fit:cover;
+}
+.hero-avatar-name{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:#f0d878;margin-bottom:20px;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.8rem,6vw,5.2rem);
+  line-height:1.04;letter-spacing:-.03em;
+  color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.3);
+  margin-bottom:20px;
+}
+.hero h1 em{color:#f0d878;font-style:italic;}
+.hero-sub{
+  font-size:1rem;color:rgba(255,255,255,.78);
+  max-width:500px;line-height:1.8;margin-bottom:40px;
+}
+.hero-stats{
+  display:flex;gap:0;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.2);border-radius:12px;
+  overflow:hidden;width:fit-content;
+}
+.hero-stat{
+  padding:18px 28px;text-align:center;
+  border-right:1px solid rgba(255,255,255,.12);
+}
+.hero-stat:last-child{border-right:none;}
+.hero-stat-num{
+  font-family:'Playfair Display',serif;font-size:1.9rem;
+  font-weight:700;color:#f0d878;line-height:1;margin-bottom:4px;
+}
+.hero-stat-lbl{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.hero-scroll{
+  position:absolute;bottom:28px;left:60px;
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.38);animation:bounce 2s infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(5px);}}
+
+/* BGM */
+.bgm-wrap{position:absolute;bottom:72px;right:48px;z-index:4;}
+.bgm-btn-inner{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.25);border-radius:32px;padding:10px 18px;
+}
+.bgm-play{
+  width:28px;height:28px;background:var(--red);border:none;
+  border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;cursor:pointer;padding:0;
+}
+.bgm-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;line-height:1.4;color:#fff;}
+
+/* PRODUCT INTRO */
+.poster-section{
+  padding:90px 40px;
+  background:linear-gradient(180deg,var(--bg2),var(--bg));
+  border-bottom:1px solid var(--border);
+}
+.poster-wrap{
+  max-width:960px;margin:0 auto;
+  display:grid;grid-template-columns:.85fr 1.15fr;
+  gap:48px;align-items:center;
+}
+.poster-label{
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:24px;
+}
+.poster-copy h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.2rem,5vw,3.6rem);
+  line-height:1.05;letter-spacing:-.04em;
+  color:var(--ink);margin-bottom:24px;
+}
+.poster-copy h2 em{font-style:italic;color:var(--gold);}
+.poster-copy p{font-size:.98rem;line-height:1.9;color:var(--ink3);max-width:380px;}
+.season-poster{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 16px 42px rgba(0,0,0,.12);
+}
+.season-poster img{display:block;width:100%;height:360px;object-fit:cover;}
+.season-poster figcaption{
+  padding:12px 16px;font-family:'DM Mono',monospace;
+  font-size:.68rem;letter-spacing:.1em;color:var(--ink4);
+  background:var(--surface);border-top:1px solid var(--border);
+}
+
+/* TOC */
+.toc-section{padding:80px 40px;max-width:860px;margin:0 auto;}
+.toc-label{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink4);margin-bottom:32px;
+}
+.toc-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.toc-item{
+  background:var(--bg2);padding:28px 24px;
+  text-decoration:none;color:var(--ink);transition:background .25s;
+}
+.toc-item:hover{background:var(--surface);}
+.toc-item-num{
+  font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;
+  color:var(--border2);line-height:1;margin-bottom:16px;
+}
+.toc-item-tag{
+  font-family:'DM Mono',monospace;font-size:.6rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.toc-item-title{font-size:.88rem;color:var(--ink3);line-height:1.4;}
+
+/* SECTION */
+.section{
+  padding:80px 40px;max-width:860px;margin:0 auto;
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateY(40px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-header{margin-bottom:48px;}
+.section-meta{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.section-num{
+  font-family:'Playfair Display',serif;
+  font-size:3.6rem;font-weight:900;
+  color:var(--border2);line-height:1;
+}
+.section-tag{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(154,122,40,.3);
+  padding:5px 12px;border-radius:999px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3rem);
+  line-height:1.1;letter-spacing:-.03em;color:var(--ink);
+  margin-bottom:12px;
+}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-date{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.12em;color:var(--ink4);
+}
+.body-grid{
+  display:grid;grid-template-columns:1fr .6fr;
+  gap:40px;align-items:start;margin-bottom:40px;
+}
+.prose{font-size:1rem;color:var(--ink2);line-height:1.9;}
+.prose strong{color:var(--ink);font-weight:700;}
+.prose em{color:var(--water);font-style:italic;}
+.prose p+p{margin-top:1.2em;}
+
+/* PULL QUOTE */
+.pull-quote{
+  border-left:3px solid var(--gold);padding:28px 28px 28px 32px;
+  background:var(--gold-glow);position:relative;border-radius:0 8px 8px 0;
+}
+.pull-quote::before{
+  content:'\201C';font-family:'Playfair Display',serif;
+  font-size:6rem;line-height:.7;color:rgba(200,168,75,.12);
+  position:absolute;top:12px;left:16px;
+}
+.pull-quote p{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:1.2rem;color:var(--ink);line-height:1.6;
+}
+.pull-quote cite{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);font-style:normal;display:block;margin-top:12px;
+}
+
+/* CALLOUT */
+.callout{
+  background:var(--gold-dim);border-left:4px solid var(--gold);
+  border-radius:0 10px 10px 0;padding:28px 28px 28px 32px;margin-top:40px;
+}
+.callout-text{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:1.25rem;color:var(--gold2);line-height:1.6;
+}
+.callout-sub{margin-top:16px;font-size:.9rem;color:var(--ink3);line-height:1.7;}
+
+/* SPEC TABLE */
+.spec-table{width:100%;border-collapse:collapse;margin-top:48px;font-size:.88rem;}
+.spec-table th{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink4);padding:10px 16px;
+  border-bottom:2px solid var(--border2);text-align:left;
+}
+.spec-table td{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  vertical-align:top;color:var(--ink3);
+}
+.spec-table td:first-child{
+  font-family:'DM Mono',monospace;font-size:.75rem;
+  letter-spacing:.08em;color:var(--water2);white-space:nowrap;
+}
+.spec-table tr.highlight td{background:var(--gold-dim);}
+.spec-table tr.highlight td:first-child{color:var(--gold);}
+
+/* INSIGHT ROW */
+.insight-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:40px;
+}
+.insight-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:24px 20px;
+}
+.insight-box-icon{font-size:1.6rem;margin-bottom:12px;}
+.insight-box-label{
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.insight-box-text{font-size:.86rem;color:var(--ink3);line-height:1.7;}
+
+/* STRUCTURE DIAGRAM */
+.structure-diagram{
+  margin-top:40px;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;overflow:hidden;
+}
+.sd-header{
+  padding:16px 24px;background:var(--bg3);
+  border-bottom:1px solid var(--border);
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink4);
+}
+.sd-body{padding:28px 24px;}
+.sd-row{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+}
+.sd-row:last-child{border-bottom:none;}
+.sd-label{
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  letter-spacing:.1em;color:var(--gold);
+  min-width:120px;padding-top:2px;
+}
+.sd-content{font-size:.88rem;color:var(--ink3);line-height:1.7;}
+.sd-badge{
+  display:inline-block;
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:999px;
+  background:var(--gold-dim);color:var(--gold);
+  border:1px solid rgba(154,122,40,.2);
+  margin-right:6px;margin-bottom:4px;
+}
+.sd-badge.water{background:var(--water-dim);color:var(--water2);border-color:rgba(45,110,92,.2);}
+.sd-badge.red{background:var(--red-dim);color:var(--red);border-color:rgba(176,56,40,.2);}
+
+/* FLOW */
+.flow-wrap{margin-top:40px;}
+.flow-label{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink4);margin-bottom:20px;
+}
+.flow-steps{display:flex;flex-direction:column;}
+.flow-step{
+  display:flex;gap:16px;padding:18px 0;
+  border-bottom:1px solid var(--border);align-items:flex-start;
+}
+.flow-step:last-child{border-bottom:none;}
+.flow-step-num{
+  font-family:'Playfair Display',serif;font-size:1.5rem;
+  font-weight:700;color:var(--border2);line-height:1;
+  min-width:32px;padding-top:2px;
+}
+.flow-step.key .flow-step-num{
+  color:var(--gold);background:var(--gold-dim);border-radius:50%;
+  width:32px;height:32px;min-width:32px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;
+}
+.flow-step-text{font-size:.9rem;color:var(--ink3);line-height:1.7;padding-top:4px;}
+.flow-step-text strong{color:var(--ink);}
+
+/* CH IMAGE */
+.ch-img{width:100%;border-radius:12px;overflow:hidden;margin-top:40px;}
+.ch-img img{width:100%;height:320px;object-fit:cover;display:block;}
+.ch-img.wide img{height:400px;}
+.ch-img figcaption{
+  padding:10px 16px;font-family:'DM Mono',monospace;
+  font-size:.68rem;color:var(--ink4);
+  background:var(--surface);letter-spacing:.08em;
+}
+.lb-trigger{cursor:zoom-in;position:relative;display:block;}
+.lb-trigger::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(0,0,0,0);transition:background .2s;border-radius:inherit;
+}
+.lb-trigger:hover::after{background:rgba(0,0,0,.18);}
+.lb-trigger:hover img{transform:scale(1.02);}
+.lb-trigger img{transition:transform .3s ease;}
+
+/* LIGHTBOX */
+#lb{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:24px;
+}
+#lb.open{display:flex;}
+#lb-img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:4px;display:block;}
+#lb-cap{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;
+  color:rgba(255,255,255,.55);white-space:nowrap;
+}
+.lb-close{
+  position:absolute;top:20px;right:24px;
+  background:none;border:none;color:rgba(255,255,255,.6);
+  font-size:28px;cursor:pointer;line-height:1;padding:4px 8px;
+}
+.lb-close:hover{color:#fff;}
+.lb-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:20px;cursor:pointer;border-radius:50%;
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.lb-arrow:hover{background:rgba(255,255,255,.22);}
+.lb-prev{left:20px;}
+.lb-next{right:20px;}
+
+/* EPILOGUE */
+.epilogue{
+  padding:120px 40px;text-align:center;
+  background:var(--bg2);position:relative;overflow:hidden;
+}
+.epilogue::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(154,122,40,.05) 0%,transparent 70%);
+}
+.epilogue-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;}
+.epilogue h2{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(2rem,4vw,3rem);color:var(--gold);
+  margin-bottom:32px;line-height:1.3;
+}
+.epilogue p{font-size:1.05rem;color:var(--ink3);line-height:1.9;margin-bottom:20px;}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:48px;}
+.badge{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 16px;border-radius:999px;
+  border:1px solid rgba(200,168,75,.25);
+  color:var(--gold);background:var(--gold-dim);
+}
+
+/* FOOTER */
+footer{
+  padding:48px 40px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-logo{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+}
+.footer-copy{
+  font-family:'DM Mono',monospace;font-size:.65rem;
+  letter-spacing:.1em;color:var(--ink4);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{padding-left:24px;padding-right:24px;}
+  .poster-section,.toc-section,.section,.epilogue,footer{padding-left:24px;padding-right:24px;}
+  .toc-grid{grid-template-columns:repeat(2,1fr);}
+  .body-grid{grid-template-columns:1fr;}
+  .insight-row{grid-template-columns:1fr 1fr;}
+  .bgm-wrap{right:20px;bottom:60px;}
+  .poster-wrap{grid-template-columns:1fr;gap:32px;}
+  .poster-copy p{max-width:none;}
+}
+@media(max-width:600px){
+  .toc-grid{grid-template-columns:1fr;}
+  .insight-row{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .hero-stats{flex-wrap:wrap;}
+}
+</style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/tt-tech-gloves-review.html" target="_blank" rel="noopener">원본 저장소</a></div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav" id="stickyNav">
+  <div class="nav-inner">
+    <a href="#sec-top" class="nav-logo">CADDIS-GR</a>
+    <div class="nav-links">
+      <a href="#sec-top">맨 위</a>
+      <a href="#ch1">구매 배경</a>
+      <a href="#ch2">구조 분석</a>
+      <a href="#ch3">적합성</a>
+      <a href="#ch4">총평</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="sec-top">
+  <div class="hero-bg"></div>
+  <div class="hero-lines" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-avatar">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG" alt="낚시대장 프로필">
+      <span class="hero-avatar-name">낚시대장 · CADDIS-GR</span>
+    </div>
+    <div class="hero-eyebrow">Gear Review · Gloves · 2025</div>
+    <h1>T&amp;T Tech Gloves<br><em>손이 먼저 탄다</em></h1>
+    <p class="hero-sub">
+      하루 종일 캐스팅하는 손등이 자외선에 무방비로 노출된다는 사실을,
+      이미 시커멓게 타버린 다음에야 깨달았다.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">UPF50+</div>
+        <div class="hero-stat-lbl">자외선 차단</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">S/M</div>
+        <div class="hero-stat-lbl">사이즈</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">55,000</div>
+        <div class="hero-stat-lbl">원</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1969</div>
+        <div class="hero-stat-lbl">T&amp;T EST.</div>
+      </div>
+    </div>
+  </div>
+  <div class="bgm-wrap">
+    <div class="bgm-btn-inner">
+      <button class="bgm-play" onclick="toggleBgm()">
+        <svg id="bgm-icon-play" width="10" height="12" viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+        <svg id="bgm-icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="white" style="display:none"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>
+      </button>
+      <span class="bgm-label">된다 된다 오늘도 된다<br><span style="opacity:.6;font-size:10px">되고송 🎶</span></span>
+    </div>
+    <audio id="bgm" loop>
+      <source src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/OK-Song.m4a" type="audio/mp4">
+    </audio>
+  </div>
+  <div class="hero-scroll">Scroll ↓</div>
+</header>
+
+<!-- PRODUCT INTRO -->
+<section class="poster-section">
+  <div class="poster-wrap">
+    <div class="poster-copy">
+      <div class="poster-label">Product Introduction</div>
+      <h2>T&amp;T의 이름을<br><em>손에 끼다</em></h2>
+      <p>
+        낚싯대에서 시작한 Thomas &amp; Thomas가 1969년부터 쌓아온 신뢰는
+        이제 장갑 한 켤레에도 담겨 있다.
+        UPF 50+ 원단, 앤티슬립 마이크로파이버 그립, 핑거리스 컷,
+        그리고 낚시터에서만 의미 있는 디테일 하나.
+      </p>
+    </div>
+    <figure class="season-poster">
+      <img
+        src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/image/SunGlove/Glove01.JPEG"
+        alt="T&T Tech Gloves 제품 이미지"
+      >
+      <figcaption>T&amp;T Tech Gloves · S/M · White · 2025</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="toc-section">
+  <div class="toc-label">Contents</div>
+  <div class="toc-grid">
+    <a href="#ch1" class="toc-item">
+      <div class="toc-item-num">1</div>
+      <div class="toc-item-tag">Background</div>
+      <div class="toc-item-title">왜 글로브가 필요했나</div>
+    </a>
+    <a href="#ch2" class="toc-item">
+      <div class="toc-item-num">2</div>
+      <div class="toc-item-tag">Structure</div>
+      <div class="toc-item-title">구조와 소재 분석</div>
+    </a>
+    <a href="#ch3" class="toc-item">
+      <div class="toc-item-num">3</div>
+      <div class="toc-item-tag">Fly Fishing Fit</div>
+      <div class="toc-item-title">플라이낚시 적합성</div>
+    </a>
+    <a href="#ch4" class="toc-item">
+      <div class="toc-item-num">4</div>
+      <div class="toc-item-tag">Verdict</div>
+      <div class="toc-item-title">총평 &amp; 구매 판단</div>
+    </a>
+  </div>
+</section>
+
+<!-- CH 1 -->
+<section class="section" id="ch1">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="section-num">1</span>
+      <span class="section-tag">Background</span>
+    </div>
+    <h2 class="section-title">왜 글로브가<br><em>필요했나</em></h2>
+    <div class="section-date">2025 봄 시즌 · 용인 한터낚시터</div>
+  </div>
+  <div class="body-grid">
+    <div class="prose">
+      <p>
+        플라이낚시에서 손은 생각보다 훨씬 혹독한 환경에 놓인다.
+        오전 6시부터 오후 4시까지 저수지 위에서 캐스팅을 반복하다 보면,
+        손등은 직사광선에 고스란히 노출된 채 하루를 버텨야 한다.
+      </p>
+      <p>
+        선크림을 바르는 방법도 있지만, 라인을 잡고 리트리브를 하는 동안
+        크림은 금방 지워진다. 낚시 전용 자외선 차단 글로브가 필요하다는 결론에
+        이르는 데는 그리 오랜 시간이 걸리지 않았다.
+      </p>
+      <p>
+        이미 T&amp;T Helix를 쓰고 있었기 때문에 T&amp;T의 장갑은 자연스럽게 눈에 들어왔다.
+        같은 브랜드라는 이유만으로 선택한 건 아니다.
+        스펙이 플라이낚시 현장의 요구사항을 상당히 정직하게 충족시키는 편이었다.
+      </p>
+    </div>
+    <div class="pull-quote">
+      <p>손등이 이미 시커멓게 타버린 다음에야, 이 장비가 필요했다는 걸 깨달았다.</p>
+      <cite>낚시대장 · 2025 봄 시즌</cite>
+    </div>
+  </div>
+  <div class="insight-row">
+    <div class="insight-box">
+      <div class="insight-box-icon">☀️</div>
+      <div class="insight-box-label">자외선 노출</div>
+      <div class="insight-box-text">수면 반사광까지 더해지면 자외선 지수는 체감보다 훨씬 높아질 수 있다.</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-box-icon">🎣</div>
+      <div class="insight-box-label">선크림의 한계</div>
+      <div class="insight-box-text">리트리브 반복 동작으로 크림이 빠르게 소진된다. 물리적 차단이 더 실용적이다.</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-box-icon">🤚</div>
+      <div class="insight-box-label">핑거리스 조건</div>
+      <div class="insight-box-text">라인 감각과 훅셋 반응을 유지하려면 손가락 끝은 반드시 노출되어야 한다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CH 2 -->
+<section class="section" id="ch2">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="section-num">2</span>
+      <span class="section-tag">Structure</span>
+    </div>
+    <h2 class="section-title">구조와<br><em>소재 분석</em></h2>
+    <div class="section-date">언박싱 · T&amp;T Tech Gloves S/M</div>
+  </div>
+  <div class="body-grid">
+    <div class="prose">
+      <p>
+        포장을 열면 첫인상은 생각보다 가볍다. 원단은 UPF 50+ 인증을 받은
+        스트레치 패브릭으로, 손등 전면을 덮는 주요 차단 구조물 역할을 한다.
+        화이트 컬러 선택은 미관의 문제가 아니라 열 흡수를 줄이는 현실적 판단에 가깝다.
+      </p>
+      <p>
+        손바닥 쪽에는 <strong>앤티슬립 마이크로파이버 패드</strong>가 부착되어 있다.
+        코르크 그립을 잡는 감각을 크게 해치지 않으면서 미끄럼을 방지하는 구조다.
+        손가락은 세 번째 마디까지만 덮이는 하프-핑거 컷으로,
+        검지부터 소지까지 끝단이 노출되어 라인 컨트롤이 가능하다.
+      </p>
+      <p>
+        그리고 가운데 손가락 끝의 작은 루프 하나.
+        처음엔 장갑이 말리는 것을 방지하는 부품으로 보이지만,
+        실제 용도는 <strong>탈착용 풀탭(Pull Loop)</strong>이다.
+        젖은 손이나 선크림이 묻은 상태에서 장갑을 벗을 때,
+        끝단이 아닌 이 루프를 잡아당기면 봉제선에 집중되는 힘을 분산시킬 수 있다.
+      </p>
+    </div>
+    <div class="pull-quote">
+      <p>작은 루프 하나가 장갑의 수명을 결정짓는 디테일이 될 수도 있다.</p>
+      <cite>구조 분석 · Pull Loop</cite>
+    </div>
+  </div>
+
+  <div class="structure-diagram">
+    <div class="sd-header">Structure Breakdown · T&amp;T Tech Gloves</div>
+    <div class="sd-body">
+      <div class="sd-row">
+        <div class="sd-label">주원단</div>
+        <div class="sd-content">
+          <span class="sd-badge">UPF 50+</span>
+          <span class="sd-badge">스트레치</span>
+          <span class="sd-badge">브리더블</span>
+          손등 전면 커버. 자외선 물리 차단층. 화이트로 열 흡수 최소화.
+        </div>
+      </div>
+      <div class="sd-row">
+        <div class="sd-label">그립 패드</div>
+        <div class="sd-content">
+          <span class="sd-badge water">마이크로파이버</span>
+          <span class="sd-badge water">앤티슬립</span>
+          손바닥 하단부 부착. 코르크 그립 접촉면에 배치. 로드 그립력 보완.
+        </div>
+      </div>
+      <div class="sd-row">
+        <div class="sd-label">핑거컷</div>
+        <div class="sd-content">
+          <span class="sd-badge">하프 핑거리스</span>
+          4지 모두 세 번째 마디 이후 노출. 라인 감각 및 훅셋 반응 유지.
+        </div>
+      </div>
+      <div class="sd-row">
+        <div class="sd-label">Pull Loop</div>
+        <div class="sd-content">
+          <span class="sd-badge red">탈착용 루프</span>
+          가운데 손가락 끝단 루프. 젖은 손·선크림 상태에서 탈착 시 봉제선 응력 분산.
+        </div>
+      </div>
+      <div class="sd-row">
+        <div class="sd-label">사이즈 / 가격</div>
+        <div class="sd-content">S/M · L/XL 두 가지. 국내 판매가 <strong>55,000원</strong>. T&amp;T EST. 1969.</div>
+      </div>
+    </div>
+  </div>
+
+  <figure class="ch-img wide">
+    <span class="lb-trigger" onclick="openLb(0)">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/image/SunGlove/Glove02.JPEG" alt="T&T Tech Gloves 구조 디테일">
+    </span>
+    <figcaption>T&amp;T Tech Gloves · 구조 디테일 · Pull Loop &amp; 그립 패드</figcaption>
+  </figure>
+</section>
+
+<!-- CH 3 -->
+<section class="section" id="ch3">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="section-num">3</span>
+      <span class="section-tag">Fly Fishing Fit</span>
+    </div>
+    <h2 class="section-title">플라이낚시<br><em>적합성</em></h2>
+    <div class="section-date">관리형 저수지 · 스틸워터 플라이낚시 기준</div>
+  </div>
+  <div class="body-grid">
+    <div class="prose">
+      <p>
+        플라이낚시에서 장갑이 방해가 되는 상황은 생각보다 많다.
+        라인을 쥐고 리트리브할 때의 감각, 플라이 교체 시 훅 포인트를 다룰 때,
+        그리고 훅셋 순간의 즉각적인 힘 전달. 이 세 가지가 핵심이다.
+      </p>
+      <p>
+        핑거리스 컷은 이 조건들을 대부분 충족시킨다.
+        라인 리트리브는 검지와 중지 끝이 노출되어 있어
+        싱킹 라인 특유의 묵직한 텐션도 손끝에서 읽히는 편이다.
+        훅셋 타이밍에 장갑이 개입하는 느낌은 거의 없을 것으로 예상된다.
+      </p>
+      <p>
+        그립 패드는 코르크 손잡이와 접촉하는 면에 걸쳐 있어,
+        물에 젖었을 때도 로드를 놓치는 불안감이 줄어들 것으로 보인다.
+        실전 캐스팅에서 최종 확인이 필요하지만, 구조적으로는 긍정적이다.
+      </p>
+    </div>
+    <div class="pull-quote">
+      <p>장갑이 없는 것처럼 느껴진다면, 그게 좋은 장갑이다.</p>
+      <cite>플라이낚시 적합성 판단 기준</cite>
+    </div>
+  </div>
+
+  <div class="flow-wrap">
+    <div class="flow-label">플라이낚시 동작별 적합성 판단</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-text"><strong>캐스팅</strong> — 스트레치 원단이 손목과 손등 움직임을 제한하지 않는 구조. 오버헤드 및 롤 캐스트 모두 간섭 없을 것으로 예상.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-text"><strong>라인 리트리브</strong> — 검지·중지 끝 노출로 싱킹 라인 텐션 감지 가능. 8자 리트리브 또는 스트립 리트리브 모두 손끝 감각 유지.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-text"><strong>훅셋</strong> — 핑거리스 컷으로 손가락 전달력 확보. 지연 없이 즉각 반응 가능한 구조.</div>
+      </div>
+      <div class="flow-step key">
+        <div class="flow-step-num">!</div>
+        <div class="flow-step-text"><strong>탈착 핵심 디테일</strong> — Pull Loop를 이용하면 젖은 손 + 선크림 상태에서도 봉제선 손상 없이 장갑을 뺄 수 있다. 장갑 수명과 직결되는 부분.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">4</div>
+        <div class="flow-step-text"><strong>플라이 교체 / 티핏 작업</strong> — 소지까지 노출되어 있어 섬세한 매듭 작업에도 불편함이 적을 것으로 보인다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-text">"손이 자유롭되, 햇볕으로부터는 보호받는 것."</div>
+    <div class="callout-sub">플라이낚시 장갑에 요구되는 조건은 단순하다. 없는 것처럼 쓰면서도, 제 역할은 다 해야 한다. T&amp;T Tech Gloves는 구조적으로 그 균형을 맞추려 한 흔적이 보인다.</div>
+  </div>
+
+  <figure class="ch-img">
+    <span class="lb-trigger" onclick="openLb(1)">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/image/SunGlove/Glove03.JPEG" alt="T&T Tech Gloves 착용 이미지">
+    </span>
+    <figcaption>T&amp;T Tech Gloves · 플라이낚시 적합성 검토</figcaption>
+  </figure>
+</section>
+
+<!-- CH 4 -->
+<section class="section" id="ch4">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="section-num">4</span>
+      <span class="section-tag">Verdict</span>
+    </div>
+    <h2 class="section-title">총평 &amp;<br><em>구매 판단</em></h2>
+    <div class="section-date">미사용 상태 · 언박싱 기준 평가</div>
+  </div>
+  <div class="body-grid">
+    <div class="prose">
+      <p>
+        이 리뷰는 아직 실전 투입 전의 평가다.
+        구조와 소재, 그리고 디테일을 분석한 인상으로는 기대치를 충족시킬 가능성이
+        높아 보이는 편이다. 특히 Pull Loop라는 작은 디테일이 오래 쓸수록
+        체감될 것이라는 점은 첫 분석에서도 분명히 읽힌다.
+      </p>
+      <p>
+        55,000원이라는 가격은 낚시 장갑 카테고리에서 높은 편이다.
+        T&amp;T 브랜드 프리미엄이 일부 포함되어 있다는 점은 인정해야 한다.
+        그러나 UPF 50+ 원단 + 앤티슬립 패드 + 낚시 전용 설계의 조합이라면,
+        시즌 내내 손등을 지키는 도구로서의 가치는 충분히 있다고 본다.
+      </p>
+      <p>
+        실전 투입 후 착용감, 세탁 내구성, 실제 캐스팅 간섭 여부를
+        추가로 기록할 예정이다.
+      </p>
+    </div>
+    <div class="pull-quote">
+      <p>손등이 타는 건 딱 한 번만 겪으면 된다. 그다음은 준비가 필요하다.</p>
+      <cite>구매 결론 · 2025</cite>
+    </div>
+  </div>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th>내용</th>
+        <th>평가</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>자외선 차단</td>
+        <td>UPF 50+ 인증 원단, 손등 전면 커버</td>
+        <td>핵심 목적 충족</td>
+      </tr>
+      <tr>
+        <td>라인 감각</td>
+        <td>핑거리스 컷, 4지 끝단 노출</td>
+        <td>리트리브 감각 유지 가능</td>
+      </tr>
+      <tr>
+        <td>그립</td>
+        <td>손바닥 마이크로파이버 앤티슬립 패드</td>
+        <td>코르크 그립 보완</td>
+      </tr>
+      <tr class="highlight">
+        <td>Pull Loop</td>
+        <td>가운데 손가락 끝 탈착용 루프</td>
+        <td>장갑 수명 연장 핵심 디테일</td>
+      </tr>
+      <tr>
+        <td>통기성</td>
+        <td>브리더블 원단, 화이트 컬러</td>
+        <td>여름 장시간 착용 대응</td>
+      </tr>
+      <tr>
+        <td>가격</td>
+        <td>55,000원 (S/M · L/XL 동가)</td>
+        <td>카테고리 상위권. 브랜드 프리미엄 포함</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- EPILOGUE -->
+<section class="epilogue">
+  <div class="epilogue-inner">
+    <h2>"손이 타고 나서야<br>장비를 찾는다"</h2>
+    <p>
+      플라이낚시에서 보호 장비는 언제나 후순위로 밀린다.
+      라인이 먼저고, 플라이가 먼저고, 로드가 먼저다.
+      그러다 어느 봄날, 거울처럼 반짝이는 수면 위에서 손등이 조용히 타들어간다.
+    </p>
+    <p>
+      T&amp;T Tech Gloves는 그 교훈 이후에 고른 첫 번째 답이다.
+      실전에서 어떻게 증명될지는 아직 모르지만, 구조는 솔직하고, 디테일은 성실하다.
+    </p>
+    <div class="badge-row">
+      <span class="badge">UPF 50+</span>
+      <span class="badge">Pull Loop</span>
+      <span class="badge">Fingerless</span>
+      <span class="badge">Anti-Slip</span>
+      <span class="badge">T&amp;T 1969</span>
+      <span class="badge">2025 Spring</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CADDIS-GR</div>
+  <div style="display:flex;align-items:center;gap:28px;">
+    <a href="https://thomasandthomas.com/collections/gloves" target="_blank" style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(154,122,40,.3);padding-bottom:2px;">T&amp;T Gloves Collection ↗</a>
+    <div class="footer-copy">© 2025 낚시대장 · Gear Review · T&amp;T Tech Gloves</div>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <button class="lb-close" onclick="closeLb()">✕</button>
+  <button class="lb-arrow lb-prev" onclick="moveLb(-1)">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-arrow lb-next" onclick="moveLb(1)">›</button>
+  <span id="lb-cap"></span>
+</div>
+
+<script>
+function toggleBgm(){
+  const audio=document.getElementById('bgm');
+  const play=document.getElementById('bgm-icon-play');
+  const pause=document.getElementById('bgm-icon-pause');
+  if(audio.paused){
+    audio.play();play.style.display='none';pause.style.display='block';
+  }else{
+    audio.pause();play.style.display='block';pause.style.display='none';
+  }
+}
+const LB_ITEMS=[
+  {src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/image/SunGlove/Glove02.JPEG',cap:'T&T Tech Gloves · 구조 디테일 · Pull Loop & 그립 패드'},
+  {src:'https://raw.githubusercontent.com/CADDIS-GR/fishing-gear/main/image/SunGlove/Glove03.JPEG',cap:'T&T Tech Gloves · 플라이낚시 적합성 검토'},
+];
+let lbIdx=0;
+function openLb(i){
+  if(!LB_ITEMS.length)return;
+  lbIdx=i;
+  document.getElementById('lb-img').src=LB_ITEMS[i].src;
+  document.getElementById('lb-cap').textContent=LB_ITEMS[i].cap;
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow='';
+}
+function moveLb(dir){
+  if(!LB_ITEMS.length)return;
+  lbIdx=(lbIdx+dir+LB_ITEMS.length)%LB_ITEMS.length;
+  document.getElementById('lb-img').src=LB_ITEMS[lbIdx].src;
+  document.getElementById('lb-cap').textContent=LB_ITEMS[lbIdx].cap;
+}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lb').classList.contains('open'))return;
+  if(e.key==='Escape')closeLb();
+  if(e.key==='ArrowLeft')moveLb(-1);
+  if(e.key==='ArrowRight')moveLb(1);
+});
+document.getElementById('lb').addEventListener('click',e=>{
+  if(e.target===document.getElementById('lb'))closeLb();
+});
+const sections=document.querySelectorAll('.section');
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}
+  });
+},{threshold:0.06});
+sections.forEach(s=>observer.observe(s));
+const navLinks=document.querySelectorAll('.nav-links a');
+const allSections=document.querySelectorAll('section[id],header[id]');
+window.addEventListener('scroll',()=>{
+  let current='';
+  allSections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)current=s.id;});
+  navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+current);});
+});
+</script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

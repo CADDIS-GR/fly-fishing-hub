@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>낚시... 그 태도를 바꾸는 장비!! · CADDIS-GR LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #F8F8F8;
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+        }
+        .grayscale-hover {
+            filter: grayscale(100%);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .grayscale-hover:hover {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .active-tab {
+            color: #1A1A1A !important;
+            border-bottom: 2px solid #1A1A1A;
+        }
+        /* 헤더 텍스트 그림자 효과 (가독성 증대) */
+        .text-shadow {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="p-4 md:p-8 tracking-tight archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/Paradigm_Bouglé_Gold.html" target="_blank" rel="noopener">원본 저장소</a></div>
+    <div class="max-w-5xl mx-auto bg-white shadow-sm border border-zinc-100 rounded-sm overflow-hidden">
+        
+        <!-- Header Section with Robust Image Background -->
+        <header class="relative p-8 md:p-24 text-white min-h-[500px] flex flex-col justify-center overflow-hidden bg-zinc-900">
+            <!-- Background Image Layer (최우선 순위 렌더링) -->
+            <img src="https://lh3.googleusercontent.com/pw/AP1GczPWWDsIuJUtCCJCpTHQLQo1q6Bzxft1T6CFD-zsp7v3opGs-jjF2ON3EVom1KIi5QM1p0qwVAaH2XXj5TgWV9Zx7LtQGU99FAryH-HqHLd9nu__CtppCEcSV3tVSPR8HOZN6w33n2DRyO0LAK6wql-0RQ=w1977-h1318-s-no-gm?authuser=0" 
+                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none brightness-[0.45] z-0" 
+                 alt="Background Scenic"
+                 onerror="this.style.display='none'; this.parentElement.style.backgroundColor='#1a1a1a';">
+            
+            <!-- Dark Overlay for Contrast -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-1"></div>
+            
+            <!-- Content Overlay -->
+            <div class="relative z-10 w-full text-shadow">
+                <div class="flex justify-between items-center mb-16">
+                    <p class="font-bold text-[10px] tracking-[0.5em] uppercase text-white/50">Archive Index 2025.12</p>
+                    <div class="h-[1px] w-20 bg-white/20"></div>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl font-black leading-[1.1] tracking-tighter mb-12 uppercase">
+                    낚시... <br> 
+                    <span class="text-white/70">그 태도를 바꾸는 장비!!</span>
+                </h1>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pt-10 border-t border-white/20">
+                    <div class="md:col-span-3 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 italic">Curated by Jeff</div>
+                    <div class="md:col-span-9 text-sm md:text-base leading-relaxed text-white/90 max-w-xl font-medium">
+                        T&T Paradigm과 Hardy Bouglé의 만남은 단순히 장비의 조합을 넘어, 낚시라는 행위를 대하는 우리의 자세를 근본적으로 재정의합니다.
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation (Sticky-ready) -->
+        <nav class="flex px-8 md:px-16 py-6 gap-10 border-b border-zinc-100 bg-white font-bold sticky top-0 z-20">
+            <button onclick="switchTab('gear')" id="tab-gear" class="text-[10px] tracking-[0.2em] uppercase transition-all pb-1 active-tab text-zinc-900">
+                01. The Instruments
+            </button>
+            <button onclick="switchTab('spirit')" id="tab-spirit" class="text-[10px] tracking-[0.2em] uppercase transition-all pb-1 text-zinc-300 hover:text-zinc-500">
+                02. The Mindset
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="p-8 md:p-20">
+            
+            <!-- Gear Tab -->
+            <div id="content-gear" class="tab-content active space-y-40">
+                <!-- Rod Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center group">
+                    <div class="lg:col-span-6 overflow-hidden bg-[#FBFBFB] border border-zinc-100 shadow-sm">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczNpmcxnzk0R2J9-AujGfUiUVgfVCk6EWnqUQWQ-xuqg15PUmcHcHBWB-qgHRDWYPup1vTp9eC-0yAQhjDx35arh3GEDGD3kDPWtwK58MrhdoAlNJxdd18CIBT-tdikqHg1deqmJNyg_qqEEJNHlDl3eOA=w2350-h1318-s-no-gm?authuser=0" 
+                             alt="Thomas & Thomas Paradigm" class="w-full grayscale-hover object-cover aspect-[4/3]">
+                    </div>
+                    <div class="lg:col-span-6">
+                        <span class="text-[9px] font-black tracking-[0.4em] uppercase text-zinc-300 mb-6 block">Selection 01</span>
+                        <h2 class="text-2xl md:text-3xl font-black tracking-tighter mb-4 uppercase leading-none text-emerald-950">
+                            THOMAS & THOMAS <br> Paradigm 590-4
+                        </h2>
+                        <p class="text-zinc-400 font-bold text-[10px] mb-8 tracking-[0.15em] uppercase italic opacity-80">Precision meets soul.</p>
+                        <p class="text-zinc-600 text-[14px] leading-relaxed mb-10 max-w-sm font-medium">
+                            단순한 장비를 넘어 낚시꾼의 감각을 확장하는 예술품입니다. T&T만의 부드러운 복원력은 드라이 플라이 낚시의 새로운 기준을 제시합니다.
+                        </p>
+                        <div class="flex flex-wrap gap-x-8 gap-y-3 pt-8 border-t border-zinc-50">
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-emerald-900/20 rounded-full mr-2"></span>Action: Semi-Flex
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-emerald-900/20 rounded-full mr-2"></span>Material: Graphite
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-emerald-900/20 rounded-full mr-2"></span>Seat: Maple
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center group">
+                    <div class="lg:col-span-6 overflow-hidden bg-[#FBFBFB] border border-zinc-100 shadow-sm">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczNjZkf41hD8qagBHS1D-nPYI0AXD7Tq5m5Klls1c2qM1TuKWWdKB28YaDcbNH3ejI5HZn69o25sGgyz4Ev2Qu_59RjmCR7CDRD6q1WTKfmeWsw7D3ByABEMf3ZSJ_Zs-qx53dahOGG_E41jnQGlA7Kavg=w1977-h1318-s-no-gm?authuser=0" 
+                             alt="Hardy Bouglé" class="w-full grayscale-hover object-cover aspect-[4/3]">
+                    </div>
+                    <div class="lg:col-span-6">
+                        <span class="text-[9px] font-black tracking-[0.4em] uppercase text-zinc-300 mb-6 block">Selection 02</span>
+                        <h2 class="text-2xl md:text-3xl font-black tracking-tighter mb-4 uppercase leading-none text-zinc-700 font-black">
+                            HARDY HERITAGE <br> Bouglé 3 1/4 (1939)
+                        </h2>
+                        <p class="text-zinc-400 font-bold text-[10px] mb-8 tracking-[0.15em] uppercase italic opacity-80">The heritage in a click.</p>
+                        <p class="text-zinc-600 text-[14px] leading-relaxed mb-10 max-w-sm font-medium">
+                            1903년부터 이어온 보글레의 역사는 이 작은 릴 안에 응축되어 있습니다. 영국 알닉(Alnwick) 장인들의 고집이 담긴 시대를 초월하는 명기입니다.
+                        </p>
+                        <div class="flex flex-wrap gap-x-8 gap-y-3 pt-8 border-t border-zinc-50">
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-zinc-400/20 rounded-full mr-2"></span>Origin: England
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-zinc-400/20 rounded-full mr-2"></span>System: Check-Click
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-zinc-400/20 rounded-full mr-2"></span>Finish: Silver
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center group">
+                    <div class="lg:col-span-6 overflow-hidden bg-[#FBFBFB] border border-zinc-100 shadow-sm">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczOrP5sbbguyNwenpQug7TFkK5V8dvVSuv8w-LWVvkC6_csk6Fo9_LIEa6eMp7-kZlRR5-hpc4OSF1DsU_80Bv_PxhxcWT6j_OytEp3eb_WP81FRGjX_KFkmNlYdoplidO7HhlccU3vay0PI7hS5ZKgfOw=w2350-h1318-s-no-gm?authuser=0" 
+                             alt="Rio Elite Gold" class="w-full grayscale-hover object-cover aspect-[4/3]">
+                    </div>
+                    <div class="lg:col-span-6">
+                        <span class="text-[9px] font-black tracking-[0.4em] uppercase text-zinc-300 mb-6 block">Selection 03</span>
+                        <h2 class="text-2xl md:text-3xl font-black tracking-tighter mb-4 uppercase leading-none text-orange-950 font-black">
+                            RIO Elite Gold <br> Classic WF5F
+                        </h2>
+                        <p class="text-zinc-400 font-bold text-[10px] mb-8 tracking-[0.15em] uppercase italic opacity-80">The seamless connection.</p>
+                        <p class="text-zinc-600 text-[14px] leading-relaxed mb-10 max-w-sm font-medium">
+                            패러다임 로드가 가진 섬세한 에너지를 손실 없이 수면 위로 전달합니다. 최상의 매끄러움과 저신축 코어는 완벽한 루프를 완성합니다.
+                        </p>
+                        <div class="flex flex-wrap gap-x-8 gap-y-3 pt-8 border-t border-zinc-50">
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-orange-900/20 rounded-full mr-2"></span>Core: ConnectCore+
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-orange-900/20 rounded-full mr-2"></span>Tech: SlickCast
+                            </span>
+                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter flex items-center">
+                                <span class="w-1.5 h-1.5 bg-orange-900/20 rounded-full mr-2"></span>Taper: Long Head
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mindset Tab -->
+            <div id="content-spirit" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div class="p-10 border border-zinc-50 hover:bg-zinc-50/50 transition-all duration-500 group rounded-sm">
+                        <div class="mb-10 text-zinc-200 group-hover:text-zinc-900 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black tracking-[0.4em] mb-4 block text-zinc-300 uppercase">Principle 01</span>
+                        <h4 class="text-sm font-black tracking-widest mb-4 uppercase text-slate-800">PROCESS</h4>
+                        <p class="text-[12px] leading-relaxed font-medium text-zinc-500">
+                            결과보다 과정을, 조과보다 루프의 아름다운 궤적을 즐깁니다.
+                        </p>
+                    </div>
+                    <div class="p-10 border border-zinc-50 hover:bg-zinc-50/50 transition-all duration-500 group rounded-sm">
+                        <div class="mb-10 text-zinc-200 group-hover:text-zinc-900 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 9h11l-1.5 8.5h-8Z"/><path d="M12 17.5V22"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black tracking-[0.4em] mb-4 block text-zinc-300 uppercase">Principle 02</span>
+                        <h4 class="text-sm font-black tracking-widest mb-4 uppercase text-slate-800">ANALOG</h4>
+                        <p class="text-[12px] leading-relaxed font-medium text-zinc-500">
+                            첨단 기술 속에서도 손끝의 감각으로 물고기와 정직하게 대화합니다.
+                        </p>
+                    </div>
+                    <div class="p-10 border border-zinc-50 hover:bg-zinc-50/50 transition-all duration-500 group rounded-sm">
+                        <div class="mb-10 text-zinc-200 group-hover:text-zinc-900 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </div>
+                        <span class="text-[9px] font-black tracking-[0.4em] mb-4 block text-zinc-300 uppercase">Principle 03</span>
+                        <h4 class="text-sm font-black tracking-widest mb-4 uppercase text-slate-800">RESPECT</h4>
+                        <p class="text-[12px] leading-relaxed font-medium text-zinc-500">
+                            전통 있는 장비를 통해 자연과 대상어를 향한 깊은 예우를 배웁니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="p-10 md:p-16 bg-white border-t border-zinc-100 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-[9px] font-bold tracking-[0.5em] uppercase text-zinc-300">
+                Heritage Archive for 낚시대장
+            </div>
+            <div class="text-[9px] font-bold tracking-[0.5em] uppercase text-zinc-300">
+                2025.12.31 | ALNWICK TO VERMONT
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('nav button').forEach(tab => {
+                tab.classList.remove('active-tab');
+                tab.classList.add('text-zinc-300');
+                tab.classList.remove('text-zinc-900');
+            });
+
+            document.getElementById('content-' + tabName).classList.add('active');
+            
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-zinc-300');
+            activeBtn.classList.add('text-zinc-900');
+        }
+    </script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

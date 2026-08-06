@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonar Sink 25 Cold - Tactical Manual · CADDIS-GR LAB</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .animate-bounce-slow { animation: bounce 3s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(-5%); } 50% { transform: translateY(0); } }
+    </style>
+<link rel="stylesheet" href="../../assets/css/archive.css">
+</head>
+<body class="bg-slate-50 text-slate-800 archive-page">
+<div class="lab-archive-bar">
+  <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
+  <nav aria-label="아카이브 탐색">
+    <a href="../../research/index.html">Research</a>
+    <a href="../../gear/index.html" aria-current="page">Gear</a>
+    <a href="../../fly-patterns/index.html">Fly Patterns</a>
+    <a href="../../field-log/index.html">Field Log</a>
+    <a href="../../library/index.html">Library</a>
+  </nav>
+</div>
+<div class="lab-archive-source"><span>GEAR REVIEW · 원문 보존 이전</span><a href="https://github.com/CADDIS-GR/fishing-gear/blob/main/reviews/260108_sonar_sink_manual_EN.html" target="_blank" rel="noopener">원본 저장소</a></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- Inline SVG Icons (Replacing Lucide Library to fix Error #130) ---
+        const Icons = {
+            Waves: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+            ),
+            ArrowDownToLine: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></svg>
+            ),
+            Anchor: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22v-4"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/><circle cx="12" cy="5" r="3"/></svg>
+            ),
+            MoveVertical: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 5 3-3 3 3"/><path d="m9 19 3 3 3-3"/><path d="M12 2v20"/></svg>
+            ),
+            Zap: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            ),
+            Hand: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/><path d="M6 10V9a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/></svg>
+            ),
+            Target: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            ),
+            Play: ({fill}) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={fill || "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            ),
+            Activity: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            ),
+            ChevronDown: () => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            ),
+            Fish: ({className}) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6.5 12c.94 1.58 2.37 2.42 4 2.42 1.63 0 3.06-.84 4-2.42-.94-1.58-2.37-2.42-4-2.42-1.63 0-3.06.84-4 2.42Z"/><path d="M14.5 12c.5 1 2 1.5 3.5 1.5.76 0 1.48-.13 2.1-.37l2.9 1.37V9.5l-2.9 1.37c-.62-.24-1.34-.37-2.1-.37-1.5 0-3 .5-3.5 1.5Z"/><path d="M2 12c1.5 0 3 .5 3.5 1.5.5-1 2-1.5 3.5-1.5"/><path d="M2 12c1.5 0 3-.5 3.5-1.5.5 1 2 1.5 3.5 1.5"/><path d="M6.5 12c.5-2 1.5-3.5 3-3.5 1.41 0 2.43 1.34 2.93 3.12"/><path d="M12.43 12.12c-.5 1.78-1.52 3.12-2.93 3.12-1.5 0-2.5-1.5-3-3.5"/></svg>
+            )
+        };
+
+        const Infographic = () => {
+            const lineProfileUrl = "https://lh3.googleusercontent.com/pw/AP1GczM0eERiAR_llI6xmcQ2Rx0YmnyrboaFTmyULo_7TQAPEz-pE9hOJ7yfntadR6mv_NEkOT2yw3tkFy2RQWnhMqMSSDnmYL8_GcdvSfq4jQc58LOh6kgRxZKUIxXC5_iJlkPGGSiJPALGG-DNsc1y45baUA=w1000-h375-s-no-gm?authuser=0";
+
+            return (
+                <div className="min-h-screen p-4 md:p-8">
+                    {/* Header */}
+                    <header className="max-w-4xl mx-auto text-center mb-10">
+                        <div className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold mb-4 uppercase tracking-widest">
+                            Product Identity Analysis
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 uppercase">
+                            Sonar Sink 25 <span className="text-blue-600">Cold</span>
+                        </h1>
+                        <p className="text-xl text-slate-600 font-medium italic">
+                            "Deep-Quick Shooting Head System for Coldwater Streamer Tactics"
+                        </p>
+                    </header>
+
+                    <div className="max-w-5xl mx-auto space-y-8">
+                        
+                        {/* Profile Visualization Section with Core Keywords */}
+                        <section className="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 relative">
+                            <div className="bg-slate-900 p-5 text-white flex justify-between items-center">
+                                <h2 className="text-lg font-bold flex items-center gap-2">
+                                    <Icons.Waves /> Line Taper & Sink Profile
+                                </h2>
+                                <div className="flex gap-2">
+                                    <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[10px] font-bold uppercase">COLD</span>
+                                    <span className="bg-slate-700 text-slate-300 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight">25ft Head</span>
+                                </div>
+                            </div>
+                            
+                            <div className="p-4 md:p-8 bg-white flex flex-col items-center justify-center relative">
+                                {/* Core Keywords Overlay (Top-Center) */}
+                                <div className="flex flex-wrap justify-center gap-3 mb-6">
+                                    <div className="flex flex-col items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-xl shadow-sm">
+                                        <span className="text-[10px] text-blue-500 font-bold uppercase">Condition</span>
+                                        <span className="text-sm font-black text-blue-900 uppercase">COLD</span>
+                                    </div>
+                                    <div className="flex flex-col items-center px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl shadow-sm">
+                                        <span className="text-[10px] text-slate-500 font-bold uppercase">Engine</span>
+                                        <span className="text-sm font-black text-slate-900 uppercase">25ft HEAD</span>
+                                    </div>
+                                    <div className="flex flex-col items-center px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl shadow-sm">
+                                        <span className="text-[10px] text-amber-600 font-bold uppercase">Target</span>
+                                        <span className="text-sm font-black text-amber-900 uppercase">DIRTY</span>
+                                    </div>
+                                    <div className="flex flex-col items-center px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm">
+                                        <span className="text-[10px] text-indigo-600 font-bold uppercase">Application</span>
+                                        <span className="text-sm font-black text-indigo-900 uppercase tracking-tighter">DEEP LINING</span>
+                                    </div>
+                                </div>
+
+                                <img 
+                                    src={lineProfileUrl} 
+                                    alt="Line Profile" 
+                                    className="max-w-full h-auto rounded-lg mb-6 shadow-sm"
+                                />
+                                
+                                <div className="flex flex-wrap justify-center gap-4 text-[10px] font-bold uppercase tracking-wider">
+                                    <div className="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full">
+                                        <span className="w-2 h-2 rounded-full bg-yellow-400"></span> Floating Running Line
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full">
+                                        <span className="w-2 h-2 rounded-full bg-orange-400"></span> Large Diameter Handling Section
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-full">
+                                        <span className="w-2 h-2 rounded-full bg-slate-800"></span> 25ft Extra-Fast Head
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Tactical Core Concepts */}
+                        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="bg-white border border-blue-100 p-5 rounded-2xl shadow-sm flex items-start gap-4 hover:border-blue-300 transition-colors">
+                                <div className="bg-blue-600 text-white p-2 rounded-lg shrink-0">
+                                    <Icons.ArrowDownToLine />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 mb-1 text-sm">Short Cast & Vertical Sink</h4>
+                                    <p className="text-xs text-slate-600 leading-snug">Avoid long distance. Short casts allow the head to sink "near vertical" for precision.</p>
+                                </div>
+                            </div>
+                            <div className="bg-white border border-blue-100 p-5 rounded-2xl shadow-sm flex items-start gap-4 hover:border-blue-300 transition-colors">
+                                <div className="bg-blue-600 text-white p-2 rounded-lg shrink-0">
+                                    <Icons.Anchor />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 mb-1 text-sm">Bottom Contact Verification</h4>
+                                    <p className="text-xs text-slate-600 leading-snug">Forget countdowns. The heavy head allows you to "feel" the bottom contact as your baseline.</p>
+                                </div>
+                            </div>
+                            <div className="bg-white border border-blue-100 p-5 rounded-2xl shadow-sm flex items-start gap-4 hover:border-blue-300 transition-colors">
+                                <div className="bg-blue-600 text-white p-2 rounded-lg shrink-0">
+                                    <Icons.MoveVertical />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 mb-1 text-sm">Lift & Fall Centric</h4>
+                                    <p className="text-xs text-slate-600 leading-snug">Horizontal retrieve is secondary. Vertical action (8 to 10 o'clock) triggers the bite.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Real-World Simulation Section */}
+                        <section className="bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-slate-900">
+                            <div className="bg-slate-900 p-6 text-white">
+                                <h2 className="text-2xl font-black flex items-center gap-3 uppercase">
+                                    <Icons.Play fill="#60a5fa" /> 
+                                    Tactical Simulation: 6m Stillwater / 30s Countdown
+                                </h2>
+                                <p className="text-slate-400 text-sm mt-1 uppercase tracking-tighter">Naksi-daejang's Deep-Lining Protocol</p>
+                            </div>
+                            
+                            <div className="p-6 md:p-8 space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="relative pl-8 border-l-2 border-blue-200">
+                                        <div className="absolute -left-[11px] top-0 w-5 h-5 bg-blue-600 rounded-full border-4 border-white shadow-sm"></div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="text-blue-600 font-black">PHASE 0</span>
+                                            <span className="text-slate-400 text-xs font-bold uppercase">0~5 SEC</span>
+                                        </div>
+                                        <h4 className="font-bold text-slate-900 mb-2 underline decoration-blue-200 decoration-2">Post-Cast: "Slight Tension"</h4>
+                                        <p className="text-sm text-slate-600 leading-relaxed">
+                                            Retrieve <strong>30-60cm</strong> immediately. Not fully slack, but not tight. Prepare to detect the "Thump" signal during the sink.
+                                        </p>
+                                    </div>
+
+                                    <div className="relative pl-8 border-l-2 border-blue-200">
+                                        <div className="absolute -left-[11px] top-0 w-5 h-5 bg-blue-600 rounded-full border-4 border-white shadow-sm"></div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="text-blue-600 font-black">PHASE 1</span>
+                                            <span className="text-slate-400 text-xs font-bold uppercase">5~30 SEC</span>
+                                        </div>
+                                        <h4 className="font-bold text-slate-900 mb-2 underline decoration-blue-200 decoration-2">Countdown: "Micro-Check"</h4>
+                                        <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                                            At 15s, perform a 5-10cm micro-lift. A <strong>sudden stop (Thump)</strong> or <strong>sudden slack</strong> indicates you've reached the "Strike Zone."
+                                        </p>
+                                        <div className="inline-flex items-center gap-2 bg-red-50 px-2 py-1 rounded border border-red-100 text-[10px] text-red-600 font-bold uppercase">
+                                            <Icons.Activity /> Signal: Thump or Slack
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <Icons.MoveVertical />
+                                        <h4 className="font-black text-slate-900 uppercase text-lg">PHASE 2: Main Action (8 to 10 o'clock Lift)</h4>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                                            <div className="text-blue-600 font-bold text-xs mb-1 uppercase">Mode A</div>
+                                            <h5 className="font-bold text-slate-900 mb-2">Pop/Step Lift (Staccato)</h5>
+                                            <p className="text-xs text-slate-600">8→9→10 o'clock in short bursts. Mimics a fleeing prey near the bottom to trigger <strong>Reaction Bites</strong>.</p>
+                                        </div>
+                                        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                                            <div className="text-blue-600 font-bold text-xs mb-1 uppercase">Mode B</div>
+                                            <h5 className="font-bold text-slate-900 mb-2">Slow Lift (Legato)</h5>
+                                            <p className="text-xs text-slate-600">A steady 2-3s lift to 10 o'clock. Strip in the excess line to maintain <strong>direct connectivity</strong> for followers.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="p-5 border-2 border-dashed border-slate-200 rounded-2xl">
+                                        <div className="flex items-center gap-2 mb-2 text-slate-900">
+                                            <Icons.ChevronDown />
+                                            <h4 className="font-bold italic text-sm underline uppercase">PHASE 3: The 'Fall' (Critical)</h4>
+                                        </div>
+                                        <p className="text-xs text-slate-600 leading-relaxed">
+                                            Lower the rod back and follow the line. Most strikes happen <strong>during the drop</strong>. Watch for line hesitation or acceleration.
+                                        </p>
+                                    </div>
+
+                                    <div className="p-5 bg-red-50 border-2 border-red-200 rounded-2xl relative overflow-hidden">
+                                        <div className="flex items-center gap-2 mb-2 text-red-900">
+                                            <Icons.Target />
+                                            <h4 className="font-black text-sm uppercase">KILLZONE: The 'Hang' Presentation</h4>
+                                        </div>
+                                        <div className="space-y-2 relative z-10">
+                                            <div className="flex items-center gap-2 text-xs">
+                                                <span className="bg-red-600 text-white px-1.5 py-0.5 rounded font-bold uppercase">Level 1</span>
+                                                <span className="font-bold text-red-800 italic">2-4s Full Stop (Maintain 10-11 o'clock)</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs">
+                                                <span className="bg-red-600 text-white px-1.5 py-0.5 rounded font-bold uppercase">Level 2</span>
+                                                <span className="font-bold text-red-800 italic">10cm Micro-Rise + Micro-Fall cycle</span>
+                                            </div>
+                                        </div>
+                                        <Icons.Fish className="absolute -right-4 -bottom-4 text-red-200 w-24 h-24 rotate-12 opacity-50" />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Special Summary Card */}
+                        <section className="bg-blue-600 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-4 text-white">
+                                    <Icons.Fish className="animate-bounce-slow" />
+                                    <h2 className="text-2xl font-black italic uppercase tracking-tighter">Vertical Fly Jigging</h2>
+                                </div>
+                                <p className="text-blue-100 text-sm mb-6 leading-relaxed italic">
+                                    "The Sonar Sink 25 is a tactical weapon that imports the precise strike-detection mechanics 
+                                    of deep-sea jigging into the 6m stillwater column."
+                                </p>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-blue-700/50 p-3 rounded-xl">
+                                        <span className="block text-[10px] text-blue-300 font-bold uppercase mb-1">Target</span>
+                                        <span className="text-sm font-bold">Stillwater Deep Lining</span>
+                                    </div>
+                                    <div className="bg-blue-700/50 p-3 rounded-xl">
+                                        <span className="block text-[10px] text-blue-300 font-bold uppercase mb-1">Focus</span>
+                                        <span className="text-sm font-bold">Visual Tip Detection</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-full md:w-1/3 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+                                <h3 className="text-lg font-bold mb-4 border-b border-white/20 pb-2 flex items-center gap-2">
+                                    <Icons.Zap /> Summary
+                                </h3>
+                                <ul className="text-xs space-y-3 opacity-90">
+                                    <li className="flex gap-2"><span>✔</span> 25ft Sink-Head as the 'Engine'</li>
+                                    <li className="flex gap-2"><span>✔</span> Not a Tip, but a "Shooting Head"</li>
+                                    <li className="flex gap-2"><span>✔</span> Rapid Deep-Quick penetration</li>
+                                    <li className="flex gap-2"><span>✔</span> High-Sensitivity Handling Section</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        {/* 3 Core Philosophies Section */}
+                        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 text-center">
+                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-blue-600">
+                                    <Icons.Zap />
+                                </div>
+                                <h3 className="text-md font-bold mb-2 uppercase">1. Deep & Quick</h3>
+                                <p className="text-xs text-slate-600">Mass-loaded 25ft head achieves target depth instantly.</p>
+                            </div>
+
+                            <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 text-center">
+                                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-orange-600">
+                                    <Icons.Hand />
+                                </div>
+                                <h3 className="text-md font-bold mb-2 uppercase">2. Real Handling</h3>
+                                <p className="text-xs text-slate-600">Sink the head, keep the control in your hands.</p>
+                            </div>
+
+                            <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 text-center">
+                                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                                    <Icons.Target />
+                                </div>
+                                <h3 className="text-md font-bold mb-2 uppercase">3. Shooting Cycle</h3>
+                                <p className="text-xs text-slate-600">Optimized for: Shoot, Sink, Strip, Repeat.</p>
+                            </div>
+                        </section>
+                    </div>
+
+                    <footer className="max-w-4xl mx-auto mt-12 text-center text-slate-400 text-[10px] border-t border-slate-200 pt-8 uppercase tracking-widest">
+                        Tactical Analysis for Naksi-daejang by Jeff | English Version
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Infographic />);
+    </script>
+<footer class="lab-archive-footer"><a href="../../gear/index.html">← GEAR REVIEW 목록</a><a href="../../index.html">CADDIS-GR LAB 홈</a></footer>
+</body>
+</html>

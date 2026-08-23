@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#243b24" />
+  <meta name="description" content="BLOB FLY의 구조, 타잉 시스템, 인디케이터와 싱킹라인 운용법을 정리한 한국어 필드 가이드" />
+  <meta property="og:title" content="BLOB FLY · Stillwater Field Guide" />
+  <meta property="og:description" content="에그처럼 멈춰 보여주고, 루어처럼 움직여 깨우는 전층 패턴" />
+  <meta property="og:image" content="https://caddis-gr.github.io/fly-fishing-hub/fly-patterns/blob-fly/assets/blob-collection.jpg" />
+  <title>BLOB FLY · Stillwater Field Guide</title>
+  <style>
+    :root {
+      --paper: #f4efe3;
+      --paper-light: #fffaf0;
+      --ink: #13202c;
+      --green: #263b22;
+      --orange: #ef5b24;
+      --yellow: #e9b949;
+      --muted: #657068;
+      --rule: #c8bda5;
+      --shadow: 0 18px 55px rgba(35, 31, 22, .14);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(95, 78, 42, .06) 0 1px, transparent 1.5px) 0 0 / 29px 31px,
+        var(--paper);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 22px auto;
+      border: 1px solid var(--rule);
+      background: rgba(244, 239, 227, .94);
+      box-shadow: var(--shadow);
+    }
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--rule);
+      color: var(--green);
+      font-weight: 800;
+      letter-spacing: .08em;
+      font-size: .78rem;
+    }
+
+    .masthead nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    .masthead a { text-decoration: none; }
+    .masthead a:hover { color: var(--orange); }
+
+    .hero { padding: clamp(28px, 5vw, 68px); }
+    .eyebrow {
+      margin: 0 0 7px;
+      color: var(--green);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Impact, "Arial Black", "Malgun Gothic", sans-serif;
+      font-size: clamp(4.3rem, 13vw, 10rem);
+      line-height: .86;
+      letter-spacing: -.035em;
+    }
+
+    .deck {
+      margin: 23px 0 34px;
+      max-width: 820px;
+      color: var(--green);
+      font-size: clamp(1.05rem, 2.2vw, 1.55rem);
+      font-weight: 500;
+    }
+
+    .hero-photo { position: relative; min-height: 390px; overflow: hidden; border: 1px solid var(--rule); }
+    .hero-photo img { width: 100%; height: 100%; min-height: 390px; object-fit: cover; }
+    .hero-caption {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 20px 24px;
+      color: white;
+      background: linear-gradient(transparent, rgba(7, 13, 15, .92));
+    }
+    .hero-caption strong { display: block; font-size: 1.2rem; }
+
+    .grid-3, .grid-2 { display: grid; gap: 16px; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); margin-top: 18px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 7px;
+      overflow: hidden;
+      background: var(--paper-light);
+    }
+    .card > h2, .card > h3 {
+      margin: 0;
+      padding: 12px 16px;
+      color: white;
+      background: var(--green);
+      font-size: 1rem;
+      letter-spacing: -.02em;
+    }
+    .card.orange > h2, .card.orange > h3 { background: var(--orange); }
+    .card.ink > h2, .card.ink > h3 { background: var(--ink); }
+    .card-body { padding: 18px; }
+    .card-body p:first-child { margin-top: 0; }
+    .card-body p:last-child { margin-bottom: 0; }
+
+    .number-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+    .number-list li { display: grid; grid-template-columns: 32px 1fr; gap: 11px; align-items: start; }
+    .num {
+      display: grid; place-items: center;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      color: white; background: var(--orange);
+      font-weight: 900;
+    }
+    .green-num .num { background: var(--green); }
+    .number-list strong { display: block; margin-bottom: 2px; }
+    .number-list span:last-child { color: var(--muted); }
+
+    .thesis {
+      margin-top: 18px;
+      padding: clamp(24px, 4vw, 46px);
+      border-radius: 8px;
+      text-align: center;
+      color: white;
+      background: var(--orange);
+    }
+    .thesis strong { display: block; font-size: clamp(1.25rem, 3vw, 2rem); }
+    .thesis span { display: block; margin-top: 7px; font-size: clamp(.95rem, 1.8vw, 1.2rem); }
+
+    .chapter { padding: clamp(38px, 6vw, 72px); border-top: 1px solid var(--rule); }
+    .chapter-head { margin-bottom: 28px; }
+    .chapter-head h2 { margin: 0; font-size: clamp(2.3rem, 6vw, 5rem); line-height: 1; letter-spacing: -.055em; }
+    .chapter-head p { margin: 12px 0 0; color: var(--green); font-size: 1.15rem; }
+
+    .method-photo { position: relative; height: 320px; overflow: hidden; border-bottom: 1px solid var(--rule); }
+    .method-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .tag {
+      position: absolute; left: 16px; top: 16px;
+      padding: 7px 13px;
+      border-radius: 4px;
+      color: white; background: var(--orange);
+      font-weight: 900; font-size: .8rem; letter-spacing: .04em;
+    }
+    .tag.green { background: var(--green); }
+
+    .depth-map {
+      margin-top: 18px;
+      border: 1px solid var(--rule);
+      border-radius: 7px;
+      overflow: hidden;
+      background: var(--paper-light);
+    }
+    .depth-map h3 { margin: 0; padding: 12px 17px; color: white; background: var(--ink); font-size: 1rem; }
+    .depth-bar { display: grid; grid-template-columns: repeat(4, 1fr); padding: 28px; padding-bottom: 16px; }
+    .depth-bar div { min-height: 104px; display: grid; place-content: center; text-align: center; color: white; padding: 12px; }
+    .depth-bar div:nth-child(1) { background: #b9dce8; }
+    .depth-bar div:nth-child(2) { background: #70a9bd; }
+    .depth-bar div:nth-child(3) { background: #47788c; }
+    .depth-bar div:nth-child(4) { background: #294a59; }
+    .depth-bar strong { display: block; margin-bottom: 7px; }
+    .depth-bar small { opacity: .88; }
+    .depth-note { display: flex; justify-content: space-between; gap: 18px; padding: 0 28px 24px; font-weight: 800; }
+    .depth-note em { color: var(--orange); font-style: normal; }
+
+    .decision {
+      margin-top: 18px;
+      padding: 24px;
+      border-radius: 7px;
+      color: white;
+      background: var(--green);
+    }
+    .decision h3 { margin: 0 0 18px; }
+    .decision-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .decision-grid article { padding: 0 20px; border-left: 1px solid rgba(255,255,255,.25); }
+    .decision-grid article:first-child { padding-left: 0; border-left: 0; }
+    .decision-grid small { color: var(--yellow); font-weight: 900; }
+    .decision-grid strong { display: block; margin: 6px 0 2px; }
+    .decision-grid span { color: rgba(255,255,255,.78); font-size: .85rem; }
+
+    .field-note {
+      margin-top: 18px;
+      padding: 18px 22px;
+      border-left: 5px solid var(--orange);
+      background: rgba(255,255,255,.42);
+      font-weight: 700;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 28px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font-size: .75rem;
+    }
+
+    @media (max-width: 820px) {
+      .masthead { align-items: flex-start; flex-direction: column; }
+      .grid-3, .grid-2, .decision-grid { grid-template-columns: 1fr; }
+      .decision-grid article { padding: 15px 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.24); }
+      .decision-grid article:first-child { border-top: 0; }
+      .depth-bar { grid-template-columns: repeat(2, 1fr); }
+      .hero-photo, .hero-photo img { min-height: 290px; }
+      .method-photo { height: 270px; }
+    }
+
+    @media (max-width: 520px) {
+      .page { width: 100%; margin: 0; border-width: 0; }
+      .masthead nav { gap: 12px; }
+      .hero, .chapter { padding: 28px 18px; }
+      .depth-bar { grid-template-columns: 1fr; padding: 18px; }
+      .depth-bar div { min-height: 82px; }
+      .depth-note { flex-direction: column; padding: 0 18px 18px; }
+      footer { flex-direction: column; }
+    }
+
+    @media print {
+      body { background: white; }
+      .page { width: 100%; margin: 0; box-shadow: none; border: 0; }
+      .masthead nav { display: none; }
+      .hero, .chapter { break-inside: avoid; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <a href="../../index.html">CADDIS-GR LAB · FIELD NOTES 01</a>
+      <nav aria-label="페이지 내 이동">
+        <a href="../index.html">← Fly Patterns</a>
+        <a href="#identity">정체</a>
+        <a href="#system">타잉 시스템</a>
+        <a href="#operation">운영</a>
+        <a href="#depth">전층 공략</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="identity">
+      <p class="eyebrow">The fly that moves between imitation and attraction</p>
+      <h1>BLOB FLY</h1>
+      <p class="deck">먹이인가, 자극인가 - <strong>정지와 리트리브를 모두 소화하는 전층 패턴</strong></p>
+
+      <figure class="hero-photo">
+        <img src="assets/blob-collection.jpg" alt="사용자가 직접 타잉한 언웨이티드와 웨이트 블롭 플라이 컬렉션" />
+        <figcaption class="hero-caption">
+          <strong>하나의 덩어리, 두 개의 얼굴</strong>
+          정지하면 다프니아·에그 이미지, 움직이면 반응을 끌어내는 어트랙터.
+        </figcaption>
+      </figure>
+
+      <div class="grid-3">
+        <article class="card">
+          <h2>30초 정의</h2>
+          <div class="card-body">
+            <p><strong>BLOB</strong>은 프리츠·젤리·에그스타시를 훅에 풍성하게 감은 정수용 패턴이다.</p>
+            <p>특정 곤충 한 마리를 복제하기보다 <strong>다프니아 구름, 에그 덩어리, 정체불명의 먹이</strong>를 암시한다.</p>
+            <p>그래서 자연스러운 모방과 공격 반응 유도 사이를 자유롭게 오간다.</p>
+          </div>
+        </article>
+
+        <article class="card ink">
+          <h2>왜 먹히나 - 3가지</h2>
+          <div class="card-body">
+            <ol class="number-list">
+              <li><span class="num">1</span><span><strong>발견</strong>형광·UV·명암 대비가 멀리서도 보인다.</span></li>
+              <li><span class="num">2</span><span><strong>펄스</strong>당기면 수축하고 멈추면 팽창한다.</span></li>
+              <li><span class="num">3</span><span><strong>모호함</strong>먹이 같기도, 침입자 같기도 하다.</span></li>
+            </ol>
+          </div>
+        </article>
+
+        <article class="card orange" id="system">
+          <h2>현재 타잉 시스템</h2>
+          <div class="card-body">
+            <p><strong>MOVE · 언웨이티드</strong><br />FM5095 #12 · 8 mm Plush / Jelly Biscuit<br />싱킹팁·풀싱킹</p>
+            <p><strong>HOLD · 웨이트</strong><br />H250BL #14 · 1/8 지그오프 비드<br />인디케이터 현수</p>
+            <p><strong>핵심 컬러</strong><br />Sunburst · Orange · Biscuit<br />Egg White · Black/Chartreuse</p>
+          </div>
+        </article>
+      </div>
+
+      <blockquote class="thesis">
+        <strong>에그처럼 멈춰 보여주고, 루어처럼 움직여 깨운다.</strong>
+        <span>수심은 라인과 비드가 만들고, 블롭은 색과 펄스로 입질의 이유를 만든다.</span>
+      </blockquote>
+    </section>
+
+    <section class="chapter" id="operation">
+      <header class="chapter-head">
+        <p class="eyebrow">How to fish it</p>
+        <h2>운영은 딱 두 갈래</h2>
+        <p>넓게 찾을 때는 <strong>MOVE</strong>, 정확히 세울 때는 <strong>HOLD</strong>.</p>
+      </header>
+
+      <div class="grid-2">
+        <article class="card orange">
+          <div class="method-photo">
+            <img src="assets/blob-unweighted.jpg" alt="FM5095 12번 훅에 타잉한 언웨이티드 Biscuit Jelly 블롭" />
+            <span class="tag">MOVE · SINKING LINE</span>
+          </div>
+          <h3>언웨이티드 - 수평 탐색</h3>
+          <div class="card-body">
+            <ol class="number-list">
+              <li><span class="num">1</span><span><strong>카운트다운</strong>5초 → 10초 → 15초. 위에서 아래로 찾는다.</span></li>
+              <li><span class="num">2</span><span><strong>느린 피겨에이트</strong>같은 속도로 목표층을 통과시킨다.</span></li>
+              <li><span class="num">3</span><span><strong>정지</strong>3-5초. 섬유가 다시 벌어지는 시간을 준다.</span></li>
+            </ol>
+            <p><strong>활성이 높거나 먹이가 불명확할 때</strong><br />Intermediate → Medium → Fast sink 순으로 수심을 확장한다.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="method-photo">
+            <img src="assets/blob-weighted.jpg" alt="H250BL 14번 훅과 오렌지 지그오프 비드로 타잉한 웨이트 Biscuit Jelly 블롭" />
+            <span class="tag green">HOLD · INDICATOR</span>
+          </div>
+          <h3>웨이트 - 수직 정밀 공략</h3>
+          <div class="card-body">
+            <ol class="number-list green-num">
+              <li><span class="num">1</span><span><strong>수심 고정</strong>송어가 떠 있는 층에 블롭을 매단다.</span></li>
+              <li><span class="num">2</span><span><strong>정지 + 미세 리프트</strong>5-10 cm 들어 올린 뒤 다시 침강시킨다.</span></li>
+              <li><span class="num">3</span><span><strong>즉시 훅셋</strong>인디케이터가 멈추거나 잠기면 바로 건다.</span></li>
+            </ol>
+            <p><strong>차가운 물·저활성·다프니아 섭식</strong><br />바닥이 아니라 물고기가 떠 있는 정확한 층이 목표다.</p>
+          </div>
+        </article>
+      </div>
+
+      <section class="depth-map" id="depth">
+        <h3>전층 공략 지도</h3>
+        <div class="depth-bar" role="img" aria-label="수면 직하부터 하층까지의 블롭 운용법">
+          <div><strong>수면 직하</strong><small>즉시 리트리브</small></div>
+          <div><strong>상층</strong><small>짧은 카운트</small></div>
+          <div><strong>중층</strong><small>느린 탐색 / 현수</small></div>
+          <div><strong>하층</strong><small>긴 카운트 / 빠른 싱크</small></div>
+        </div>
+        <div class="depth-note">
+          <span>같은 캐스트 거리 · 같은 리트리브 속도 · 변수는 한 번에 하나만</span>
+          <em>입질 수심을 찾으면 반복</em>
+        </div>
+      </section>
+
+      <section class="decision">
+        <h3>상황별 첫 선택</h3>
+        <div class="decision-grid">
+          <article><small>CLEAR / DAPHNIA</small><strong>Biscuit · Egg White</strong><span>느리게, 오래 멈춤</span></article>
+          <article><small>SEARCH / NO HATCH</small><strong>Sunburst · Orange</strong><span>카운트다운 탐색</span></article>
+          <article><small>LOW LIGHT / OFF BITE</small><strong>Black · Chartreuse</strong><span>짧은 스트립 + 정지</span></article>
+        </div>
+      </section>
+
+      <aside class="field-note">현장 메모: 라인 / 카운트 / 리트리브 / 정지 시간 / 입질층을 함께 기록한다. 가장 먼저 기억할 것은 <strong>색보다 수심, 수심 다음은 정지 시간</strong>.</aside>
+    </section>
+
+    <footer>
+      <span>사용자 타잉 기록을 바탕으로 구성한 BLOB FLY 필드 가이드</span>
+      <span>참고: Fly Fishing University · How to Fish the Blob Fly</span>
+    </footer>
+  </main>
+</body>
+</html>
+

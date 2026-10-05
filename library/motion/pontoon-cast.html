@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="부교 위 오버헤드 캐스트 한 사이클을 물리 시뮬레이션으로 재현한 모션그래픽">
+<title>부교 캐스팅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one wide cinematic stage, an instrument strip under it (phase timeline · rod clock · readouts), field notes below. */
+:root{
+  --night:#0d1d19;      /* page ground, pre-dawn reservoir */
+  --deep:#16302a;       /* panels */
+  --rule:#2b4a42;       /* hairlines */
+  --mist:#a8c5be;       /* secondary text, ghosts */
+  --paper:#f2efe8;      /* primary text */
+  --flyline:#f0a35e;    /* apricot floating line, the accent */
+  --gold:#c9a640;       /* bead head, peaks */
+  --serif:'DM Serif Display',Georgia,'Times New Roman',serif;
+  --mono:'DM Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --sans:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--paper);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:clamp(28px,5vw,56px) 64px;display:grid;gap:28px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mist)}
+header.intro{display:grid;gap:10px;max-width:760px}
+h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-.01em;text-wrap:balance}
+h1 em{color:var(--flyline);font-style:italic}
+.lead{margin:0;color:var(--mist);font-size:clamp(15px,1.6vw,17px);font-weight:300;max-width:62ch}
+
+.stage{position:relative;border-radius:6px;overflow:hidden;background:#0b1a17;border:1px solid var(--rule)}
+.stage canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
+.caption{position:absolute;left:clamp(12px,2.4vw,28px);top:clamp(10px,2.2vw,26px);display:grid;gap:2px;pointer-events:none;max-width:60%}
+.caption .num{font-family:var(--mono);font-size:clamp(10px,1.1vw,12px);letter-spacing:.2em;color:var(--flyline)}
+.caption .name{font-family:var(--serif);font-size:clamp(22px,3.4vw,44px);line-height:1.05;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.caption .desc{font-size:clamp(11px,1.2vw,14px);color:var(--mist);font-weight:300;text-wrap:balance}
+
+.instruments{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:20px 28px;align-items:center;padding-block:4px}
+.timeline{display:grid;gap:10px;min-width:0}
+.track{position:relative;display:flex;height:34px;border-radius:4px;overflow:hidden;border:1px solid var(--rule);cursor:pointer;background:var(--deep)}
+.track:focus-visible{outline:2px solid var(--flyline);outline-offset:3px}
+.seg{position:relative;border-right:1px solid var(--rule);display:flex;align-items:center;padding-inline:8px;min-width:0;font-size:12px;color:var(--mist);white-space:nowrap;overflow:hidden;transition:color .2s}
+.seg:last-child{border-right:0}
+.seg span{position:relative;z-index:1;overflow:hidden;text-overflow:ellipsis}
+.seg.on{color:var(--night);font-weight:500}
+.seg.on::before{content:'';position:absolute;inset:0;background:var(--flyline)}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--paper);box-shadow:0 0 0 1px rgba(0,0,0,.25);z-index:2;pointer-events:none}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{appearance:none;border:1px solid var(--rule);background:transparent;color:var(--paper);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;height:32px;padding-inline:12px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--mist)}
+.btn:focus-visible,.seg-ctl input:focus-visible+label{outline:2px solid var(--flyline);outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--paper);color:var(--night);border-color:var(--paper)}
+.seg-ctl{display:inline-flex;border:1px solid var(--rule);border-radius:999px;overflow:hidden}
+.seg-ctl input{position:absolute;opacity:0;pointer-events:none}
+.seg-ctl label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:0 12px;height:30px;display:flex;align-items:center;cursor:pointer;color:var(--mist)}
+.seg-ctl input:checked+label{background:var(--mist);color:var(--night)}
+
+.dial{display:flex;align-items:center;gap:12px}
+.dial svg{width:104px;height:104px;flex:none}
+.dial .read{display:grid;gap:0}
+.big{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;line-height:1.2}
+.small{font-size:12px;color:var(--mist)}
+.big small{font-size:12px;color:var(--mist);font-family:var(--sans)}
+.readouts{display:grid;grid-template-columns:repeat(2,minmax(110px,auto));gap:12px 26px}
+.readouts div{display:grid}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12.5px;color:var(--mist);border-top:1px solid var(--rule);padding-top:14px}
+.legend i{display:inline-block;width:22px;height:0;border-top:2px solid;vertical-align:middle;margin-right:8px}
+
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;border-top:1px solid var(--rule);padding-top:28px}
+.notes h2{grid-column:1/-1;margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,34px)}
+.note{display:grid;gap:6px;align-content:start;min-width:0}
+.note h3{margin:0;font-size:16px;font-weight:500}
+.note p{margin:0;color:var(--mist);font-size:14.5px;font-weight:300;max-width:46ch}
+.foot{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mist);text-transform:uppercase}
+
+@media (max-width:900px){
+  .instruments{grid-template-columns:1fr 1fr}
+  .timeline{grid-column:1/-1}
+  .notes{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .instruments{grid-template-columns:1fr}
+  .seg{font-size:10.5px;padding-inline:4px}
+  .caption .desc{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="intro">
+    <div class="kicker"><a href="../index.html" style="color:inherit">Library</a> · Motion Study 01</div>
+    <h1>부교 <em>캐스팅</em></h1>
+    <p class="lead">관리형 저수지의 부교 위에서 오버헤드 캐스트 한 사이클을 물리 시뮬레이션으로 재현했습니다. 9ft 로드, 플로팅 라인 8 m에 리더 3 m. 수면 아래 단면에서는 플라이가 가라앉고 스트립에 따라 움직이는 모습까지 이어집니다.</p>
+  </header>
+
+  <figure class="stage" style="margin:0">
+    <canvas id="scene" width="1600" height="900" role="img" aria-label="부교 위 낚시인이 백캐스트와 포워드캐스트를 하고, 라인이 수면에 내려앉은 뒤 플라이가 수중으로 가라앉는 애니메이션"></canvas>
+    <div class="caption" aria-live="polite">
+      <div class="num" id="capNum">01 / 06</div>
+      <div class="name" id="capName">픽업</div>
+      <div class="desc" id="capDesc"></div>
+    </div>
+  </figure>
+
+  <section class="instruments" aria-label="캐스팅 계기판">
+    <div class="timeline">
+      <div class="track" id="track" tabindex="0" role="slider" aria-label="사이클 위치" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div>
+      <div class="controls">
+        <button class="btn" id="play" type="button">일시정지</button>
+        <div class="seg-ctl" role="radiogroup" aria-label="재생 속도">
+          <input type="radio" name="speed" id="spCine" value="cine" checked><label for="spCine">시네마틱</label>
+          <input type="radio" name="speed" id="spReal" value="1"><label for="spReal">실시간</label>
+          <input type="radio" name="speed" id="spSlow" value="0.25"><label for="spSlow">0.25×</label>
+        </div>
+        <button class="btn" id="ghost" type="button" aria-pressed="true">잔상</button>
+      </div>
+    </div>
+    <div class="dial">
+      <svg viewBox="-60 -60 120 120" aria-hidden="true">
+        <circle r="54" fill="none" stroke="var(--rule)" stroke-width="1"></circle>
+        <path id="arc" fill="none" stroke="var(--flyline)" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"></path>
+        <g id="ticks"></g>
+        <line id="needleTip" x1="0" y1="0" x2="0" y2="-46" stroke="var(--mist)" stroke-width="1.2" stroke-dasharray="2 3"></line>
+        <line id="needle" x1="0" y1="0" x2="0" y2="-46" stroke="var(--paper)" stroke-width="2.4" stroke-linecap="round"></line>
+        <circle r="3.5" fill="var(--paper)"></circle>
+      </svg>
+      <div class="read">
+        <span class="small">로드 각도</span>
+        <span class="big" id="clock">10:00</span>
+        <span class="small">← 캐스팅 방향 · 10–1시</span>
+      </div>
+    </div>
+    <div class="readouts">
+      <div><span class="small">로드팁 속도</span><span class="big"><span id="spd">0.0</span><small> m/s</small></span></div>
+      <div><span class="small">이번 캐스트 최고</span><span class="big"><span id="peak">0.0</span><small> m/s</small></span></div>
+      <div><span class="small">플라이 수심</span><span class="big"><span id="depth">0.0</span><small> m</small></span></div>
+      <div><span class="small">스트립</span><span class="big"><span id="strips">0</span><small> / 5회</small></span></div>
+    </div>
+  </section>
+
+  <div class="legend">
+    <span><i style="border-color:var(--flyline)"></i>플로팅 라인 8 m</span>
+    <span><i style="border-color:var(--paper);border-top-width:1px"></i>리더 3 m · 플라이</span>
+    <span><i style="border-color:var(--mist);border-top-style:dashed"></i>잔상 0.06초 간격 궤적</span>
+    <span>수심 눈금 0–6 m · 1 m = 48 px</span>
+  </div>
+
+  <section class="notes">
+    <h2>부교 위에서 캐스팅할 때</h2>
+    <div class="note">
+      <h3>출렁이는 발판</h3>
+      <p>부교는 걸음과 바람에 계속 흔들립니다. 발을 어깨너비로 벌리고 무릎을 살짝 굽혀 하체로 흔들림을 받아 내면 로드의 정지 지점이 흐트러지지 않습니다.</p>
+    </div>
+    <div class="note">
+      <h3>백캐스트 공간</h3>
+      <p>뒤쪽 난간, 지붕, 옆 낚시인과의 거리를 먼저 확인합니다. 공간이 좁을 때는 1시에서 조금 더 일찍, 높게 멈춰 루프를 위로 세우거나 사이드캐스트를 섞습니다.</p>
+    </div>
+    <div class="note">
+      <h3>발밑 라인 관리</h3>
+      <p>스트립한 라인은 데크 위에 쌓입니다. 밟거나 데크 틈에 걸리면 슈팅이 끊기므로 스트리핑 바스켓을 쓰거나 라인을 발 앞쪽 한곳에 모아 둡니다.</p>
+    </div>
+  </section>
+
+  <div class="foot">© 2026 CADDIS-GR · Simulation, not footage</div>
+</div>
+<script>
+const SIM = (() => {
+  const PX = 48;                 // 1 m = 48 px
+  const WATER_Y = 560, BOTTOM_Y = WATER_Y + 6 * PX;
+  const H = 1 / 240;             // physics substep
+  const G = 430, AIR = 0.55;     // gravity, air drag (1/s)
+  const N_LINE = 32, N_LEAD = 12, N = N_LINE + N_LEAD + 1, SEG = 12; // 8 m line + 3 m leader
+  const ROD = 132;               // 9 ft rod
+  const T = 10;                  // cycle length (s)
+  const STRIP_LEN = 18, STRIPS = [5.0, 5.9, 6.8, 7.7, 8.6], STRIP_DUR = 0.16;
+  const STRIP_TOTAL = STRIP_LEN * STRIPS.length;
+  // [start, end, from°, to°, easing]  angle 0° = 12시, -60° = 10시, +30° = 1시
+  const KEYS = [
+    [0.00, 1.00, -116, -50, 'inout'],
+    [1.00, 1.40, -50, 30, 'power'],
+    [1.40, 1.70, 30, 36, 'out'],
+    [1.70, 2.40, 36, 36, 'hold'],
+    [2.40, 2.80, 36, -58, 'power'],
+    [2.80, 3.70, -58, -84, 'out'],
+    [3.70, 4.40, -84, -116, 'inout'],
+    [4.40, T, -116, -116, 'hold'],
+  ];
+  const PHASES = [
+    { key: 'pickup', label: '픽업', from: 0.0, to: 1.0 },
+    { key: 'back', label: '백캐스트', from: 1.0, to: 1.7 },
+    { key: 'pause', label: '포즈', from: 1.7, to: 2.4 },
+    { key: 'forward', label: '포워드캐스트', from: 2.4, to: 3.0 },
+    { key: 'present', label: '프레젠테이션', from: 3.0, to: 4.6 },
+    { key: 'retrieve', label: '리트리브', from: 4.6, to: T },
+  ];
+  const ease = (u, k) => k === 'inout' ? u * u * (3 - 2 * u)
+    : k === 'out' ? 1 - (1 - u) * (1 - u)
+    : k === 'power' ? u * u * (1.6 - 0.6 * u)
+    : 0;
+  function rodDeg(t) {
+    t = ((t % T) + T) % T;
+    for (const [a, b, d0, d1, k] of KEYS) if (t >= a && t < b) return d0 + (d1 - d0) * ease((t - a) / (b - a), k);
+    return KEYS[0][2];
+  }
+  function stripped(t) {
+    t = ((t % T) + T) % T;
+    if (t < 2.75) return STRIP_TOTAL;
+    if (t < 3.35) { const u = (t - 2.75) / 0.6; return STRIP_TOTAL * (1 - u * (2 - u)); } // shoot
+    let s = 0;
+    for (const st of STRIPS) if (t > st) s += STRIP_LEN * Math.min(1, (t - st) / STRIP_DUR);
+    return s;
+  }
+  function stripPulse(t) { // 0..1 left-hand pull for drawing
+    t = ((t % T) + T) % T;
+    for (const st of STRIPS) { const u = (t - st) / 0.55; if (u >= 0 && u < 1) return u < 0.3 ? u / 0.3 : 1 - (u - 0.3) / 0.7; }
+    return 0;
+  }
+  const phaseAt = t => { t = ((t % T) + T) % T; return PHASES.find(p => t >= p.from && t < p.to) || PHASES[0]; };
+  const bob = t => Math.sin(t * 1.3) * 1.8 + Math.sin(t * 2.9 + 1) * 0.6;
+  const DECK_X = 930;
+  function hand(t, th) { return { x: DECK_X - 8 + Math.sin(th) * 16, y: WATER_Y - 16 - 66 + bob(t) - Math.cos(th) * 26 }; }
+
+  function create() {
+    const s = { t: 0, x: new Float64Array(N), y: new Float64Array(N), px: new Float64Array(N), py: new Float64Array(N),
+      b: 0, bv: 0, th: rodDeg(0) * Math.PI / 180, om: 0, events: [], tip: { x: 0, y: 0 }, hand: { x: 0, y: 0 }, tipSpeed: 0 };
+    const th = s.th, h = hand(0, th);
+    const tx = h.x + Math.sin(th) * ROD, ty = h.y - Math.cos(th) * ROD;
+    let cx = tx, cy = ty;
+    for (let i = 0; i < N; i++) {
+      s.x[i] = s.px[i] = cx; s.y[i] = s.py[i] = cy;
+      const d = (i < N_LINE ? SEG * (1 - stripped(0) / (N_LINE * SEG)) : SEG) * 0.95;
+      if (cy < WATER_Y) { cx -= d * 0.6; cy = Math.min(WATER_Y, cy + d * 0.8); } else cx -= d;
+    }
+    for (let i = 0; i < 240 * 3; i++) step(s, 0, true);
+    s.t = 0;
+    return s;
+  }
+
+  function step(s, t, frozen) {
+    if (!frozen) s.t = t;
+    const th = rodDeg(s.t) * Math.PI / 180;
+    const om = (th - s.th) / H;
+    // rod as damped spring: bends against angular acceleration, recoils after the stop
+    const K = 900, C = 18;
+    s.bv += (-K * s.b - C * s.bv) * H - 0.55 * (om - s.om);
+    s.b += s.bv * H;
+    s.b = Math.max(-0.45, Math.min(0.45, s.b));
+    s.th = th; s.om = om;
+    const h = hand(s.t, th);
+    const ta = th + s.b;
+    const tx = h.x + Math.sin(ta) * ROD, ty = h.y - Math.cos(ta) * ROD;
+    s.tipSpeed = Math.hypot(tx - s.tip.x, ty - s.tip.y) / H;
+    s.tip.x = tx; s.tip.y = ty; s.hand = h;
+    const lineSeg = SEG * (1 - stripped(s.t) / (N_LINE * SEG));
+    const { x, y, px, py } = s;
+    x[0] = px[0] = tx; y[0] = py[0] = ty;
+    for (let i = 1; i < N; i++) {
+      const lead = i > N_LINE, wet = y[i] >= WATER_Y - 0.5;
+      let damp, g;
+      if (lead && wet) { damp = 0.955; g = i === N - 1 ? 260 : 150; }
+      else { damp = 1 - AIR * H; g = G; }
+      const vx = (x[i] - px[i]) * damp, vy = (y[i] - py[i]) * damp;
+      px[i] = x[i]; py[i] = y[i];
+      x[i] += vx; y[i] += vy + g * H * H;
+    }
+    for (let it = 0; it < 18; it++) {
+      for (let i = 0; i < N - 1; i++) {
+        const rest = i < N_LINE ? lineSeg : SEG;
+        const dx = x[i + 1] - x[i], dy = y[i + 1] - y[i];
+        const d = Math.hypot(dx, dy) || 1e-6, diff = (d - rest) / d;
+        if (i === 0) { x[1] -= dx * diff; y[1] -= dy * diff; }
+        else { x[i] += dx * diff * 0.5; y[i] += dy * diff * 0.5; x[i + 1] -= dx * diff * 0.5; y[i + 1] -= dy * diff * 0.5; }
+      }
+    }
+    for (let i = 1; i < N; i++) {
+      const vy = y[i] - py[i];
+      if (py[i] < WATER_Y && y[i] >= WATER_Y && vy * 240 > 60 && !frozen)
+        s.events.push({ x: x[i], strength: Math.min(1, vy * 240 / 600), fly: i === N - 1 });
+      if (i <= N_LINE) {
+        if (y[i] > WATER_Y) { y[i] = WATER_Y; py[i] = WATER_Y; px[i] = x[i] - (x[i] - px[i]) * 0.8; }
+      } else if (y[i] > BOTTOM_Y - 6) { y[i] = BOTTOM_Y - 6; py[i] = y[i]; }
+    }
+  }
+  return { STRIPS, PX, WATER_Y, BOTTOM_Y, H, N, N_LINE, N_LEAD, ROD, T, DECK_X, PHASES, rodDeg, stripPulse, phaseAt, bob, create, step };
+})();
+(() => {
+  const W = 1600, HH = 900, WY = SIM.WATER_Y, BY = SIM.BOTTOM_Y, T = SIM.T;
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d');
+  const bg = document.createElement('canvas');
+  const bctx = bg.getContext('2d');
+  let scale = 1;
+  // camera: zoom into the action band so the angler reads at phone width
+  const CAM = { s: 1.3, cx: 800, cy: 560, ox: 800, oy: 500 };
+  const toLX = sx => (sx - CAM.ox) / CAM.s + CAM.cx;
+  const toLY = sy => (sy - CAM.oy) / CAM.s + CAM.cy;
+  const L0 = toLX(0), L1 = toLX(W), T0 = toLY(0), T1 = toLY(HH);
+  const cam = c => c.setTransform(scale * CAM.s, 0, 0, scale * CAM.s, scale * (CAM.ox - CAM.cx * CAM.s), scale * (CAM.oy - CAM.cy * CAM.s));
+
+  const PHASE_TEXT = {
+    pickup:   ['픽업', '로드를 천천히 들어 수면에 누운 라인을 끌어올립니다'],
+    back:     ['백캐스트', '가속한 뒤 1시 방향에서 멈추면 루프가 뒤로 펴집니다'],
+    pause:    ['포즈', '라인이 뒤에서 거의 다 펴질 때까지 기다립니다'],
+    forward:  ['포워드캐스트', '10시 방향까지 가속해 멈추고, 스트립해 둔 라인을 슈팅합니다'],
+    present:  ['프레젠테이션', '루프가 풀리며 라인과 리더가 수면에 내려앉습니다'],
+    retrieve: ['리트리브', '플라이가 가라앉는 동안 짧은 스트립 다섯 번'],
+  };
+  const SHORT = { pickup: '픽업', back: '백캐스트', pause: '포즈', forward: '포워드', present: '착수', retrieve: '리트리브' };
+  const WEIGHT = { pickup: 1.3, back: 1.25, pause: 1, forward: 1.35, present: 1.4, retrieve: 2 };
+
+  // ---------- seeded helpers ----------
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const motes = Array.from({ length: 46 }, () => ({ x: rnd() * W, y: WY + 20 + rnd() * (BY - WY - 40), r: 0.6 + rnd() * 1.4, s: 0.2 + rnd() }));
+  const weeds = Array.from({ length: 26 }, () => ({ x: 40 + rnd() * 1500, h: 26 + rnd() * 70, p: rnd() * 6 }));
+  const midges = Array.from({ length: 12 }, () => ({ x: 120 + rnd() * 600, y: WY - 30 - rnd() * 120, p: rnd() * 6, f: 1 + rnd() * 2 }));
+
+  // ---------- static background ----------
+  function hillLine(c, base, amp, step, ph, color) {
+    c.beginPath(); c.moveTo(L0, WY);
+    for (let x = L0 - step; x <= L1 + step; x += step) {
+      const y = base - amp * (0.55 + 0.25 * Math.sin(x / 210 + ph) + 0.15 * Math.sin(x / 77 + ph * 2) + 0.05 * Math.sin(x / 13 + ph));
+      c.lineTo(x, y);
+    }
+    c.lineTo(L1 + step, WY); c.closePath(); c.fillStyle = color; c.fill();
+  }
+  function buildBg() {
+    bg.width = Math.round(W * scale); bg.height = Math.round(HH * scale);
+    const c = bctx; cam(c);
+    let g = c.createLinearGradient(0, T0, 0, WY);
+    g.addColorStop(0, '#0e2420'); g.addColorStop(0.5, '#21423a'); g.addColorStop(0.86, '#6f978c'); g.addColorStop(1, '#bccdbd');
+    c.fillStyle = g; c.fillRect(L0, T0, L1 - L0, WY - T0);
+    g = c.createRadialGradient(360, WY - 30, 10, 360, WY - 30, 520);
+    g.addColorStop(0, 'rgba(244,205,150,.42)'); g.addColorStop(0.4, 'rgba(240,190,140,.12)'); g.addColorStop(1, 'rgba(240,190,140,0)');
+    c.fillStyle = g; c.fillRect(L0, T0, L1 - L0, WY - T0);
+    hillLine(c, WY - 18, 150, 8, 1.2, 'rgba(70,104,95,.55)');
+    hillLine(c, WY - 6, 92, 6, 3.4, 'rgba(38,66,58,.85)');
+    // treeline texture on near hills
+    c.fillStyle = 'rgba(24,46,40,.9)';
+    for (let x = Math.floor(L0); x < L1; x += 5) {
+      const top = WY - 6 - 92 * (0.55 + 0.25 * Math.sin(x / 210 + 3.4) + 0.15 * Math.sin(x / 77 + 6.8) + 0.05 * Math.sin(x / 13 + 3.4));
+      const h = 6 + 8 * Math.abs(Math.sin(x * 12.9898) * 0.5);
+      c.beginPath(); c.moveTo(x - 3, top + 4); c.lineTo(x, top - h); c.lineTo(x + 3, top + 4); c.fill();
+    }
+    g = c.createLinearGradient(0, WY - 70, 0, WY);
+    g.addColorStop(0, 'rgba(200,220,212,0)'); g.addColorStop(1, 'rgba(206,222,212,.45)');
+    c.fillStyle = g; c.fillRect(L0, WY - 70, L1 - L0, 70);
+    // water column
+    g = c.createLinearGradient(0, WY, 0, BY);
+    g.addColorStop(0, '#3b6a5f'); g.addColorStop(0.25, '#28504a'); g.addColorStop(1, '#0f2420');
+    c.fillStyle = g; c.fillRect(L0, WY, L1 - L0, BY - WY + 4);
+    // bottom
+    c.beginPath(); c.moveTo(L0, T1 + 10);
+    for (let x = Math.floor(L0); x <= L1 + 10; x += 10) c.lineTo(x, BY + 4 * Math.sin(x / 90) + 3 * Math.sin(x / 31));
+    c.lineTo(L1 + 10, T1 + 10); c.closePath(); c.fillStyle = '#0a1815'; c.fill();
+    // depth ruler
+    const RX = toLX(W - 18);
+    c.font = '500 11px "DM Mono", monospace'; c.textBaseline = 'middle'; c.textAlign = 'right';
+    for (let m = 0; m <= 6; m++) {
+      const y = WY + m * SIM.PX;
+      c.strokeStyle = 'rgba(168,197,190,.5)'; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(RX - 12, y); c.lineTo(RX, y); c.stroke();
+      if (m) { c.fillStyle = 'rgba(168,197,190,.7)'; c.fillText(m + ' m', RX - 16, y); }
+      if (m < 6) { c.beginPath(); c.moveTo(RX - 6, y + 24); c.lineTo(RX, y + 24); c.stroke(); }
+    }
+    c.beginPath(); c.moveTo(RX, WY); c.lineTo(RX, BY); c.stroke();
+    // scale bar
+    c.textAlign = 'left'; c.fillStyle = 'rgba(168,197,190,.75)'; c.strokeStyle = 'rgba(168,197,190,.75)';
+    const sx = toLX(40), sy = BY - 14;
+    c.beginPath(); c.moveTo(sx, sy); c.lineTo(sx + 5 * SIM.PX, sy);
+    for (let m = 0; m <= 5; m++) { c.moveTo(sx + m * SIM.PX, sy - (m % 5 ? 4 : 7)); c.lineTo(sx + m * SIM.PX, sy); }
+    c.stroke(); c.fillText('5 m', sx + 5 * SIM.PX + 10, sy - 2);
+  }
+
+  // ---------- simulation state ----------
+  const clone = s => ({ ...s, x: s.x.slice(), y: s.y.slice(), px: s.px.slice(), py: s.py.slice(), events: [], tip: { ...s.tip }, hand: { ...s.hand } });
+  let state = SIM.create(), simT = 0;
+  while (simT < T) { simT += SIM.H; SIM.step(state, simT); }
+  state.events.length = 0;
+  const steady = clone(state);
+  let ghosts = [], ripples = [], drops = [], lastSnap = -1, peak = 0, acc = 0;
+
+  function cyc(t) { return ((t % T) + T) % T; }
+  function tick() {
+    const before = cyc(simT);
+    simT += SIM.H;
+    SIM.step(state, simT);
+    const c = cyc(simT);
+    if (c < before) peak = 0;
+    peak = Math.max(peak, state.tipSpeed);
+    if (c >= 0.95 && c < 4.2 && simT - lastSnap >= 0.06) {
+      lastSnap = simT;
+      const n = SIM.N, pts = new Float32Array(n * 2);
+      for (let i = 0; i < n; i++) { pts[2 * i] = state.x[i]; pts[2 * i + 1] = state.y[i]; }
+      ghosts.push({ t: simT, pts, hx: state.hand.x, hy: state.hand.y });
+    }
+    for (const e of state.events) {
+      if (ripples.length < 60) ripples.push({ x: e.x, t: simT, s: e.strength, fly: e.fly });
+      if (e.fly) for (let k = 0; k < 9; k++) drops.push({ x: e.x, y: WY, vx: (rnd() - 0.5) * 120, vy: -60 - rnd() * 140, t: simT });
+    }
+    state.events.length = 0;
+  }
+  function seekTo(tc) {
+    state = clone(steady); simT = T; ghosts = []; ripples = []; drops = []; lastSnap = -1; peak = 0; acc = 0;
+    const end = T + Math.max(0, Math.min(T - 0.01, tc));
+    while (simT < end) tick();
+    draw(); updateHud(true);
+  }
+
+  // ---------- drawing ----------
+  function smoothPath(c, xs, ys, a, b) {
+    c.moveTo(xs[a], ys[a]);
+    for (let i = a + 1; i < b; i++) {
+      const mx = (xs[i] + xs[i + 1]) / 2, my = (ys[i] + ys[i + 1]) / 2;
+      c.quadraticCurveTo(xs[i], ys[i], mx, my);
+    }
+    c.lineTo(xs[b], ys[b]);
+  }
+  function limb(c, ax, ay, bx, by, l1, l2, bendSign) {
+    const dx = bx - ax, dy = by - ay; let d = Math.hypot(dx, dy);
+    d = Math.min(d, l1 + l2 - 0.01);
+    const a = Math.atan2(dy, dx), cosA = (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d);
+    const e = a + bendSign * Math.acos(Math.max(-1, Math.min(1, cosA)));
+    const ex = ax + Math.cos(e) * l1, ey = ay + Math.sin(e) * l1;
+    c.beginPath(); c.moveTo(ax, ay); c.lineTo(ex, ey); c.lineTo(bx, by); c.stroke();
+  }
+
+  function draw() {
+    const c = ctx, t = simT, ct = cyc(t);
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    c.drawImage(bg, 0, 0);
+    cam(c);
+
+    // light shafts
+    c.save();
+    for (let i = 0; i < 6; i++) {
+      const x = 140 + i * 250 + Math.sin(t * 0.21 + i) * 40;
+      const g = c.createLinearGradient(0, WY, 0, BY);
+      g.addColorStop(0, 'rgba(200,230,215,.10)'); g.addColorStop(1, 'rgba(200,230,215,0)');
+      c.fillStyle = g; c.beginPath();
+      c.moveTo(x, WY); c.lineTo(x + 46, WY); c.lineTo(x + 160, BY); c.lineTo(x + 70, BY); c.fill();
+    }
+    c.restore();
+    // weeds
+    c.lineCap = 'round';
+    for (const w of weeds) {
+      c.strokeStyle = 'rgba(52,86,64,.8)'; c.lineWidth = 2.2;
+      c.beginPath(); c.moveTo(w.x, BY + 4);
+      c.quadraticCurveTo(w.x + Math.sin(t * 0.8 + w.p) * 8, BY - w.h * 0.5, w.x + Math.sin(t * 0.8 + w.p + 0.8) * 14, BY - w.h);
+      c.stroke();
+    }
+    // suspended particles
+    c.fillStyle = 'rgba(210,230,220,.28)';
+    for (const m of motes) {
+      const x = L0 + (m.x + t * 6 * m.s) % (L1 - L0), y = m.y + Math.sin(t * 0.5 + m.x) * 4;
+      c.beginPath(); c.arc(x, y, m.r, 0, Math.PI * 2); c.fill();
+    }
+
+    // strobe ghosts
+    const ghostOn = ghostBtn.getAttribute('aria-pressed') === 'true';
+    ghosts = ghosts.filter(gh => t - gh.t < 1.1);
+    if (ghostOn) {
+      c.lineWidth = 1.1;
+      for (const gh of ghosts) {
+        const a = 0.38 * (1 - (t - gh.t) / 1.1);
+        c.strokeStyle = `rgba(190,215,206,${a.toFixed(3)})`;
+        c.beginPath(); c.moveTo(gh.hx, gh.hy);
+        for (let i = 0; i < SIM.N; i++) c.lineTo(gh.pts[2 * i], gh.pts[2 * i + 1]);
+        c.stroke();
+      }
+    }
+
+    // pontoon floats (under deck)
+    const deckY = WY - 16 + SIM.bob(t);
+    for (let x = 830; x < L1 + 40; x += 118) {
+      c.fillStyle = '#1d2f33';
+      c.beginPath(); c.roundRect(x, deckY + 6, 92, WY + 22 - deckY - 6, [2, 2, 10, 10]); c.fill();
+    }
+
+    // fly line + leader
+    const xs = state.x, ys = state.y, NL = SIM.N_LINE, n = SIM.N;
+    c.lineJoin = 'round';
+    c.strokeStyle = 'rgba(240,163,94,.18)'; c.lineWidth = 7;
+    c.beginPath(); smoothPath(c, xs, ys, 0, NL); c.stroke();
+    c.strokeStyle = '#f0a35e'; c.lineWidth = 2.4;
+    c.beginPath(); smoothPath(c, xs, ys, 0, NL); c.stroke();
+    c.strokeStyle = 'rgba(236,240,232,.85)'; c.lineWidth = 1;
+    c.beginPath(); smoothPath(c, xs, ys, NL, n - 1); c.stroke();
+    // fly: olive marabou with gold bead
+    const fx = xs[n - 1], fy = ys[n - 1];
+    const ang = Math.atan2(fy - ys[n - 2], fx - xs[n - 2]);
+    c.save(); c.translate(fx, fy); c.rotate(ang);
+    if (fy > WY) {
+      const g = c.createRadialGradient(4, 0, 0, 4, 0, 22);
+      g.addColorStop(0, 'rgba(201,166,64,.25)'); g.addColorStop(1, 'rgba(201,166,64,0)');
+      c.fillStyle = g; c.beginPath(); c.arc(4, 0, 22, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = '#4c5232';
+    c.beginPath(); c.moveTo(2, -2.6); c.quadraticCurveTo(10, -4 + Math.sin(t * 11) * 2, 16, Math.sin(t * 9) * 2.5); c.quadraticCurveTo(10, 4 + Math.sin(t * 11) * 2, 2, 2.6); c.fill();
+    c.fillStyle = '#2f3322'; c.beginPath(); c.ellipse(1, 0, 5, 2.6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c9a640'; c.beginPath(); c.arc(-4, 0, 2.2, 0, Math.PI * 2); c.fill();
+    c.restore();
+
+    // water tint over everything submerged
+    c.fillStyle = 'rgba(16,46,40,.22)'; c.fillRect(L0, WY, L1 - L0, T1 - WY + 10);
+    // surface
+    c.strokeStyle = 'rgba(226,238,230,.6)'; c.lineWidth = 1.4;
+    c.beginPath();
+    for (let x = Math.floor(L0); x <= L1 + 16; x += 16) c.lineTo(x, WY + Math.sin(x / 40 + t * 1.6) * 0.8);
+    c.stroke();
+    // ripples
+    ripples = ripples.filter(r => t - r.t < 2.2);
+    for (const r of ripples) {
+      const age = (t - r.t) / 2.2, rad = 4 + age * (r.fly ? 70 : 34) * (0.5 + r.s);
+      c.strokeStyle = `rgba(226,238,230,${(0.55 * (1 - age) * (0.4 + r.s)).toFixed(3)})`;
+      c.lineWidth = 1.2;
+      c.beginPath(); c.ellipse(r.x, WY, rad, rad * 0.16, 0, 0, Math.PI * 2); c.stroke();
+    }
+    drops = drops.filter(d => t - d.t < 0.6);
+    c.fillStyle = 'rgba(226,238,230,.8)';
+    for (const d of drops) {
+      const a = t - d.t, x = d.x + d.vx * a, y = WY + d.vy * a + 400 * a * a;
+      if (y <= WY) { c.beginPath(); c.arc(x, y, 1.4, 0, Math.PI * 2); c.fill(); }
+    }
+
+    // deck
+    c.fillStyle = '#4a3d31'; c.fillRect(812, deckY - 1, L1 - 812 + 10, 8);
+    c.fillStyle = '#8b7558'; c.fillRect(812, deckY - 2, L1 - 812 + 10, 2.2);
+    c.fillStyle = '#2b241d'; for (let x = 812; x < L1; x += 26) c.fillRect(x, deckY + 1, 1, 6);
+    c.fillStyle = '#20302c'; c.fillRect(808, deckY - 3, 6, 12);
+
+    // stripped line coil on the deck
+    const h = state.hand, th = state.th, dir = { x: Math.sin(th), y: -Math.cos(th) };
+    const pull = SIM.stripPulse(t);
+    const lhx = h.x + 14 + pull * 8, lhy = h.y + 20 + pull * 20;
+    c.strokeStyle = 'rgba(240,163,94,.9)'; c.lineWidth = 1.4;
+    for (let k = 0; k < 3; k++) { c.beginPath(); c.ellipse(962 + k * 6, deckY - 2, 18 - k * 3, 2.4, 0, 0, Math.PI * 2); c.stroke(); }
+    c.beginPath(); c.moveTo(h.x + dir.x * 24, h.y + dir.y * 24); c.lineTo(lhx, lhy);
+    c.quadraticCurveTo(lhx + 10, deckY - 4, 955, deckY - 2); c.stroke();
+
+    // angler (faces left)
+    const ink = '#101c19', rim = 'rgba(190,215,206,.55)';
+    const hipX = 944, hipY = deckY - 38, shX = 938, shY = deckY - 70;
+    c.lineCap = 'round'; c.strokeStyle = ink;
+    c.lineWidth = 9; c.beginPath(); c.moveTo(hipX, hipY); c.lineTo(934, deckY - 2); c.moveTo(hipX, hipY); c.lineTo(952, deckY - 2); c.stroke();
+    c.lineWidth = 18; c.beginPath(); c.moveTo(hipX, hipY); c.lineTo(shX, shY + 4); c.stroke();
+    c.fillStyle = ink; c.beginPath(); c.arc(shX - 4, shY - 13, 8, 0, Math.PI * 2); c.fill();
+    c.lineWidth = 3; c.beginPath(); c.moveTo(shX - 2, shY - 19); c.lineTo(shX - 20, shY - 17); c.stroke();
+    c.strokeStyle = rim; c.lineWidth = 1;
+    c.beginPath(); c.arc(shX - 4, shY - 13, 8, Math.PI * 0.6, Math.PI * 1.45); c.stroke();
+    c.strokeStyle = ink; c.lineWidth = 6;
+    limb(c, shX + 4, shY + 4, lhx, lhy, 22, 22, -1);
+    // rod
+    const tip = state.tip, butt = { x: h.x - dir.x * 16, y: h.y - dir.y * 16 };
+    const cp = { x: h.x + dir.x * SIM.ROD * 0.55, y: h.y + dir.y * SIM.ROD * 0.55 };
+    c.strokeStyle = '#d9d1bf'; c.lineWidth = 1.6;
+    c.beginPath(); c.moveTo(butt.x, butt.y); c.quadraticCurveTo(cp.x, cp.y, tip.x, tip.y); c.stroke();
+    c.strokeStyle = '#3a2f26'; c.lineWidth = 4;
+    c.beginPath(); c.moveTo(butt.x, butt.y); c.lineTo(h.x + dir.x * 10, h.y + dir.y * 10); c.stroke();
+    c.fillStyle = '#6d6a62'; c.beginPath(); c.arc(h.x - dir.x * 10 - dir.y * 4, h.y - dir.y * 10 + dir.x * 4, 4, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = ink; c.lineWidth = 6;
+    limb(c, shX - 2, shY + 2, h.x, h.y, 24, 22, 1);
+    c.fillStyle = ink; c.beginPath(); c.arc(h.x, h.y, 3.6, 0, Math.PI * 2); c.fill();
+
+    // midges
+    c.fillStyle = 'rgba(30,40,36,.7)';
+    for (const m of midges) {
+      const x = m.x + Math.sin(t * m.f + m.p) * 22, y = m.y + Math.sin(t * m.f * 1.7 + m.p) * 9;
+      c.beginPath(); c.arc(x, y, 1.3, 0, Math.PI * 2); c.fill();
+    }
+  }
+
+  // ---------- HUD ----------
+  const $ = id => document.getElementById(id);
+  const track = $('track'), playBtn = $('play'), ghostBtn = $('ghost');
+  const totalW = SIM.PHASES.reduce((s, p) => s + WEIGHT[p.key], 0);
+  const segs = SIM.PHASES.map(p => {
+    const el = document.createElement('div');
+    el.className = 'seg'; el.style.flex = `${WEIGHT[p.key]} 1 0`;
+    el.innerHTML = `<span>${SHORT[p.key]}</span>`;
+    track.appendChild(el); return el;
+  });
+  const head = document.createElement('div'); head.className = 'playhead'; track.appendChild(head);
+  function tToFrac(tc) {
+    let acc = 0;
+    for (const p of SIM.PHASES) {
+      if (tc < p.to) return (acc + WEIGHT[p.key] * (tc - p.from) / (p.to - p.from)) / totalW;
+      acc += WEIGHT[p.key];
+    }
+    return 1;
+  }
+  function fracToT(f) {
+    let acc = 0; const target = f * totalW;
+    for (const p of SIM.PHASES) {
+      if (target <= acc + WEIGHT[p.key]) return p.from + (target - acc) / WEIGHT[p.key] * (p.to - p.from);
+      acc += WEIGHT[p.key];
+    }
+    return T - 0.01;
+  }
+  // rod clock
+  const P = (deg, r) => [Math.sin(deg * Math.PI / 180) * r, -Math.cos(deg * Math.PI / 180) * r];
+  {
+    const [ax, ay] = P(-60, 54), [bx, by] = P(30, 54);
+    $('arc').setAttribute('d', `M${ax.toFixed(2)} ${ay.toFixed(2)} A54 54 0 0 1 ${bx.toFixed(2)} ${by.toFixed(2)}`);
+    let s = '';
+    for (let k = 0; k < 12; k++) {
+      const [x1, y1] = P(k * 30, 54), [x2, y2] = P(k * 30, k % 3 ? 49 : 45);
+      s += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="var(--mist)" stroke-width="${k % 3 ? 1 : 1.6}"/>`;
+    }
+    $('ticks').innerHTML = s;
+  }
+  const clockText = deg => {
+    let hrs = ((deg / 30) % 12 + 12) % 12, hh = Math.floor(hrs), mm = Math.round((hrs - hh) * 60);
+    if (mm === 60) { hh = (hh + 1) % 12; mm = 0; }
+    return `${hh === 0 ? 12 : hh}:${String(mm).padStart(2, '0')}`;
+  };
+  let lastPhase = null, hudFrame = 0;
+  function updateHud(force) {
+    const ct = cyc(simT), ph = SIM.phaseAt(ct);
+    if (ph.key !== lastPhase || force) {
+      lastPhase = ph.key;
+      const idx = SIM.PHASES.indexOf(ph);
+      $('capNum').textContent = `${String(idx + 1).padStart(2, '0')} / 06`;
+      $('capName').textContent = PHASE_TEXT[ph.key][0];
+      $('capDesc').textContent = PHASE_TEXT[ph.key][1];
+      segs.forEach((el, i) => el.classList.toggle('on', i === idx));
+    }
+    head.style.left = `calc(${(tToFrac(ct) * 100).toFixed(3)}% - 1px)`;
+    track.setAttribute('aria-valuenow', ct.toFixed(1));
+    track.setAttribute('aria-valuetext', `${PHASE_TEXT[ph.key][0]}, ${ct.toFixed(1)}초`);
+    const deg = SIM.rodDeg(ct), tipDeg = deg + state.b * 180 / Math.PI;
+    $('needle').setAttribute('transform', `rotate(${deg.toFixed(2)})`);
+    $('needleTip').setAttribute('transform', `rotate(${tipDeg.toFixed(2)})`);
+    if (!force && (hudFrame++ % 3)) return;
+    $('clock').textContent = clockText(deg);
+    $('spd').textContent = (state.tipSpeed / SIM.PX).toFixed(1);
+    $('peak').textContent = (peak / SIM.PX).toFixed(1);
+    const fd = Math.max(0, (state.y[SIM.N - 1] - WY) / SIM.PX);
+    $('depth').textContent = fd.toFixed(1);
+    $('strips').textContent = SIM.STRIPS.filter(s => ct > s).length;
+  }
+
+  // ---------- loop & controls ----------
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let playing = !reduce, mode = 'cine', last = performance.now();
+  const rate = ct => mode === 'cine' ? (ct < 0.9 ? 0.8 : ct < 4.3 ? 0.4 : 1.6) : Number(mode);
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (playing) {
+      acc += dt * rate(cyc(simT));
+      let guard = 0;
+      while (acc >= SIM.H && guard++ < 400) { tick(); acc -= SIM.H; }
+      draw(); updateHud(false);
+    }
+    requestAnimationFrame(frame);
+  }
+  function setPlaying(p) { playing = p; playBtn.textContent = p ? '일시정지' : '재생'; last = performance.now(); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  ghostBtn.addEventListener('click', () => { ghostBtn.setAttribute('aria-pressed', String(ghostBtn.getAttribute('aria-pressed') !== 'true')); draw(); });
+  document.querySelectorAll('input[name="speed"]').forEach(r => r.addEventListener('change', () => { mode = r.value; }));
+  function seekFromEvent(e) {
+    const r = track.getBoundingClientRect();
+    seekTo(fracToT(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))));
+  }
+  let dragging = false;
+  track.addEventListener('pointerdown', e => { dragging = true; track.setPointerCapture(e.pointerId); seekFromEvent(e); });
+  track.addEventListener('pointermove', e => { if (dragging) seekFromEvent(e); });
+  track.addEventListener('pointerup', () => { dragging = false; });
+  track.addEventListener('keydown', e => {
+    const step = e.key === 'ArrowRight' ? 0.2 : e.key === 'ArrowLeft' ? -0.2 : 0;
+    if (step) { e.preventDefault(); seekTo(Math.max(0, Math.min(T - 0.01, cyc(simT) + step))); }
+    if (e.key === ' ') { e.preventDefault(); setPlaying(!playing); }
+  });
+
+  function resize() {
+    const w = canvas.getBoundingClientRect().width || W;
+    scale = Math.max(0.5, Math.min(2, w * (window.devicePixelRatio || 1) / W));
+    canvas.width = Math.round(W * scale); canvas.height = Math.round(HH * scale);
+    buildBg(); draw();
+  }
+  new ResizeObserver(resize).observe(canvas);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { buildBg(); draw(); });
+
+  seekTo(reduce ? 2.95 : 0.6);
+  setPlaying(playing);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

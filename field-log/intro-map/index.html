@@ -14,6 +14,12 @@
   #controls { position:fixed; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:8px; font:14px sans-serif; }
   #controls button { background:#f3e6c4; color:#3b2a1a; border:1px solid #8a6a3a; border-radius:6px; padding:6px 14px; cursor:pointer; }
   body.record #controls { display:none; }
+  /* 조행기 iframe 삽입용 (?embed) */
+  body.embed { background:transparent; }
+  body.embed #stage { width:100vw; height:100vh; aspect-ratio:auto; }
+  body.embed #controls { display:none; }
+  #replay { position:absolute; right:2.2%; bottom:3.5%; display:none; align-items:center; gap:6px; background:rgba(243,230,196,.92); color:#3b2a1a; border:1px solid #8a6a3a; border-radius:999px; padding:.4em 1em; font:600 clamp(10px, 1.6vw, 13px) 'Noto Sans KR', sans-serif; cursor:pointer; }
+  body.embed.done #replay { display:inline-flex; }
 </style>
 </head>
 <body>
@@ -96,9 +102,10 @@
   <g id="arrive" transform="translate(470 560)" opacity="0" font-family="'Nanum Myeongjo', serif">
     <rect x="-230" y="-60" width="460" height="120" rx="14" fill="#f3e6c4" stroke="#6b4a24" stroke-width="4" filter="url(#shadow)"/>
     <text y="-6" font-size="46" font-weight="800" fill="#3b2a1a" text-anchor="middle">한터낚시터 도착</text>
-    <text y="36" font-size="22" font-weight="700" fill="#7a5a34" text-anchor="middle">용인시 처인구 양지면</text>
+    <text id="arriveSub" y="36" font-size="22" font-weight="700" fill="#7a5a34" text-anchor="middle">용인시 처인구 양지면</text>
   </g>
 </svg>
+<button id="replay" type="button">↻ 다시 보기</button>
 </div>
 <div id="controls"><button id="play">▶ 다시 재생</button><button id="pause">❚❚ 일시정지</button></div>
 
@@ -181,14 +188,28 @@ function loop(now) {
   const t = (now - start) / 1000;
   render(Math.min(t, DUR));
   if (t < DUR + 1.5) raf = requestAnimationFrame(loop);
+  else document.body.classList.add("done");
 }
-function play() { cancelAnimationFrame(raf); start = null; paused = false; raf = requestAnimationFrame(loop); }
+function play() { cancelAnimationFrame(raf); document.body.classList.remove("done"); start = null; paused = false; raf = requestAnimationFrame(loop); }
+$("replay").onclick = play;
 $("play").onclick = play;
 $("pause").onclick = () => {
   if (!paused) { cancelAnimationFrame(raf); pausedAt = performance.now(); paused = true; }
   else { start += performance.now() - pausedAt; paused = false; raf = requestAnimationFrame(loop); }
 };
-if (new URLSearchParams(location.search).has("record")) { document.body.classList.add("record"); render(0); }
+// ?date=2026.10.23 → 도착 배너에 출조일 표시
+const params = new URLSearchParams(location.search);
+if (params.get("date")) $("arriveSub").textContent = `${params.get("date")} · 용인시 처인구 양지면`;
+
+if (params.has("record")) { document.body.classList.add("record"); render(0); }
+else if (params.has("embed")) {
+  // 조행기 안에서는 화면에 절반 이상 보일 때 한 번 재생
+  document.body.classList.add("embed"); render(0);
+  const io = new IntersectionObserver(es => {
+    if (es.some(e => e.intersectionRatio >= .5)) { io.disconnect(); play(); }
+  }, { threshold: [.5] });
+  io.observe($("stage"));
+}
 else play();
 </script>
 </body>

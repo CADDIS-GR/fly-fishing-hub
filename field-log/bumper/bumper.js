@@ -82,12 +82,12 @@
 #cgb .cgb-km{font-family:'DM Serif Display',serif;font-size:30px;color:#e6c35c;line-height:1.1}
 #cgb .cgb-stage{font-size:13px;color:rgba(255,255,255,.75)}
 #cgb .cgb-water{background:radial-gradient(ellipse at 30% 70%,#3d6e62 0%,#2d5248 45%,#1c362f 100%)}
-#cgb .cgb-card{position:absolute;left:0;right:0;bottom:0;padding:0 clamp(24px,4vw,64px) clamp(56px,10vh,110px)}
+#cgb .cgb-card{position:absolute;left:0;right:0;bottom:0;padding:0 48px clamp(56px,10vh,110px)}
 #cgb .cgb-card > *{will-change:transform,opacity}
 #cgb .cgb-tag{word-break:keep-all;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(168,197,190,.85);display:flex;align-items:center;gap:10px;margin-bottom:18px}
 #cgb .cgb-tag img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.4)}
 #cgb .cgb-date{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.2em;color:rgba(255,255,255,.7);margin-bottom:10px}
-#cgb .cgb-title{word-break:keep-all;font-size:clamp(46px,10vw,128px);line-height:1.02;letter-spacing:-.02em;margin:0 0 16px;color:#fff;
+#cgb .cgb-title{word-break:keep-all;font-size:clamp(32px,6.4vw,88px);line-height:1.15;letter-spacing:-.02em;margin:0 0 16px;color:#fff;
   font-family:${korTitle ? "'Noto Sans KR',sans-serif;font-weight:700" : "'DM Serif Display',serif;font-weight:400;font-style:italic"}}
 #cgb .cgb-sub{word-break:keep-all;font-size:clamp(14px,2vw,19px);font-weight:300;color:rgba(255,255,255,.8);max-width:680px;margin:0 0 22px;line-height:1.6}
 #cgb .cgb-catch{display:flex;align-items:baseline;gap:8px;margin-bottom:30px;font-size:15px;color:rgba(255,255,255,.75)}
@@ -105,6 +105,7 @@
 #cgb .cgb-bar{position:absolute;left:0;bottom:0;height:2px;background:#e6c35c;z-index:3}
 #cgb .cgb-wave{position:absolute;left:0;top:100%;width:100%;height:60px;display:block}
 @media(max-width:600px){
+  #cgb .cgb-card{padding-left:20px;padding-right:20px}
   #cgb .cgb-hud{min-width:0;padding:10px 14px}
   #cgb .cgb-hud b{font-size:14px}
   #cgb .cgb-km{font-size:24px}
@@ -350,6 +351,10 @@
   function renderExit(u) {
     const e = ease(clamp(u));
     root.style.transform = `translateY(${-e * 115}%)`;
+    // 막이 오르기 전에 카드 글자를 먼저 지워 제목이 두 번 겹쳐 보이지 않게 한다
+    const f = 1 - seg(u, 0, .3);
+    el.card.style.opacity = f;
+    el.skip.style.opacity = Math.min(+el.skip.style.opacity || 0, f);
   }
 
   function enter(withMusic) {
@@ -404,10 +409,11 @@
   // '오프닝 다시 보기' 버튼 (replay:true 일 때)
   function addReplayButton() {
     const st = document.createElement('style');
-    st.textContent = `.cgb-replay{position:fixed;right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:9000;
+    st.textContent = `.cgb-replay{position:fixed;right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:9000;transition:opacity .3s,visibility .3s;
   font:500 12px 'Noto Sans KR',sans-serif;letter-spacing:.04em;color:#fff;background:rgba(20,35,30,.9);border:1px solid rgba(168,197,190,.35);
   border-radius:999px;padding:10px 16px;cursor:pointer;backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .cgb-replay:hover{background:rgba(45,82,72,.95)}
+.cgb-replay[data-off]{opacity:0;visibility:hidden}
 .cgb-replay:focus-visible{outline:2px solid #e6c35c;outline-offset:2px}`;
     document.head.appendChild(st);
     const btn = document.createElement('button');
@@ -416,6 +422,10 @@
     btn.textContent = '↻ 오프닝 다시 보기';
     btn.onclick = () => { window.scrollTo(0, 0); window.CADDIS_BUMPER_PLAY(); };
     document.body.appendChild(btn);
+    // 첫 화면(히어로 제목)을 가리지 않도록, 조금 내려간 뒤부터 보인다
+    const sync = () => btn.toggleAttribute('data-off', window.scrollY < window.innerHeight * .6);
+    window.addEventListener('scroll', sync, { passive: true });
+    sync();
   }
 
   const onReady = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn();

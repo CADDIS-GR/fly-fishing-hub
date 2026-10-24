@@ -8,7 +8,9 @@
  *   <script src="../bumper/bumper.js"></script>
  *
  * 주소 옵션: ?bumper=0 끄기 · ?bumper=1 다시 보기(세션 기록 무시)
- * 한 번 본 페이지는 같은 탭에서 다시 열어도 건너뛰고, '동작 줄이기' 설정 사용자에게는 표시하지 않는다.
+ * 한 번 본 페이지는 같은 탭에서 다시 열어도 건너뛰고, '동작 줄이기' 설정 사용자에게는 자동 재생하지 않는다.
+ * window.CADDIS_BUMPER_PLAY() 를 부르면 언제든 다시 재생한다 (예: '오프닝 다시 보기' 버튼).
+ * 설정 선택 항목: avatar(프로필 이미지 주소), map(지도 이미지 주소)
  */
 (function () {
   const CFG = Object.assign({ from: '의정부', place: '한터낚시터', km: 75 }, window.CADDIS_BUMPER || {});
@@ -20,7 +22,7 @@
   const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   let seen = false;
   try { seen = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (mode === '0' || (mode !== '1' && mode !== 'record' && (seen || reduced))) return;
+  const AUTO = mode !== '0' && (mode === '1' || mode === 'record' || !(seen || reduced));
   const RECORD = mode === 'record';
 
   // ── 타임라인(초) ──
@@ -56,7 +58,7 @@
   // ── 깜빡임 방지: 오버레이가 붙기 전까지 본문 숨김 ──
   const pre = document.createElement('style');
   pre.textContent = 'html{background:#14231e}body{visibility:hidden}';
-  document.head.appendChild(pre);
+  if (AUTO) document.head.appendChild(pre);
   const fonts = document.createElement('link');
   fonts.rel = 'stylesheet';
   fonts.href = 'https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;500;700&display=swap';
@@ -122,7 +124,8 @@
     </g>
     <path class="cgb-beam" d="M36,-12 L95,-34 L95,34 L36,12 z" fill="#fff7c0" opacity="0"/>`;
 
-  const PROF = 'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG';
+  const PROF = CFG.avatar || 'https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG';
+  const MAP = CFG.map || asset('../intro-map/map-clean.jpg');
   const HTML = `
   <div class="cgb-layer cgb-grid" data-k="ident"></div>
   <svg class="cgb-layer" data-k="identSvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -137,7 +140,7 @@
   </div>
   <svg class="cgb-layer cgb-map" aria-hidden="true">
     <g class="cgb-cam">
-      <image href="${asset('../intro-map/map-clean.jpg')}" width="${MAP_W}" height="${MAP_H}"/>
+      <image href="${MAP}" width="${MAP_W}" height="${MAP_H}"/>
       <path class="cgb-ghost" d="${ROUTE}" fill="none" stroke="#7a1d12" stroke-opacity=".3" stroke-width="7" stroke-dasharray="16 12" stroke-linecap="round"/>
       <path class="cgb-glow" d="${ROUTE}" fill="none" stroke="#ff6a4a" stroke-opacity=".35" stroke-width="20" stroke-linecap="round"/>
       <path class="cgb-trail" d="${ROUTE}" fill="none" stroke="#d4231f" stroke-width="9" stroke-linecap="round"/>
@@ -181,9 +184,12 @@
   let root, el = {}, LEN = 0, LINE_LEN = 0, LN = null, exitAt = null, started = false, t0 = 0, raf;
 
   function build() {
-    const st = document.createElement('style');
-    st.textContent = CSS;
-    document.head.appendChild(st);
+    if (!document.getElementById('cgb-style')) {
+      const st = document.createElement('style');
+      st.id = 'cgb-style';
+      st.textContent = CSS;
+      document.head.appendChild(st);
+    }
     root = document.createElement('div');
     root.id = 'cgb';
     root.setAttribute('role', 'dialog');
@@ -386,6 +392,16 @@
     Promise.race([ready, new Promise(r => setTimeout(r, 1200))]).then(start);
   }
 
+  // 다시 재생 (이미 재생 중이면 무시)
+  window.CADDIS_BUMPER_PLAY = function () {
+    if (root && root.isConnected) return;
+    exitAt = null; started = false; LN = null;
+    build();
+    render(0);
+    start();
+  };
+
+  if (!AUTO) return;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();

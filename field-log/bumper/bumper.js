@@ -82,12 +82,12 @@
 #cgb .cgb-water{background:radial-gradient(ellipse at 30% 70%,#3d6e62 0%,#2d5248 45%,#1c362f 100%)}
 #cgb .cgb-card{position:absolute;left:0;right:0;bottom:0;padding:0 clamp(24px,4vw,64px) clamp(56px,10vh,110px)}
 #cgb .cgb-card > *{will-change:transform,opacity}
-#cgb .cgb-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(168,197,190,.85);display:flex;align-items:center;gap:10px;margin-bottom:18px}
+#cgb .cgb-tag{word-break:keep-all;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(168,197,190,.85);display:flex;align-items:center;gap:10px;margin-bottom:18px}
 #cgb .cgb-tag img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.4)}
 #cgb .cgb-date{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.2em;color:rgba(255,255,255,.7);margin-bottom:10px}
-#cgb .cgb-title{font-size:clamp(46px,10vw,128px);line-height:1.02;letter-spacing:-.02em;margin:0 0 16px;color:#fff;
+#cgb .cgb-title{word-break:keep-all;font-size:clamp(46px,10vw,128px);line-height:1.02;letter-spacing:-.02em;margin:0 0 16px;color:#fff;
   font-family:${korTitle ? "'Noto Sans KR',sans-serif;font-weight:700" : "'DM Serif Display',serif;font-weight:400;font-style:italic"}}
-#cgb .cgb-sub{font-size:clamp(14px,2vw,19px);font-weight:300;color:rgba(255,255,255,.8);max-width:680px;margin:0 0 22px;line-height:1.6}
+#cgb .cgb-sub{word-break:keep-all;font-size:clamp(14px,2vw,19px);font-weight:300;color:rgba(255,255,255,.8);max-width:680px;margin:0 0 22px;line-height:1.6}
 #cgb .cgb-catch{display:flex;align-items:baseline;gap:8px;margin-bottom:30px;font-size:15px;color:rgba(255,255,255,.75)}
 #cgb .cgb-catch b{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(40px,6vw,64px);color:#e6c35c;line-height:1}
 #cgb .cgb-btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center}

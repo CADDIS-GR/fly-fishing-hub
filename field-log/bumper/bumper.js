@@ -10,7 +10,7 @@
  * 주소 옵션: ?bumper=0 끄기 · ?bumper=1 다시 보기(세션 기록 무시)
  * 한 번 본 페이지는 같은 탭에서 다시 열어도 건너뛰고, '동작 줄이기' 설정 사용자에게는 자동 재생하지 않는다.
  * window.CADDIS_BUMPER_PLAY() 를 부르면 언제든 다시 재생한다 (예: '오프닝 다시 보기' 버튼).
- * 설정 선택 항목: avatar(프로필 이미지 주소), map(지도 이미지 주소)
+ * 설정 선택 항목: avatar(프로필 이미지 주소), map(지도 이미지 주소), replay:true(오른쪽 아래 '오프닝 다시 보기' 버튼)
  */
 (function () {
   const CFG = Object.assign({ from: '의정부', place: '한터낚시터', km: 75 }, window.CADDIS_BUMPER || {});
@@ -401,7 +401,24 @@
     start();
   };
 
-  if (!AUTO) return;
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  // '오프닝 다시 보기' 버튼 (replay:true 일 때)
+  function addReplayButton() {
+    const st = document.createElement('style');
+    st.textContent = `.cgb-replay{position:fixed;right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px));z-index:9000;
+  font:500 12px 'Noto Sans KR',sans-serif;letter-spacing:.04em;color:#fff;background:rgba(20,35,30,.9);border:1px solid rgba(168,197,190,.35);
+  border-radius:999px;padding:10px 16px;cursor:pointer;backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.cgb-replay:hover{background:rgba(45,82,72,.95)}
+.cgb-replay:focus-visible{outline:2px solid #e6c35c;outline-offset:2px}`;
+    document.head.appendChild(st);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cgb-replay';
+    btn.textContent = '↻ 오프닝 다시 보기';
+    btn.onclick = () => { window.scrollTo(0, 0); window.CADDIS_BUMPER_PLAY(); };
+    document.body.appendChild(btn);
+  }
+
+  const onReady = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn();
+  if (CFG.replay && !RECORD) onReady(addReplayButton);
+  if (AUTO) onReady(boot);
 })();

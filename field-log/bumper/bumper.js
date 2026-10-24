@@ -7,8 +7,9 @@
  *   <script>window.CADDIS_BUMPER = { date:'2026-10-23', title:'제목', sub:'부제', catch:23, music:'되고송' };</script>
  *   <script src="../bumper/bumper.js"></script>
  *
- * 주소 옵션: ?bumper=0 끄기 · ?bumper=1 다시 보기(세션 기록 무시)
- * 한 번 본 페이지는 같은 탭에서 다시 열어도 건너뛰고, '동작 줄이기' 설정 사용자에게는 자동 재생하지 않는다.
+ * 주소 옵션: ?bumper=0 끄기
+ * 페이지를 열거나 새로고침할 때마다 재생한다. 뒤로/앞으로 가기로 돌아온 경우에만 건너뛴다.
+ * (SKIP 버튼·Esc·스크롤로 언제든 바로 넘어갈 수 있다)
  * window.CADDIS_BUMPER_PLAY() 를 부르면 언제든 다시 재생한다 (예: '오프닝 다시 보기' 버튼).
  * 설정 선택 항목: avatar(프로필 이미지 주소), map(지도 이미지 주소), replay:true(오른쪽 아래 '오프닝 다시 보기' 버튼)
  */
@@ -18,11 +19,12 @@
   const asset = p => new URL(p, SRC || location.href).href;
   const qs = new URLSearchParams(location.search);
   const mode = qs.get('bumper');
-  const KEY = 'cgb:' + location.pathname;
-  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let seen = false;
-  try { seen = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
-  const AUTO = mode !== '0' && (mode === '1' || mode === 'record' || !(seen || reduced));
+  let backForward = false;
+  try {
+    const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    backForward = !!nav && nav.type === 'back_forward';
+  } catch (e) {}
+  const AUTO = mode !== '0' && (mode === 'record' || !backForward);
   const RECORD = mode === 'record';
 
   // ── 타임라인(초) ──
@@ -360,7 +362,6 @@
   function enter(withMusic) {
     if (exitAt !== null || RECORD) return;
     exitAt = performance.now();
-    try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
     if (withMusic && typeof window.toggleBgm === 'function') { try { window.toggleBgm(); } catch (e) {} }
     document.removeEventListener('keydown', onKey);
     root.style.pointerEvents = 'none';

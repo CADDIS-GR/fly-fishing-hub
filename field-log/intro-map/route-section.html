@@ -1,0 +1,42 @@
+<!--
+  조행기용 "출조길" 섹션 스니펫
+  ─────────────────────────────────────────────
+  사용법 (field-log/logs/YYYY-MM-DD-hanter.html 기준)
+  1) <style> 안에 아래 CSS 블록을 붙여 넣는다.
+  2) 히어로 </header> 바로 뒤, 요약 카드(.summary) 앞에 <section> 블록을 넣는다.
+  3) sticky-nav 에 <a href="#sec-route" class="snl">출조길</a> 를 '요약' 앞에 추가하고,
+     JS sections 배열에도 'sec-route' 를 'sec-summary' 앞에 추가한다.
+  4) iframe src 의 date= 값을 출조일로 바꾼다.
+-->
+
+<!-- ① CSS -->
+<style>
+.route-section { padding:72px 24px 24px; }
+.route-wrap { max-width:960px; margin:0 auto; }
+.route-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+.route-wrap h2 { font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:clamp(1.3rem,3vw,1.7rem); color:var(--ink); margin:0 0 20px; }
+.route-frame { position:relative; aspect-ratio:1672/941; border-radius:14px; overflow:hidden; background:#1b140d; border:1px solid var(--rule); box-shadow:0 16px 42px rgba(0,0,0,.14); }
+.route-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+.route-cap { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; color:var(--ink-soft); }
+.route-cap a { color:var(--water); text-decoration:none; }
+.route-cap a:hover { text-decoration:underline; }
+@media(max-width:600px){ .route-section{padding:56px 16px 16px;} .route-frame{border-radius:10px;} }
+</style>
+
+<!-- ② 섹션 (히어로 바로 뒤) -->
+<section class="route-section" id="sec-route">
+  <div class="route-wrap">
+    <div class="route-label">Route · 출조길</div>
+    <h2>의정부 집 → 한터낚시터</h2>
+    <div class="route-frame">
+      <iframe src="../intro-map/index.html?embed&amp;date=2026.10.23" title="의정부에서 한터낚시터까지 차량 이동 애니메이션 지도" loading="lazy"></iframe>
+    </div>
+    <div class="route-cap">
+      <span>약 75 km · 남양주 → 하남 → 광주 → 용인 처인구 양지면</span>
+      <a href="../intro-map/intro-map.mp4" target="_blank" rel="noopener">▶ 영상(MP4)으로 보기</a>
+    </div>
+  </div>
+</section>
+
+<!-- ③ sticky-nav 링크 -->
+<a href="#sec-route" class="snl">출조길</a>

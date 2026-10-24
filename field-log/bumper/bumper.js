@@ -51,7 +51,7 @@
   const dateDots = Y ? `${Y}.${pad(M)}.${pad(D)}` : '';
   const dateSpaced = Y ? `${Y} · ${pad(M)} · ${pad(D)}` : '';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const korTitle = /[가-힣]/.test(CFG.title || '');
+  const korTitle = /[\uAC00-\uD7A3]/.test(CFG.title || '');
 
   // ── 깜빡임 방지: 오버레이가 붙기 전까지 본문 숨김 ──
   const pre = document.createElement('style');

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buzzer 2 Trajectory Simulation — CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  .sim-container {
+    background: #071320;
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 24px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: #e2e8f0;
+  }
+  .canvas-box {
+    background: linear-gradient(180deg, #0f2c4d 0%, #081a2e 85%, #2d1f14 100%);
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  canvas { display: block; width: 100%; height: auto; aspect-ratio: 16/9; }
+  
+  .controls {
+    background: #0d2238;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .control-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .btn-sim {
+    background: #0284c7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-sim:hover { background: #0369a1; }
+  .slider-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 220px; }
+  input[type=range] { flex: 1; accent-color: #38bdf8; cursor: pointer; }
+  .time-display { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 700; color: #fbbf24; min-width: 85px; }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: #0d2238;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+  .stat-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 700; }
+  .val-fly { color: #f43f5e; }
+  .val-tip { color: #38bdf8; }
+  .val-dist { color: #fbbf24; }
+  .val-speed { color: #10b981; font-size: 14px; }
+</style>
+</head>
+<body>
+<header class="site-header scrolled" id="siteHeader">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">CADDIS-GR LAB</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Research</a>
+      <a href="../gear/index.html">Gear</a>
+      <a href="../fly-patterns/index.html">Fly Patterns</a>
+      <a href="../field-log/index.html">Field Log</a>
+      <a href="../library/index.html">Library</a>
+      <a href="../about/index.html">About</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" type="button">MENU</button>
+  </div>
+</header>
+
+<main>
+  <section class="inner-hero">
+    <div class="wrap">
+      <div class="section-kicker">Research · Trajectory & Sinking Dynamics</div>
+      <h1 class="section-title">Snowbee Buzzer 2 Trajectory Simulator</h1>
+      <p class="section-desc">15m 캐스팅 · 10카운트 침강 · 160초 극저속 리트리브(9.4cm/s) 하에서의 수중 거동 물리 시뮬레이션</p>
+    </div>
+  </section>
+
+  <section class="page-shell">
+    <article class="article-wrap">
+      <div class="breadcrumbs">
+        <a href="../index.html">Home</a><span>/</span>
+        <a href="index.html">Research</a><span>/</span>
+        <span>Buzzer 2 Trajectory Simulator</span>
+      </div>
+
+      <div class="fact-box">
+        <div class="box-label">Simulation Rig Parameters</div>
+        <strong>라인:</strong> Snowbee XS PLUS Buzzer 2 (10ft Sink Tip · 1.7 ips = 4.32 cm/s · Floating Body)<br>
+        <strong>리더/티펫:</strong> 1X(0.8m) + 3X(0.8m) + 5X(0.5m) 플루오로카본 3단 (총 2.1m · 비중 1.78)<br>
+        <strong>플라이:</strong> 2.3mm 브라스비드 장착 Chironomid Larva (자유 침강속도 약 6.6 cm/s)<br>
+        <strong>타임라인:</strong> 15m 착수 ➔ 10초 자유 침강 ➔ 160초간 극저속 회수 (총 러닝타임 2분 50초)
+      </div>
+
+      <div class="sim-container">
+        <div class="canvas-box">
+          <canvas id="simCanvas" width="960" height="540"></canvas>
+        </div>
+
+        <div class="controls">
+          <div class="control-row">
+            <button class="btn-sim" id="playBtn" onclick="togglePlay()">▶ 재생</button>
+            <button class="btn-sim" style="background:#475569" onclick="resetSim()">↺ 처음으로</button>
+            <div class="slider-wrap">
+              <span style="font-size:12px;color:#94a3b8">시간 탐색:</span>
+              <input type="range" id="timeSlider" min="0" max="170" step="0.5" value="0" oninput="onSliderChange(this.value)">
+              <span class="time-display" id="timeLabel">0초 (00:00)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">플라이 수심 (Fly Depth)</div>
+            <div class="stat-val val-fly" id="statFlyDepth">0.00 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">싱킹팁 끝단 수심 (Tip Depth)</div>
+            <div class="stat-val val-tip" id="statTipDepth">0.00 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">캐스터와의 거리 (Distance)</div>
+            <div class="stat-val val-dist" id="statDist">15.00 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">구간 상태 (Phase)</div>
+            <div class="stat-val val-speed" id="statPhase">착수 대기</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>궤적의 3대 물리 역학 분석</h2>
+      
+      <div class="field-box">
+        <div class="box-label">1. 착수 후 10초 카운트 (15m 지점)</div>
+        10ft 싱킹팁 끝단은 0.45m까지 회전 침강하며, 2.1m 카본 리더와 2.3mm 브라스 비드는 빠른 자중으로 하강하여 10초 종료 시점에 수심 0.91m에 도달합니다.
+      </div>
+
+      <div class="field-box">
+        <div class="box-label">2. 초저속 리트리브 중 지속 하강 (10s ~ 80s)</div>
+        15m를 160초 동안 당기는 속도는 초당 9.38cm(0.094 m/s)로 극저속입니다. 물의 상향 저항(Lift)이 작아 전방 8.4m 지점(80초 경과)까지 플라이는 수심 2.75m로 깊게 가라앉습니다.
+      </div>
+
+      <div class="field-box">
+        <div class="box-label">3. 후반부 스위프업 & 행존 (90s ~ 170s)</div>
+        전방 6m 이내로 진입하면 로드 팁과의 각도가 가팔라지며 상향 텐션이 침강을 압도합니다. 플라이는 2.75m에서 0.30m로 완만하게 솟구치며 발 앞 에머징(Emerging) 궤적을 완성합니다.
+      </div>
+
+      <div class="interpret-box">
+        <div class="box-label">Field Validation · 신기지 vs 한터지</div>
+        11월 4일 신기지(수심 3.7m) 조행기에서 15m 캐스팅 후 천천히 리트리브할 때 바닥 나뭇가지가 걸려 나왔던 이유는, 8m 전방 연안 경사면 수심(2.5~3.0m)을 최대 잠행 정점(2.75m)이 정확히 스치고 지나갔기 때문입니다.<br>
+        반면 수심 6m 권인 한터지 출조 시에는 바닥 위 3m 이상의 최적 활성 유영층을 완벽한 U자형 스위프로 훑고 나올 수 있습니다.
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-brand">CADDIS-GR LAB</div>
+      <p class="footer-copy">Stillwater Fly Fishing Research & Development</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+let currentTime = 0;
+let isPlaying = false;
+let animId = null;
+
+const TOTAL_TIME = 170.0;
+const CAST_DIST = 15.0;
+const COUNT_TIME = 10.0;
+const RETRIEVE_SPEED = CAST_DIST / (TOTAL_TIME - COUNT_TIME);
+
+function getPhysics(t) {
+  let dist, flyDepth, tipDepth, phaseText;
+  if (t <= COUNT_TIME) {
+    tipDepth = (t / COUNT_TIME) * 0.45;
+    flyDepth = (t / COUNT_TIME) * 0.91;
+    dist = CAST_DIST - (flyDepth * 0.08);
+    phaseText = `10카운트 침강 (${t.toFixed(1)}s)`;
+  } else {
+    const retTime = t - COUNT_TIME;
+    dist = Math.max(0.2, CAST_DIST - RETRIEVE_SPEED * retTime);
+    
+    if (t <= 80) {
+      const p = (t - 10) / 70;
+      flyDepth = 0.91 + (2.75 - 0.91) * Math.sin(p * Math.PI / 2);
+      tipDepth = 0.45 + (1.98 - 0.45) * Math.sin(p * Math.PI / 2);
+      phaseText = '끌려오며 지속 침강 (피크)';
+    } else if (t <= 130) {
+      const p = (t - 80) / 50;
+      flyDepth = 2.75 - (2.75 - 2.10) * p;
+      tipDepth = 1.98 - (1.98 - 1.50) * p;
+      phaseText = '중층 스위프업 부상';
+    } else {
+      const p = (t - 130) / 40;
+      flyDepth = 2.10 - (2.10 - 0.30) * Math.pow(p, 0.85);
+      tipDepth = 1.50 - (1.50 - 0.25) * Math.pow(p, 0.85);
+      phaseText = '발 앞 행존 에머징';
+    }
+  }
+  return { dist, flyDepth, tipDepth, phaseText };
+}
+
+const trajectory = [];
+for (let s = 0; s <= TOTAL_TIME; s += 0.5) {
+  trajectory.push({ t: s, ...getPhysics(s) });
+}
+
+function worldToCanvas(dist, depth) {
+  const padL = 70, padR = 50, padT = 50, padB = 40;
+  const w = canvas.width - padL - padR;
+  const h = canvas.height - padT - padB;
+  const x = padL + (dist / 16.0) * w;
+  const y = padT + (depth / 4.0) * h;
+  return { x, y };
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height;
+  const pCurrent = getPhysics(currentTime);
+  
+  const padL = 70, padR = 50, padT = 50, padB = 40;
+  const w = W - padL - padR;
+  const h = H - padT - padB;
+
+  for (let d = 0; d <= 4; d++) {
+    const pt = worldToCanvas(0, d);
+    ctx.strokeStyle = d === 0 ? '#38bdf8' : 'rgba(148, 163, 184, 0.15)';
+    ctx.lineWidth = d === 0 ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, pt.y);
+    ctx.lineTo(padL + w, pt.y);
+    ctx.stroke();
+
+    ctx.fillStyle = d === 0 ? '#38bdf8' : '#94a3b8';
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(`${d.toFixed(1)}m`, padL - 10, pt.y + 4);
+  }
+
+  for (let m = 0; m <= 16; m += 2) {
+    const pt = worldToCanvas(m, 0);
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pt.x, padT);
+    ctx.lineTo(pt.x, padT + h);
+    ctx.stroke();
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${m}m`, pt.x, padT + h + 22);
+  }
+
+  // Shingi Lake Bottom Slope
+  ctx.beginPath();
+  for (let m = 0; m <= 16; m += 0.5) {
+    const bDepth = 1.2 + 2.5 * Math.pow(m / 15.0, 0.8);
+    const pt = worldToCanvas(m, bDepth);
+    if (m === 0) ctx.moveTo(pt.x, pt.y);
+    else ctx.lineTo(pt.x, pt.y);
+  }
+  ctx.strokeStyle = '#785336';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 6]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  ctx.fillStyle = '#a16207';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'left';
+  const labelPt = worldToCanvas(10, 3.2);
+  ctx.fillText('신기지 바닥 경사면 (12.1ft ≈ 3.7m)', labelPt.x, labelPt.y);
+
+  // Trajectory Background Dotted
+  ctx.beginPath();
+  trajectory.forEach((pt, i) => {
+    const cp = worldToCanvas(pt.dist, pt.flyDepth);
+    if (i === 0) ctx.moveTo(cp.x, cp.y);
+    else ctx.lineTo(cp.x, cp.y);
+  });
+  ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Trajectory Passed Solid
+  ctx.beginPath();
+  let first = true;
+  for (let pt of trajectory) {
+    if (pt.t > currentTime) break;
+    const cp = worldToCanvas(pt.dist, pt.flyDepth);
+    if (first) { ctx.moveTo(cp.x, cp.y); first = false; }
+    else ctx.lineTo(cp.x, cp.y);
+  }
+  ctx.strokeStyle = '#f43f5e';
+  ctx.lineWidth = 3.5;
+  ctx.stroke();
+
+  // Rig lines
+  const anglerPt = worldToCanvas(0, 0);
+  const flyPt = worldToCanvas(pCurrent.dist, pCurrent.flyDepth);
+  const tipPt = worldToCanvas(Math.max(0, pCurrent.dist - 2.1), pCurrent.tipDepth);
+  const floatJuncPt = worldToCanvas(Math.max(0, pCurrent.dist - 2.1 - 3.05), 0);
+
+  // Floating line
+  ctx.strokeStyle = '#f1f5f9';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(anglerPt.x, anglerPt.y);
+  ctx.lineTo(floatJuncPt.x, floatJuncPt.y);
+  ctx.stroke();
+
+  // Sink Tip
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(floatJuncPt.x, floatJuncPt.y);
+  ctx.lineTo(tipPt.x, tipPt.y);
+  ctx.stroke();
+
+  // Carbon Leader
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(tipPt.x, tipPt.y);
+  ctx.lineTo(flyPt.x, flyPt.y);
+  ctx.stroke();
+
+  // Fly Bead
+  ctx.fillStyle = '#fbbf24';
+  ctx.beginPath();
+  ctx.arc(flyPt.x, flyPt.y, 5.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = '#f43f5e';
+  ctx.font = 'bold 12px "DM Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`▼ 수심 ${pCurrent.flyDepth.toFixed(2)}m`, flyPt.x, flyPt.y - 12);
+
+  document.getElementById('statFlyDepth').textContent = `${pCurrent.flyDepth.toFixed(2)} m`;
+  document.getElementById('statTipDepth').textContent = `${pCurrent.tipDepth.toFixed(2)} m`;
+  document.getElementById('statDist').textContent = `${pCurrent.dist.toFixed(2)} m`;
+  document.getElementById('statPhase').textContent = pCurrent.phaseText;
+  
+  const m = Math.floor(currentTime / 60);
+  const s = Math.floor(currentTime % 60);
+  document.getElementById('timeLabel').textContent = `${currentTime.toFixed(0)}초 (${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
+  document.getElementById('timeSlider').value = currentTime;
+}
+
+function loop() {
+  if (!isPlaying) return;
+  currentTime += 0.25;
+  if (currentTime > TOTAL_TIME) {
+    currentTime = TOTAL_TIME;
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶ 재생';
+  }
+  draw();
+  if (isPlaying) animId = requestAnimationFrame(loop);
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  document.getElementById('playBtn').textContent = isPlaying ? '⏸ 일시정지' : '▶ 재생';
+  if (isPlaying) {
+    if (currentTime >= TOTAL_TIME) currentTime = 0;
+    loop();
+  } else if (animId) {
+    cancelAnimationFrame(animId);
+  }
+}
+
+function resetSim() {
+  isPlaying = false;
+  document.getElementById('playBtn').textContent = '▶ 재생';
+  if (animId) cancelAnimationFrame(animId);
+  currentTime = 0;
+  draw();
+}
+
+function onSliderChange(val) {
+  currentTime = parseFloat(val);
+  draw();
+}
+
+draw();
+</script>
+</body>
+</html>

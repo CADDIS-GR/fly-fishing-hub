@@ -343,36 +343,27 @@ function draw() {
   ctx.textAlign = 'left';
   ctx.fillText('로드 팁 (수면 고정)', rodPt.x + 8, rodPt.y - 6);
 
-  // 1. Draw Suspended Segment: Taut straight line from Rod Tip (0,0) down to transition fillet near bottom!
+  // 1. Draw Suspended Segment: Natural Gentle Curve (Cubic Bezier)
+  // Taut rod departure -> gentle hydrodynamic curve -> tangential arrival at lake bed
   if (cur.depthTip < 5.95) {
-    // Taut straight line to tip
+    const cp1 = worldToCanvas(cur.distTip * 0.35, cur.depthTip * 0.28);
+    const cp2 = worldToCanvas(cur.distTip * 0.75, cur.depthTip * 0.96);
     ctx.beginPath();
     ctx.moveTo(rodPt.x, rodPt.y);
-    ctx.lineTo(tipPt.x, tipPt.y);
-    ctx.strokeStyle = '#38bdf8';
-    ctx.lineWidth = 2.6;
-    ctx.stroke();
-  } else {
-    // Touchdown state: Taut straight line from rod (0,0) to fillet point (depth ~5.15m), then smooth arc to touchPt
-    const xFillet = cur.xTouch * 0.82;
-    const yFillet = 5.15;
-    const filletPt = worldToCanvas(xFillet, yFillet);
-
-    // Straight taut line under tension from rod
-    ctx.beginPath();
-    ctx.moveTo(rodPt.x, rodPt.y);
-    ctx.lineTo(filletPt.x, filletPt.y);
+    ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, tipPt.x, tipPt.y);
     ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 2.8;
     ctx.stroke();
-
-    // Smooth fillet curve transition to bottom
+  } else {
+    // Touchdown & Crawl state:
+    // Natural gentle sweep from rod tip down to touchPt
+    const cp1 = worldToCanvas(cur.xTouch * 0.35, 5.98 * 0.28);
+    const cp2 = worldToCanvas(cur.xTouch * 0.75, 5.98 * 0.96);
     ctx.beginPath();
-    ctx.moveTo(filletPt.x, filletPt.y);
-    const cpFillet = worldToCanvas(cur.xTouch * 0.95, 5.85);
-    ctx.quadraticCurveTo(cpFillet.x, cpFillet.y, touchPt.x, touchPt.y);
-    ctx.strokeStyle = '#2dd4bf';
-    ctx.lineWidth = 3.2;
+    ctx.moveTo(rodPt.x, rodPt.y);
+    ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, touchPt.x, touchPt.y);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.8;
     ctx.stroke();
   }
 
@@ -393,10 +384,11 @@ function draw() {
     ctx.fillText(`바닥 밀착: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + groundTipPt.x) / 2, touchPt.y - 12);
   }
 
-  // 3. Leader & Fly
+  // 3. Leader & Fly: gentle buoyant arc
+  const cpLeader = worldToCanvas(cur.distTip + 0.8, cur.depthFly + 0.01);
   ctx.beginPath();
   ctx.moveTo(tipPt.x, tipPt.y);
-  ctx.lineTo(flyPt.x, flyPt.y);
+  ctx.quadraticCurveTo(cpLeader.x, cpLeader.y, flyPt.x, flyPt.y);
   ctx.strokeStyle = 'rgba(168, 85, 247, 0.9)';
   ctx.lineWidth = 1.6;
   ctx.setLineDash([4, 3]);

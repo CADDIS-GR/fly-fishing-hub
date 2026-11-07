@@ -148,7 +148,8 @@
           </div>
           <div class="legend-row">
             <div class="legend-item"><div class="legend-color" style="background:#10b981;height:5px;"></div><span>바닥 밀착 구간 (최대 7.2m 깔림)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#2dd4bf;height:3px;"></div><span>수중 현수선 구간 (로드~바닥)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#38bdf8;height:3px;"></div><span>로드 직결 팽팽한 직선 구간 (Taut Blade)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#2dd4bf;height:3px;"></div><span>바닥 완충 전이 아크 (Fillet)</span></div>
             <div class="legend-item"><div class="legend-color" style="background:#f43f5e;width:8px;height:8px;border-radius:50%;"></div><span>플라이 (바닥 위 1~2cm 유영)</span></div>
             <div class="legend-item"><div class="legend-color" style="background:#fb923c;width:7px;height:7px;border-radius:50%;"></div><span>Hang Marker (10/20/40ft)</span></div>
             <div class="legend-item"><div class="legend-color" style="background:#a855f7;border-top:1px dashed #a855f7;background:none;"></div><span>리더/티펫 (2.4m)</span></div>
@@ -338,16 +339,39 @@ function draw() {
   ctx.textAlign = 'left';
   ctx.fillText('로드 팁 (수면 고정)', rodPt.x + 8, rodPt.y - 6);
 
-  // 1. Draw Suspended Catenary Segment (from Rod to Touchdown)
-  const touchPt = worldToCanvas(cur.xTouch, Math.min(5.98, cur.depthTip));
-  ctx.beginPath();
-  ctx.moveTo(rodPt.x, rodPt.y);
-  const cpX = cur.xTouch * 0.45;
-  const cpY = touchPt.y * 0.85;
-  ctx.quadraticCurveTo(cpX, cpY, touchPt.x, touchPt.y);
-  ctx.strokeStyle = '#2dd4bf';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
+  // 1. Draw Suspended Segment: Taut straight line from Rod Tip (0,0) down to transition fillet near bottom!
+  if (cur.depthTip < 5.95) {
+    // Taut straight line to tip
+    ctx.beginPath();
+    ctx.moveTo(rodPt.x, rodPt.y);
+    ctx.lineTo(tipPt.x, tipPt.y);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+  } else {
+    // Touchdown state: Taut straight line from rod (0,0) to fillet point (depth ~5.15m), then smooth arc to touchPt
+    const xFillet = cur.xTouch * 0.82;
+    const yFillet = 5.15;
+    const filletPt = worldToCanvas(xFillet, yFillet);
+    const touchPt = worldToCanvas(cur.xTouch, 5.98);
+
+    // Straight taut line under tension from rod
+    ctx.beginPath();
+    ctx.moveTo(rodPt.x, rodPt.y);
+    ctx.lineTo(filletPt.x, filletPt.y);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.8;
+    ctx.stroke();
+
+    // Smooth fillet curve transition to bottom
+    ctx.beginPath();
+    ctx.moveTo(filletPt.x, filletPt.y);
+    const cpFillet = worldToCanvas(cur.xTouch * 0.95, 5.85);
+    ctx.quadraticCurveTo(cpFillet.x, cpFillet.y, touchPt.x, touchPt.y);
+    ctx.strokeStyle = '#2dd4bf';
+    ctx.lineWidth = 3.2;
+    ctx.stroke();
+  }
 
   // 2. Draw Grounded Segment (lying flat on lake bed!)
   if (cur.groundLen > 0.05) {

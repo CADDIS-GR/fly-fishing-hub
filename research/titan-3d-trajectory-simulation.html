@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SA Sonar Titan 3D (i/3/5) 수중 궤적 시뮬레이터 — CADDIS-GR LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+  .sim-container {
+    background: #071320;
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 24px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: #e2e8f0;
+  }
+  .canvas-box {
+    background: linear-gradient(180deg, #091e36 0%, #061322 80%, #301f11 100%);
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  canvas { display: block; width: 100%; height: auto; aspect-ratio: 16/9; }
+  
+  .controls {
+    background: #0d2238;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .control-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .btn-sim {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-sim:hover { background: #b91c1c; }
+  .slider-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 220px; }
+  input[type=range] { flex: 1; accent-color: #f87171; cursor: pointer; }
+  .time-display { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 700; color: #fbbf24; min-width: 95px; }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: #0d2238;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .stat-label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+  .stat-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 700; }
+  .val-fly { color: #f43f5e; }
+  .val-tip { color: #f87171; }
+  .val-ground { color: #a3e635; }
+  .val-dist { color: #fbbf24; }
+  .val-speed { color: #38bdf8; font-size: 13px; }
+
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-color { width: 14px; height: 4px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<header class="site-header scrolled" id="siteHeader">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">CADDIS-GR LAB</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Research</a>
+      <a href="../gear/index.html">Gear</a>
+      <a href="../fly-patterns/index.html">Fly Patterns</a>
+      <a href="../field-log/index.html">Field Log</a>
+      <a href="../library/index.html">Library</a>
+      <a href="../about/index.html">About</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" type="button">MENU</button>
+  </div>
+</header>
+
+<main>
+  <section class="inner-hero">
+    <div class="wrap">
+      <div class="section-kicker">Research · Triple Density Dynamics</div>
+      <h1 class="section-title">SA Sonar Titan 3D (i/3/5) 수중 궤적 시뮬레이터</h1>
+      <p class="section-desc">3단 점진적 밀도(i/3/5) · 팁 선행 일자 사선 침강 · 바닥 팁 밀착(1.8m) · 완만한 포물선 스위프업(발 앞 80% 바이트)</p>
+    </div>
+  </section>
+
+  <section class="page-shell">
+    <article class="article-wrap">
+      <div class="breadcrumbs">
+        <a href="../index.html">Home</a><span>/</span>
+        <a href="index.html">Research</a><span>/</span>
+        <span>Titan 3D Trajectory Simulator</span>
+      </div>
+
+      <div class="fact-box">
+        <div class="box-label">Titan 3D Rig Specifications · 3단 밀도 제원</div>
+        <strong>라인:</strong> Scientific Anglers Sonar Titan 3D i/3/5 WF6S (Head 33.5ft / 10.2m · 230gr)<br>
+        <strong>3단 밀도 구성:</strong> Rear Intermediate(1.25 ips) ➔ Mid Belly Sink 3(3.0 ips) ➔ Front Tip Sink 5(5.25 ips)<br>
+        <strong>리더/티펫:</strong> 0X 리더(0.8m) + 5X 티펫(1.6m) 복합 시스템 (총 2.4m)<br>
+        <strong>수역 환경:</strong> 한터낚시터 (수심 6.0m 바닥권)<br>
+        <strong>실전 특성:</strong> 배처짐 없는 일자 사선 침강 ➔ 팁 1.8m만 닿고 몸통 부유 ➔ 완만한 포물선 에머징(Glide-up)
+      </div>
+
+      <div class="sim-container">
+        <div class="canvas-box">
+          <canvas id="simCanvas" width="960" height="540"></canvas>
+        </div>
+
+        <div class="controls">
+          <div class="control-row">
+            <button class="btn-sim" id="playBtn" onclick="togglePlay()">▶ 재생</button>
+            <button class="btn-sim" style="background:#475569" onclick="resetSim()">↺ 처음으로</button>
+            <div class="slider-wrap">
+              <span style="font-size:12px;color:#94a3b8">시간 탐색:</span>
+              <input type="range" id="timeSlider" min="0" max="165" step="0.5" value="0" oninput="onSliderChange(this.value)">
+              <span class="time-display" id="timeLabel">0초 (00:00)</span>
+            </div>
+          </div>
+          <div class="legend-row">
+            <div class="legend-item"><div class="legend-color" style="background:#38bdf8;"></div><span>Rear Intermediate (1.25 ips)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div><span>Mid Belly Sink 3 (3.0 ips)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#ef4444;"></div><span>Front Tip Sink 5 (5.25 ips)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#f43f5e;width:8px;height:8px;border-radius:50%;"></div><span>플라이 (바닥 위 2~4cm)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#94a3b8;border-top:2px dotted #94a3b8;background:none;"></div><span>SS2 DI5 비교 궤적 (Ghost)</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">플라이 수심 (Fly Depth)</div>
+            <div class="stat-val val-fly" id="statFlyDepth">0.00 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">S5 팁 수심 (Tip Depth)</div>
+            <div class="stat-val val-tip" id="statTipDepth">0.00 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">바닥 접촉 길이 (Tip Ground)</div>
+            <div class="stat-val val-ground" id="statGround">0.0 m</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">플라이 전방 거리 (Distance)</div>
+            <div class="stat-val val-dist" id="statDist">17.40 m</div>
+          </div>
+          <div class="stat-card" style="grid-column: span 2;">
+            <div class="stat-label">운용 페이즈 (Current Phase)</div>
+            <div class="stat-val val-speed" id="statPhase">착수 대기</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Titan 3D vs SS2 DI5 핵심 거동 비교 분석</h2>
+      
+      <div class="field-box">
+        <div class="box-label">1. 침강 단계 (0s ~ 25s) — 일자 사선 vs U자 배처짐</div>
+        <p>Titan 3D는 뒷부분이 가벼운 Intermediate(1.25ips)라 수면 상층에 머물고, 중간(S3, 3ips)을 거쳐 오직 팁(S5, 5.25ips)만 가파르게 꽂힙니다. 그 결과 SS2 DI5처럼 중간 벨리가 먼저 주저앉는 U자 배처짐(Sag)이 전혀 없이, <strong>로드 팁부터 플라이까지 칼 같은 일자 사선 미끄럼틀(Tip-First Ramp)</strong>을 형성합니다.</p>
+      </div>
+
+      <div class="field-box">
+        <div class="box-label">2. 바닥 횡이동 (25s ~ 105s) — 팁 1.8m 밀착 vs 몸통 7.2m 깔림</div>
+        <p>SS2 DI5는 전 구간 5ips로 인해 15m 중 7.2m라는 막대한 라인 몸통이 바닥 뻘에 질질 끌려오는 반면, Titan 3D는 33.5ft 짧은 헤드와 가벼운 뒤쪽 부력 덕분에 <strong>전방 팁(S5) 구간 약 1.8m만 바닥을 스칠 뿐, 몸통 전체는 바닥에서 30cm~1m 떠 있는 상향 텐션</strong>을 유지합니다. 뻘 저항이 극도로 적어 손끝 감도가 가볍고 플라이가 뻘에 묻히지 않습니다.</p>
+      </div>
+
+      <div class="field-box">
+        <div class="box-label">3. 발앞 상승 (105s ~ 145s) — 완만한 포물선 에머징 vs 각진 급상승</div>
+        <p>SS2 DI5가 바닥에 길게 누워 있다가 20ft 마커에서 각지게 솟구치는 급상승(Pop-up)을 보인다면, Titan 3D는 이미 뒤쪽이 떠 있었기 때문에 <strong>바닥을 박차고 아주 완만하고 부드러운 포물선(Smooth Glide-up Parabola)</strong>을 그리며 천천히 에머징합니다. 한터지에서 입질의 80%가 집중되는 가장 치명적인 킬존 궤적입니다.</p>
+      </div>
+
+      <h2>정밀 대조 분석 차트 (Trajectory Contrast Charts)</h2>
+      
+      <div style="margin: 24px 0; background: #071320; border: 1px solid #1e3a5f; border-radius: 10px; overflow: hidden; padding: 18px;">
+        <h3 style="font-size: 16px; color: #f87171; margin-bottom: 8px;">Chart 1 · Titan 3D 3단 밀도 수중 형상 & 상향 인장 분력 구조</h3>
+        <p style="font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px;">수면 로드에서 출발하는 Intermediate(청색), 중간 벨리 S3(황색), 바닥을 찍는 팁 S5(적색)의 3단 점진적 수중 경사와 바닥 접촉부(1.8m 한정)의 역학 구조입니다.</p>
+        <img src="../assets/images/titan-3d-trajectory-analysis.png" alt="Titan 3D Triple Density Trajectory Analysis" style="width: 100%; height: auto; border-radius: 6px; border: 1px solid #1e3a5f; display: block;">
+      </div>
+
+      <div style="margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a class="btn btn-primary" href="ss2-di5-trajectory-simulation.html" style="font-size: 13px; padding: 10px 18px; background: #0d9488; border-color: #0d9488;">◀ Airflo SS2 DI5 시뮬레이터 보기</a>
+        <a class="btn btn-secondary" href="four-line-system.html" style="font-size: 13px; padding: 10px 18px;">4단 라인 종합 분석 문서 ▸</a>
+      </div>
+
+    </article>
+  </section>
+</main>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+const TOTAL_TIME = 165.0;
+const CAST_DIST = 15.0;
+const LEADER_LEN = 2.4;
+let currentTime = 0;
+let isPlaying = false;
+let animReq = null;
+
+function getPhysics3D(t) {
+  let distTip, distFly, depthFly, depthTip, groundLen, gapCm, phaseText;
+
+  if (t <= 25.0) {
+    const p = t / 25.0;
+    depthTip = Math.min(3.3, 0.133 * t);
+    distTip = CAST_DIST - 0.2 * p;
+    distFly = distTip + LEADER_LEN;
+    depthFly = Math.max(0.0, depthTip - 0.1 * (1.0 - p));
+    groundLen = 0.0;
+    gapCm = ((6.0 - depthFly) * 100).toFixed(0);
+    phaseText = `Phase 1 · 팁 선행 일자 사선 침강 (${t.toFixed(1)}s)`;
+  } else if (t <= 45.0) {
+    const p = (t - 25.0) / 20.0;
+    distTip = 14.8 - (14.8 - 13.0) * p;
+    depthTip = Math.min(5.95, 3.3 + (5.95 - 3.3) * Math.pow(p, 0.85));
+    distFly = distTip + LEADER_LEN;
+    depthFly = Math.min(5.96, depthTip);
+    groundLen = 1.8 * p;
+    gapCm = ((6.0 - depthFly) * 100).toFixed(1);
+    phaseText = `Phase 2A · S5 팁 바닥 착저 (몸통 부유 유지)`;
+  } else if (t <= 105.0) {
+    const p = (t - 45.0) / 60.0;
+    distTip = 13.0 - (13.0 - 7.5) * p;
+    depthTip = 5.95;
+    distFly = distTip + LEADER_LEN;
+    const undulation = 0.015 * Math.sin(2 * Math.PI * p * 6.0);
+    depthFly = 5.965 - 0.02 + undulation;
+    groundLen = Math.max(0.0, 1.8 * (1.0 - p));
+    gapCm = ((6.0 - depthFly) * 100).toFixed(1);
+    phaseText = `Phase 2B · 상향 텐션 바닥 횡이동 (팁 1.8m만 접촉)`;
+  } else if (t <= 145.0) {
+    const p = (t - 105.0) / 40.0;
+    distTip = 7.5 - (7.5 - 3.2) * p;
+    depthTip = 5.95 - (5.95 - 1.8) * Math.pow(p, 0.95);
+    distFly = distTip + 2.2 * (1.0 - 0.3 * p);
+    depthFly = 5.96 - (5.96 - 1.5) * Math.pow(p, 0.95);
+    groundLen = 0.0;
+    gapCm = ((6.0 - depthFly) * 100).toFixed(0);
+    phaseText = `Phase 3 · 완만한 포물선 스위프업 (Glide-Up)`;
+  } else {
+    const p = (t - 145.0) / 20.0;
+    distTip = 3.2 - 0.8 * p;
+    depthTip = 1.8 - (1.8 - 0.3) * p;
+    distFly = distTip + 1.2 * (1.0 - 0.5 * p);
+    depthFly = 1.5 - (1.5 - 0.4) * Math.pow(p, 1.1);
+    groundLen = 0.0;
+    gapCm = ((6.0 - depthFly) * 100).toFixed(0);
+    phaseText = `Phase 4 · 10ft 마커 행(Hang) & 수면 에머징`;
+  }
+
+  return { distTip, distFly, depthFly, depthTip, groundLen, gapCm, phaseText };
+}
+
+function getPhysicsSS2Ghost(t) {
+  let distFly, depthFly;
+  if (t <= 25.0) {
+    const p = t / 25.0;
+    depthFly = Math.max(0.0, Math.min(3.3, 0.127 * t * 1.05) - 0.2 * (1.0 - p));
+    distFly = (15.0 - 0.7 * Math.pow(p, 1.6)) + 2.4 * (1.0 - 0.15 * p);
+  } else if (t <= 45.0) {
+    const p = (t - 25.0) / 20.0;
+    depthFly = Math.min(5.97, 3.3 + (5.98 - 3.3) * Math.pow(p, 0.85));
+    distFly = (14.3 - (14.3 - 12.4) * p) + 2.4 * 0.9;
+  } else if (t <= 110.0) {
+    const p = (t - 45.0) / 65.0;
+    depthFly = 5.975 - 0.02 + 0.02 * Math.sin(2 * Math.PI * p * 8.0);
+    distFly = (12.4 - (12.4 - 6.8) * p) + 2.4 * 0.88;
+  } else if (t <= 150.0) {
+    const p = (t - 110.0) / 40.0;
+    depthFly = 5.97 - (5.97 - 1.8) * Math.pow(p, 1.4);
+    distFly = (6.8 - (6.8 - 2.8) * p) + 2.4 * (0.88 - 0.3 * p);
+  } else {
+    const p = (t - 150.0) / 15.0;
+    depthFly = 1.8 - (1.8 - 0.4) * Math.pow(p, 1.1);
+    distFly = (2.8 - 0.8 * p) + 1.2 * (1.0 - 0.5 * p);
+  }
+  return { distFly, depthFly };
+}
+
+function worldToCanvas(dist, depth) {
+  const padL = 60, padR = 40, padT = 40, padB = 40;
+  const w = canvas.width - padL - padR;
+  const h = canvas.height - padT - padB;
+  const x = padL + (dist / 18.0) * w;
+  const y = padT + (depth / 6.5) * h;
+  return { x, y };
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height;
+  const cur = getPhysics3D(currentTime);
+  
+  const padL = 60, padR = 40, padT = 40, padB = 40;
+  const w = W - padL - padR;
+  const h = H - padT - padB;
+
+  // Depth Grid
+  for (let d = 0; d <= 6; d++) {
+    const pt = worldToCanvas(0, d);
+    ctx.strokeStyle = d === 0 ? '#38bdf8' : (d === 6 ? '#78350f' : 'rgba(148, 163, 184, 0.12)');
+    ctx.lineWidth = (d === 0 || d === 6) ? 2.5 : 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, pt.y);
+    ctx.lineTo(padL + w, pt.y);
+    ctx.stroke();
+
+    ctx.fillStyle = d === 6 ? '#fbbf24' : '#94a3b8';
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(`${d.toFixed(1)}m`, padL - 10, pt.y + 4);
+  }
+
+  // Distance Grid
+  for (let m = 0; m <= 18; m += 2) {
+    const pt = worldToCanvas(m, 0);
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pt.x, padT);
+    ctx.lineTo(pt.x, padT + h);
+    ctx.stroke();
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${m}m`, pt.x, padT + h + 20);
+  }
+
+  // Bottom silt fill
+  const bTop = worldToCanvas(0, 6.0).y;
+  ctx.fillStyle = 'rgba(69, 26, 3, 0.45)';
+  ctx.fillRect(padL, bTop, w, padT + h - bTop);
+
+  // Rod tip & key points
+  const rodPt = worldToCanvas(0, 0);
+  const tipPt = worldToCanvas(cur.distTip, cur.depthTip);
+  const flyPt = worldToCanvas(cur.distFly, cur.depthFly);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillRect(rodPt.x - 4, rodPt.y - 4, 8, 8);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = '11px "Noto Sans KR", sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('로드 팁 (수면 고정)', rodPt.x + 8, rodPt.y - 6);
+
+  // Ghost Line: SS2 DI5 Trajectory for Comparison
+  ctx.beginPath();
+  for (let s = 0; s <= TOTAL_TIME; s += 0.5) {
+    const g = getPhysicsSS2Ghost(s);
+    const pt = worldToCanvas(g.distFly, g.depthFly);
+    if (s === 0) ctx.moveTo(pt.x, pt.y);
+    else ctx.lineTo(pt.x, pt.y);
+  }
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Titan 3D Triple Density Head (3-Section Color-Coded Ramp!)
+  // Intermediate (0 - 35%): Cyan #38bdf8
+  // Sink 3 (35% - 70%): Amber #f59e0b
+  // Sink 5 (70% - 100%): Red #ef4444
+  const p35 = worldToCanvas(cur.distTip * 0.35, cur.depthTip * 0.25);
+  const p70 = worldToCanvas(cur.distTip * 0.70, cur.depthTip * 0.60);
+
+  // Segment 1: Intermediate
+  ctx.beginPath();
+  ctx.moveTo(rodPt.x, rodPt.y);
+  ctx.lineTo(p35.x, p35.y);
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3.8;
+  ctx.stroke();
+
+  // Segment 2: Sink 3
+  ctx.beginPath();
+  ctx.moveTo(p35.x, p35.y);
+  ctx.lineTo(p70.x, p70.y);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 4.0;
+  ctx.stroke();
+
+  // Segment 3: Sink 5
+  ctx.beginPath();
+  ctx.moveTo(p70.x, p70.y);
+  ctx.lineTo(tipPt.x, tipPt.y);
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 4.2;
+  ctx.stroke();
+
+  // Grounded Tip on Bottom (max 1.8m)
+  if (cur.groundLen > 0.05) {
+    const touchPt = worldToCanvas(cur.distTip - cur.groundLen, 5.98);
+    ctx.beginPath();
+    ctx.moveTo(touchPt.x, touchPt.y);
+    ctx.lineTo(tipPt.x, tipPt.y);
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 5.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`팁 접촉: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + tipPt.x) / 2, touchPt.y - 12);
+  }
+
+  // Leader & Fly
+  ctx.beginPath();
+  ctx.moveTo(tipPt.x, tipPt.y);
+  ctx.lineTo(flyPt.x, flyPt.y);
+  ctx.strokeStyle = 'rgba(168, 85, 247, 0.9)';
+  ctx.lineWidth = 1.6;
+  ctx.setLineDash([4, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Line Tip Marker
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(tipPt.x, tipPt.y, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Fly Marker
+  ctx.fillStyle = '#f43f5e';
+  ctx.beginPath();
+  ctx.arc(flyPt.x, flyPt.y, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Update Stats DOM
+  document.getElementById('statGround').textContent = `${cur.groundLen.toFixed(1)} m`;
+  document.getElementById('statFlyDepth').textContent = `${cur.depthFly.toFixed(2)} m`;
+  document.getElementById('statTipDepth').textContent = `${cur.depthTip.toFixed(2)} m`;
+  document.getElementById('statDist').textContent = `${cur.distFly.toFixed(2)} m`;
+  document.getElementById('statPhase').textContent = cur.phaseText;
+
+  const min = Math.floor(currentTime / 60);
+  const sec = Math.floor(currentTime % 60);
+  document.getElementById('timeLabel').textContent = `${currentTime.toFixed(1)}s (${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')})`;
+  document.getElementById('timeSlider').value = currentTime;
+}
+
+function updateAnim() {
+  if (!isPlaying) return;
+  currentTime += 0.25;
+  if (currentTime > TOTAL_TIME) {
+    currentTime = TOTAL_TIME;
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶ 재생';
+  }
+  draw();
+  if (isPlaying) {
+    animReq = requestAnimationFrame(updateAnim);
+  }
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  const btn = document.getElementById('playBtn');
+  if (isPlaying) {
+    btn.textContent = '⏸ 일시정지';
+    if (currentTime >= TOTAL_TIME) currentTime = 0;
+    animReq = requestAnimationFrame(updateAnim);
+  } else {
+    btn.textContent = '▶ 재생';
+    if (animReq) cancelAnimationFrame(animReq);
+  }
+}
+
+function resetSim() {
+  isPlaying = false;
+  document.getElementById('playBtn').textContent = '▶ 재생';
+  if (animReq) cancelAnimationFrame(animReq);
+  currentTime = 0;
+  draw();
+}
+
+function onSliderChange(val) {
+  currentTime = parseFloat(val);
+  draw();
+}
+
+draw();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Airflo SS2 DI5 vs Titan 3D 실전 리트리브 수중 궤적 시뮬레이터 — CADDIS-GR LAB</title>
+<title>Airflo SS2 DI5 정밀 바닥 밀착(7.2m) 수중 궤적 시뮬레이터 — CADDIS-GR LAB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
   
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
     margin-bottom: 16px;
   }
@@ -72,6 +72,7 @@
   .stat-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 700; }
   .val-fly { color: #f43f5e; }
   .val-tip { color: #2dd4bf; }
+  .val-ground { color: #10b981; }
   .val-gap { color: #a3e635; }
   .val-dist { color: #fbbf24; }
   .val-speed { color: #38bdf8; font-size: 13px; }
@@ -109,9 +110,9 @@
 <main>
   <section class="inner-hero">
     <div class="wrap">
-      <div class="section-kicker">Research · Trajectory & Sinking Dynamics</div>
-      <h1 class="section-title">SS2 DI5 vs Titan 3D 리트리브 수중 궤적 시뮬레이터</h1>
-      <p class="section-desc">한터지 6m 수심 · 15m 캐스팅 · 25카운트 침강 · 85초 바닥 횡이동(1~2cm 이격) · 발앞 급상승 & Hang</p>
+      <div class="section-kicker">Research · Trajectory & Grounded Line Dynamics</div>
+      <h1 class="section-title">SS2 DI5 바닥 밀착(최대 7.2m) 실전 리트리브 시뮬레이터</h1>
+      <p class="section-desc">한터지 6m 수심 · 15m 캐스팅 · 25카운트 침강 · 헤드 7.2m 바닥 밀착 횡이동 · 20ft 마커 리프트오프</p>
     </div>
   </section>
 
@@ -120,16 +121,14 @@
       <div class="breadcrumbs">
         <a href="../index.html">Home</a><span>/</span>
         <a href="index.html">Research</a><span>/</span>
-        <span>SS2 DI5 Trajectory Simulator</span>
+        <span>SS2 DI5 Grounded Line Simulator</span>
       </div>
 
       <div class="fact-box">
-        <div class="box-label">Simulation Rig Parameters · 실전 운용 제원</div>
-        <strong>라인:</strong> Airflo Sixth Sense 2 DI5 (Head 46ft · Uniform 5.0 ips = 12.7cm/s · 3 Hang Markers: 10·20·40ft)<br>
-        <strong>비교 라인:</strong> SA Sonar Titan 3D (i/3/5 · Head 33.5ft · 230gr)<br>
-        <strong>리더/티펫:</strong> 0X 리더(0.8m) + 5X 티펫(1.6m) 복합 시스템 (총 2.4m)<br>
-        <strong>수역 환경:</strong> 한터낚시터 (수심 6.0m 플랫 바닥 · 밑걸림 없음)<br>
-        <strong>타임라인:</strong> 15m 착수 ➔ 25s 자유 침강 ➔ 85s 바닥 횡이동 ➔ 40s 발앞 급상승 ➔ 15s Hang (총 2분 45초)
+        <div class="box-label">Grounded Line Mechanics · 낚시대장 피드백 반영 모델</div>
+        <strong>핵심 발견:</strong> 6m 수심에서 15m 라인이 침강하면, 수면 로드에서 바닥까지 현수선으로 내려오는 데 약 7.8m가 소요되고, <strong>나머지 7.2m(전체 라인의 48%)가 바닥 뻘에 길게 드러눕는 상태</strong>가 형성됩니다.<br>
+        <strong>바닥 횡이동 (45s ~ 110s):</strong> 라인 끝단뿐 아니라 전방 5.2m부터 12.4m까지 <strong>7m가 넘는 라인 몸통 전체가 바닥에 깔린 채</strong> 8자로 끌려옵니다.<br>
+        <strong>리프트오프 (110s):</strong> 20ft(6m) 마커 진입 시 남은 라인이 8m 미만이 되며 <strong>바닥 밀착 길이가 0m가 되는 순간</strong> 플라이가 바닥을 박차고 급상승(Pop-up)합니다.
       </div>
 
       <div class="sim-container">
@@ -148,15 +147,19 @@
             </div>
           </div>
           <div class="legend-row">
-            <div class="legend-item"><div class="legend-color" style="background:#f43f5e;height:4px;"></div><span>플라이 (미니리치)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#2dd4bf;height:3px;"></div><span>SS2 DI5 라인 (균일 5ips)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#fb923c;width:8px;height:8px;border-radius:50%;"></div><span>Hang Marker (10/20/40ft)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#10b981;height:5px;"></div><span>바닥 밀착 구간 (최대 7.2m 깔림)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#2dd4bf;height:3px;"></div><span>수중 현수선 구간 (로드~바닥)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#f43f5e;width:8px;height:8px;border-radius:50%;"></div><span>플라이 (바닥 위 1~2cm 유영)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#fb923c;width:7px;height:7px;border-radius:50%;"></div><span>Hang Marker (10/20/40ft)</span></div>
             <div class="legend-item"><div class="legend-color" style="background:#a855f7;border-top:1px dashed #a855f7;background:none;"></div><span>리더/티펫 (2.4m)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#f87171;border-top:2px dotted #f87171;background:none;"></div><span>Titan 3D 궤적 (비교선)</span></div>
           </div>
         </div>
 
         <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">바닥 밀착 길이 (Grounded)</div>
+            <div class="stat-val val-ground" id="statGround">0.0 m</div>
+          </div>
           <div class="stat-card">
             <div class="stat-label">플라이 수심 (Fly Depth)</div>
             <div class="stat-val val-fly" id="statFlyDepth">0.00 m</div>
@@ -170,7 +173,7 @@
             <div class="stat-val val-gap" id="statGap">- cm</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">전방 거리 (Distance)</div>
+            <div class="stat-label">플라이 전방 거리 (Distance)</div>
             <div class="stat-val val-dist" id="statDist">17.40 m</div>
           </div>
           <div class="stat-card" style="grid-column: span 2;">
@@ -180,26 +183,21 @@
         </div>
       </div>
 
-      <h2>4단계 수중 궤적 물리 역학 분석</h2>
+      <h2>낚시대장 역학 분석 · 라인 바닥 밀착(7.2m)의 실전 의미</h2>
       
       <div class="field-box">
-        <div class="box-label">Phase 1 · 25카운트 자유 침강 (0s ~ 25s)</div>
-        <p>15m 착수 직후 수면(0m)에서 로드 팁이 라인 끝을 붙들고 있는 고정단 경계조건이 형성됩니다. 전 구간 5.0 ips로 가라앉는 SS2 DI5는 로드 직하에서 급격히 꺾여 떨어지며, 중간 벨리(전방 9~11m)가 자체 하중으로 인해 가장 깊게 처지는 <strong>U자형 현수선(Belly Sag)</strong>을 만듭니다. 25초 도달 시 벨리는 수심 4.2m까지 내려가고 팁은 3.3m에 머물며 벨리가 팁보다 깊게 가라앉는 역전 현상이 나타납니다.</p>
+        <div class="box-label">1. 라인 끝단이 아닌 "몸통 7m가 바닥에 깔리는" 물리적 이유</div>
+        <p>15m 캐스팅 후 6m 수심으로 침강 시, 수면(x=0) 로드 끝에서 수심 6m 바닥까지 현수선 각도로 내려오는 데 필요한 라인은 약 7.8m입니다. 따라서 총 15m 중 <strong>무려 7.2m 분량의 라인이 바닥에 완전히 드러눕게(Grounded)</strong> 됩니다. 대장님이 지적하셨듯 "라인 끝단보다 훨씬 더 앞쪽까지 바닥에 처져 있는 상태"가 정확히 7미터에 달합니다.</p>
       </div>
 
       <div class="field-box">
-        <div class="box-label">Phase 2 · 바닥 횡이동 골드 틴팅존 (25s ~ 110s)</div>
-        <p>슬로우 8자 리트리브(약 8.5cm/s)를 시작하면서 45초경 라인 팁과 벨리가 수심 6m 바닥에 완전 착저합니다. 이후 110초까지 약 65초간 바닥 횡이동이 지속됩니다. 이때 플라이의 수심은 라인이 아니라 <strong>0X 리더 + 5X 티펫의 부력과 마라부 유체 저항</strong>이 통제하므로, 플라이는 <strong>바닥 1.5~2.5cm 위를 살짝 떴다 가라앉았다</strong>하며 스쳐옵니다. 진흙 이물질 없이 흰색 마라부가 은은한 골드톤으로 틴팅되는 핵심 킬존입니다.</p>
+        <div class="box-label">2. 8자 리트리브 시의 거동 — 바닥 밀착선이 줄어드는 과정</div>
+        <p>45초부터 110초까지 8자 리트리브를 하는 동안, 플라이만 끌려오는 것이 아니라 <strong>바닥에 누워 있는 7.2m의 라인이 서서히 줄어들면서(7.2m ➔ 0m) 끌려옵니다.</strong> 110초경 남은 라인이 약 8m가 되는 순간, 마침내 바닥에 닿아 있던 마지막 라인 부분이 바닥에서 떨어지며(Lift-off), 바로 이 순간 플라이가 바닥을 박차고 위로 솟구치게 됩니다.</p>
       </div>
 
       <div class="field-box">
-        <div class="box-label">Phase 3 · 20ft 마커 발앞 급상승 (110s ~ 150s)</div>
-        <p>40ft(12m) 마커를 통과하고 20ft(6m) 마커가 가이드에 닿는 순간, 로드 팁과의 각도가 커지면서 플라이가 바닥을 박차고 위로 솟구칩니다. Titan 3D가 뒤쪽의 가벼운 i/S3 부력으로 완만한 포물선(Glide-up)을 그렸다면, SS2 DI5는 전 구간 5ips 텐션으로 인해 <strong>훨씬 더 가파르고 직선적인 사선 급상승(Pop-up)</strong>을 연출하여 바닥권 송어의 리액션 바이트를 강렬하게 자극합니다.</p>
-      </div>
-
-      <div class="field-box">
-        <div class="box-label">Phase 4 · 10ft 마커 행(Hang) 및 픽업 (150s ~ 165s)</div>
-        <p>손끝에 10ft(3m) 마커가 걸리는 순간 리트리브를 정지하고 로드를 천천히 세워 올립니다. 플라이는 수심 1.5m~0.5m 권에서 꼬리 마라부를 살랑거리며 정지 유영(Hang)을 지속하며, 뒤따라오던 송어의 최종 바이트를 이끌어낸 뒤 수면으로 픽업됩니다.</p>
+        <div class="box-label">3. 20ft 마커(6m)가 정확히 급상승(Pop-up) 타이밍인 이유</div>
+        <p>Airflo의 20ft 마커는 전방 약 6m 지점입니다. 수심이 6m이므로, 전방 6m에서 수면 로드로 이어지는 빗변 길이는 약 8.5m입니다. 즉, <strong>20ft 마커가 릴 가이드에 닿는 순간이 바로 바닥 밀착 길이가 0m가 되며 라인 전체가 공중으로 들려 올라가는 기하학적 임계점</strong>과 완벽히 일치합니다.</p>
       </div>
 
     </article>
@@ -218,57 +216,62 @@ let isPlaying = false;
 let animReq = null;
 
 function getPhysics(t) {
-  let distTip, distFly, depthFly, depthTip, depthBelly, gapCm, phaseText;
+  let distTip, distFly, depthFly, depthTip, xTouch, groundLen, gapCm, phaseText;
 
   if (t <= 25.0) {
     const p = t / 25.0;
     depthTip = Math.min(3.3, 0.127 * t * 1.05);
-    depthBelly = Math.min(4.2, 0.127 * t * 1.32);
     distTip = CAST_DIST - 0.7 * Math.pow(p, 1.6);
     distFly = distTip + LEADER_LEN * (1.0 - 0.15 * p);
     depthFly = Math.max(0.0, depthTip - 0.2 * (1.0 - p));
+    xTouch = distTip;
+    groundLen = 0.0;
     gapCm = ((6.0 - depthFly) * 100).toFixed(0);
     phaseText = `Phase 1 · 25카운트 자유 침강 (${t.toFixed(1)}s)`;
   } else if (t <= 45.0) {
     const p = (t - 25.0) / 20.0;
-    distTip = 14.3 - (14.3 - 12.6) * p;
-    depthTip = Math.min(5.95, 3.3 + (5.95 - 3.3) * Math.pow(p, 0.85));
-    depthBelly = Math.min(5.98, 4.2 + (5.98 - 4.2) * Math.pow(p, 0.85));
+    distTip = 14.3 - (14.3 - 12.4) * p;
+    depthTip = Math.min(5.98, 3.3 + (5.98 - 3.3) * Math.pow(p, 0.85));
+    xTouch = 14.3 - (14.3 - 5.2) * p;
+    groundLen = (distTip - xTouch) * Math.pow(p, 0.9);
     distFly = distTip + LEADER_LEN * 0.9;
-    depthFly = Math.min(5.97, depthTip + 0.1 * p);
+    depthFly = Math.min(5.97, depthTip);
     gapCm = ((6.0 - depthFly) * 100).toFixed(1);
-    phaseText = `Phase 2A · 8자 리트리브 개시 & 바닥 안착`;
+    phaseText = `Phase 2A · 바닥 안착 & 7.2m 밀착 형성 중`;
   } else if (t <= 110.0) {
     const p = (t - 45.0) / 65.0;
-    distTip = 12.6 - (12.6 - 6.8) * p;
-    depthTip = 5.95;
-    depthBelly = 5.98;
+    xTouch = 5.2 - (5.2 - 5.0) * p;
+    distTip = 12.4 - (12.4 - 6.8) * p;
+    depthTip = 5.98;
+    groundLen = Math.max(0, 7.2 * (1.0 - p));
     distFly = distTip + LEADER_LEN * 0.88;
     const undulation = 0.02 * Math.sin(2 * Math.PI * p * 8.0);
     depthFly = 5.975 - 0.02 + undulation;
     gapCm = ((6.0 - depthFly) * 100).toFixed(1);
-    phaseText = `Phase 2B · 바닥 횡이동 골드 틴팅존 (1~2cm 이격)`;
+    phaseText = `Phase 2B · 7.2m~0m 바닥 횡이동 크롤 (${groundLen.toFixed(1)}m 깔림)`;
   } else if (t <= 150.0) {
     const p = (t - 110.0) / 40.0;
     distTip = 6.8 - (6.8 - 2.8) * p;
-    depthTip = 5.95 - (5.95 - 2.2) * Math.pow(p, 1.3);
-    depthBelly = 5.98 - (5.98 - 2.6) * Math.pow(p, 1.2);
+    depthTip = 5.98 - (5.98 - 2.2) * Math.pow(p, 1.3);
+    xTouch = distTip;
+    groundLen = 0.0;
     distFly = distTip + LEADER_LEN * (0.88 - 0.3 * p);
     depthFly = 5.97 - (5.97 - 1.8) * Math.pow(p, 1.4);
     gapCm = ((6.0 - depthFly) * 100).toFixed(0);
-    phaseText = `Phase 3 · 20ft 마커 발앞 급상승 (Pop-up)`;
+    phaseText = `Phase 3 · 바닥 완전 이탈(0m) & 20ft 마커 급상승`;
   } else {
     const p = (t - 150.0) / 15.0;
     distTip = 2.8 - 0.8 * p;
     depthTip = 2.2 - (2.2 - 0.2) * p;
-    depthBelly = 2.6 - (2.6 - 0.3) * p;
+    xTouch = distTip;
+    groundLen = 0.0;
     distFly = distTip + 1.2 * (1.0 - 0.5 * p);
     depthFly = 1.8 - (1.8 - 0.4) * Math.pow(p, 1.1);
     gapCm = ((6.0 - depthFly) * 100).toFixed(0);
     phaseText = `Phase 4 · 10ft 마커 행(Hang) & 픽업`;
   }
 
-  return { distTip, distFly, depthFly, depthTip, depthBelly, gapCm, phaseText };
+  return { distTip, distFly, depthFly, depthTip, xTouch, groundLen, gapCm, phaseText };
 }
 
 function worldToCanvas(dist, depth) {
@@ -323,7 +326,7 @@ function draw() {
 
   // Bottom silt fill
   const bTop = worldToCanvas(0, 6.0).y;
-  ctx.fillStyle = 'rgba(69, 26, 3, 0.4)';
+  ctx.fillStyle = 'rgba(69, 26, 3, 0.45)';
   ctx.fillRect(padL, bTop, w, padT + h - bTop);
 
   // Rod tip marker
@@ -335,49 +338,42 @@ function draw() {
   ctx.textAlign = 'left';
   ctx.fillText('로드 팁 (수면 고정)', rodPt.x + 8, rodPt.y - 6);
 
-  // Draw Full Sunk Trajectory Ghost Path for Fly
-  ctx.beginPath();
-  for (let s = 0; s <= TOTAL_TIME; s += 0.5) {
-    const p = getPhysics(s);
-    const pt = worldToCanvas(p.distFly, p.depthFly);
-    if (s === 0) ctx.moveTo(pt.x, pt.y);
-    else ctx.lineTo(pt.x, pt.y);
-  }
-  ctx.strokeStyle = 'rgba(244, 63, 94, 0.25)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Draw Line Curve for Current Time
-  const tipPt = worldToCanvas(cur.distTip, cur.depthTip);
-  const bellyPt = worldToCanvas(cur.distTip * 0.6, cur.depthBelly);
-
-  // Line curve from rodPt to tipPt through bellyPt
+  // 1. Draw Suspended Catenary Segment (from Rod to Touchdown)
+  const touchPt = worldToCanvas(cur.xTouch, Math.min(5.98, cur.depthTip));
   ctx.beginPath();
   ctx.moveTo(rodPt.x, rodPt.y);
-  ctx.quadraticCurveTo(bellyPt.x, bellyPt.y, tipPt.x, tipPt.y);
+  const cpX = cur.xTouch * 0.45;
+  const cpY = touchPt.y * 0.85;
+  ctx.quadraticCurveTo(cpX, cpY, touchPt.x, touchPt.y);
   ctx.strokeStyle = '#2dd4bf';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Hang Markers on line
-  const m40Pt = worldToCanvas(Math.max(0, cur.distTip - 2.8), Math.max(0, cur.depthTip * 0.7));
-  const m20Pt = worldToCanvas(Math.max(0, cur.distTip - 6.0), Math.max(0, cur.depthTip * 0.4));
-  const m10Pt = worldToCanvas(Math.max(0, cur.distTip - 9.0), Math.max(0, cur.depthTip * 0.2));
-
-  [m40Pt, m20Pt, m10Pt].forEach(m => {
-    ctx.fillStyle = '#fb923c';
+  // 2. Draw Grounded Segment (lying flat on lake bed!)
+  if (cur.groundLen > 0.05) {
+    const tipPt = worldToCanvas(cur.distTip, 5.98);
     ctx.beginPath();
-    ctx.arc(m.x, m.y, 4, 0, Math.PI * 2);
-    ctx.fill();
-  });
+    ctx.moveTo(touchPt.x, touchPt.y);
+    ctx.lineTo(tipPt.x, tipPt.y);
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 5.5;
+    ctx.stroke();
 
-  // Leader line from tip to fly
+    // Grounded Label
+    ctx.fillStyle = '#10b981';
+    ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`바닥 밀착: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + tipPt.x) / 2, touchPt.y - 12);
+  }
+
+  // 3. Leader & Fly
+  const tipPt = worldToCanvas(cur.distTip, cur.depthTip);
   const flyPt = worldToCanvas(cur.distFly, cur.depthFly);
   ctx.beginPath();
   ctx.moveTo(tipPt.x, tipPt.y);
   ctx.lineTo(flyPt.x, flyPt.y);
-  ctx.strokeStyle = 'rgba(168, 85, 247, 0.8)';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(168, 85, 247, 0.9)';
+  ctx.lineWidth = 1.6;
   ctx.setLineDash([4, 3]);
   ctx.stroke();
   ctx.setLineDash([]);
@@ -398,6 +394,7 @@ function draw() {
   ctx.stroke();
 
   // Update Stats DOM
+  document.getElementById('statGround').textContent = `${cur.groundLen.toFixed(1)} m`;
   document.getElementById('statFlyDepth').textContent = `${cur.depthFly.toFixed(2)} m`;
   document.getElementById('statTipDepth').textContent = `${cur.depthTip.toFixed(2)} m`;
   document.getElementById('statGap').textContent = `${cur.gapCm} cm`;

@@ -433,20 +433,18 @@ function draw() {
     ctx.fillText(`팁 접촉: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + tipPt.x) / 2, touchPt.y - 12);
   }
 
-  // Leader & Fly
+  // Leader & Fly: Direct Seamless Inline Extension
   ctx.beginPath();
   ctx.moveTo(tipPt.x, tipPt.y);
   ctx.lineTo(flyPt.x, flyPt.y);
-  ctx.strokeStyle = 'rgba(168, 85, 247, 0.9)';
-  ctx.lineWidth = 1.6;
-  ctx.setLineDash([4, 3]);
+  ctx.strokeStyle = '#c084fc';
+  ctx.lineWidth = 2.2;
   ctx.stroke();
-  ctx.setLineDash([]);
 
-  // Line Tip Marker
-  ctx.fillStyle = '#ef4444';
+  // Knot connection point
+  ctx.fillStyle = '#a855f7';
   ctx.beginPath();
-  ctx.arc(tipPt.x, tipPt.y, 4, 0, Math.PI * 2);
+  ctx.arc(tipPt.x, tipPt.y, 2.5, 0, Math.PI * 2);
   ctx.fill();
 
   // Fly Marker

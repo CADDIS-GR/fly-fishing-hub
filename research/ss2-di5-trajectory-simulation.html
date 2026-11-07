@@ -403,21 +403,18 @@ function draw() {
     ctx.fillText(`바닥 밀착: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + groundTipPt.x) / 2, touchPt.y - 12);
   }
 
-  // 3. Leader & Fly: gentle buoyant arc
-  const cpLeader = worldToCanvas(cur.distTip + 0.8, cur.depthFly + 0.01);
+  // 3. Leader & Fly: Direct Seamless Inline Extension
   ctx.beginPath();
   ctx.moveTo(tipPt.x, tipPt.y);
-  ctx.quadraticCurveTo(cpLeader.x, cpLeader.y, flyPt.x, flyPt.y);
-  ctx.strokeStyle = 'rgba(168, 85, 247, 0.9)';
-  ctx.lineWidth = 1.6;
-  ctx.setLineDash([4, 3]);
+  ctx.lineTo(flyPt.x, flyPt.y);
+  ctx.strokeStyle = '#c084fc';
+  ctx.lineWidth = 2.2;
   ctx.stroke();
-  ctx.setLineDash([]);
 
-  // Line Tip Marker
-  ctx.fillStyle = '#2dd4bf';
+  // Knot connection point
+  ctx.fillStyle = '#a855f7';
   ctx.beginPath();
-  ctx.arc(tipPt.x, tipPt.y, 4, 0, Math.PI * 2);
+  ctx.arc(tipPt.x, tipPt.y, 2.5, 0, Math.PI * 2);
   ctx.fill();
 
   // Fly Marker

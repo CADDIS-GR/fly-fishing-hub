@@ -1,1 +1,239 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Four-Line System — CADDIS-GR LAB</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/css/style.css"></head><body><header class="site-header scrolled" id="siteHeader"><div class="wrap nav"><a class="brand" href="../index.html">CADDIS-GR LAB</a><nav class="nav-links" id="navLinks"><a href="index.html">Research</a><a href="../gear/index.html">Gear</a><a href="../fly-patterns/index.html">Fly Patterns</a><a href="../field-log/index.html">Field Log</a><a href="../library/index.html">Library</a><a href="../about/index.html">About</a></nav><button class="menu-btn" id="menuBtn" type="button">MENU</button></div></header><main><section class="inner-hero"><div class="wrap"><div class="section-kicker">Research · Depth & Trajectory</div><h1 class="section-title">Four-Line System</h1><p class="section-desc">표층부터 6m 바닥까지 각 라인이 만드는 플라이의 수중 궤적을 연결합니다.</p></div></section><section class="page-shell"><article class="article-wrap"><div class="breadcrumbs"><a href="../index.html">Home</a><span>/</span><a href="index.html">Research</a><span>/</span><span>Four-Line System</span></div><div class="fact-box"><div class="box-label">System Summary</div>Floating은 표층, Intermediate는 전층 사선, Parabolic Sink는 중층에서 바닥 전환, Titan i/3/5는 바닥 수평 탐색을 담당하는 개념 체계입니다.</div><h2>라인이 아니라 궤적을 선택합니다</h2><p>같은 수심이라도 밀도와 리트리브 방식에 따라 플라이가 통과하는 순서와 자세가 달라집니다.</p><div class="field-box"><div class="box-label">Field Observation</div>한터 6m 수심에서는 i/3/5가 바닥 접근과 발 앞 수직상승 구간에서 가장 강력했고, Hover와 Intermediate는 상층부터 중하층을 탐색하는 파일럿 역할을 담당했습니다.</div><h2>현재의 수정된 결론</h2><p>Parabolic Sink는 초기에는 마이크로 님핑 가능성에 높은 평가를 두었으나 실제 사용에서는 Sink 5 밸리가 빠르게 떨어져 또 하나의 풀싱킹 라인처럼 작동했습니다.</p><div class="interpret-box"><div class="box-label">Interpretation · Revised</div>시스템은 고정된 장비 목록이 아니라 현장 결과에 따라 역할을 수정하는 구조입니다.</div><p><a class="text-link" href="../gear/fly-line/sa-parabolic-sink.html">Parabolic Sink 상세 리뷰 보기</a></p></article></section></main><footer><div class="wrap footer-grid"><div><div class="footer-brand">CADDIS-GR LAB</div></div></div></footer><script src="../assets/js/main.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Four-Line System (4단 라인 운용 체계) — CADDIS-GR LAB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .spec-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.05em}
+    .badge-float{background:#e8f5e9;color:#2e7d32;border:1px solid rgba(46,125,50,.2)}
+    .badge-inter{background:#e0f2fe;color:#0284c7;border:1px solid rgba(2,132,199,.2)}
+    .badge-sinktip{background:#fef3c7;color:#d97706;border:1px solid rgba(217,119,6,.2)}
+    .badge-titan{background:#f3e8ff;color:#7e22ce;border:1px solid rgba(126,34,206,.2)}
+    .sim-banner{background:linear-gradient(135deg,#0c4a6e 0%,#0369a1 50%,#0284c7 100%);border-radius:16px;padding:28px 32px;color:#fff;margin:36px 0;box-shadow:0 8px 24px rgba(2,132,199,.25)}
+    .sim-banner h3{margin:0 0 10px;font-size:22px;color:#fff}
+    .sim-banner p{color:rgba(255,255,255,.85);margin:0 0 18px;line-height:1.7;font-size:15px}
+    .btn-sim{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0369a1;font-weight:700;font-size:13px;padding:10px 20px;border-radius:999px;text-decoration:none;transition:transform .2s}
+    .btn-sim:hover{transform:translateY(-2px);background:#f0f9ff}
+    .line-card{border:1px solid var(--line);border-radius:16px;padding:28px;margin:28px 0;background:#fff}
+    .line-card h3{margin:0 0 12px;font-size:22px;letter-spacing:-.02em}
+  </style>
+</head>
+<body>
+
+<header class="site-header scrolled" id="siteHeader">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">CADDIS-GR LAB</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" class="active">Research</a>
+      <a href="../gear/index.html">Gear</a>
+      <a href="../fly-patterns/index.html">Fly Patterns</a>
+      <a href="../field-log/index.html">Field Log</a>
+      <a href="../library/index.html">Library</a>
+      <a href="../about/index.html">About</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" type="button">MENU</button>
+  </div>
+</header>
+
+<main>
+  <section class="inner-hero">
+    <div class="wrap">
+      <div class="section-kicker">Research · 2026 Stillwater Architecture</div>
+      <h1 class="section-title">Four-Line System</h1>
+      <p class="section-desc">
+        표층 0m부터 바닥 6m 킬존까지, 제품명이 아닌 '수중 궤적(Water Column Trajectory)'을 선택하는 스틸워터 종합 운용 프로토콜
+      </p>
+    </div>
+  </section>
+
+  <section class="page-shell">
+    <article class="article-wrap">
+      <div class="breadcrumbs">
+        <a href="../index.html">Home</a><span>/</span><a href="index.html">Research</a><span>/</span><span>Four-Line System</span>
+      </div>
+
+      <div class="fact-box">
+        <div class="box-label">System Summary · 핵심 정의</div>
+        스틸워터 플라이낚시는 던져서 가라앉히는 단순한 낚시가 아닙니다. 저수지 수심과 송어의 유영층에 맞춰 플라이가 진입하는 <strong>수심(Depth)</strong>, 특정 층에 머무는 <strong>체류 시간(Dwell Time)</strong>, 그리고 리트리브 후반부 <strong>상승 각도(Lift Angle)</strong>를 통제하는 <em>'수중 궤적 제어 체계'</em>입니다.
+      </div>
+
+      <h2>1. 라인이 아니라 궤적을 선택합니다</h2>
+      <p>
+        같은 6m 수심의 저수지(용인 한터지)라도 계절과 수온, 기압과 배수 여부에 따라 송어가 머무는 킬존(Killzone)은 매번 달라집니다. 어떤 날은 바닥 위 20cm에 배를 붙이고 있고, 어떤 날은 3m 중층에서 부유하는 유충을 쫓으며, 어떤 날은 표층 1m 안쪽에서 수면으로 솟구칩니다.
+      </p>
+      <p>
+        CADDIS-GR LAB의 <strong>Four-Line System</strong>은 시판되는 수많은 라인을 제조사 브랜드로 분류하지 않고, 플라이를 물속에서 어떤 궤적으로 움직이게 만들 것인가를 기준으로 4개 수층에 최적화된 4종의 라인을 하나의 유기적 시스템으로 묶었습니다.
+      </p>
+
+      <h2>2. 2026 스틸워터 4단 라인 종합 비교표</h2>
+      <p>수심 공략 범위와 침강 특성, 리더 결합 및 실전 역할을 한눈에 대조합니다.</p>
+
+      <div class="table-responsive">
+        <table class="system-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>수층</th>
+              <th>주력 라인</th>
+              <th>침강 제원</th>
+              <th>리더 & 티펫 시스템</th>
+              <th>주력 패턴</th>
+              <th>핵심 역할 및 궤적</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="spec-badge badge-float">01</span></td>
+              <td><strong>표층 (0~2m)</strong></td>
+              <td>RIO Elite Technical Trout WF4F</td>
+              <td>0 ips (플로팅)</td>
+              <td>6.5~7.0m 롱리더 (0X-3X-5X/6X) 또는 4.5m 인디케이터</td>
+              <td>Chironomid #14~#18, Foam Beetle</td>
+              <td>피네스 롱리더 자연낙하, 저활성 인디케이터 정적 고정</td>
+            </tr>
+            <tr>
+              <td><span class="spec-badge badge-inter">02</span></td>
+              <td><strong>중층 (2~4m)</strong></td>
+              <td>RIO Elite CamoLux WF5I / Sixth Sense 2</td>
+              <td>1.5~2.0 ips (균일 침강)</td>
+              <td>12~15ft 카본 리더 (비중 1.78 활용)</td>
+              <td>Chironomid Pupa, Buzzer, Mini Leech</td>
+              <td>전층 완만한 사선 탐색, 카본 리더 연계 스텔스 유영</td>
+            </tr>
+            <tr>
+              <td><span class="spec-badge badge-sinktip">03</span></td>
+              <td><strong>중하층 (4~6m)</strong></td>
+              <td>Snowbee Buzzer 2 (10ft) / Spectre (6ft)</td>
+              <td>1.25~1.7 ips (팁부 침강)</td>
+              <td>2.1m 카본 3단 (1X 0.8m + 3X 0.8m + 5X 0.5m)</td>
+              <td>2.3mm Brass Bead Chironomid Larva</td>
+              <td>U자형 완만 잠행 후 전방 6~7m부터 에머징 부상, Hang 유도</td>
+            </tr>
+            <tr>
+              <td><span class="spec-badge badge-titan">04</span></td>
+              <td><strong>바닥권 (6m)</strong></td>
+              <td>SA Sonar Titan 3D i/3/5</td>
+              <td>1.5 / 3.0 / 5.0 ips (3단 밀도)</td>
+              <td>5~6ft 짧은 카본 리더 (직결 감도)</td>
+              <td>Balanced Leech, Booby, Larva</td>
+              <td>꺾임 없는 바닥 수평 긁기, 픽업 직전 발 앞 수직상승(70~80% 바이트)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 시뮬레이터 배너 -->
+      <div class="sim-banner">
+        <h3>🔬 4단 라인 중 03 싱킹팁 궤적 시뮬레이터 연동</h3>
+        <p>
+          15m 캐스팅 후 10카운트 침강과 2분 50초간의 초저속(9.4cm/s) 리트리브, 그리고 발 앞 6~7m 전방에서의 스위프업 부상까지의 전 과정을 캔버스 물리 애니메이션으로 직접 확인하실 수 있습니다.
+        </p>
+        <a class="btn-sim" href="buzzer2-trajectory-simulation.html">★ Snowbee Buzzer 2 수중 궤적 시뮬레이터 열기 ▸</a>
+      </div>
+
+      <h2>3. 4대 라인별 세부 운용 매뉴얼</h2>
+
+      <div class="line-card">
+        <span class="spec-badge badge-float">SYSTEM 01</span>
+        <h3>표층 (0~2m) — Floating: 정적 고정과 마이크로 피네스</h3>
+        <p>
+          수면 직하 2m 이내에 송어의 시선이 집중되는 아침 피딩이나 늦봄 이머징 타이밍에 투입됩니다. 플로팅 라인은 수면에 떠 있으므로 채비의 궤적은 전적으로 <strong>리더의 길이와 테이퍼 설계</strong>에 좌우됩니다.
+        </p>
+        <div class="field-box">
+          <div class="box-label">실전 데이터 · 2026.05.16 한터 복기</div>
+          극저활성 배수기 조건에서 Hover·Intermediate 유영 채비가 완전 침묵했을 때, RIO Xtreme Indicator + 4.5m 롱리더 조합으로 바닥 위 30cm에 Chironomid Larva를 2~3분간 정적 노출시켜 23수의 폭발적인 조과를 회복했습니다.
+        </div>
+        <p style="margin-top:14px">
+          <a class="text-link" href="micro-nymphing.html">01 Micro Nymphing 연구 전문 ▸</a> &nbsp;|&nbsp;
+          <a class="text-link" href="indicator-system.html">03 Indicator System 연구 전문 ▸</a>
+        </p>
+      </div>
+
+      <div class="line-card">
+        <span class="spec-badge badge-inter">SYSTEM 02</span>
+        <h3>상층~중층 (2~4m) — Intermediate: 전층 사선 탐색과 스텔스 유영</h3>
+        <p>
+          클리어 인터미디어트 라인(RIO CamoLux)은 물속에서 빛을 난반사하지 않는 스텔스성이 핵심입니다. 라인 전체가 1.5~2.0 ips로 천천히 가라앉기 때문에, 캐스팅 후 카운트다운 시간에 따라 표층부터 중층까지를 완만한 사선(Diagonal)으로 훑으며 넓은 범위를 수색하는 '파일럿(Pilot)' 역할을 수행합니다.
+        </p>
+        <p style="margin-top:14px">
+          <a class="text-link" href="../gear/reviews/RIO_Elite_CamoLux_WF5I_Review.html">RIO Elite CamoLux WF5I 상세 리뷰 ▸</a>
+        </p>
+      </div>
+
+      <div class="line-card">
+        <span class="spec-badge badge-sinktip">SYSTEM 03</span>
+        <h3>중하층 (4~6m) — Sink-Tip: U자형 에머징 궤적과 Hang 기법</h3>
+        <p>
+          몸체(Body)는 수면에 뜨고 앞쪽 팁(Tip)만 가라앉는 싱킹팁(Snowbee Buzzer 2, Spectre Pro)은 스틸워터에서 가장 극적인 궤적을 연출합니다. 15m 캐스팅 후 10~20카운트를 주면 플라이가 3m권까지 파고들었다가, 리트리브 후반부 전방 6~7m 지점부터 로드 팁을 세워주는 <strong>행(Hang) 동작</strong>을 통해 수직으로 솟구치며 송어의 추격 본능을 격발합니다.
+        </p>
+        <div class="field-box">
+          <div class="box-label">실전 데이터 · 2026.11.04 신기지 복기</div>
+          Buzzer 2 10ft 라인으로 15m 캐스팅 후 20초 카운트 침강 운용 시 바닥 나뭇가지를 건져낼 정도로 정확한 바닥권 탐색이 가능했으며, 전방 6m에서 로드를 서서히 들어 올리는 행(Hang) 운용 중 툭 건드리는 반응 4회 접수, 깔끔하게 1수를 걸어냈습니다.
+        </div>
+        <p style="margin-top:14px">
+          <a class="text-link" href="buzzer2-trajectory-simulation.html">Buzzer 2 수중 궤적 시뮬레이터 ▸</a> &nbsp;|&nbsp;
+          <a class="text-link" href="../field-log/logs/2026-11-04-singi.html">11/04 신기지 조행기 전문 ▸</a>
+        </p>
+      </div>
+
+      <div class="line-card">
+        <span class="spec-badge badge-titan">SYSTEM 04</span>
+        <h3>바닥권 (6m) — Titan 3D i/3/5: 바닥 킬존과 수직 상승(Hang Zone)</h3>
+        <p>
+          수심 6m 한터지의 엄동설한에 가장 강력한 바텀 주력 라인입니다. Intermediate(1.5ips) - Sink 3(3.0ips) - Sink 5(5.0ips)의 3단 점진적 밀도 구조(Triple Density) 덕분에 라인 중간이 아래로 처지는 '벨리 힌지(Belly Hinge)' 현상 없이, 바닥면과 플라이가 완벽한 수평을 이루며 끌려옵니다.
+        </p>
+        <div class="interpret-box">
+          <div class="box-label">핵심 통계 · Hang Zone 70~80% 바이트</div>
+          한터지 i/3/5 실전 분석 결과, 자연 침강 중 입질은 5% 미만, 바닥 수평 회수 중 20~30%인 반면, <strong>픽업 직전 발 앞 2~3m 수직 급상승 구간(Hang Zone)에서 전체 입질의 70~80%가 집중</strong>되었습니다. 바닥을 긁는 것보다 마지막 발 앞 상승을 어떻게 연출하느냐가 승부처입니다.
+        </div>
+        <p style="margin-top:14px">
+          <a class="text-link" href="../gear/reviews/sa-sonar-titan-i3-5-review.html">SA Sonar Titan 3D i/3/5 리뷰 ▸</a> &nbsp;|&nbsp;
+          <a class="text-link" href="hang-zone.html">04 Hang Zone 연구 전문 ▸</a>
+        </p>
+      </div>
+
+      <h2>4. 현장 검증과 역할 수정 (Interpretation · Revised)</h2>
+      <p>
+        CADDIS-GR LAB의 시스템은 박제된 이론이 아닙니다. 현장 테스트 결과에 따라 끊임없이 역할을 재정의합니다.
+      </p>
+      <div class="interpret-box">
+        <div class="box-label">케이스 스터디 · SA Parabolic Sink의 교훈</div>
+        초기에는 3/5/3 밀도의 SA Parabolic Sink 라인이 U자형 궤적으로 마이크로 님핑에 최적일 것으로 기대했으나, 실제 6m 한터 필드에서는 5ips 밸리가 너무 빨리 가라앉아 또 하나의 풀싱킹 라인처럼 바닥에 닿아버렸습니다.<br><br>
+        이 실패 데이터를 바탕으로 팁만 얇게 가라앉는 <strong>Snowbee Buzzer 2 (10ft, 1.7ips)</strong>와 수심 3~4m용 <strong>Spectre Pro (6ft, 1.25~1.5ips)</strong>로 라인업을 정밀 재조정했습니다.
+      </div>
+
+      <div style="margin:48px 0;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <a class="btn btn-secondary" href="index.html">← Research 목록으로</a>
+        <a class="btn btn-primary" href="buzzer2-trajectory-simulation.html">Buzzer 2 시뮬레이터 실행 →</a>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="footer-brand">CADDIS-GR LAB</div>
+      <div class="footer-copy">
+        공식 스펙, 현장 관찰, 개인적 해석을 구분하여 기록합니다.
+        실측되지 않은 수중 궤적은 가설 또는 개념도로 표시하며, 실사용 결과에 따라 기존 판단을 수정합니다.
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Research</a>
+      <a href="../gear/index.html">Gear</a>
+      <a href="../fly-patterns/index.html">Patterns</a>
+      <a href="../field-log/index.html">Field Log</a>
+      <a href="#">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

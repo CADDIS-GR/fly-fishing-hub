@@ -330,8 +330,12 @@ function draw() {
   ctx.fillStyle = 'rgba(69, 26, 3, 0.45)';
   ctx.fillRect(padL, bTop, w, padT + h - bTop);
 
-  // Rod tip marker
+  // Rod tip & key points
   const rodPt = worldToCanvas(0, 0);
+  const tipPt = worldToCanvas(cur.distTip, cur.depthTip);
+  const flyPt = worldToCanvas(cur.distFly, cur.depthFly);
+  const touchPt = worldToCanvas(cur.xTouch, 5.98);
+
   ctx.fillStyle = '#38bdf8';
   ctx.fillRect(rodPt.x - 4, rodPt.y - 4, 8, 8);
   ctx.fillStyle = '#e2e8f0';
@@ -353,7 +357,6 @@ function draw() {
     const xFillet = cur.xTouch * 0.82;
     const yFillet = 5.15;
     const filletPt = worldToCanvas(xFillet, yFillet);
-    const touchPt = worldToCanvas(cur.xTouch, 5.98);
 
     // Straight taut line under tension from rod
     ctx.beginPath();
@@ -375,10 +378,10 @@ function draw() {
 
   // 2. Draw Grounded Segment (lying flat on lake bed!)
   if (cur.groundLen > 0.05) {
-    const tipPt = worldToCanvas(cur.distTip, 5.98);
+    const groundTipPt = worldToCanvas(cur.distTip, 5.98);
     ctx.beginPath();
     ctx.moveTo(touchPt.x, touchPt.y);
-    ctx.lineTo(tipPt.x, tipPt.y);
+    ctx.lineTo(groundTipPt.x, groundTipPt.y);
     ctx.strokeStyle = '#10b981';
     ctx.lineWidth = 5.5;
     ctx.stroke();
@@ -387,12 +390,10 @@ function draw() {
     ctx.fillStyle = '#10b981';
     ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`바닥 밀착: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + tipPt.x) / 2, touchPt.y - 12);
+    ctx.fillText(`바닥 밀착: ${cur.groundLen.toFixed(1)}m`, (touchPt.x + groundTipPt.x) / 2, touchPt.y - 12);
   }
 
   // 3. Leader & Fly
-  const tipPt = worldToCanvas(cur.distTip, cur.depthTip);
-  const flyPt = worldToCanvas(cur.distFly, cur.depthFly);
   ctx.beginPath();
   ctx.moveTo(tipPt.x, tipPt.y);
   ctx.lineTo(flyPt.x, flyPt.y);

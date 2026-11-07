@@ -109,7 +109,8 @@
     .notes-section .section-kicker{color:var(--water-light)}
     .notes-section .section-desc{color:rgba(255,255,255,.58)}
     .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
-    .note-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:24px;background:rgba(255,255,255,.035)}
+    .note-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:24px;background:rgba(255,255,255,.035);text-decoration:none;color:inherit;display:block;transition:border-color .2s,transform .2s,background .2s}
+    a.note-card:hover{border-color:rgba(168,197,190,.4);background:rgba(255,255,255,.07);transform:translateY(-2px)}
     .note-date{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.13em;color:rgba(255,255,255,.38)}
     .note-card h3{margin:16px 0 10px;font-family:'Noto Sans KR',sans-serif;font-size:19px;font-weight:700;line-height:1.45;letter-spacing:-.025em}
     .note-card p{margin:0;color:rgba(255,255,255,.58);font-size:14px}

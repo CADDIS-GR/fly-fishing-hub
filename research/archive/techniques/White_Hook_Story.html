@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko" style="scroll-behavior:smooth; scroll-padding-top:64px;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>흰바늘 이야기 — CADDIS-GR Field Essay</title>
+<meta name="description" content="송어는 왜 민바늘에 반응하는가, 그리고 이것을 플라이낚시라고 할 수 있는가. 관리형 저수지에서 흰바늘을 두고 정리한 생각.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --olive: #5C6B3A;
+  --olive-light: #7a8c4e;
+  --olive-pale: #e8eddc;
+  --orange: #D95B1A;
+  --orange-light: #f0834a;
+  --orange-pale: #faeee6;
+  --dark: #1a1c16;
+  --mid: #3a3d30;
+  --text: #2e3124;
+  --muted: #6b7058;
+  --border: #d4d8c4;
+  --bg: #f5f4ef;
+  --white: #fafaf7;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; line-height: 1.6; }
+
+/* ── Sticky Nav ── */
+.sticky-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(26,28,22,.92); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,.08); min-height: 56px; display: flex; align-items: center; }
+.sticky-nav-inner { max-width: 760px; margin: 0 auto; width: 100%; padding: 6px 24px; display: flex; align-items: center; }
+.sticky-nav-menu { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .18em; color: rgba(200,190,170,.5); margin-right: 24px; text-transform: uppercase; }
+.sticky-nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+.snl { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(200,190,170,.6); text-decoration: none; padding: 4px 10px; border-radius: 4px; transition: color .2s, background .2s; }
+.snl:hover { color: var(--orange-light); background: rgba(217,91,26,.12); }
+
+/* ── Hero ── */
+.hero { background: var(--dark); padding: 96px 24px 64px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 40%, rgba(92,107,58,.18) 0%, transparent 65%), radial-gradient(ellipse at 20% 80%, rgba(217,91,26,.10) 0%, transparent 60%); pointer-events: none; }
+.hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
+.hero-avatar { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.hero-avatar img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(217,91,26,.4); flex-shrink: 0; }
+.hero-avatar-name { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(200,190,170,.8); }
+.hero-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; background: rgba(217,91,26,.18); color: var(--orange-light); border: 1px solid rgba(217,91,26,.35); border-radius: 20px; padding: 4px 14px; margin-bottom: 18px; }
+.hero-sub { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(200,190,170,.5); margin-bottom: 10px; }
+.hero-title { font-family: 'DM Serif Display', 'Noto Sans KR', serif; font-size: clamp(34px, 7vw, 56px); color: var(--white); line-height: 1.15; margin-bottom: 16px; letter-spacing: -.01em; }
+.hero-title em { color: var(--orange-light); font-style: normal; }
+.hero-desc { font-size: 15px; color: rgba(200,190,170,.7); max-width: 540px; line-height: 1.8; margin-bottom: 28px; }
+.hero-meta { display: flex; gap: 16px; flex-wrap: wrap; padding-right: 0; }
+.hero-meta-item { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(200,190,170,.45); letter-spacing: .08em; }
+.hero-meta-item strong { color: rgba(200,190,170,.8); }
+
+/* BGM */
+.bgm-wrap { position: absolute; bottom: 28px; right: 40px; z-index: 4; }
+.bgm-btn-inner { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.10); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.2); border-radius: 32px; padding: 10px 18px; }
+.bgm-play { width: 28px; height: 28px; background: var(--orange); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; padding: 0; }
+.bgm-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .12em; line-height: 1.4; color: #fff; }
+
+/* ── Main ── */
+main { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+.section { margin-bottom: 64px; opacity: 0; animation: fadeUp .6s forwards; }
+.s1{animation-delay:.1s} .s2{animation-delay:.2s} .s3{animation-delay:.3s} .s4{animation-delay:.4s}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .section { animation: none; opacity: 1; } }
+
+.sec-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+.sec-title { font-family: 'DM Serif Display', 'Noto Sans KR', serif; font-size: clamp(24px, 4.4vw, 32px); color: var(--dark); line-height: 1.3; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+
+.prose p { font-size: 16.5px; line-height: 2; color: var(--text); margin-bottom: 20px; word-break: keep-all; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--dark); font-weight: 600; }
+.prose .lead { font-size: 18px; color: var(--dark); }
+
+.quote-box { background: var(--dark); border-left: 3px solid var(--orange); border-radius: 0 8px 8px 0; padding: 24px 28px; margin: 28px 0; }
+.quote-text { font-size: 17px; line-height: 1.85; color: rgba(240,235,220,.92); word-break: keep-all; }
+.quote-text strong { color: var(--orange-light); font-weight: 600; }
+
+/* Photo */
+.photo { margin: 32px 0; }
+.photo-frame { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--dark); }
+.photo-frame img { width: 100%; height: 440px; object-fit: cover; object-position: 30% 68%; display: block; }
+.photo figcaption { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-top: 10px; }
+
+/* Hook card */
+.hook-card { display: grid; grid-template-columns: 200px 1fr; gap: 0; align-items: stretch; background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 28px 0; text-decoration: none; color: inherit; transition: border-color .2s, box-shadow .2s; }
+.hook-card:hover { border-color: var(--olive-light); box-shadow: 0 6px 20px rgba(26,28,22,.08); }
+.hook-card-img { background: #fff; border-right: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+.hook-card-img img { width: 100%; height: 200px; object-fit: contain; display: block; }
+.hook-card-body { padding: 22px 24px; display: flex; flex-direction: column; justify-content: center; }
+.hook-card-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin-bottom: 6px; }
+.hook-card-name { font-family: 'DM Serif Display', 'Noto Sans KR', serif; font-size: 21px; color: var(--dark); margin-bottom: 8px; }
+.hook-card-body p { font-size: 14.5px; line-height: 1.8; color: var(--mid); word-break: keep-all; }
+.hook-card-link { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .08em; color: var(--olive); margin-top: 12px; }
+.hook-card:hover .hook-card-link { color: var(--orange); }
+
+/* Reason cards */
+.reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 28px 0; }
+.reason { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
+.reason-no { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .14em; color: var(--orange); margin-bottom: 6px; }
+.reason-title { font-size: 16px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+.reason p { font-size: 14.5px; line-height: 1.8; color: var(--mid); word-break: keep-all; }
+
+/* Kite note */
+.note { background: var(--olive-pale); border: 1px solid #cfd8b8; border-radius: 10px; padding: 24px 26px; margin: 28px 0; }
+.note-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--olive); margin-bottom: 8px; }
+.note-title { font-family: 'DM Serif Display', 'Noto Sans KR', serif; font-size: 20px; color: var(--dark); margin-bottom: 10px; }
+.note p { font-size: 15px; line-height: 1.9; color: var(--text); word-break: keep-all; }
+.note p + p { margin-top: 10px; }
+
+/* Two views */
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 28px 0; }
+.view { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--olive); border-radius: 10px; padding: 20px 22px; }
+.view.no { border-top-color: var(--orange); }
+.view-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.view-verdict { font-size: 17px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+.view p { font-size: 14.5px; line-height: 1.8; color: var(--mid); word-break: keep-all; }
+
+/* Readout */
+.readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 28px 0; background: var(--white); }
+.readout div { padding: 18px 20px; border-right: 1px solid var(--border); }
+.readout div:last-child { border-right: none; }
+.readout dt { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.readout dd { font-size: 16px; font-weight: 600; color: var(--dark); }
+
+.refs { border-top: 1px solid var(--border); padding-top: 20px; }
+.refs-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.refs li { font-size: 13.5px; color: var(--muted); list-style: none; line-height: 1.9; }
+.refs a { color: var(--olive); }
+
+footer { background: var(--dark); padding: 28px 24px; text-align: center; }
+footer p { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; color: rgba(200,190,170,.5); }
+footer span { color: var(--orange-light); }
+footer a { color: rgba(200,190,170,.75); }
+
+/* ── Lightbox (§C) ── */
+.lb-trigger { cursor: zoom-in; position: relative; display: block; border: none; padding: 0; background: none; width: 100%; }
+.lb-trigger::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; }
+.lb-trigger:hover::after { background: rgba(0,0,0,.14); }
+#lb { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,.88); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 24px; }
+#lb.open { display: flex; }
+#lb-inner { position: relative; display: inline-flex; }
+#lb-img { max-width: 92vw; max-height: 86vh; object-fit: contain; border-radius: 4px; display: block; }
+.lb-close { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; background: rgba(0,0,0,.5); border: none; border-radius: 50%; color: #fff; font-size: 16px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; }
+#lb-cap { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .1em; color: rgba(255,255,255,.6); text-align: center; width: 90vw; }
+
+@media (max-width: 640px) {
+  .sticky-nav-menu { display: none; }
+  .reasons, .views { grid-template-columns: 1fr; }
+  .hook-card { grid-template-columns: 1fr; }
+  .hook-card-img { border-right: none; border-bottom: 1px solid var(--border); }
+  .hook-card-img img { height: 180px; }
+  .readout { grid-template-columns: 1fr; }
+  .readout div { border-right: none; border-bottom: 1px solid var(--border); }
+  .readout div:last-child { border-bottom: none; }
+  .photo-frame img { height: 340px; }
+  .bgm-wrap { bottom: 18px; right: 20px; }
+  .bgm-label { display: none; }
+  .hero { padding-bottom: 84px; }
+  .prose p { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sticky-nav">
+  <div class="sticky-nav-inner">
+    <span class="sticky-nav-menu">MENU</span>
+    <div class="sticky-nav-links">
+      <a href="#sec-top"   class="snl">맨 위</a>
+      <a href="#sec-story" class="snl">흰바늘</a>
+      <a href="#sec-why"   class="snl">왜 무는가</a>
+      <a href="#sec-fly"   class="snl">플라이인가</a>
+      <a href="#sec-line"  class="snl">나의 선</a>
+      <a href="../../index.html" class="snl">← Research</a>
+      <a href="../../../index.html" class="snl">🏠 Hub</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" id="sec-top">
+  <div class="hero-inner">
+    <div class="hero-avatar">
+      <img src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/prof.PNG" alt="낚시대장 프로필">
+      <span class="hero-avatar-name">낚시대장 · CADDIS-GR</span>
+    </div>
+    <div class="hero-badge">Field Essay · 낚시 생각</div>
+    <div class="hero-sub">The White Hook</div>
+    <h1 class="hero-title"><em>흰바늘</em> 이야기</h1>
+    <p class="hero-desc">
+      아무것도 감지 않은 바늘에 송어가 문다.<br>
+      왜 무는가. 그리고 이것을 플라이낚시라고 할 수 있는가.
+    </p>
+    <div class="hero-meta">
+      <span class="hero-meta-item"><strong>분야</strong> · Stillwater · 관리형 저수지</span>
+      <span class="hero-meta-item"><strong>주제</strong> · 민바늘 · Chironomid · 프레젠테이션</span>
+      <span class="hero-meta-item"><strong>기록</strong> · 2026. 11</span>
+    </div>
+  </div>
+  <div class="bgm-wrap">
+    <div class="bgm-btn-inner">
+      <button class="bgm-play" onclick="toggleBgm()" aria-label="배경음악 재생/정지">
+        <svg id="bgm-icon-play" width="10" height="12" viewBox="0 0 10 12" fill="white"><polygon points="0,0 10,6 0,12"/></svg>
+        <svg id="bgm-icon-pause" width="10" height="12" viewBox="0 0 10 12" fill="white" style="display:none"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>
+      </button>
+      <span class="bgm-label">된다 된다 오늘도 된다<br><span style="opacity:.6;font-size:10px">되고송 🎶</span></span>
+    </div>
+    <audio id="bgm" loop>
+      <source src="https://raw.githubusercontent.com/CADDIS-GR/fishing-log/main/data/OK-Song.m4a" type="audio/mp4">
+    </audio>
+  </div>
+</section>
+
+<main>
+
+  <!-- 01 -->
+  <section class="section s1" id="sec-story">
+    <div class="sec-label">01 · Story</div>
+    <h2 class="sec-title">가끔 아주 웃기는 일이 벌어진다</h2>
+    <div class="prose">
+      <p class="lead">흰바늘, 빨간바늘. 아무것도 감지 않은 이 민바늘에 송어가 곧잘 반응한다.</p>
+      <p>아예 여러 색의 민바늘만 쓰는 사람도 있다. 옆에서 샘이 나도록 걷어 올리길래 다가가 물어보면, 흰바늘을 쓴다고 한다.</p>
+    </div>
+
+    <a class="hook-card" href="https://gamakatsu.com/product/octopus-uv/" target="_blank" rel="noopener">
+      <div class="hook-card-img">
+        <img src="../images/white-hook-octopus-uv.jpg" alt="흰색 UV 코팅 옥토퍼스 훅 — Gamakatsu Octopus UV">
+      </div>
+      <div class="hook-card-body">
+        <div class="hook-card-label">The Hook · 흰바늘</div>
+        <div class="hook-card-name">Gamakatsu Octopus UV</div>
+        <p>흰색 UV 코팅을 입힌 옥토퍼스 훅. 위로 꺾인 아이에 짧고 둥근 벤드. 감은 것은 아무것도 없다.</p>
+        <span class="hook-card-link">↗ Gamakatsu 제품 페이지 · 이미지 출처</span>
+      </div>
+    </a>
+
+    <figure class="photo">
+      <div class="photo-frame">
+        <button class="lb-trigger" onclick="openLb()" aria-label="사진 크게 보기">
+          <img src="../images/white-hook-trout.jpg" alt="윗턱에 흰바늘이 걸린 채 수면으로 올라온 무지개송어">
+        </button>
+      </div>
+      <figcaption>윗턱 한가운데. 스쳐 걸린 것이 아니라 제대로 먹은 입질이다.</figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>나도 써 본 적이 있다. 솜씨가 없던 시절에는 그저 송어를 낚고 싶다는 생각 하나로 흰바늘을 던졌었다. 잠깐 사이에 대여섯 수를 끌어올리기도 했고, 이것저것 해 보다 도저히 반응이 없을 때 슬쩍 꺼내 보기도 했다.</p>
+      <p>요즘은 거의 쓰지 않는다. 솜씨가 늘었고, 민바늘이 아니어도 송어 얼굴을 보는 데 지장이 없으니...  아주 가끔 수심층 반응을 보려고 사용할 뿐이다. 딱 반응을 확인하는 용도로만.</p>
+      <p>그래도 질문은 남는다. <strong>송어는 왜 이런 바늘에 반응하는가.</strong> 그리고 명색이 플라이낚시인인 내가 <strong>이것을 어디까지 허용할 수 있는가.</strong></p>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="section s2" id="sec-why">
+    <div class="sec-label">02 · Why</div>
+    <h2 class="sec-title">민바늘은 '아무것도 아닌 것'이 아니다</h2>
+    <div class="prose">
+      <p>내 결론부터 적는다. 색을 입힌 민바늘은 <strong>가장 극단적으로 단순화된 Chironomid 패턴</strong>이다. 송어는 빈 바늘을 무는 것이 아니라, 자기가 늘 먹던 것과 닮은 무언가를 무는 것이다. 이유는 네 가지로 본다.</p>
+    </div>
+
+    <div class="reasons">
+      <div class="reason">
+        <div class="reason-no">01 · SILHOUETTE</div>
+        <div class="reason-title">실루엣이 같다</div>
+        <p>정지수 송어의 주식은 깔따구(Chironomid) 유충과 번데기다. 가늘고 살짝 휜 몸통에 다리도 꼬리도 없다. 빨간 바늘은 블러드웜으로, 흰 바늘은 창백한 유충이나 탈피 직전의 번데기로 읽힐 수 있다.</p>
+      </div>
+      <div class="reason">
+        <div class="reason-no">02 · CONTRAST</div>
+        <div class="reason-title">탁한 물에서 가장 먼저 보인다</div>
+        <p>녹갈색으로 흐린 물에서는 흰색이 가장 멀리서 눈에 띈다. 정교함은 그다음 문제다. 발견되지 않는 플라이는 평가받을 기회조차 없다.</p>
+      </div>
+      <div class="reason">
+        <div class="reason-no">03 · SINK RATE</div>
+        <div class="reason-title">천천히, 자연스럽게 떨어진다</div>
+        <p>무게도 저항도 거의 없다. 비드헤드와 마라부를 하루 종일 본 학습된 송어에게는, 부자연스러운 구석이 없다는 점이 오히려 먹힌다.</p>
+      </div>
+      <div class="reason">
+        <div class="reason-no">04 · HABIT</div>
+        <div class="reason-title">일단 입에 넣어 확인한다</div>
+        <p>펠릿으로 자란 송어는 작고 떠 있는 것을 입으로 확인하는 습성이 있다. 민바늘에는 거부감을 줄 만한 요소가 없다.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="note-label">Reference · 1960s, England</div>
+      <div class="note-title">Oliver Kite의 Bare Hook Nymph</div>
+      <p>새로운 이야기도 아니다. 영국의 올리버 카이트는 Sawyer의 Pheasant Tail Nymph에서 깃털마저 덜어내고, 바늘에 가는 구리선만 감아 작은 흉부를 만든 님프를 썼다. 재주를 보여 주려는 것이 아니라 그의 주력 채비였고, 1967년 한 해 조과의 절반 가까이를 이 바늘로 올렸다고 전해진다.</p>
+      <p>그가 남긴 말이 <strong>induced take</strong>, 움직임으로 입질을 끌어낸다는 개념이다. 드레싱보다 수심과 움직임이 먼저라는 뜻이다.</p>
+    </div>
+
+    <div class="quote-box">
+      <p class="quote-text">흰바늘이 유난히 잘 먹히는 날은,<br><strong>무엇을 묶었는가보다 어디에 어떻게 넣었는가</strong>가 답인 날이다.</p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="section s3" id="sec-fly">
+    <div class="sec-label">03 · Is It Fly Fishing</div>
+    <h2 class="sec-title">이것을 플라이낚시라고 할 수 있는가</h2>
+    <div class="prose">
+      <p>기준을 어디에 두느냐에 따라 답이 갈린다.</p>
+    </div>
+
+    <div class="views">
+      <div class="view">
+        <div class="view-label">방법을 기준으로</div>
+        <div class="view-verdict">맞다</div>
+        <p>플라이라인의 무게로 던지고, 라인으로 입질을 읽는다. 낚시의 방법은 온전히 플라이낚시다.</p>
+      </div>
+      <div class="view no">
+        <div class="view-label">플라이를 기준으로</div>
+        <div class="view-verdict">아니다</div>
+        <p>타잉한 것이 없다. 감은 것도, 고른 재료도 없으니 '플라이'라고 부르기 어렵다. 그래도 플라이라고 한다면 털쪼가리정도는 붙어 있어야 하지 않을까? </p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>다만 그 경계는 생각보다 흐리다. 빨간 실을 몇 바퀴 감고 바니시를 바른 버저는 누구나 인정하는 플라이다. 그런데 공장에서 빨갛게 코팅해 나온 바늘과 물속에서는 사실상 같은 물건이다. 실 몇 바퀴가 플라이와 민바늘을 가르는 셈이다.</p>
+      <p>그래서 나는 이렇게 정리한다. <strong>플라이낚시의 방법으로 하는, 플라이 없는 낚시.</strong> 반칙은 아니다. 하지만 플라이낚시의 재미 절반, 곧 내가 읽고 고르고 만든 것으로 속였다는 그 부분이 빠져 있다. 솜씨가 늘면서 손이 가지 않게 된 까닭도 거기에 있을 것이다.</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="section s4" id="sec-line">
+    <div class="sec-label">04 · My Line</div>
+    <h2 class="sec-title">답안지가 아니라 측정 도구로</h2>
+    <div class="prose">
+      <p>내가 허용하는 선은 지금 쓰는 방식 그대로다. 수심층 반응을 확인하는 용도. 흰바늘에 입질이 온다는 것은 조과가 아니라 정보다.</p>
+    </div>
+
+    <dl class="readout">
+      <div><dt>Depth</dt><dd>지금 이 수심에서</dd></div>
+      <div><dt>Profile</dt><dd>가늘고 밝은 것을</dd></div>
+      <div><dt>Speed</dt><dd>천천히 떨어질 때</dd></div>
+    </dl>
+
+    <div class="prose">
+      <p>이 세 가지를 읽었으면 흰바늘의 일은 끝난 것이다. 그다음은 흰색이나 펄 계열의 슬림한 버저로 옮겨, 같은 수심에 같은 속도로 넣는다. 그렇게 낚은 송어는 내가 읽어서 낚은 송어다.</p>
+      <p>옆에서 흰바늘로 걷어 올리는 사람을 볼 때도 마찬가지다. 샘낼 일이 아니다. <strong>저 수심, 저 속도구나.</strong> 그렇게 읽으면 된다.</p>
+    </div>
+
+    <div class="quote-box">
+      <p class="quote-text">흰바늘은 <strong>질문</strong>이고,<br>답은 내가 감은 플라이로 한다.</p>
+    </div>
+
+    <div class="refs">
+      <div class="refs-label">참고</div>
+      <ul>
+        <li>Kite의 Bare Hook Nymph · <a href="https://www.swtu.org/?p=1501" target="_blank" rel="noopener">Southern Wisconsin TU — Fountains of Youth</a></li>
+        <li>Bare hook nymph의 계보 · <a href="https://czechnymph.com/en/fly-fishing-articles/flies-for-fly-fishing/65-when-less-becomes-more" target="_blank" rel="noopener">CzechNymph.com — When Less Becomes More</a></li>
+        <li>'왜 무는가'의 네 가지는 현장 경험에 기댄 가설이며, 검증된 결론이 아니다.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>CADDIS-GR · Field Essay · <span>흰바늘 이야기</span> · <a href="../../index.html">Research Archive</a> · <a href="https://caddis-gr.github.io/fishing-technique/" target="_blank" rel="noopener">Techniques 원본</a></p>
+</footer>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="사진 확대">
+  <div id="lb-inner">
+    <img id="lb-img" src="../images/white-hook-trout.jpg" alt="윗턱에 흰바늘이 걸린 무지개송어">
+    <button class="lb-close" onclick="closeLb()" aria-label="닫기">✕</button>
+  </div>
+  <span id="lb-cap">흰바늘 · 윗턱 정중앙 훅셋</span>
+</div>
+
+<script>
+function toggleBgm() {
+  const audio = document.getElementById('bgm');
+  const play  = document.getElementById('bgm-icon-play');
+  const pause = document.getElementById('bgm-icon-pause');
+  if (audio.paused) { audio.play(); play.style.display='none'; pause.style.display='block'; }
+  else { audio.pause(); play.style.display='block'; pause.style.display='none'; }
+}
+function openLb() {
+  document.getElementById('lb').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lb').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+document.getElementById('lb').addEventListener('click', e => {
+  if (e.target === document.getElementById('lb')) closeLb();
+});
+</script>
+</body>
+</html>

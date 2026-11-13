@@ -27,9 +27,10 @@ const header = document.getElementById('siteHeader');
     if (!container) return;
 
     try {
-      const [fieldRes, gearRes] = await Promise.allSettled([
+      const [fieldRes, gearRes, researchRes] = await Promise.allSettled([
         fetch('field-log/index.html').then(r => r.ok ? r.text() : ''),
-        fetch('gear/index.html').then(r => r.ok ? r.text() : '')
+        fetch('gear/index.html').then(r => r.ok ? r.text() : ''),
+        fetch('research/index.html').then(r => r.ok ? r.text() : '')
       ]);
 
       const parser = new DOMParser();
@@ -61,6 +62,23 @@ const header = document.getElementById('siteHeader');
           const href = rawHref.startsWith('http') || rawHref.startsWith('/') ? rawHref : `gear/${rawHref}`;
           const m = (kicker + ' ' + desc).match(/(\d{4})[.\-](\d{2})[.\-](\d{2})/);
           const date = m ? `${m[1]}-${m[2]}-${m[3]}` : '2026-00-00';
+          items.push({ date, kicker, title, desc, tag, href });
+        });
+      }
+
+      if (researchRes.status === 'fulfilled' && researchRes.value) {
+        const doc = parser.parseFromString(researchRes.value, 'text/html');
+        doc.querySelectorAll('.content-grid a.content-card').forEach(card => {
+          const kicker = card.querySelector('.section-kicker')?.textContent.trim() || '';
+          if (!kicker.includes('Field Essay') && !kicker.includes('2026.')) return;
+          const title = card.querySelector('h2')?.textContent.trim() || '';
+          const desc = card.querySelector('p')?.textContent.trim() || '';
+          const tag = card.querySelector('.tag')?.textContent.trim() || 'FIELD ESSAY';
+          const rawHref = card.getAttribute('href') || '';
+          const href = rawHref.startsWith('http') || rawHref.startsWith('/') ? rawHref : `research/${rawHref}`;
+          const m = (kicker + ' ' + desc).match(/(\d{4})[.\-](\d{2})[.\-](\d{2})/);
+          const m2 = (kicker + ' ' + desc).match(/(\d{4})[.\-](\d{2})/);
+          const date = m ? `${m[1]}-${m[2]}-${m[3]}` : (m2 ? `${m2[1]}-${m2[2]}-13` : '2026-11-13');
           items.push({ date, kicker, title, desc, tag, href });
         });
       }

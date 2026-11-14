@@ -297,6 +297,78 @@
             border-top: 1px solid #ede8de;
         }
 
+        /* Inline Hub Links */
+        .hub-link {
+            color: var(--red-accent);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(166,38,46,0.35);
+            transition: border-color .2s, background-color .2s;
+        }
+        .hub-link:hover {
+            border-bottom-color: var(--red-accent);
+            background-color: var(--red-soft);
+        }
+        .midge-box {
+            background: #ffffff;
+            border: 1px solid var(--rule);
+            border-left: 4px solid var(--red-accent);
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin: 24px 0 32px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .midge-box-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+        .midge-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 14.5px;
+            color: var(--ink-mid);
+            line-height: 1.7;
+        }
+        .midge-list strong { color: var(--navy); }
+        .related-box {
+            background: #ffffff;
+            border: 1px solid var(--rule);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-top: 40px;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 18px;
+            margin-top: 14px;
+        }
+        @media(max-width:640px) { .related-grid { grid-template-columns: 1fr; } }
+        .related-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #faf8f5;
+            border: 1px solid #ede8de;
+            text-decoration: none;
+            color: var(--navy);
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: border-color .2s, background-color .2s;
+        }
+        .related-link:hover {
+            border-color: var(--red-accent);
+            background: var(--red-soft);
+        }
+
         /* Lightbox */
         #lightbox {
             display: none;
@@ -446,11 +518,20 @@
         <section>
             <h2 class="section-title">밋지팁 라인이 필요했다</h2>
             <p>
-                일반적인 스틸워터 채비는 플로팅 라인에 롱리더를 세팅하는 것이다. 아주 천천히 가라앉히고, 또 천천히 끌고 오는 정교한 운영. 바람 없이 잔잔함에는 아무런 문제가 없지만, 필드의 바람은 피할 수 없는 숙제 같은 것이다.
+                일반적인 스틸워터 채비는 플로팅 라인에 롱리더를 세팅하는 것이다. 아주 천천히 가라앉히고, 또 천천히 끌고 오는 <a class="hub-link" href="../../research/archive/techniques/Micro_Nymphing_Guide.html">마이크로 님핑</a>의 정교한 운영. 바람 없이 잔잔함에는 아무런 문제가 없지만, 필드의 바람은 피할 수 없는 숙제 같은 것이다.
             </p>
             <p>
-                수면 위에 떠 있는 플로팅 라인이 바람에 밀리기 시작하면 프리젠테이션의 균형이 무너지고 입질 감도마저 흐려진다. 그래서 바람을 뚫고 수면 아래로 라인을 꾹 눌러줄 <strong>밋지팁(Midge Tip), 즉 싱킹팁</strong>이 필요해졌다.
+                수면 위에 떠 있는 플로팅 라인이 바람에 밀리기 시작하면 프리젠테이션의 균형이 무너지고 입질 감도마저 흐려진다. 그래서 바람을 뚫고 수면 아래로 라인을 꾹 눌러줄 <a class="hub-link" href="../notes/midge-tip-buzzer-tip-why-review.html"><strong>밋지팁(Midge Tip), 즉 싱킹팁</strong></a>이 필요해졌다.
             </p>
+
+            <div class="midge-box">
+                <div class="midge-box-title">마이크로 님핑에서 밋지팁의 역할</div>
+                <ul class="midge-list">
+                    <li>• <strong>바람 차단:</strong> 수면 위 라인이 바람에 밀려 채비가 붕 뜨는 것을 6ft 팁이 수면 아래에서 꾹 눌러 막아준다.</li>
+                    <li>• <strong>유영층 유지:</strong> 자체 무게가 가벼운 마이크로 님프가 리트리브 시 들리지 않고, 송어가 머무는 중층을 길게 훑도록 보이지 않는 앵커를 잡아준다.</li>
+                    <li>• <strong>직선 감도:</strong> 바람으로 인한 라인 슬랙(배)을 줄여, 조심스러운 흡입 입질까지 손끝으로 또렷하게 전달한다.</li>
+                </ul>
+            </div>
 
             <!-- Package Photo Showcase -->
             <div class="photo-card">
@@ -466,10 +547,10 @@
         <section>
             <h2 class="section-title">프리젠테이션에 딱 맞는 스노우비 싱킹팁 라인업</h2>
             <p>
-                자연스럽게 눈이 간 곳은 프리젠테이션에 딱 맞는 스노우비(Snowbee)의 싱킹팁 라인업이었다. 버저 1, 버저 2… 그리고 2025년형으로 새롭게 등장한 <strong>SPECTRE PRO WFSPST-6</strong>.
+                자연스럽게 눈이 간 곳은 프리젠테이션에 딱 맞는 스노우비(Snowbee)의 싱킹팁 라인업이었다. 버저 1, <a class="hub-link" href="snowbee-xs-plus-buzzer-2-preview.html">버저 2(XS-Plus Buzzer 2)</a>… 그리고 2025년형으로 새롭게 등장한 <strong>SPECTRE PRO WFSPST-6</strong>.
             </p>
             <p>
-                이미 한터지 물가에서 경험해 온 버저 2(XS-Plus Buzzer 2)가 6m권 깊은 수심에 잘 어울린다면, 3~4m 수심의 송어장(이를테면 신기지)에는 이 <strong>SPECTRE PRO</strong>가 훨씬 더 알맞은 옷처럼 어울리는 것 같았다.
+                이미 한터지 물가에서 <a class="hub-link" href="../../research/buzzer2-trajectory-simulation.html">수중 궤적 시뮬레이션</a>까지 검증해 온 버저 2가 6m권 깊은 수심에 잘 어울린다면, 3~4m 수심의 송어장(이를테면 <a class="hub-link" href="../../field-log/logs/2026-11-04-singi.html">신기지</a>)에는 이 <strong>SPECTRE PRO</strong>가 훨씬 더 알맞은 옷처럼 어울리는 것 같았다.
             </p>
 
             <!-- Box Back & Spec Label Grid -->
@@ -551,11 +632,25 @@
         <section>
             <h2 class="section-title">다음 짬낚시 채비는 딱, SPECTRE PRO WFSPST-6</h2>
             <p>
-                조만간 짬낚시를 신기지로 다녀올 텐데, 이번 채비는 고민할 것 없이 딱 <strong>SPECTRE PRO WFSPST-6</strong>다.
+                조만간 짬낚시를 <a class="hub-link" href="../../research/archive/spot-maps/shingi-fishing-spot.html">신기지</a>로 다녀올 텐데, 이번 채비는 고민할 것 없이 딱 <strong>SPECTRE PRO WFSPST-6</strong>다.
             </p>
             <p>
                 차트뢰즈 백킹 위로 감긴 하얀 러닝라인과 붉은 6ft 싱크팁, 그리고 오랜 친구 SAGE DS2 690-2의 조합. 바람 부는 날에도 흔들림 없이 3~4m 수심을 눌러줄 이 붉은 팁이 물속에서 어떤 그림을 그려낼지 곧 현장 조행기로 확인해 보려 한다.
             </p>
+
+            <div class="related-box">
+                <div class="mono" style="font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--red-accent); font-weight: 600;">
+                    CONNECTED HUB ARCHIVE
+                </div>
+                <div class="related-grid">
+                    <a class="related-link" href="../../research/archive/techniques/Micro_Nymphing_Guide.html"><span>마이크로 님핑 가이드</span><span>↗</span></a>
+                    <a class="related-link" href="../notes/midge-tip-buzzer-tip-why-review.html"><span>왜 밋지팁 / 버저팁 라인인가</span><span>↗</span></a>
+                    <a class="related-link" href="snowbee-xs-plus-buzzer-2-preview.html"><span>Snowbee XS-Plus Buzzer 2 프리뷰</span><span>↗</span></a>
+                    <a class="related-link" href="../../research/buzzer2-trajectory-simulation.html"><span>Buzzer 2 수중 궤적 시뮬레이터</span><span>↗</span></a>
+                    <a class="related-link" href="../../field-log/logs/2026-11-04-singi.html"><span>신기지 조행기 (2026.11.04)</span><span>↗</span></a>
+                    <a class="related-link" href="../../research/archive/spot-maps/shingi-fishing-spot.html"><span>신기지 6대 포인트 맵</span><span>↗</span></a>
+                </div>
+            </div>
         </section>
 
         <!-- Author Meta Box -->

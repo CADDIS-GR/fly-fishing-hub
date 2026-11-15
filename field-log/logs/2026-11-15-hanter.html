@@ -236,8 +236,16 @@ footer p{font-size:12px}
 }
 @media(max-width:540px){.lb-arr{display:none}}
 </style>
+<style>
+#introBumperOverlay{position:fixed;inset:0;z-index:2147483000;background:#000;display:flex;align-items:center;justify-content:center}
+#introBumperOverlay[hidden]{display:none}
+#introBumperOverlay video{width:100%;height:100%;object-fit:contain;background:#000}
+#introBumperSkip{position:absolute;right:24px;bottom:36px;padding:10px 22px;border-radius:26px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer}
+#introBumperSkip:active{background:rgba(255,255,255,.25)}
+</style>
 </head>
 <body class="archive-page">
+<div id="introBumperOverlay" hidden><video id="introBumperVideo" muted playsinline preload="auto"></video><button id="introBumperSkip" type="button">SKIP ▸</button></div>
 <div class="lab-archive-bar">
   <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
   <nav aria-label="아카이브 탐색">
@@ -461,6 +469,19 @@ function closeLb(){document.getElementById('lb').classList.remove('open');docume
 function moveLb(d){lbIdx=(lbIdx+d+LB_ITEMS.length)%LB_ITEMS.length;showLb()}
 document.addEventListener('keydown',e=>{if(!document.getElementById('lb').classList.contains('open'))return;if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')moveLb(-1);if(e.key==='ArrowRight')moveLb(1)});
 document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))closeLb()});
+// Opening bumper video (plays on open; ?bumper=0 turns it off; skipped on back/forward)
+(function(){
+  const INTRO_SRC='../../assets/images/field-log-2026-11-15/hanter-intro-bumper.mp4';
+  const ov=document.getElementById('introBumperOverlay'),v=document.getElementById('introBumperVideo');
+  let bf=false;try{const n=performance.getEntriesByType('navigation')[0];bf=!!n&&n.type==='back_forward'}catch(e){}
+  if(new URLSearchParams(location.search).get('bumper')==='0'||bf)return;
+  function done(){ov.hidden=true;document.body.style.overflow='';try{v.pause()}catch(e){}}
+  v.src=INTRO_SRC;ov.hidden=false;document.body.style.overflow='hidden';
+  v.addEventListener('ended',done);v.addEventListener('error',done);
+  document.getElementById('introBumperSkip').addEventListener('click',done);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)done()});
+  const p=v.play();if(p&&p.catch)p.catch(()=>{});
+})();
 </script>
 </body>
 </html>

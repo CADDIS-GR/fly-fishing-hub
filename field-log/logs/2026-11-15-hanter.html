@@ -242,10 +242,13 @@ footer p{font-size:12px}
 #introBumperOverlay video{width:100%;height:100%;object-fit:contain;background:#000}
 #introBumperSkip{position:absolute;right:24px;bottom:36px;padding:10px 22px;border-radius:26px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.1em;cursor:pointer}
 #introBumperSkip:active{background:rgba(255,255,255,.25)}
+#introBumperSound{position:absolute;left:24px;bottom:36px;padding:10px 18px;border-radius:26px;border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.45);color:#fff;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.04em;cursor:pointer;backdrop-filter:blur(6px)}
+#introBumperSound.is-muted{border-color:rgba(255,255,255,.85);background:rgba(255,255,255,.2)}
+#introBumperSound:active{background:rgba(255,255,255,.3)}
 </style>
 </head>
 <body class="archive-page">
-<div id="introBumperOverlay" hidden><video id="introBumperVideo" muted playsinline preload="auto"></video><button id="introBumperSkip" type="button">SKIP ▸</button></div>
+<div id="introBumperOverlay" hidden><video id="introBumperVideo" playsinline preload="auto"></video><button id="introBumperSound" type="button">🔊 소리</button><button id="introBumperSkip" type="button">SKIP ▸</button></div>
 <div class="lab-archive-bar">
   <a class="lab-archive-brand" href="../../index.html">CADDIS-GR LAB</a>
   <nav aria-label="아카이브 탐색">
@@ -483,15 +486,23 @@ document.getElementById('lb').addEventListener('click',e=>{if(e.target===documen
 // Opening bumper video (plays on open; ?bumper=0 turns it off; skipped on back/forward)
 (function(){
   const INTRO_SRC='../../assets/images/field-log-2026-11-15/hanter-intro-bumper.mp4';
-  const ov=document.getElementById('introBumperOverlay'),v=document.getElementById('introBumperVideo');
+  const ov=document.getElementById('introBumperOverlay'),v=document.getElementById('introBumperVideo'),snd=document.getElementById('introBumperSound');
   let bf=false;try{const n=performance.getEntriesByType('navigation')[0];bf=!!n&&n.type==='back_forward'}catch(e){}
   if(new URLSearchParams(location.search).get('bumper')==='0'||bf)return;
+  function syncSoundBtn(){
+    if(v.muted){snd.textContent='🔇 소리 켜기';snd.classList.add('is-muted')}
+    else{snd.textContent='🔊 소리 끄기';snd.classList.remove('is-muted')}
+  }
   function done(){ov.hidden=true;document.body.style.overflow='';try{v.pause()}catch(e){}}
   v.src=INTRO_SRC;ov.hidden=false;document.body.style.overflow='hidden';
   v.addEventListener('ended',done);v.addEventListener('error',done);
   document.getElementById('introBumperSkip').addEventListener('click',done);
+  snd.addEventListener('click',e=>{e.stopPropagation();v.muted=!v.muted;syncSoundBtn();if(v.paused){const r=v.play();if(r&&r.catch)r.catch(()=>{})}});
+  ov.addEventListener('click',e=>{if(e.target===v||e.target===ov){if(v.muted){v.muted=false;syncSoundBtn()}if(v.paused){const r=v.play();if(r&&r.catch)r.catch(()=>{})}}});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden)done()});
-  const p=v.play();if(p&&p.catch)p.catch(()=>{});
+  v.muted=false;syncSoundBtn();
+  const p=v.play();
+  if(p&&p.catch){p.catch(()=>{v.muted=true;syncSoundBtn();const p2=v.play();if(p2&&p2.catch)p2.catch(()=>{})})}
 })();
 </script>
 </body>

@@ -239,13 +239,25 @@ footer p{font-size:12px}
 
 <style>
 /* ── 2026-11-18 신기지 시안 ── */
-.hero{background-position:center 55%}
+/* 히어로는 한낮의 볕을 살리려 톤다운(multiply) 대신 얕은 스크림만 */
+.hero{background-blend-mode:normal;background-color:#b9c8cf;background-position:center 42%}
+.hero::before{background:
+  linear-gradient(180deg,rgba(10,14,16,.46) 0%,rgba(10,14,16,.20) 30%,rgba(10,14,16,.10) 52%,rgba(10,14,16,.34) 70%,rgba(10,14,16,.62) 85%,rgba(232,226,216,.94) 97%,#e8e2d8 100%),
+  linear-gradient(90deg,rgba(10,14,16,.40) 0%,rgba(10,14,16,.10) 40%,rgba(10,14,16,.04) 65%,rgba(10,14,16,.34) 100%)}
+.hero-tag{text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.hero h1{text-shadow:0 3px 22px rgba(0,0,0,.40)}
+.hero-sub{text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.hero-meta{text-shadow:0 1px 8px rgba(0,0,0,.65)}
 .closing::before{content:'變'}
+/* 갤러리 타일: aspect-ratio 박스 안에서 사진이 남는 공간 없이 채워지게 */
+.gallery-item .lb-trigger img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gallery-item .lb-trigger{position:relative;height:100%}
 .spec-table{border-top:1px solid var(--rule);margin:4px 0 40px}
 .spec-row{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--rule)}
 .spec-row dt{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);padding-top:4px}
 .spec-row dd{font-size:15px;color:var(--ink-mid);line-height:1.7}
 @media(max-width:600px){.spec-row{grid-template-columns:1fr;gap:4px}}
+@media(max-width:640px){#sec-gallery > div{grid-template-columns:repeat(2,1fr)!important}}
 </style>
 </head>
 <body class="archive-page">
@@ -419,7 +431,7 @@ footer p{font-size:12px}
 <section class="gallery-section wrap" id="sec-gallery">
   <p class="gal-kicker">Field Gallery · 2026.11.18</p>
   <h2>현장 갤러리</h2>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px">
     <div class="gallery-item"><span class="lb-trigger" onclick="openLb(0)"><img data-k="s01" alt="삼각형 저수지 신기지 전경"></span></div>
     <div class="gallery-item"><span class="lb-trigger" onclick="openLb(1)"><img data-k="s02" alt="DEPTHTRAX 1H 발 앞 수심 11.2ft"></span></div>
     <div class="gallery-item"><span class="lb-trigger" onclick="openLb(2)"><img data-k="s03" alt="DEPTHTRAX 1H 표층 수온 59.0도"></span></div>
